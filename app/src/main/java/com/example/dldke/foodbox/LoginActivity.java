@@ -19,5 +19,12 @@ public class LoginActivity extends AppCompatActivity {
         ok_btn = (Button)findViewById(R.id.login_button);
         id_edittext = (EditText)findViewById(R.id.edittext_id);
         pw_edittext = (EditText)findViewById(R.id.edittext_pw);
+
+        ok_btn.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                startActivity(RefrigeratorMainActivity);
+            }
+        });
     }
 }
