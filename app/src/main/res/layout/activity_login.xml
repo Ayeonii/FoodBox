@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:id="@+id/edittext_id"
+        android:layout_centerInParent="true"
+        android:hint="ID" />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:id="@+id/edittext_pw"
+        android:layout_below="@+id/edittext_id"
+        android:layout_centerInParent="true"
+        android:hint="PW"/>
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:id="@+id/login_button"
+        android:text="Login"
+        android:layout_below="@+id/edittext_pw"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="5dp"/>
+
+</RelativeLayout>
