@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".RefrigeratorMainActivity" />
-        <activity android:name=".JoinActivity"></activity>
+        <activity android:name=".JoinActivity" />
+        <activity android:name=".RefrigeratorInsideActivity"></activity>
     </application>
 
 </manifest>
