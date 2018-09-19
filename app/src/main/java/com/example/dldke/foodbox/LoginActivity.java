@@ -1,12 +1,23 @@
 package com.example.dldke.foodbox;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.amazonaws.mobile.auth.ui.AuthUIConfiguration;
+import com.amazonaws.mobile.auth.core.IdentityHandler;
+import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.auth.core.SignInStateChangeListener;
+import com.amazonaws.mobile.auth.ui.SignInUI;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.AWSStartupHandler;
+import com.amazonaws.mobile.client.AWSStartupResult;
 
 public class LoginActivity extends AppCompatActivity {
     Button ok_btn;
@@ -16,6 +27,27 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Add a call to initialize AWSMobileClient
+        AWSMobileClient.getInstance().initialize(this).execute();
+        IdentityManager.getDefaultIdentityManager().addSignInStateChangeListener(new SignInStateChangeListener() {
+            @Override
+            public void onUserSignedIn() {
+                //Log.d(LOG_TAG, "User Signed In");
+            }
+
+            // Sign-out listener
+            @Override
+            public void onUserSignedOut() {
+
+                //Log.d(LOG_TAG, "User Signed Out");
+                showSignIn();
+            }
+        });
+        showSignIn();
+
+
+
+        /*
         ok_btn = (Button)findViewById(R.id.login_button);
         id_edittext = (EditText)findViewById(R.id.edittext_id);
         pw_edittext = (EditText)findViewById(R.id.edittext_pw);
@@ -26,5 +58,19 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(RefrigeratorMainActivity);
             }
         });
+        */
     }
+    private void showSignIn() {
+
+        //Log.d(LOG_TAG, "showSignIn");
+        AuthUIConfiguration config =
+                new AuthUIConfiguration.Builder()
+                        .userPools(true)  // true? show the Email and Password UI
+                        .fontFamily("sans-serif-light") // Apply sans-serif-light as the global font
+                        .canCancel(true)
+                        .build();
+        SignInUI signin = (SignInUI) AWSMobileClient.getInstance().getClient(LoginActivity.this, SignInUI.class);
+        signin.login(LoginActivity.this, RefrigeratorMainActivity.class).authUIConfiguration(config).execute();
+    }
+
 }
