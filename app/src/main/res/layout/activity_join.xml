@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
+
+    <EditText
+        android:id="@+id/edittext_jid"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_alignStart="@+id/join_button"
+        android:layout_centerVertical="true"
+        android:hint="ID를 입력하세요" />
+
+    <Button
+        android:id="@+id/re_button"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/edittext_jid"
+        android:text="중복확인" />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:id="@+id/edittext_jpw"
+        android:layout_below="@+id/edittext_jid"
+        android:layout_centerInParent="true"
+        android:hint="PW를 입력하세요"/>
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:id="@+id/textview_pw"
+        android:layout_below="@+id/edittext_jpw"
+        android:layout_centerInParent="true"
+        android:hint="영문, 숫자, 특수문자 포함 6자 이상"/>
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:id="@+id/edittext_repw"
+        android:layout_below="@+id/textview_pw"
+        android:layout_centerInParent="true"
+        android:hint="PW를 다시 한 번 확인합니다"/>
+
+    <TextView
+        android:text="PW가 일치하지 않습니다."
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:id="@+id/edittext_repw_message"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/edittext_repw"
+        android:textColor="#FF0000"
+        />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:id="@+id/join_button"
+        android:text="Join"
+        android:layout_below="@+id/edittext_repw_message"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="5dp"/>
+
+</RelativeLayout>
