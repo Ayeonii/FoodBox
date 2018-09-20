@@ -1,14 +1,9 @@
 package com.example.dldke.foodbox;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.provider.MediaStore;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -65,6 +59,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         leftAnim = AnimationUtils.loadAnimation(this, R.anim.go_left);
         rightAnim = AnimationUtils.loadAnimation(this, R.anim.go_right);
 
+        /*애니메이션 이벤트*/
         SlidingPageAnimationListener animationListener = new SlidingPageAnimationListener();
         leftAnim.setAnimationListener(animationListener);
         rightAnim.setAnimationListener(animationListener);
@@ -99,7 +94,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         FullLayout = (LinearLayout) findViewById(R.id.fullLayout);
         MiniLayout = (LinearLayout) findViewById(R.id.miniLayout);
 
-
+        /*플러스 플로팅 버튼*/
         fabPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +132,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             }
         });
 
-
+        /*마이너스 플로팅 버튼*/
         fabMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,14 +181,16 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     optionPage.setVisibility(View.VISIBLE);
                     listview.setVisibility(View.VISIBLE);
                     optionPage.startAnimation(leftAnim);
-                    leftDoor.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            optionPage.startAnimation(rightAnim);
-                        }
-                    });
+                    if(!isPageOpen) {
+                        leftDoor.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                optionPage.startAnimation(rightAnim);
+                            }
+                        });
+                    }
                 }
+
 
 
             }
@@ -221,10 +218,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
             }
         }) ;
-
-
-
-
 
 
     }
