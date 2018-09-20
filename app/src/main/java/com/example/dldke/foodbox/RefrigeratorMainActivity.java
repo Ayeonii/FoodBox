@@ -23,15 +23,18 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     Animation ShowPlus, HidePlus,LayHide,ShowMinus,HideMinus, LayShow;
     private FloatingActionButton fabPlus, fabCamera, fabPencil, fabMinus, fabFull, fabMini;
     LinearLayout CameraLayout, PencilLayout, FullLayout, MiniLayout;
+
+    //설정창에 들어갈 리스트
     static final String[] LIST_MENU = {"내 정보", "로그아웃", "설정"} ;
+
+    //냉장고 오른쪽/왼쪽 부분
     Button leftDoor;
+    Button rightDoor;
 
     //슬라이드 열기/닫기 플래그
     boolean isPageOpen = false;
-    //슬라이드 열기 애니메이션
-    Animation leftAnim;
-    //슬라이드 닫기 애니메이션
-    Animation rightAnim;
+    //슬라이드 열기/닫기 애니메이션
+    Animation leftAnim, rightAnim;
     //슬라이드 레이아웃
     LinearLayout optionPage;
     //리스트뷰
@@ -44,6 +47,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         setContentView(LAYOUT);
 
         leftDoor = (Button) findViewById(R.id.leftButton);
+        leftDoor = (Button) findViewById(R.id.rightButton);
 
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, LIST_MENU) ;
