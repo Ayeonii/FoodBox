@@ -7,6 +7,13 @@
     app:ignore="NamespaceTypo">
 
 
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:id="@+id/insidetest_button"
+        android:text="Inside"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="5dp"/>
 
 
 

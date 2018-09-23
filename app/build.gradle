@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
+
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -29,4 +30,16 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/simple-side-drawer2.jar')
     implementation 'com.android.support:design:27.1.1'
+
+    // Mobile Client for initializing the SDK
+    implementation ('com.amazonaws:aws-android-sdk-mobile-client:2.7.+@aar') { transitive = true }
+
+    // Cognito UserPools for SignIn
+    implementation ('com.amazonaws:aws-android-sdk-auth-userpools:2.7.+@aar') { transitive = true }
+
+    // Sign in UI Library
+    implementation ('com.amazonaws:aws-android-sdk-auth-ui:2.7.+@aar') { transitive = true }
+
+    // AmazonDynamoDB dependencies for NoSQL Database
+    implementation 'com.amazonaws:aws-android-sdk-ddb-mapper:2.6.+'
 }

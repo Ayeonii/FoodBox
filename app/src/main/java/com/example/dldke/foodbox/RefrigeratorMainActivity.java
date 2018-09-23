@@ -15,6 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.AWSStartupHandler;
+import com.amazonaws.mobile.client.AWSStartupResult;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
 
@@ -41,13 +48,20 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     ListView listview;
 
 
+
+    Button insidetest_btn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+
+
         leftDoor = (Button) findViewById(R.id.leftButton);
-        leftDoor = (Button) findViewById(R.id.rightButton);
+        rightDoor = (Button) findViewById(R.id.rightButton);
+
+        insidetest_btn = (Button) findViewById(R.id.insidetest_button);
 
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, LIST_MENU) ;
@@ -97,6 +111,14 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
         FullLayout = (LinearLayout) findViewById(R.id.fullLayout);
         MiniLayout = (LinearLayout) findViewById(R.id.miniLayout);
+
+        insidetest_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent RefrigeratorInsideActivity = new Intent(getApplicationContext(), RefrigeratorInsideActivity.class);
+                startActivity(RefrigeratorInsideActivity);
+            }
+        });
 
         /*플러스 플로팅 버튼*/
         fabPlus.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +240,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
                 // get TextView's Text.
                 String strText = (String) parent.getItemAtPosition(position) ;
+
+                if(strText.equals("로그아웃")) {
+                    IdentityManager.getDefaultIdentityManager().signOut();
+                }
 
                 Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
             }
