@@ -28,6 +28,7 @@
         android:id="@+id/edittext_jpw"
         android:layout_below="@+id/edittext_jid"
         android:layout_centerInParent="true"
+        android:inputType="textPassword"
         android:hint="PW를 입력하세요"/>
 
     <TextView
@@ -44,6 +45,7 @@
         android:id="@+id/edittext_repw"
         android:layout_below="@+id/textview_pw"
         android:layout_centerInParent="true"
+        android:inputType="textPassword"
         android:hint="PW를 다시 한 번 확인합니다"/>
 
     <TextView
@@ -54,6 +56,7 @@
         android:layout_centerInParent="true"
         android:layout_below="@+id/edittext_repw"
         android:textColor="#FF0000"
+        android:visibility="invisible"
         />
 
     <Button

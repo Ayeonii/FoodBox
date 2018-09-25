@@ -219,7 +219,12 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 // get TextView's Text.
                 String strText = (String) parent.getItemAtPosition(position) ;
 
-                Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
+
+                if(strText == "로그아웃"){
+                    Intent MainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(MainActivity);
+                }
             }
         }) ;
 

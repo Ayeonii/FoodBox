@@ -27,10 +27,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent JoinActivity = new Intent(getApplicationContext(), JoinActivity.class);
                     startActivity(JoinActivity);
-
-                    //JoinActivity 구현 완성시 없앰
-                    Toast toast = Toast.makeText(getApplicationContext(), "join 눌림", Toast.LENGTH_SHORT);
-                    toast.show();
                 }
             });
 

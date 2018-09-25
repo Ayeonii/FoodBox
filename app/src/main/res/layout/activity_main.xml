@@ -67,6 +67,7 @@
                 android:layout_height="40dp"
                 android:layout_below="@+id/id_text"
                 android:layout_marginLeft="20dp"
+                android:inputType="textPassword"
                 android:hint="Password" />
 
             <Button
