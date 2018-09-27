@@ -4,7 +4,7 @@
   "CredentialsProvider": {
     "CognitoIdentity": {
       "Default": {
-        "PoolId": "us-east-1:4a925297-5940-49c0-b4e7-18ce813634da",
+        "PoolId": "us-east-1:8c05dbaa-a472-40bb-8a04-054acaaeca31",
         "Region": "us-east-1"
       }
     }
@@ -14,15 +14,20 @@
   },
   "CognitoUserPool": {
     "Default": {
-      "PoolId": "us-east-1_EvcuExCdi",
-      "AppClientId": "7unu5cb7f6lusr55916e1t9veu",
-      "AppClientSecret": "idijol1moqalmijqmna2cm8knj3j3re0fio3o98q4gb481pq9eh",
+      "PoolId": "us-east-1_AyVjCVA9M",
+      "AppClientId": "3bujkds1vutthitd4udfc76l4f",
+      "AppClientSecret": "cln7ba998stqpahdsjkuab0v64r95av83icvushd0ni6loah74t",
+      "Region": "us-east-1"
+    }
+  },
+  "DynamoDBObjectMapper": {
+    "Default": {
       "Region": "us-east-1"
     }
   },
   "PinpointAnalytics": {
     "Default": {
-      "AppId": "fb3f786ed2654205b0eda1217fcab4e8",
+      "AppId": "eef1364b7f5b4ac2a8e2a8d3d0958f7b",
       "Region": "us-east-1"
     }
   },
@@ -30,5 +35,9 @@
     "Default": {
       "Region": "us-east-1"
     }
+  },
+  "GoogleSignIn": {
+    "ClientId-WebApp": "163609238969-k6rh5mc7t59i964qse2fnn7b59jdmkml.apps.googleusercontent.com",
+    "Permissions": "email,profile,openid"
   }
 }
