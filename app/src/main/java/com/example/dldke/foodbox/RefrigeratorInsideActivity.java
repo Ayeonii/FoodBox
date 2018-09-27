@@ -30,13 +30,13 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
     Button btnSidedish, btnEggs, btnMeat, btnFruit;
 
     // Declare a DynamoDBMapper object
-    DynamoDBMapper dynamoDBMapper;
+    //DynamoDBMapper dynamoDBMapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator_inside);
-
+        /*
         // AWSMobileClient enables AWS user credentials to access your table
         AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
 
@@ -69,7 +69,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 });
 
             }
-        }).execute();
+        }).execute();*/
 
         btnSidedish = (Button)findViewById(R.id.btn_sidedish);
         btnEggs = (Button)findViewById(R.id.btn_eggs);
@@ -79,8 +79,8 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         btnSidedish.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createRecipe();
-                //scanFood();
+                //createRecipe();
+                scanFood();
                 //createPost();
                 //createFood();
                 //Toast.makeText(getApplicationContext(), "반찬", Toast.LENGTH_LONG).show();
@@ -159,7 +159,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                dynamoDBMapper.save(recipeItem);
+                Mapper.getDynamoDBMapper().save(recipeItem);
                 // Item saved
                 Log.d("2", String.format("Post Item: %s", recipeItem.getDetail().getFoodName()));
             }
@@ -185,7 +185,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                dynamoDBMapper.save(postItem);
+                Mapper.getDynamoDBMapper().save(postItem);
                 // Item saved
                 Log.d("2", String.format("after Post Item: %s", postItem.getTitle()));
             }
@@ -201,7 +201,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS("fresh"));
                 scanExpression.addFilterCondition("section", condition);
-                List<InfoDO> itemList = dynamoDBMapper.scan(InfoDO.class, scanExpression);
+                List<InfoDO> itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
 
 
                 // Item saved
@@ -224,7 +224,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                dynamoDBMapper.save(foodItem);
+                Mapper.getDynamoDBMapper().save(foodItem);
                 // Item saved
                 Log.d("2", String.format("Food Item: %s", foodItem.getName()));
             }
@@ -235,7 +235,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                com.example.dldke.foodbox.InfoDO foodItem = dynamoDBMapper.load(
+                com.example.dldke.foodbox.InfoDO foodItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.InfoDO.class,
                         "수박",
                         "fresh");
@@ -264,7 +264,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
 
                 // Using .save(bookItem) with no Title value makes that attribute value equal null
                 // The .Savebehavior shown here leaves the existing value as is
-                dynamoDBMapper.save(foodItem, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES));
+                Mapper.getDynamoDBMapper().save(foodItem, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES));
 
                 // Item updated
             }
@@ -280,7 +280,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 foodItem.setSection("fresh");
                 foodItem.setName("오렌지");
 
-                dynamoDBMapper.delete(foodItem);
+                Mapper.getDynamoDBMapper().delete(foodItem);
 
                 // Item deleted
             }
