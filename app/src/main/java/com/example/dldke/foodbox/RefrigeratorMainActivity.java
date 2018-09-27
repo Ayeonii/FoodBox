@@ -149,9 +149,11 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
         menu.setOnClickListener(onClickListener);
         menuTransBack.setOnClickListener(onClickListener);
+        listview.setOnItemClickListener(listClickListener);
+
         postit.setOnClickListener(onClickListener);
 
-        listview.setOnItemClickListener(listClickListener);
+
 
 
     }
@@ -167,6 +169,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
             if(strText.equals("로그아웃")){
                 Intent MainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                //로그아웃 후, 뒤로가기 누르면 다시 로그인 된 상태로 가는 것을 방지
+                MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(MainActivity);
             }
             Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
@@ -266,6 +270,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     break ;
                 case R.id.fabFull:
                     Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();
+                    Intent fullActivity = new Intent(getApplicationContext(),FullRecipeActivity.class);
+                    startActivity(fullActivity);
+                    //다음 화면이 아래에서 올라오는 애니메이션
+                    overridePendingTransition(R.anim.bottom_to_up,R.anim.up_to_bottom);
                     break ;
                 case R.id.fabMini:
                     Toast.makeText(RefrigeratorMainActivity.this, "간이 레시피 누름", Toast.LENGTH_SHORT).show();

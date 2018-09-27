@@ -3,6 +3,8 @@
     <color name="colorPrimary">#a9a9a9</color>
     <color name="colorPrimaryDark">#a9a9a9</color>
     <color name="colorAccent">#a9a9a9</color>
+    <color name="translucent">#e0000000</color>
+    <color name="transparent">#00000000</color>
     <drawable name="translucent_background">#e0000000</drawable>
     <drawable name="transparent_background">#00000000</drawable>
 </resources>
