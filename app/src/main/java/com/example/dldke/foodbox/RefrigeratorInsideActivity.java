@@ -36,40 +36,6 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator_inside);
-        /*
-        // AWSMobileClient enables AWS user credentials to access your table
-        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
-
-            @Override
-            public void onComplete(AWSStartupResult awsStartupResult) {
-
-                // Add code to instantiate a AmazonDynamoDBClient
-                AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(AWSMobileClient.getInstance().getCredentialsProvider());
-                dynamoDBMapper = DynamoDBMapper.builder()
-                        .dynamoDBClient(dynamoDBClient)
-                        .awsConfiguration(
-                                AWSMobileClient.getInstance().getConfiguration())
-                        .build();
-
-                IdentityManager.getDefaultIdentityManager().getUserID(new IdentityHandler() {
-
-                    @Override
-                    public void onIdentityId(String s) {
-
-                        //The network call to fetch AWS credentials succeeded, the cached
-                        // user ID is available from IdentityManager throughout your app
-                        Log.d("MainActivity", "Identity ID is: " + s);
-                        Log.d("MainActivity", "Cached Identity ID: " + IdentityManager.getDefaultIdentityManager().getCachedUserID());
-                    }
-
-                    @Override
-                    public void handleError(Exception e) {
-                        Log.e("MainActivity", "Error in retrieving Identity ID: " + e.getMessage());
-                    }
-                });
-
-            }
-        }).execute();*/
 
         btnSidedish = (Button)findViewById(R.id.btn_sidedish);
         btnEggs = (Button)findViewById(R.id.btn_eggs);
@@ -79,8 +45,9 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         btnSidedish.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                createRefrigerator();
                 //createRecipe();
-                scanFood();
+                //scanFood();
                 //createPost();
                 //createFood();
                 //Toast.makeText(getApplicationContext(), "반찬", Toast.LENGTH_LONG).show();
@@ -119,11 +86,11 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         recipeItem.setDate("2018-09-26 21:24");
         RecipeDO.Ingredient onion = new RecipeDO.Ingredient();
         onion.setIngredientName("onion");
-        onion.setIngredientCount(2);
+        onion.setIngredientCount(2.0);
 
         RecipeDO.Ingredient carrot = new RecipeDO.Ingredient();
         carrot.setIngredientName("carrot");
-        carrot.setIngredientCount(1);
+        carrot.setIngredientCount(1.0);
 
         List<RecipeDO.Ingredient> tmpIngredientList = recipeItem.getIngredient();
         tmpIngredientList.add(onion);
@@ -283,6 +250,30 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 Mapper.getDynamoDBMapper().delete(foodItem);
 
                 // Item deleted
+            }
+        }).start();
+    }
+
+    public void createRefrigerator() {
+        final com.example.dldke.foodbox.RefrigeratorDO refrigeratorItem = new com.example.dldke.foodbox.RefrigeratorDO();
+
+        refrigeratorItem.setUserId("kitawo324");
+
+        RefrigeratorDO.Item item1 = new RefrigeratorDO.Item();
+        item1.setName("감자");
+        item1.setCount(2.0);
+        item1.setSection("fresh");
+        item1.setKindOf("vegetable");
+        item1.setDueDate(7);
+
+        List<RefrigeratorDO.Item> r_item = refrigeratorItem.getItem();
+        r_item.add(item1);
+        refrigeratorItem.setItem(r_item);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Mapper.getDynamoDBMapper().save(refrigeratorItem);
             }
         }).start();
     }

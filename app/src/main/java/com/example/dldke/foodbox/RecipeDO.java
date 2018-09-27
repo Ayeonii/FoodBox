@@ -126,7 +126,7 @@ public class RecipeDO {
     @DynamoDBDocument
     public static class Ingredient {
         private String _ingredientName;
-        private Integer _ingredientCount;
+        private Double _ingredientCount;
 
         @DynamoDBAttribute(attributeName = "ingredientName")
         public String getIngredientName() {
@@ -137,11 +137,11 @@ public class RecipeDO {
             this._ingredientName = _ingredientName;
         }
         @DynamoDBAttribute(attributeName = "ingredientCount")
-        public Integer getIngredientCount() {
+        public Double getIngredientCount() {
             return _ingredientCount;
         }
 
-        public void setIngredientCount(final Integer _ingredientCount) {
+        public void setIngredientCount(final Double _ingredientCount) {
             this._ingredientCount = _ingredientCount;
         }
     }
