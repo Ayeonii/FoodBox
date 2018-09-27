@@ -1,12 +1,14 @@
-package com.amazonaws.models.nosql;
+package com.example.dldke.foodbox;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBDocument;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,14 +18,9 @@ import java.util.Set;
 public class RecipeDO {
     private String _recipeId;
     private String _date;
-    private Map<String, String> _detail;
-    private String _foodName;
-    private List<String> _ingredient;
-    private String _specFire;
-    private List<String> _specIngredient;
-    private List<String> _specList;
-    private String _specMethod;
-    private Double _specMinute;
+    private Detail _detail;
+    private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
+
 
     @DynamoDBHashKey(attributeName = "recipeId")
     @DynamoDBAttribute(attributeName = "recipeId")
@@ -43,68 +40,109 @@ public class RecipeDO {
         this._date = _date;
     }
     @DynamoDBAttribute(attributeName = "detail")
-    public Map<String, String> getDetail() {
+    public Detail getDetail() {
         return _detail;
     }
 
-    public void setDetail(final Map<String, String> _detail) {
+    public void setDetail(final Detail _detail) {
         this._detail = _detail;
     }
-    @DynamoDBAttribute(attributeName = "foodName")
-    public String getFoodName() {
-        return _foodName;
-    }
 
-    public void setFoodName(final String _foodName) {
-        this._foodName = _foodName;
-    }
     @DynamoDBAttribute(attributeName = "ingredient")
-    public List<String> getIngredient() {
+    public List<Ingredient> getIngredient() {
         return _ingredient;
     }
 
-    public void setIngredient(final List<String> _ingredient) {
+    public void setIngredient(final List<Ingredient> _ingredient) {
         this._ingredient = _ingredient;
     }
-    @DynamoDBAttribute(attributeName = "specFire")
-    public String getSpecFire() {
-        return _specFire;
+
+
+
+    @DynamoDBDocument
+    public static class Detail{
+        private String _foodName;
+        private List<Spec> _specList = new ArrayList<Spec>();
+
+        @DynamoDBAttribute(attributeName = "foodName")
+        public String getFoodName() {
+            return _foodName;
+        }
+
+        public void setFoodName(final String _foodName) {
+            this._foodName = _foodName;
+        }
+        @DynamoDBAttribute(attributeName = "specList")
+        public List<Spec> getSpecList() {
+            return _specList;
+        }
+
+        public void setSpecList(final List<Spec> _specList) {
+            this._specList = _specList;
+        }
     }
 
-    public void setSpecFire(final String _specFire) {
-        this._specFire = _specFire;
-    }
-    @DynamoDBAttribute(attributeName = "specIngredient")
-    public List<String> getSpecIngredient() {
-        return _specIngredient;
+    @DynamoDBDocument
+    public static class Spec{
+        private String _specFire;
+        private List<Ingredient> _specIngredient = new ArrayList<Ingredient>();
+        private String _specMethod;
+        private Integer _specMinute;
+
+        @DynamoDBAttribute(attributeName = "specFire")
+        public String getSpecFire() {
+            return _specFire;
+        }
+
+        public void setSpecFire(final String _specFire) {
+            this._specFire = _specFire;
+        }
+        @DynamoDBAttribute(attributeName = "specIngredient")
+        public List<Ingredient> getSpecIngredient() {
+            return _specIngredient;
+        }
+
+        public void setSpecIngredient(final List<Ingredient> _specIngredient) {
+            this._specIngredient = _specIngredient;
+        }
+        @DynamoDBAttribute(attributeName = "specMethod")
+        public String getSpecMethod() {
+            return _specMethod;
+        }
+
+        public void setSpecMethod(final String _specMethod) {
+            this._specMethod = _specMethod;
+        }
+        @DynamoDBAttribute(attributeName = "specMinute")
+        public Integer getSpecMinute() {
+            return _specMinute;
+        }
+
+        public void setSpecMinute(final Integer _specMinute) {
+            this._specMinute = _specMinute;
+        }
     }
 
-    public void setSpecIngredient(final List<String> _specIngredient) {
-        this._specIngredient = _specIngredient;
-    }
-    @DynamoDBAttribute(attributeName = "specList")
-    public List<String> getSpecList() {
-        return _specList;
-    }
+    @DynamoDBDocument
+    public static class Ingredient {
+        private String _ingredientName;
+        private Integer _ingredientCount;
 
-    public void setSpecList(final List<String> _specList) {
-        this._specList = _specList;
-    }
-    @DynamoDBAttribute(attributeName = "specMethod")
-    public String getSpecMethod() {
-        return _specMethod;
-    }
+        @DynamoDBAttribute(attributeName = "ingredientName")
+        public String getIngredientName() {
+            return _ingredientName;
+        }
 
-    public void setSpecMethod(final String _specMethod) {
-        this._specMethod = _specMethod;
-    }
-    @DynamoDBAttribute(attributeName = "specMinute")
-    public Double getSpecMinute() {
-        return _specMinute;
-    }
+        public void setIngredientName(final String _ingredientName) {
+            this._ingredientName = _ingredientName;
+        }
+        @DynamoDBAttribute(attributeName = "ingredientCount")
+        public Integer getIngredientCount() {
+            return _ingredientCount;
+        }
 
-    public void setSpecMinute(final Double _specMinute) {
-        this._specMinute = _specMinute;
+        public void setIngredientCount(final Integer _ingredientCount) {
+            this._ingredientCount = _ingredientCount;
+        }
     }
-
 }

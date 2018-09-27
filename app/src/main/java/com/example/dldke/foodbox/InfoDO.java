@@ -1,4 +1,4 @@
-package com.amazonaws.models.nosql;
+package com.example.dldke.foodbox;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
@@ -16,7 +16,7 @@ import java.util.Set;
 public class InfoDO {
     private String _name;
     private String _section;
-    private Double _dueDate;
+    private Integer _dueDate;
     private String _kindOf;
 
     @DynamoDBHashKey(attributeName = "name")
@@ -38,11 +38,11 @@ public class InfoDO {
         this._section = _section;
     }
     @DynamoDBAttribute(attributeName = "dueDate")
-    public Double getDueDate() {
+    public Integer getDueDate() {
         return _dueDate;
     }
 
-    public void setDueDate(final Double _dueDate) {
+    public void setDueDate(final Integer _dueDate) {
         this._dueDate = _dueDate;
     }
     @DynamoDBIndexRangeKey(attributeName = "kindOf", globalSecondaryIndexName = "name-kindOf")

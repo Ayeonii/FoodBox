@@ -42,4 +42,7 @@ dependencies {
 
     // AmazonDynamoDB dependencies for NoSQL Database
     implementation 'com.amazonaws:aws-android-sdk-ddb-mapper:2.6.+'
+
+    implementation ('com.amazonaws:aws-android-sdk-auth-google:2.7.+@aar') { transitive = true }
+
 }
