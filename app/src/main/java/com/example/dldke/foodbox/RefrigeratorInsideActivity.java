@@ -55,79 +55,79 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 ////신선칸 재료 보여주기
-                List<InfoDO> itemList = scanInfo( "fresh");
+               /* List<InfoDO> itemList = Mapper.scanInfo( "fresh");
                 for(int i = 0; i < itemList.size(); i++)
                 {
                     Log.d("2", String.format("Refri Item: %s", itemList.get(i).getName()));
                 }
-
+                */
                 ////내 냉장고 만들기(처음 만들때만 하면 됨)
-                //createRefrigerator("kayoung1429");
+                //Mapper.createRefrigerator("test1");
 
-                /*
+
                 ////내 냉장고에 재료 집어넣기
-                List<RefrigeratorDO.Item> foodItem = new ArrayList<>();
+                //List<RefrigeratorDO.Item> foodItem = new ArrayList<>();
 
                 //사용자 입력 몇 개 받는지에 따라 반복
-                InfoDO potato = searchFood("감자");
-                InfoDO onion = searchFood("양파");
+                //InfoDO potato = Mapper.searchFood("감자");
+                //InfoDO onion = Mapper.searchFood("양파");
 
-                foodItem.add(createFood(potato, 2.0));
-                foodItem.add(createFood(onion, 2.0));
+                //foodItem.add(Mapper.createFood(potato, 2.0));
+                //foodItem.add(Mapper.createFood(onion, 2.0));
 
                 //입력 다 받았으면 집어넣음
-                putFood("kayoung1429", foodItem);
-                */
+                //Mapper.putFood("test1", foodItem);
+
 
                 ////내 냉장고 재료 보여주기
-                List<RefrigeratorDO.Item> refri_item = scanRefri("kayoung1429");
+                /*List<RefrigeratorDO.Item> refri_item = Mapper.scanRefri("test1");
                 for(int i = 0; i < refri_item.size(); i++)
                 {
                     Log.d("2", String.format("Refri Item: %s", refri_item.get(i).getName()));
                 }
-
+                */
                 //내 냉장고 재료 유통기한 변경
-                //updateDueDate("kayoung1429", "감자", 2);
+                //Mapper.updateDueDate("test1", "감자", 2);
 
                 //내 냉장고 재료 삭제
-                //deleteFood("kayoung1429", "감자");
+                //Mapper.deleteFood("test1", "양파");
 
                 //내 냉장고 재료 소진
-               //updateCount("kayoung1429", "양파", 1);
-                /*
+               //Mapper.updateCount("test1", "감자", 1);
+
                ////간이레시피 만들기
                 List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
 
                 //사용자 입력 몇 개 받는지에 따라 반복
-                recipeIngredientList.add(createIngredient("양파", 2.0));
-                recipeIngredientList.add(createIngredient("감자", 2.0));
+                recipeIngredientList.add(Mapper.createIngredient("양파", 2.0));
+                recipeIngredientList.add(Mapper.createIngredient("감자", 2.0));
 
                 //입력 다 받았으면 간이레시피 만듦
-                createRecipe(recipeIngredientList);
-                */
+                Mapper.createRecipe(recipeIngredientList);
+
 
                 /*
                 ////풀레시피 만들기
                 List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
 
                 //한 단계에 몇개의 재료인지에 따라 반복
-                specIngredientList.add(createIngredient("양파", 2.0));
-                specIngredientList.add(createIngredient("감자", 2.0));
+                specIngredientList.add(Mapper.createIngredient("양파", 2.0));
+                specIngredientList.add(Mapper.createIngredient("감자", 2.0));
 
                 //위에서 만든 재료들이랑 방법, 불세기, 시간 넣어서 만듦
                 //마찬가지로 단계가 몇 개인지에 따라 반복
-                RecipeDO.Spec spec1 = createSpec(specIngredientList, "볶는다", "강", 3);
+                RecipeDO.Spec spec1 = Mapper.createSpec(specIngredientList, "볶는다", "강", 3);
                 List<RecipeDO.Spec> specList = new ArrayList<>();
                 specList.add(spec1);
 
                 //단계 다 끝나면 풀레시피 만듦
-                createFullRecipe("", "감자볶음", specList);
+                Mapper.createFullRecipe("", "감자볶음", specList);
 
                 ////게시글 작성
-                createPost("까까의 감자볶음","");
+                Mapper.createPost("까까의 감자볶음","");
 
                 ////댓글 작성
-               // createComment("","kayoung1429","맛있겠다!");
+               // Mapper.createComment("","kayoung1429","맛있겠다!");
                */
 
                 Toast.makeText(getApplicationContext(), "반찬", Toast.LENGTH_LONG).show();
@@ -137,7 +137,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         btnEggs.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callCloudLogic();
+                //callCloudLogic();
                 Toast.makeText(getApplicationContext(), "계란,유제품,음료,소스", Toast.LENGTH_LONG).show();
             }
         });
@@ -157,7 +157,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         });
     }
 
-    public RecipeDO.Ingredient createIngredient(String name, Double count)
+   /* public RecipeDO.Ingredient createIngredient(String name, Double count)
     {
         RecipeDO.Ingredient ingredient = new RecipeDO.Ingredient();
         ingredient.setIngredientName(name);
@@ -586,5 +586,5 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 }
             }
         }).start();
-    }
+    }*/
 }
