@@ -7,25 +7,42 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.amazonaws.http.HttpMethodName;
+import com.amazonaws.mobile.api.id8z9a74jyqj.EchoTestMobileHubClient;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
+import com.amazonaws.mobileconnectors.apigateway.ApiResponse;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapperConfig;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.util.IOUtils;
+import com.amazonaws.util.StringUtils;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RefrigeratorInsideActivity extends AppCompatActivity {
+    private static final String LOG_TAG = RefrigeratorInsideActivity.class.getSimpleName();
 
     Button btnSidedish, btnEggs, btnMeat, btnFruit;
 
+    private EchoTestMobileHubClient apiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator_inside);
+
+        apiClient = new ApiClientFactory()
+                .credentialsProvider(AWSMobileClient.getInstance().getCredentialsProvider())
+                .build(EchoTestMobileHubClient.class);
 
         btnSidedish = (Button)findViewById(R.id.btn_sidedish);
         btnEggs = (Button)findViewById(R.id.btn_eggs);
@@ -37,66 +54,66 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 ////신선칸 재료 보여주기
-                scanInfo( "fresh");
+                //scanInfo( "fresh");
 
                 ////내 냉장고 만들기(처음 만들때만 하면 됨)
-               // createRefrigerator("kayoung1429");
+                //createRefrigerator("kayoung1429");
 
                 ////내 냉장고에 재료 집어넣기
-                List<RefrigeratorDO.Item> foodItem = new ArrayList<>();
+               // List<RefrigeratorDO.Item> foodItem = new ArrayList<>();
 
                 //사용자 입력 몇 개 받는지에 따라 반복
                 //InfoDO potato = searchFood("감자");
                 //InfoDO onion = searchFood("양파");
 
                 //foodItem.add(createFood(potato, 2.0));
-                //foodItem.add(createFood(onion, 2.0));
+               // foodItem.add(createFood(onion, 2.0));
+
                 //입력 다 받았으면 집어넣음
-                putFood("kayoung1429", foodItem);
+                //putFood("kayoung1429", foodItem);
 
                 ////내 냉장고 재료 보여주기
-                scanRefri("kitawo324");
+                //scanRefri("kayoung1429");
 
                 //내 냉장고 재료 유통기한 변경
-               // updateDueDate("kayoung1429", "감자", 2);
+                //updateDueDate("kayoung1429", "감자", 2);
 
                 //내 냉장고 재료 삭제
-               // RefrigeratorDO.Item potato2;
-               // deleteFood("kayoung1429", "감자");
+                //deleteFood("kayoung1429", "감자");
 
                 //내 냉장고 재료 소진
-              //  updateCount("kayoung1429", "감자", 2);
-
+               //updateCount("kayoung1429", "양파", 1);
+                /*
                ////간이레시피 만들기
                 List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
 
                 //사용자 입력 몇 개 받는지에 따라 반복
-               // recipeIngredientList.add(createIngredient("양파", 2.0));
-               // recipeIngredientList.add(createIngredient("감자", 2.0));
+                recipeIngredientList.add(createIngredient("양파", 2.0));
+                recipeIngredientList.add(createIngredient("감자", 2.0));
 
                 //입력 다 받았으면 간이레시피 만듦
-              //  createRecipe(recipeIngredientList);
-
+                createRecipe(recipeIngredientList);
+                */
 
 
                 ////풀레시피 만들기
-             //   List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
+                List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
 
                 //한 단계에 몇개의 재료인지에 따라 반복
-               // specIngredientList.add(createIngredient("양파", 2.0));
-             //   specIngredientList.add(createIngredient("감자", 2.0));
+                specIngredientList.add(createIngredient("양파", 2.0));
+                specIngredientList.add(createIngredient("감자", 2.0));
 
                 //위에서 만든 재료들이랑 방법, 불세기, 시간 넣어서 만듦
                 //마찬가지로 단계가 몇 개인지에 따라 반복
-              //  RecipeDO.Spec spec1 = createSpec(specIngredientList, "볶는다", "강", 3);
+                RecipeDO.Spec spec1 = createSpec(specIngredientList, "볶는다", "강", 3);
                 List<RecipeDO.Spec> specList = new ArrayList<>();
-              //  specList.add(spec1);
+                specList.add(spec1);
 
                 //단계 다 끝나면 풀레시피 만듦
-               // createFullRecipe("", "감자볶음", specList);
+                createFullRecipe("", "감자볶음", specList);
 
                 ////게시글 작성
-               // createPost("까까의 감자볶음","");
+                createPost("까까의 감자볶음","");
 
                 ////댓글 작성
                // createComment("","kayoung1429","맛있겠다!");
@@ -108,6 +125,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         btnEggs.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                callCloudLogic();
                 Toast.makeText(getApplicationContext(), "계란,유제품,음료,소스", Toast.LENGTH_LONG).show();
             }
         });
@@ -306,22 +324,34 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
 
     }
 
-    public void searchFood(String name) {
+    public InfoDO searchFood(String name) {
 
         final String foodName = name;
+        returnThread thread = new returnThread(new CustomRunnable() {
 
-        new Thread(new Runnable() {
+            com.example.dldke.foodbox.InfoDO foodItem;
             @Override
             public void run() {
-                final com.example.dldke.foodbox.InfoDO foodItem = Mapper.getDynamoDBMapper().load(
+                foodItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.InfoDO.class,
                         foodName,
                         "fresh");
-                //return foodItem;
-
             }
-        }).start();
 
+            @Override
+            public Object getResult(){
+                return foodItem;
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        com.example.dldke.foodbox.InfoDO foodItem = (InfoDO)thread.getResult();
+
+        return foodItem;
     }
 
     public void updateDueDate(String userId, String name, Integer dueDate) {
@@ -385,7 +415,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         final String ID = userId;
         final String itemName = name;
 
-        new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 final com.example.dldke.foodbox.RefrigeratorDO foodItem = Mapper.getDynamoDBMapper().load(
@@ -395,13 +425,19 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 for(int i = 0; i < foodItem.getItem().size(); i++)
                 {
                     if(foodItem.getItem().get(i).getName().equals(itemName)) {
-                        index = i;
+                        foodItem.getItem().remove(i);
                         break;
                     }
                 }
-                Mapper.getDynamoDBMapper().delete(index);
+                Mapper.getDynamoDBMapper().save(foodItem);
             }
-        }).start();
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void createRefrigerator(String userId) {
@@ -423,6 +459,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         food.setName(item.getName());
         food.setSection(item.getSection());
         food.setKindOf(item.getKindOf());
+        food.setDueDate(item.getDueDate());
         food.setCount(count);
 
         return food;
@@ -432,7 +469,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         final String ID = userId;
         final List<RefrigeratorDO.Item> foods_list = foods;
 
-        new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 final com.example.dldke.foodbox.RefrigeratorDO refrigeratorItem = Mapper.getDynamoDBMapper().load(
@@ -445,6 +482,74 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                     r_item.add(foods_list.get(i));
                 }
                 refrigeratorItem.setItem(r_item);
+                Mapper.getDynamoDBMapper().save(refrigeratorItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void callCloudLogic() {
+        // Create components of api request
+        final String method = "GET";
+
+        final String path = "/items";
+
+        final String body = "";
+        final byte[] content = body.getBytes(StringUtils.UTF8);
+
+        final Map parameters = new HashMap<>();
+        parameters.put("lang", "en_US");
+
+        final Map headers = new HashMap<>();
+
+        // Use components to create the api request
+        ApiRequest localRequest =
+                new ApiRequest(apiClient.getClass().getSimpleName())
+                        .withPath(path)
+                        .withHttpMethod(HttpMethodName.valueOf(method))
+                        .withHeaders(headers)
+                        .addHeader("Content-Type", "application/json")
+                        .withParameters(parameters);
+
+        // Only set body if it has content.
+        if (body.length() > 0) {
+            localRequest = localRequest
+                    .addHeader("Content-Length", String.valueOf(content.length))
+                    .withBody(content);
+        }
+
+        final ApiRequest request = localRequest;
+
+        // Make network call on background thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.d(LOG_TAG,
+                            "Invoking API w/ Request : " +
+                                    request.getHttpMethod() + ":" +
+                                    request.getPath());
+
+                    final ApiResponse response = apiClient.execute(request);
+
+                    final InputStream responseContentStream = response.getContent();
+
+                    if (responseContentStream != null) {
+                        final String responseData = IOUtils.toString(responseContentStream);
+                        Log.d(LOG_TAG, "Response : " + responseData);
+                    }
+
+                    Log.d(LOG_TAG, response.getStatusCode() + " " + response.getStatusText());
+
+                } catch (final Exception exception) {
+                    Log.e(LOG_TAG, exception.getMessage(), exception);
+                    exception.printStackTrace();
+                }
             }
         }).start();
     }
