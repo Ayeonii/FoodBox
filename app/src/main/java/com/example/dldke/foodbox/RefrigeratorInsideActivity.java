@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox;
 
+import android.icu.text.IDNA;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,26 +55,36 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 ////신선칸 재료 보여주기
-                //scanInfo( "fresh");
+                List<InfoDO> itemList = scanInfo( "fresh");
+                for(int i = 0; i < itemList.size(); i++)
+                {
+                    Log.d("2", String.format("Refri Item: %s", itemList.get(i).getName()));
+                }
 
                 ////내 냉장고 만들기(처음 만들때만 하면 됨)
                 //createRefrigerator("kayoung1429");
 
+                /*
                 ////내 냉장고에 재료 집어넣기
-               // List<RefrigeratorDO.Item> foodItem = new ArrayList<>();
+                List<RefrigeratorDO.Item> foodItem = new ArrayList<>();
 
                 //사용자 입력 몇 개 받는지에 따라 반복
-                //InfoDO potato = searchFood("감자");
-                //InfoDO onion = searchFood("양파");
+                InfoDO potato = searchFood("감자");
+                InfoDO onion = searchFood("양파");
 
-                //foodItem.add(createFood(potato, 2.0));
-               // foodItem.add(createFood(onion, 2.0));
+                foodItem.add(createFood(potato, 2.0));
+                foodItem.add(createFood(onion, 2.0));
 
                 //입력 다 받았으면 집어넣음
-                //putFood("kayoung1429", foodItem);
+                putFood("kayoung1429", foodItem);
+                */
 
                 ////내 냉장고 재료 보여주기
-                //scanRefri("kayoung1429");
+                List<RefrigeratorDO.Item> refri_item = scanRefri("kayoung1429");
+                for(int i = 0; i < refri_item.size(); i++)
+                {
+                    Log.d("2", String.format("Refri Item: %s", refri_item.get(i).getName()));
+                }
 
                 //내 냉장고 재료 유통기한 변경
                 //updateDueDate("kayoung1429", "감자", 2);
@@ -95,7 +106,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 createRecipe(recipeIngredientList);
                 */
 
-
+                /*
                 ////풀레시피 만들기
                 List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
 
@@ -117,6 +128,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
 
                 ////댓글 작성
                // createComment("","kayoung1429","맛있겠다!");
+               */
 
                 Toast.makeText(getApplicationContext(), "반찬", Toast.LENGTH_LONG).show();
             }
@@ -283,44 +295,63 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void scanInfo(String section) {
+    public List<InfoDO> scanInfo(String section) {
         final com.example.dldke.foodbox.InfoDO foodItem = new com.example.dldke.foodbox.InfoDO();
 
         final String sectionName = section;
 
-        new Thread(new Runnable() {
+         returnThread thread = new returnThread(new CustomRunnable() {
+            List<InfoDO> itemList;
             @Override
             public void run() {
 
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(sectionName));
                 scanExpression.addFilterCondition("section", condition);
-                List<InfoDO> itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
-
-                // Item saved
-                for (int i=0;i<itemList.size();i++){
-                    Log.d("2", String.format("List Item: %s", itemList.get(i).getName()));
-                }
+                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
             }
-        }).start();
+            @Override
+            public Object getResult(){
+                return itemList;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
+        return itemList;
     }
 
-    public void scanRefri(String userId) {
+    public List<RefrigeratorDO.Item> scanRefri(String userId) {
         final String ID = userId;
         Toast.makeText(getApplicationContext(), "들어옴", Toast.LENGTH_LONG).show();
 
-        new Thread(new Runnable() {
+        returnThread thread = new returnThread(new CustomRunnable() {
+            com.example.dldke.foodbox.RefrigeratorDO Refri;
             @Override
             public void run() {
-                com.example.dldke.foodbox.RefrigeratorDO Refri = Mapper.getDynamoDBMapper().load(
+                 Refri = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.RefrigeratorDO.class,
                         ID);
+                 }
+             @Override
+            public Object getResult(){
+                return Refri.getItem();
+             }
+        });
 
-                for (int i=0;i<Refri.getItem().size();i++){
-                    Log.d("2", String.format("List Item: %s", Refri.getItem().get(i).getName()));
-                }
-            }
-        }).start();
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<RefrigeratorDO.Item> refri_item = (List<RefrigeratorDO.Item>)thread.getResult();
+        return refri_item;
 
     }
 
@@ -404,6 +435,9 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 }
                 count = count - minus;
                 foodItem.getItem().get(index).setCount(count);
+
+                if(foodItem.getItem().get(index).getCount() == 0)
+                    foodItem.getItem().remove(index);
 
                 Mapper.getDynamoDBMapper().save(foodItem, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES));
             }
