@@ -62,7 +62,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 }
                 */
                 ////내 냉장고 만들기(처음 만들때만 하면 됨)
-                //Mapper.createRefrigerator("test1");
+                //Mapper.createRefrigerator();
 
 
                 ////내 냉장고에 재료 집어넣기
@@ -97,25 +97,35 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 //Mapper.updateCount("감자", 1);
 
                 ////간이레시피 만들기
-                List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+                /*List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
 
                 //사용자 입력 몇 개 받는지에 따라 반복
-                recipeIngredientList.add(Mapper.createIngredient("양파", 2.0));
-                recipeIngredientList.add(Mapper.createIngredient("감자", 2.0));
+                InfoDO potato = Mapper.searchFood("감자");
+                InfoDO onion = Mapper.searchFood("양파");
+
+                recipeIngredientList.add(Mapper.createIngredient(potato, 2.0));
+                recipeIngredientList.add(Mapper.createIngredient(onion, 2.0));
 
                 //입력 다 받았으면 간이레시피 만듦
                 String recipeId = Mapper.createRecipe(recipeIngredientList);
 
                 //내 커뮤니티 만들기(최초1회만)
-                //Mapper.createMyCommunity();
+                Mapper.createMyCommunity();
+
+                //내 커뮤니티에 내 간이레시피 등록
                 Mapper.addRecipeInMyCommunity(recipeId);
-                /*
+                */
+
                 ////풀레시피 만들기
-                List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
+                /*List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
 
                 //한 단계에 몇개의 재료인지에 따라 반복
-                specIngredientList.add(Mapper.createIngredient("양파", 2.0));
-                specIngredientList.add(Mapper.createIngredient("감자", 2.0));
+                List<String> recipe_list = Mapper.searchMyCommunity().getMyRecipes();
+                String recipe_id = recipe_list.get(0);
+                //Log.d("2", "레시피 아이디 " + Mapper.searchRecipe(recipe_id).getIngredient().get(0).getIngredientName());
+
+                specIngredientList.add(Mapper.searchRecipe(recipe_id).getIngredient().get(0));
+                specIngredientList.add(Mapper.searchRecipe(recipe_id).getIngredient().get(1));
 
                 //위에서 만든 재료들이랑 방법, 불세기, 시간 넣어서 만듦
                 //마찬가지로 단계가 몇 개인지에 따라 반복
@@ -124,14 +134,20 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 specList.add(spec1);
 
                 //단계 다 끝나면 풀레시피 만듦
-                Mapper.createFullRecipe("", "감자볶음", specList);
+                Mapper.createFullRecipe(recipe_id, "감자볶음", specList);
+                */
 
                 ////게시글 작성
-                Mapper.createPost("까까의 감자볶음","");
+                /*List<String> recipe_list2 = Mapper.searchMyCommunity().getMyRecipes();
+                String recipe_id2 = recipe_list2.get(0);
+                if(Mapper.searchRecipe(recipe_id2).getDetail() != null)
+                    Mapper.createPost("까까의 감자볶음",recipe_id2);
+                */
 
                 ////댓글 작성
-               // Mapper.createComment("","kayoung1429","맛있겠다!");
-               */
+                /*String post_id = Mapper.searchPost("볶음밥").get(0).getPostId();
+                Mapper.createComment(post_id,"맛있겠다!");
+                */
 
                 Toast.makeText(getApplicationContext(), "반찬", Toast.LENGTH_LONG).show();
             }

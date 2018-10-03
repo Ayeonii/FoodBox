@@ -66,13 +66,12 @@ public final class Mapper {
 
     }
 
-    public static RecipeDO.Ingredient createIngredient(String name, Double count)
+    public static RecipeDO.Ingredient createIngredient(InfoDO item, Double count)
     {
         RecipeDO.Ingredient ingredient = new RecipeDO.Ingredient();
-        ingredient.setIngredientName(name);
+        ingredient.setIngredientName(item.getName());
         ingredient.setIngredientCount(count);
         return ingredient;
-
     }
 
     public static RecipeDO.Spec createSpec(List<RecipeDO.Ingredient> ingredient, String method, String fire, Integer minute)
@@ -126,11 +125,40 @@ public final class Mapper {
         return recipeItem.getRecipeId();
     }
 
+    public static RecipeDO searchRecipe(String recipeId) {
+
+        final String recipe_id = recipeId;
+        returnThread thread = new returnThread(new CustomRunnable() {
+
+            com.example.dldke.foodbox.RecipeDO recipeItem;
+            @Override
+            public void run() {
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.RecipeDO.class,
+                        recipe_id);
+            }
+
+            @Override
+            public Object getResult(){
+                return recipeItem;
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        com.example.dldke.foodbox.RecipeDO recipeItem = (RecipeDO) thread.getResult();
+
+        return recipeItem;
+    }
+
     public static void createFullRecipe(String recipeId, String name, List<RecipeDO.Spec> spec)
     {
         final String ID = recipeId;
         final String recipe_name = name;
-        final List<RecipeDO.Spec> specList = spec;
+        final List<RecipeDO.Spec> rspecList = spec;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -143,9 +171,9 @@ public final class Mapper {
                 detail.setFoodName(recipe_name);
 
                 List<RecipeDO.Spec> specList = detail.getSpecList();
-                for(int i = 0; i < specList.size(); i++)
+                for(int i = 0; i < rspecList.size(); i++)
                 {
-                    specList.add(specList.get(i));
+                    specList.add(rspecList.get(i));
                 }
                 detail.setSpecList(specList);
 
@@ -489,6 +517,63 @@ public final class Mapper {
             e.printStackTrace();
         }
     }
+
+    public static MyCommunityDO searchMyCommunity() {
+        returnThread thread = new returnThread(new CustomRunnable() {
+
+            com.example.dldke.foodbox.MyCommunityDO community;
+            @Override
+            public void run() {
+                community = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.MyCommunityDO.class,
+                        userId);
+            }
+
+            @Override
+            public Object getResult(){
+                return community;
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        MyCommunityDO commuItem = (MyCommunityDO)thread.getResult();
+
+        return commuItem;
+    }
+
+    public static List<PostDO> searchPost(String title) {
+        final String postTitle = title;
+        returnThread thread = new returnThread(new CustomRunnable() {
+
+            List<PostDO> post;
+            @Override
+            public void run() {
+                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(postTitle));
+                scanExpression.addFilterCondition("title", condition);
+                post = Mapper.getDynamoDBMapper().scan(PostDO.class, scanExpression);
+            }
+
+            @Override
+            public Object getResult(){
+                return post;
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<PostDO> postItem = (List<PostDO>)thread.getResult();
+
+        return postItem;
+    }
+
     public static void addRecipeInMyCommunity(final String recipeId) {
 
         Thread thread = new Thread(new Runnable() {
