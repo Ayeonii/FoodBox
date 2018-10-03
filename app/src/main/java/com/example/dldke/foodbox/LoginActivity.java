@@ -79,5 +79,6 @@ public class LoginActivity extends AppCompatActivity {
         SignInUI signinUI = (SignInUI) AWSMobileClient.getInstance().getClient(LoginActivity.this, SignInUI.class);
         signinUI.login(LoginActivity.this, RefrigeratorMainActivity.class).authUIConfiguration(config).execute();
         Mapper.setDynamoDBMapper();
+        Mapper.setUserId(LoginActivity.this);
     }
 }

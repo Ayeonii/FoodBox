@@ -7,6 +7,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRan
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,8 +16,8 @@ import java.util.Set;
 
 public class MyCommunityDO {
     private String _userId;
-    private List<String> _favorites;
-    private List<String> _myRecipes;
+    private List<String> _favorites = new ArrayList<String>();
+    private List<String> _myRecipes = new ArrayList<String>();
 
     @DynamoDBHashKey(attributeName = "userId")
     @DynamoDBAttribute(attributeName = "userId")

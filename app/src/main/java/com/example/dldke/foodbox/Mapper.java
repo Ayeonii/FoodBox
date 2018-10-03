@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,6 +12,8 @@ import com.amazonaws.mobile.client.AWSStartupHandler;
 import com.amazonaws.mobile.client.AWSStartupResult;
 import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
 import com.amazonaws.mobileconnectors.apigateway.ApiResponse;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapperConfig;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
@@ -20,6 +23,10 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.util.IOUtils;
 import com.amazonaws.util.StringUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -31,7 +38,7 @@ import java.util.Map;
 public final class Mapper {
 
     private static DynamoDBMapper dynamoDBMapper;
-
+    private static String userId;
     private Mapper(){
     }
 
@@ -47,6 +54,15 @@ public final class Mapper {
                     .awsConfiguration(
                             AWSMobileClient.getInstance().getConfiguration())
                     .build();
+
+    }
+    public static void setUserId(Context context){
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(AWSMobileClient.getInstance().getConfiguration().toString());
+        PoolConfig poolConfig= new Gson().fromJson(element.getAsJsonObject().get("CognitoUserPool"), PoolConfig.class);
+        CognitoUserPool cognitoUserPool = new CognitoUserPool(context,poolConfig.config.poolId,poolConfig.config.clientId,poolConfig.config.clientSecret);
+        CognitoUser user = cognitoUserPool.getCurrentUser();
+        userId = user.getUserId();
 
     }
 
@@ -77,14 +93,14 @@ public final class Mapper {
     }
 
 
-    public static void createRecipe(List<RecipeDO.Ingredient> ingredient) {
+    public static String createRecipe(List<RecipeDO.Ingredient> ingredient) {
         final com.example.dldke.foodbox.RecipeDO recipeItem = new com.example.dldke.foodbox.RecipeDO();
 
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a");
         String dateS = sdf.format(date).toString();
 
-        recipeItem.setRecipeId("test1" + dateS);
+        recipeItem.setRecipeId(userId + dateS);
         recipeItem.setDate(dateS);
 
         List<RecipeDO.Ingredient> tmpIngredientList = recipeItem.getIngredient();
@@ -107,6 +123,7 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
+        return recipeItem.getRecipeId();
     }
 
     public static void createFullRecipe(String recipeId, String name, List<RecipeDO.Spec> spec)
@@ -160,9 +177,9 @@ public final class Mapper {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a");
                 String dateS = sdf.format(date).toString();
 
-                postItem.setPostId("kitawo" + dateS);
+                postItem.setPostId(userId + dateS);
                 postItem.setDate(dateS);
-                postItem.setWriter("kitawo324");
+                postItem.setWriter(userId);
                 postItem.setTitle(post_title);
                 postItem.setRecipeId(ID);
 
@@ -177,9 +194,8 @@ public final class Mapper {
         }
     }
 
-    public static void createComment(String postId, String userId, String content) {
+    public static void createComment(String postId, String content) {
         final String postID = postId;
-        final String userID = userId;
         final String text = content;
 
 
@@ -196,7 +212,7 @@ public final class Mapper {
 
                 PostDO.Comment comment1 = new PostDO.Comment();
                 comment1.setDate(dateS);
-                comment1.setUserId(userID);
+                comment1.setUserId(userId);
                 comment1.setContent(text);
                 List<PostDO.Comment> commentList = postItem.getCommentList();
                 commentList.add(comment1);
@@ -243,8 +259,7 @@ public final class Mapper {
         return itemList;
     }
 
-    public static List<RefrigeratorDO.Item> scanRefri(String userId) {
-        final String ID = userId;
+    public static List<RefrigeratorDO.Item> scanRefri() {
 
         returnThread thread = new returnThread(new CustomRunnable() {
             com.example.dldke.foodbox.RefrigeratorDO Refri;
@@ -252,7 +267,7 @@ public final class Mapper {
             public void run() {
                 Refri = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.RefrigeratorDO.class,
-                        ID);
+                        userId);
             }
             @Override
             public Object getResult(){
@@ -301,8 +316,7 @@ public final class Mapper {
         return foodItem;
     }
 
-    public static void updateDueDate(String userId, String name, Integer dueDate) {
-        final String ID = userId;
+    public static void updateDueDate(String name, Integer dueDate) {
         final String itemName = name;
         final Integer newDueDate = dueDate;
 
@@ -311,7 +325,7 @@ public final class Mapper {
             public void run() {
                 final com.example.dldke.foodbox.RefrigeratorDO foodItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.RefrigeratorDO.class,
-                        ID);
+                        userId);
                 for(int i = 0; i < foodItem.getItem().size(); i++)
                 {
                     if(foodItem.getItem().get(i).getName().equals(itemName)) {
@@ -331,9 +345,8 @@ public final class Mapper {
         }
     }
 
-    public static void updateCount(String userId, String name, Integer count)
+    public static void updateCount(String name, Integer count)
     {
-        final String ID = userId;
         final String itemName = name;
         final Integer minus = count;
         Thread thread = new Thread(new Runnable() {
@@ -342,7 +355,7 @@ public final class Mapper {
 
                 final com.example.dldke.foodbox.RefrigeratorDO foodItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.RefrigeratorDO.class,
-                        ID);
+                        userId);
 
                 double count = 0;
                 int index = 0;
@@ -372,9 +385,7 @@ public final class Mapper {
         }
     }
 
-    public static void deleteFood(String userId, String name) {
-
-        final String ID = userId;
+    public static void deleteFood(String name) {
         final String itemName = name;
 
         Thread thread = new Thread(new Runnable() {
@@ -382,7 +393,7 @@ public final class Mapper {
             public void run() {
                 final com.example.dldke.foodbox.RefrigeratorDO foodItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.RefrigeratorDO.class,
-                        ID);
+                        userId);
                 int index = 0;
                 for(int i = 0; i < foodItem.getItem().size(); i++)
                 {
@@ -402,7 +413,7 @@ public final class Mapper {
         }
     }
 
-    public static void createRefrigerator(String userId) {
+    public static void createRefrigerator() {
         final com.example.dldke.foodbox.RefrigeratorDO refrigeratorItem = new com.example.dldke.foodbox.RefrigeratorDO();
 
         refrigeratorItem.setUserId(userId);
@@ -433,8 +444,7 @@ public final class Mapper {
         return food;
     }
 
-    public static void putFood(String userId, List<RefrigeratorDO.Item> foods) {
-        final String ID = userId;
+    public static void putFood(List<RefrigeratorDO.Item> foods) {
         final List<RefrigeratorDO.Item> foods_list = foods;
 
         Thread thread = new Thread(new Runnable() {
@@ -442,7 +452,7 @@ public final class Mapper {
             public void run() {
                 final com.example.dldke.foodbox.RefrigeratorDO refrigeratorItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.RefrigeratorDO.class,
-                        ID);
+                        userId);
 
                 List<RefrigeratorDO.Item> r_item = refrigeratorItem.getItem();
                 for(int i = 0; i < foods_list.size(); i++)
@@ -458,6 +468,70 @@ public final class Mapper {
             thread.join();
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public static void createMyCommunity() {
+        final com.example.dldke.foodbox.MyCommunityDO myCommunityDO = new com.example.dldke.foodbox.MyCommunityDO();
+
+        myCommunityDO.setUserId(userId);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Mapper.getDynamoDBMapper().save(myCommunityDO);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static void addRecipeInMyCommunity(final String recipeId) {
+
+        Thread thread = new Thread(new Runnable() {
+            com.example.dldke.foodbox.MyCommunityDO myCommunityDO;
+
+            @Override
+            public void run() {
+                myCommunityDO = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.MyCommunityDO.class,
+                        userId);
+                List<String> tmpList = myCommunityDO.getMyRecipes();
+                tmpList.add(recipeId);
+                myCommunityDO.setMyRecipes(tmpList);
+                Mapper.getDynamoDBMapper().save(myCommunityDO);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private class PoolConfig{
+        @SerializedName("Default")
+        public Config config;
+
+        class Config{
+            @SerializedName("PoolId")
+            public String poolId;
+
+            @SerializedName("AppClientId")
+            public String clientId;
+
+            @SerializedName("AppClientSecret")
+            public String clientSecret;
+
+            @SerializedName("Region")
+            public String region;
+
         }
     }
 }

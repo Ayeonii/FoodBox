@@ -55,7 +55,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 ////신선칸 재료 보여주기
-               /* List<InfoDO> itemList = Mapper.scanInfo( "fresh");
+                /*List<InfoDO> itemList = Mapper.scanInfo( "fresh");
                 for(int i = 0; i < itemList.size(); i++)
                 {
                     Log.d("2", String.format("Refri Item: %s", itemList.get(i).getName()));
@@ -66,36 +66,37 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
 
 
                 ////내 냉장고에 재료 집어넣기
-                //List<RefrigeratorDO.Item> foodItem = new ArrayList<>();
+                /*
+                List<RefrigeratorDO.Item> foodItem = new ArrayList<>();
 
                 //사용자 입력 몇 개 받는지에 따라 반복
-                //InfoDO potato = Mapper.searchFood("감자");
-                //InfoDO onion = Mapper.searchFood("양파");
+                InfoDO potato = Mapper.searchFood("감자");
+                InfoDO onion = Mapper.searchFood("양파");
 
-                //foodItem.add(Mapper.createFood(potato, 2.0));
-                //foodItem.add(Mapper.createFood(onion, 2.0));
+                foodItem.add(Mapper.createFood(potato, 2.0));
+                foodItem.add(Mapper.createFood(onion, 2.0));
 
                 //입력 다 받았으면 집어넣음
-                //Mapper.putFood("test1", foodItem);
-
+                Mapper.putFood(foodItem);
+                */
 
                 ////내 냉장고 재료 보여주기
-                /*List<RefrigeratorDO.Item> refri_item = Mapper.scanRefri("test1");
+                /*List<RefrigeratorDO.Item> refri_item = Mapper.scanRefri();
                 for(int i = 0; i < refri_item.size(); i++)
                 {
                     Log.d("2", String.format("Refri Item: %s", refri_item.get(i).getName()));
                 }
                 */
                 //내 냉장고 재료 유통기한 변경
-                //Mapper.updateDueDate("test1", "감자", 2);
+                //Mapper.updateDueDate("감자", 2);
 
                 //내 냉장고 재료 삭제
-                //Mapper.deleteFood("test1", "양파");
+                //Mapper.deleteFood( "시금치");
 
                 //내 냉장고 재료 소진
-               //Mapper.updateCount("test1", "감자", 1);
+                //Mapper.updateCount("감자", 1);
 
-               ////간이레시피 만들기
+                ////간이레시피 만들기
                 List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
 
                 //사용자 입력 몇 개 받는지에 따라 반복
@@ -103,9 +104,11 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 recipeIngredientList.add(Mapper.createIngredient("감자", 2.0));
 
                 //입력 다 받았으면 간이레시피 만듦
-                Mapper.createRecipe(recipeIngredientList);
+                String recipeId = Mapper.createRecipe(recipeIngredientList);
 
-
+                //내 커뮤니티 만들기(최초1회만)
+                //Mapper.createMyCommunity();
+                Mapper.addRecipeInMyCommunity(recipeId);
                 /*
                 ////풀레시피 만들기
                 List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
