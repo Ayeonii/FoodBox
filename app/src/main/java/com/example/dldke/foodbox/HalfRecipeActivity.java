@@ -1,19 +1,21 @@
 package com.example.dldke.foodbox;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class RefrigeratorInsideActivity extends AppCompatActivity {
+public class HalfRecipeActivity extends AppCompatActivity {
 
     private Button btnSidedish, btnEggs, btnBottles, btnMeat, btnFruit;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_refrigerator_inside);
+        setContentView(R.layout.activity_half_recipe);
 
         btnSidedish = (Button)findViewById(R.id.btn_sidedish);
         btnEggs = (Button)findViewById(R.id.btn_eggs);
