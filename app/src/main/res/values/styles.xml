@@ -9,6 +9,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="colorControlNormal">@color/colorUnderline</item>
+        <item name="colorControlActivated">@color/colorActivated</item>
+        <item name="android:textCursorDrawable">@color/colorDraw</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColorHint">@color/colorHint</item>
+    </style>
     <style name="Theme.Transparent" parent="android:Theme">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>

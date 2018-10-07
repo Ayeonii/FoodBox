@@ -267,6 +267,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     break ;
                 case R.id.fabPencil:
                     Toast.makeText(RefrigeratorMainActivity.this, "직접입력 누름", Toast.LENGTH_SHORT).show();
+                    Intent PencilActivity = new Intent(getApplicationContext(),PencilRecipeActivity.class);
+                    startActivity(PencilActivity);
+                    //다음 화면이 아래에서 올라오는 애니메이션
+                    overridePendingTransition(R.anim.bottom_to_up,R.anim.up_to_bottom);
                     break ;
                 case R.id.fabFull:
                     //Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();

@@ -24,6 +24,8 @@
         <activity android:name=".FullRecipeActivity" />
         <activity android:name=".RefrigeratorInsideActivity" />
         <activity android:name=".HalfRecipeActivity"/>
+        <activity android:name=".PencilRecipeActivity" android:windowSoftInputMode="adjustNothing"/>
+
     </application>
 
 </manifest>
