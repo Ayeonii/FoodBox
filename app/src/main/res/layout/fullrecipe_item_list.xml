@@ -8,32 +8,66 @@
 
     <TextView
         android:id="@+id/textview_recyclerview_method"
-        android:layout_width="0dp"
+        android:layout_width="254dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/background_color"
-        android:text=""
-        app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/textview_recyclerview_mintue"/>
+        android:text="첫번째"
+        app:layout_constraintEnd_toStartOf="@+id/imgview_foodimg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/textview_recyclerview_mintue"
-        android:layout_width="0dp"
+        android:layout_width="254dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/background_color"
-        android:text=""
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/textview_recyclerview_method"
-        app:layout_constraintRight_toLeftOf="@id/textview_recyclerview_fire"/>
+        android:text="두번째"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_recyclerview_method" />
+
 
     <TextView
         android:id="@+id/textview_recyclerview_fire"
-        android:layout_width="0dp"
+        android:layout_width="254dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/background_color"
-        android:text=""
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/textview_recyclerview_mintue"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:text="세번째"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgview_foodimg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_recyclerview_mintue" />
+
+
+    <ImageView
+        android:id="@+id/imgview_foodimg"
+        android:layout_width="113dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/ic_menu_gallery"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textview_recyclerview_fire"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

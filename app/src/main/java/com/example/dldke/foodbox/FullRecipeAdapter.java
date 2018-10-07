@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.lang.reflect.TypeVariable;
@@ -30,6 +32,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
         protected TextView mId;
         protected TextView mEnglish;
         protected TextView mKorean;
+        protected ImageView imgFood;
 
 
         public FullRecipeViewHolder(View view) {
@@ -38,6 +41,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
             this.mId = (TextView) view.findViewById(R.id.textview_recyclerview_method);
             this.mEnglish = (TextView) view.findViewById(R.id.textview_recyclerview_mintue);
             this.mKorean = (TextView) view.findViewById(R.id.textview_recyclerview_fire);
+            this.imgFood = (ImageView) view.findViewById(R.id.imgview_foodimg);
 
             view.setOnCreateContextMenuListener(this); //2. 리스너 등록
         }
