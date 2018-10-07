@@ -44,6 +44,7 @@ public class PencilRecipeActivity extends AppCompatActivity {
     }
 
     private void setRecyclerView(){
+        setContentView(R.layout.activity_pencil_recipe);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
@@ -59,7 +60,9 @@ public class PencilRecipeActivity extends AppCompatActivity {
 
     private void setData(){
         // 배열로 바꾼 후 db에서 불러올것
-         Img = getResources().getDrawable( R.drawable.ic_circle_food,getApplicationContext().getTheme());
+        // Img = getResources().getDrawable( R.drawable.ic_circle_food,getApplicationContext().getTheme());//sdk 22이하일 때
+        Img = getResources().getDrawable( R.drawable.ic_circle_food);//sdk 23이상일 때
+
 
 // RecyclerView 에 들어갈 데이터를 추가합니다.
         for(int i =0 ; i<food_name.length; i++){
