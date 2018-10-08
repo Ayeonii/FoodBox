@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.Activity;
 
 
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.example.dldke.foodbox.R;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {

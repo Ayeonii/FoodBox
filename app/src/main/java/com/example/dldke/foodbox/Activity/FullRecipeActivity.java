@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.Activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -13,8 +13,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.Adapter.FullRecipeAdapter;
+import com.example.dldke.foodbox.FullRecipeDictionary;
+import com.example.dldke.foodbox.R;
+
 import java.util.ArrayList;
-import java.util.Dictionary;
 
 public class FullRecipeActivity extends AppCompatActivity  {
 
