@@ -21,6 +21,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.util.IOUtils;
 import com.amazonaws.util.StringUtils;
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,6 +41,7 @@ public final class Mapper {
 
     private static DynamoDBMapper dynamoDBMapper;
     private static String userId;
+    private static String bucketName;
     private Mapper(){
     }
 
@@ -51,8 +54,8 @@ public final class Mapper {
         AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(AWSMobileClient.getInstance().getCredentialsProvider());
             dynamoDBMapper = DynamoDBMapper.builder()
                     .dynamoDBClient(dynamoDBClient)
-                    .awsConfiguration(
-                            AWSMobileClient.getInstance().getConfiguration())
+                    .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                    .awsCredentialsProviderForS3(AWSMobileClient.getInstance().getCredentialsProvider())
                     .build();
 
     }
@@ -64,6 +67,12 @@ public final class Mapper {
         CognitoUser user = cognitoUserPool.getCurrentUser();
         userId = user.getUserId();
 
+    }
+
+    public static void setBucketName(Context context){
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(AWSMobileClient.getInstance().getConfiguration().toString());
+        bucketName = element.getAsJsonObject().get("S3TransferUtility").getAsJsonObject().get("Default").getAsJsonObject().get("Bucket").getAsString();
     }
 
     public static RecipeDO.Ingredient createIngredient(InfoDO item, Double count)
@@ -187,6 +196,34 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public static void attachRecipeImage(String recipeId, final String filePath){
+        final String recipe_id = recipeId;
+        final String[] key = filePath.split("/");
+        Thread thread = new Thread(new Runnable() {
+
+            com.example.dldke.foodbox.RecipeDO recipeItem;
+            @Override
+            public void run() {
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.RecipeDO.class,
+                        recipe_id);
+                Log.d("why",Mapper.bucketName);
+                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.US_Standard,Mapper.bucketName,"kitawo324/test" + key[key.length-1]));
+                recipeItem.getRecipeImage().uploadFrom(new File(filePath));
+                Mapper.getDynamoDBMapper().save(recipeItem);
+
+            }
+
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public static void createPost(String title, String recipeId) {

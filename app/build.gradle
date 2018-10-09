@@ -47,5 +47,8 @@ dependencies {
 
     implementation 'com.amazonaws:aws-android-sdk-apigateway-core:2.7.+'
 
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.7.+'
+    implementation 'com.amazonaws:aws-android-sdk-cognito:2.7.+'
+
 
 }

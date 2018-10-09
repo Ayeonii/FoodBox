@@ -7,6 +7,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHas
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.S3Link;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,15 @@ public class RecipeDO {
     private String _date;
     private Detail _detail;
     private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
+    private S3Link recipeImage;
 
+    public S3Link getRecipeImage() {
+        return recipeImage;
+    }
+
+    public void setRecipeImage(S3Link recipeImage) {
+        this.recipeImage = recipeImage;
+    }
 
     @DynamoDBHashKey(attributeName = "recipeId")
     @DynamoDBAttribute(attributeName = "recipeId")

@@ -80,5 +80,6 @@ public class LoginActivity extends AppCompatActivity {
         signinUI.login(LoginActivity.this, RefrigeratorMainActivity.class).authUIConfiguration(config).execute();
         Mapper.setDynamoDBMapper();
         Mapper.setUserId(LoginActivity.this);
+        Mapper.setBucketName(LoginActivity.this);
     }
 }
