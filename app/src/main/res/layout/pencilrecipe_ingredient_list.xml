@@ -23,9 +23,10 @@
 
     <TextView
         android:id="@+id/foodText"
-        android:layout_width="46dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/foodImg"
         android:layout_centerHorizontal="true"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textSize="13sp" />
 </RelativeLayout>

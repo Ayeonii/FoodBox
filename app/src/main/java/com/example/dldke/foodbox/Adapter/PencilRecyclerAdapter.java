@@ -35,8 +35,13 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
         // View 의 내용을 해당 포지션의 데이터로 바꿉니다.
         @Override
         public void onBindViewHolder(ItemViewHolder holder, int position) {
+
             holder.food_name.setText(mItems.get(position).getFoodName());
             holder.food_img.setImageDrawable(mItems.get(position).getFoodImg());
+            if(mItems.get(position).getFoodName().length()>6)
+            {
+                holder.food_name.setTextSize(12);
+            }
         }
 
         // 데이터 셋의 크기를 리턴해줍니다.

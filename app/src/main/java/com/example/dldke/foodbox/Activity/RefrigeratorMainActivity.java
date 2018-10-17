@@ -181,7 +181,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     }
 
     /******************메뉴버튼 애니메이션 리스너***************/
-     class SlidingPageAnimationListener implements Animation.AnimationListener {
+    class SlidingPageAnimationListener implements Animation.AnimationListener {
         @Override
         public void onAnimationEnd(Animation animation) {
             //슬라이드 열기->닫기
@@ -223,7 +223,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                         fabCamera.startAnimation(LayHide);
                         fabPencil.startAnimation(LayHide);
                         fabPlus.startAnimation(HidePlus);
-                        //fabMinus.setElevation(10);
+                        fabMinus.setElevation(10);
 
                     }
                     //닫혀있으면 열고 여러 이벤트
@@ -235,7 +235,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                         fabCamera.startAnimation(LayShow);
                         fabPencil.startAnimation(LayShow);
                         fabPlus.startAnimation(ShowPlus);
-                        //fabMinus.setElevation(0);
+                        fabMinus.setElevation(0);
                     }
                     break ;
 
@@ -249,7 +249,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                         fabFull.startAnimation(LayHide);
                         fabMini.startAnimation(LayHide);
                         fabMinus.startAnimation(HideMinus);
-                        //fabPlus.setElevation(10);
+                        fabPlus.setElevation(10);
                     }
                     //닫혀있으면 열기
                     else  {
@@ -259,7 +259,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                         fabFull.startAnimation(LayShow);
                         fabMini.startAnimation(LayShow);
                         fabMinus.startAnimation(ShowMinus);
-                        //fabPlus.setElevation(0);
+                        fabPlus.setElevation(0);
                     }
                     break ;
 
@@ -299,7 +299,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.startAnimation(leftAnim);
                     menuPage.setVisibility(View.VISIBLE);
                     listview.setVisibility(View.VISIBLE);
-                   //fabPlus.setElevation(0);
+                    //fabPlus.setElevation(0);
                     //fabMinus.setElevation(0);
                     menuTransBack.setVisibility(View.VISIBLE);
                     break ;
@@ -335,7 +335,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             //fabPlus.setElevation(10);
         }
         else
-        menuPage.startAnimation(rightAnim);
+            menuPage.startAnimation(rightAnim);
 
 
     }
