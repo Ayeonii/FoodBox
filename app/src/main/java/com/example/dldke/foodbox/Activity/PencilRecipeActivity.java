@@ -51,8 +51,6 @@ public class PencilRecipeActivity extends AppCompatActivity {
 
     static public FrameLayout frag;
 
-    String searchText ;
-    PencilRecyclerAdapter adapter;
     ViewPager vp;
     ImageButton deleteButton;
     EditText searchBar;
@@ -67,6 +65,7 @@ public class PencilRecipeActivity extends AppCompatActivity {
 
         transaction = getSupportFragmentManager().beginTransaction();
 
+
         tabLayout = (TabLayout)findViewById(R.id.sliding_tabs);
         searchBar = (EditText)findViewById(R.id.searchBar);
         deleteButton = (ImageButton)findViewById(R.id.delete_button);
@@ -74,12 +73,17 @@ public class PencilRecipeActivity extends AppCompatActivity {
 
 
         vp = (ViewPager)findViewById(R.id.pager);
+        vp.setAdapter(new PencilPagerAdapter(getSupportFragmentManager()));
+        vp.setCurrentItem(0);
 
         //탭 레이아웃과 뷰페이저 연결
         tabLayout.setupWithViewPager(vp);
 
-        vp.setAdapter(new PencilPagerAdapter(getSupportFragmentManager()));
-        vp.setCurrentItem(0);
+
+        SearchIngredientFragment SearchFragment = new SearchIngredientFragment();
+        transaction.replace(R.id.child_fragment_container, SearchFragment);
+        transaction.commit();
+        frag.setVisibility(View.GONE);
 
 
 
@@ -100,24 +104,11 @@ public class PencilRecipeActivity extends AppCompatActivity {
                 String text;
 
                 text = searchBar.getText().toString();
-                SearchIngredientFragment SearchFragment = new SearchIngredientFragment();
-                transaction.replace(R.id.child_fragment_container, SearchFragment);
-                // transaction.commit();
-                frag.setVisibility(View.GONE);
-
-
-
                 if(text.length() == 0)
-                {
-                    Log.e("1", "문자입력 없음");
                     frag.setVisibility(View.GONE);
 
-                }
                 else
-                {
-                    Log.e("1", "문자입력 시작");
                     frag.setVisibility(View.VISIBLE);
-                }
 
                 SearchIngredientFragment.search(text);
 
@@ -132,14 +123,8 @@ public class PencilRecipeActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //텍스트가 없으면 이전 화면으로 간다. 추후 수정 가능성 있음.
-                if (searchBar.getText().length() == 0) {
-                    Intent refMain = new Intent(PencilRecipeActivity.this, RefrigeratorMainActivity.class);
-                    refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    PencilRecipeActivity.this.startActivity(refMain);
-                }
                 //텍스트가 존재 시, 모두 지운다.
-                else {
+                if (searchBar.getText().length() != 0) {
                     searchBar.setHint(" 재료명을 입력하세요.");
                     searchBar.setText(null);
                 }

@@ -26,28 +26,31 @@ import static com.example.dldke.foodbox.Fragments.AllFoodListFragment.*;
 public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
 
+    private static final char HANGUL_BEGIN_UNICODE = 44032; // 가
+    private static final char HANGUL_LAST_UNICODE = 55203; // 힣
+    private static final char HANGUL_BASE_UNIT = 588;//각 자음 마다 가지는 글자수
+    //자음
+    private static final char[] INITIAL_SOUND = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
+
 
     static ArrayList<PencilItem> list = new ArrayList<>();
 
     static RecyclerView.Adapter adapter;
     static ArrayList<String> foodlist = new ArrayList<String>() ;
-    static List<String> foodArray;
     static String searchText;
     static RecyclerView recyclerView;
+
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+
+
         View view = inflater.inflate(R.layout.fragment_search_ingredients, container, false);
-        foodlist.addAll(allfoodList);
 
-        for(int i =0 ; i<foodlist.size(); i++)
-        {
-            Log.e("index:"+i,"내용:"+foodlist.get(i));
-        }
 
-        searchText = "";
         Context context = view.getContext();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.searchRecycler);
@@ -66,46 +69,108 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     }
 
 
-
     /********************Searching method *****************************/
     static public void search(String charText) {
-
-
-        // 문자 입력시마다 리스트를 지우고 새로 뿌려줌.
+        // 문자 입력시마다 리스트를 지우고 새로 뿌려주기 위함.
         list.clear();
-
         searchText = charText;
-        // 문자 입력이 없을때는 모든 데이터를 보여줌.
-        if (charText.length() == 0) {
-            Log.e("문자입력 없음2", "문자입력 없음");
 
+        // 문자 입력이 없을때
+        if (charText.length() == 0) {
         }
         // 문자 입력을 할때.
         else {
-
-            Log.e("문자입력 할때 ", ""+charText);
             // 리스트의 모든 데이터를 검색함.
-            for (int i = 0; i < foodlist.size(); i++) {
-
-                //입력단어 수가 리스트단어 수보다 많으면 substring에서 에러발생 일어나기 때문에 필터링.
-                if (foodlist.get(i).length() >= charText.length()) {
-
-                    // arraylist의 모든 데이터에 입력받은 단어(charText)가 맨 앞에서부터 포함되어 있으면 true를 반환함.
-                    //substring으로 입력단어만큼 잘라주지 않으면, 단어가 중간이나 맨 뒤에 포함되어 있어도 필터링이 되지 않음.
-                    if (foodlist.get(i).toLowerCase().substring(0, charText.length()).equals(charText) || foodlist.get(i).toUpperCase().substring(0, charText.length()).equals(charText)) {
-
-                        //Img = getResources().getDrawable( R.drawable.ic_circle_food);//sdk 22이하일 때
+            for (int i = 0; i < allfoodList.size(); i++) {
+                    if (matchString(allfoodList.get(i),charText)) {
                         //검색된 데이터 리스트에 추가
-                        list.add(new PencilItem(foodlist.get(i),AllFoodListFragment.Img));
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-
+                        list.add(new PencilItem(allfoodList.get(i),AllFoodListFragment.Img));
                     }
-                }
             }
         }
-
-        // 리스트 데이터가 변경되었으므로 어댑터를 갱신하여 검색된 데이터를 화면에 보여준다.
+        // 리스트 데이터가 변경되었으므로 어댑터 갱신.
         adapter.notifyDataSetChanged();
     }
+
+    /**초성인지 검사**/
+    private static boolean isInitialSound(char searchar){
+        for(char c:INITIAL_SOUND){
+            if(c == searchar){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**해당 문자의 자음 얻기**/
+    private static char getInitialSound(char c) {
+        int hanBegin = (c - HANGUL_BEGIN_UNICODE);
+        int index = hanBegin / HANGUL_BASE_UNIT;
+        return INITIAL_SOUND[index];
+    }
+
+
+    /** 해당 문자가 한글인지 검사**/
+    private static boolean isHangul(char c) {
+        return HANGUL_BEGIN_UNICODE <= c && c <= HANGUL_LAST_UNICODE;
+    }
+
+
+    /**초성 검색**/
+    public static boolean matchString(String value, String search){
+        int t = 0;
+        int seof = value.length() - search.length();
+        int slen = search.length();
+        if(seof < 0)
+            return false; //검색어가 더 길면 false를 리턴.
+        for(int i = 0;i <= seof;i++){
+            t = 0;
+            while(t < slen){
+                if(isInitialSound(search.charAt(t))==true && isHangul(value.charAt(i+t))){
+                    //만약 현재 char이 초성이고 value가 한글이면
+                    if(getInitialSound(value.charAt(i+t))==search.charAt(t))
+                        //각각의 초성끼리 같은지 비교한다
+                        t++;
+                    else
+                        break;
+
+                }
+
+                /*
+                else if(isInitialSound(search.charAt(t))==false && isHangul(value.charAt(i+t))){
+
+                    if(getInitialSound(value.charAt(i+t))==search.charAt(t))
+                        //각각의 초성끼리 같은지 비교한다  ex> 검색어: 가  검색대상: 갈
+                        t++;
+                    else
+                    {
+                        if(value.charAt(i+t)==search.charAt(t))
+                            //그냥 같은지 비교한다.
+                            t++;
+                        else
+                            break;
+                    }
+
+
+                }*/
+                else {
+                    //char이 초성이 아니라면
+                    if(value.charAt(i+t)==search.charAt(t))
+                        //그냥 같은지 비교한다.
+                        t++;
+                    else
+                        break;
+
+                }
+
+            }
+            if(t == slen)
+                return true; //모두 일치한 결과를 찾으면 true를 리턴한다.
+        }
+        return false; //일치하는 것을 찾지 못했으면 false를 리턴한다.
+    }
+
 
 }
