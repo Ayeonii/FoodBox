@@ -13,7 +13,6 @@
         android:layout_height="50dp"
         android:layout_marginEnd="68dp"
         android:layout_marginStart="8dp"
-        android:backgroud="?attr/actionModeCloseDrawable"
         android:background="?attr/actionModeCloseDrawable"
         app:layout_constraintEnd_toStartOf="@+id/fullrecipe_title"
         app:layout_constraintStart_toStartOf="parent" />
