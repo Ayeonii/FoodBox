@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.Activity;
 
 
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.example.dldke.foodbox.R;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
@@ -179,13 +181,13 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     }
 
     /******************메뉴버튼 애니메이션 리스너***************/
-     class SlidingPageAnimationListener implements Animation.AnimationListener {
+    class SlidingPageAnimationListener implements Animation.AnimationListener {
         @Override
         public void onAnimationEnd(Animation animation) {
             //슬라이드 열기->닫기
             if(isPageOpen){
-                fabPlus.setElevation(10);
-                fabMinus.setElevation(10);
+                //fabPlus.setElevation(10);
+                //fabMinus.setElevation(10);
                 menuTransBack.setVisibility(View.GONE);
                 menuPage.setVisibility(View.GONE);
                 listview.setVisibility(View.GONE);
@@ -297,8 +299,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.startAnimation(leftAnim);
                     menuPage.setVisibility(View.VISIBLE);
                     listview.setVisibility(View.VISIBLE);
-                    fabPlus.setElevation(0);
-                    fabMinus.setElevation(0);
+                    //fabPlus.setElevation(0);
+                    //fabMinus.setElevation(0);
                     menuTransBack.setVisibility(View.VISIBLE);
                     break ;
                 case R.id.transparentBack:
@@ -321,7 +323,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             fabCamera.startAnimation(LayHide);
             fabPencil.startAnimation(LayHide);
             fabPlus.startAnimation(HidePlus);
-            fabMinus.setElevation(10);
+            //fabMinus.setElevation(10);
         }
         if (minusBack.getVisibility() == View.VISIBLE ) {
             minusBack.setVisibility(View.GONE);
@@ -330,10 +332,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             fabFull.startAnimation(LayHide);
             fabMini.startAnimation(LayHide);
             fabMinus.startAnimation(HideMinus);
-            fabPlus.setElevation(10);
+            //fabPlus.setElevation(10);
         }
         else
-        menuPage.startAnimation(rightAnim);
+            menuPage.startAnimation(rightAnim);
 
 
     }
