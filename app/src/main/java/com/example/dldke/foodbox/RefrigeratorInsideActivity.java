@@ -159,10 +159,17 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
                 /*String post_id = Mapper.searchPost("볶음밥").get(0).getPostId();
                 Mapper.createComment(post_id,"맛있겠다!");
                 */
-                List<String> recipe_list = Mapper.searchMyCommunity().getMyRecipes();
-                String recipe_id = recipe_list.get(0);
+                //List<String> recipe_list = Mapper.searchMyCommunity().getMyRecipes();
+                //String recipe_id = recipe_list.get(0);
+                //Mapper.attachRecipeImage(recipe_id,"/storage/emulated/0/Download/test.jpg");
+                List<InfoDO> itemList = Mapper.scanInfo( "fresh");
+                for(int i = 0; i < itemList.size(); i++)
+                {
+                    Mapper.uploadImage(itemList.get(i).getName(),"/storage/emulated/0/Download/test.jpg");
+                    Log.d("2", String.format("Refri Item: %s", itemList.get(i).getName()));
+                }
 
-                Mapper.attachRecipeImage(recipe_id,"/storage/emulated/0/Download/test.jpg");
+
                 Toast.makeText(getApplicationContext(), "반찬", Toast.LENGTH_LONG).show();
 
             }
