@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,9 @@ import com.amazonaws.mobile.client.AWSMobileClient;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
+
+import static com.example.dldke.foodbox.Activity.MainActivity.*;
+import static com.example.dldke.foodbox.Activity.MainActivity.pw;
 
 public class LoginActivity extends AppCompatActivity {
     Button ok_btn;
@@ -46,12 +50,11 @@ public class LoginActivity extends AppCompatActivity {
                 showSignIn();
             }
         });
-
-        showSignIn();
-
         ok_btn = (Button)findViewById(R.id.login_button);
         id_edittext = (EditText)findViewById(R.id.edittext_id);
         pw_edittext = (EditText)findViewById(R.id.edittext_pw);
+
+        showSignIn();
 
         ok_btn.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
@@ -71,12 +74,14 @@ public class LoginActivity extends AppCompatActivity {
                 new AuthUIConfiguration.Builder()
                         .userPools(true)  // true? show the Email and Password UI
                         .signInButton(GoogleButton.class) // Show Google button
-                        .backgroundColor(Color.BLUE) // Change the backgroundColor
+                        .backgroundColor(Color.WHITE) // Change the backgroundColor
+                        .logoResId(R.drawable.splash_background)
                         .isBackgroundColorFullScreen(true) // Full screen backgroundColor the backgroundColor full screenff
                         .fontFamily("sans-serif-light") // Apply sans-serif-light as the global font
                         .canCancel(true)
                         .build();
-        SignInUI signinUI = (SignInUI) AWSMobileClient.getInstance().getClient(LoginActivity.this, SignInUI.class);
+        SignInUI signinUI = (SignInUI) AWSMobileClient.getInstance()
+                                                      .getClient(LoginActivity.this, SignInUI.class);
         signinUI.login(LoginActivity.this, RefrigeratorMainActivity.class).authUIConfiguration(config).execute();
         Mapper.setDynamoDBMapper();
         Mapper.setUserId(LoginActivity.this);

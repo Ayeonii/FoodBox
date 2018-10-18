@@ -9,69 +9,38 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
-import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MeatListFragment extends  android.support.v4.app.Fragment  {
+
+public class CartPopupFragment extends  android.support.v4.app.Fragment {
     private Drawable Img;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
+
     private ArrayList<PencilItem> list = new ArrayList<>();
-
-
-    List<String> foodName = new ArrayList<>();
-
-
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_meat_ingredients, container, false);
+        View view = inflater.inflate(R.layout.fragment_cart_popup, container, false);
+        Context context = view.getContext();
 
-        List<InfoDO> freshList = getInfoDOList("meat");
+        recyclerView = (RecyclerView) view.findViewById(R.id.cartRecycler);
+        recyclerView.setHasFixedSize(true);
 
-            makeFoodList(freshList);
-
-
-            Context context = view.getContext();
-
-            recyclerView = (RecyclerView) view.findViewById(R.id.meatRecycler);
-            recyclerView.setHasFixedSize(true);
-
-            // use a linear layout manager
-            adapter = new PencilRecyclerAdapter(list);
-            recyclerView.setLayoutManager(new GridLayoutManager(context,5));
-            recyclerView.setAdapter(adapter);
-
-            Log.e("Frag", "meat");
-
-            setData();
-
-
-
-
+        //어댑터 연결
+        adapter = new PencilRecyclerAdapter(list);
+        recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerView.setAdapter(adapter);
+        setData();
+        Log.e("Frag", "cart_popup");
         return view;
-    }
-
-    private List<InfoDO> getInfoDOList(String section) {
-        return Mapper.scanInfo(section);
-    }
-
-    private void makeFoodList(List<InfoDO> foodList) {
-        for(int i =0 ; i< foodList.size(); i++)
-        {
-            foodName.add(foodList.get(i).getName());
-        }
     }
 
     private void setData(){
@@ -81,10 +50,12 @@ public class MeatListFragment extends  android.support.v4.app.Fragment  {
         //Img = getResources().getDrawable( R.drawable.ic_circle_food);//sdk 22이하일 때
 
         // RecyclerView 에 들어갈 데이터를 추가한다.
-        for(String name : foodName){
+        for(String name : PencilRecyclerAdapter.clickFoodString){
             list.add(new PencilItem(name, Img));
         }
         // 데이터 추가가 완료되었으면 notifyDataSetChanged() 메서드를 호출해 데이터 변경 체크를 실행한다.
         adapter.notifyDataSetChanged();
     }
+
+
 }

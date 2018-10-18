@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -21,6 +22,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -34,6 +37,7 @@ import com.example.dldke.foodbox.Adapter.PencilPagerAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.Fragments.AllFoodListFragment;
+import com.example.dldke.foodbox.Fragments.CartPopupFragment;
 import com.example.dldke.foodbox.Fragments.SearchIngredientFragment;
 import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
@@ -46,16 +50,21 @@ import java.util.List;
 import static com.example.dldke.foodbox.Fragments.AllFoodListFragment.*;
 
 
-public class PencilRecipeActivity extends AppCompatActivity {
+public class PencilRecipeActivity extends AppCompatActivity implements View.OnClickListener{
 
 
-    static public FrameLayout frag;
+   FrameLayout frag;
 
     ViewPager vp;
-    ImageButton deleteButton;
+    ImageButton deleteButton, deletButton_cart;
     EditText searchBar;
     TabLayout tabLayout;
-    FragmentTransaction transaction;
+    RelativeLayout popup_layout;
+    RecyclerView.Adapter adapter;
+    String searchText;
+
+    FloatingActionButton floating;
+    RecyclerView popup_cart;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,30 +72,46 @@ public class PencilRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pencil_recipe);
 
 
-        transaction = getSupportFragmentManager().beginTransaction();
+        searchText = "";
 
-
-        tabLayout = (TabLayout)findViewById(R.id.sliding_tabs);
-        searchBar = (EditText)findViewById(R.id.searchBar);
-        deleteButton = (ImageButton)findViewById(R.id.delete_button);
+        tabLayout = (TabLayout)findViewById(R.id.sliding_tabs); //탭 레이아웃
+        searchBar = (EditText)findViewById(R.id.searchBar); //서치 창
+        deleteButton = (ImageButton)findViewById(R.id.delete_button); //x버튼
+        deletButton_cart =(ImageButton)findViewById(R.id.delete_cart_button);
+        floating = (FloatingActionButton)findViewById(R.id.floating); //플로팅
+        popup_layout = (RelativeLayout)findViewById(R.id.popup_layout); //카드 팝업 레이아웃
         frag = (FrameLayout)findViewById(R.id.child_fragment_container);
 
+        /**cart popup**/
+        popup_cart = (RecyclerView)findViewById(R.id.cart_recycler);
+        popup_cart.setHasFixedSize(true);
+        adapter = new PencilRecyclerAdapter(PencilRecyclerAdapter.clickFood);
+        popup_cart.setLayoutManager(new GridLayoutManager(getApplicationContext(),5));
+        popup_cart.setAdapter(adapter);
 
+
+
+
+
+
+        /**view pager**/
         vp = (ViewPager)findViewById(R.id.pager);
         vp.setAdapter(new PencilPagerAdapter(getSupportFragmentManager()));
         vp.setCurrentItem(0);
-
         //탭 레이아웃과 뷰페이저 연결
         tabLayout.setupWithViewPager(vp);
 
-
-        SearchIngredientFragment SearchFragment = new SearchIngredientFragment();
-        transaction.replace(R.id.child_fragment_container, SearchFragment);
-        transaction.commit();
+        // transaction.commit();
         frag.setVisibility(View.GONE);
 
+        searchBar.setOnClickListener(this);
+        popup_layout.setOnClickListener(this);
+        floating.setOnClickListener(this);
+        deletButton_cart.setOnClickListener(this);
 
 
+
+        /****************search bar input *****************************/
         searchBar.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -104,18 +129,16 @@ public class PencilRecipeActivity extends AppCompatActivity {
                 String text;
 
                 text = searchBar.getText().toString();
+
+
                 if(text.length() == 0)
                     frag.setVisibility(View.GONE);
-
                 else
                     frag.setVisibility(View.VISIBLE);
-
                 SearchIngredientFragment.search(text);
 
             }
         });
-
-
 
 
         /****************delete button click *****************************/
@@ -132,7 +155,50 @@ public class PencilRecipeActivity extends AppCompatActivity {
         });
     }
 
+    @Override public void onBackPressed() {
+        Intent refMain = new Intent(PencilRecipeActivity.this, RefrigeratorMainActivity.class);
+        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PencilRecipeActivity.this.startActivity(refMain);
+        overridePendingTransition(R.anim.bottom_to_up,R.anim.up_to_bottom);
+    }
 
 
+    @Override
+        public void onClick(View view) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        switch (view.getId()) {
+                case R.id.searchBar:
+                    SearchIngredientFragment SearchFragment = new SearchIngredientFragment();
+                    transaction.replace(R.id.child_fragment_container, SearchFragment);
+                    transaction.commit();
+                    break;
+                case R.id.floating:
+                        floating.setVisibility(View.GONE);
+                        popup_layout.setVisibility(View.VISIBLE);
+                        popup_layout.setElevation(8);
+                        popup_cart.setElevation(10);
+
+
+                        Log.e("floating","floating의 Elevation"+floating.getElevation());
+
+                    break;
+                case R.id.popup_layout:
+                floating.setVisibility(View.VISIBLE);
+                popup_layout.setVisibility(View.GONE);
+                popup_layout.setElevation(0);
+                popup_cart.setElevation(0);
+
+                break;
+            case R.id.delete_cart_button:
+                floating.setVisibility(View.VISIBLE);
+                popup_layout.setVisibility(View.GONE);
+                popup_layout.setElevation(0);
+                popup_cart.setElevation(0);
+
+                break;
+
+            }
+    }
 
 }

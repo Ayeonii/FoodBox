@@ -36,7 +36,6 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     static ArrayList<PencilItem> list = new ArrayList<>();
 
     static RecyclerView.Adapter adapter;
-    static ArrayList<String> foodlist = new ArrayList<String>() ;
     static String searchText;
     static RecyclerView recyclerView;
 
