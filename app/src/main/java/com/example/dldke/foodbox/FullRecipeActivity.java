@@ -25,12 +25,15 @@ public class FullRecipeActivity extends AppCompatActivity  {
     private LinearLayoutManager mLayoutManager;
 
     private int MAX_ITEM_COUNT=10;
-    private int count = 0;
+
+    private final String TAG="FullRecipe DB Test";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_recipe);
+
+        //DB에 사용자 풀레시피 만들기
 
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview_main_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
