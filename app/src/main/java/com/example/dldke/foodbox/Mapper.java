@@ -225,6 +225,34 @@ public final class Mapper {
         }
 
     }
+    public static void uploadImage(final String infoName, final String filePath){
+        final String name = infoName;
+        final String[] key = filePath.split("/");
+        Thread thread = new Thread(new Runnable() {
+
+            com.example.dldke.foodbox.InfoDO infoItem;
+            @Override
+            public void run() {
+                infoItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.InfoDO.class,
+                        infoName,
+                        "fresh");
+                Log.d("why",Mapper.bucketName);
+                infoItem.setInfoImage(Mapper.getDynamoDBMapper().createS3Link(Region.US_Standard,Mapper.bucketName,"Info/" + infoName));
+                infoItem.getInfoImage().uploadFrom(new File(filePath));
+                Mapper.getDynamoDBMapper().save(infoItem);
+
+            }
+
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
     public static void createPost(String title, String recipeId) {
         final String post_title = title;

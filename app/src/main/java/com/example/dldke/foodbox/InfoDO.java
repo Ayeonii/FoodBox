@@ -6,6 +6,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHas
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.S3Link;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,15 @@ public class InfoDO {
     private String _section;
     private Integer _dueDate;
     private String _kindOf;
+    private S3Link infoImage;
+
+    public S3Link getInfoImage() {
+        return infoImage;
+    }
+
+    public void setInfoImage(S3Link infoImage) {
+        this.infoImage = infoImage;
+    }
 
     @DynamoDBHashKey(attributeName = "name")
     @DynamoDBIndexHashKey(attributeName = "name", globalSecondaryIndexName = "name-kindOf")
