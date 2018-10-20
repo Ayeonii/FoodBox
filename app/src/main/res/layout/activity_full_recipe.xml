@@ -32,20 +32,20 @@
         android:id="@+id/ingredient_add"
         android:layout_width="130dp"
         android:layout_height="50dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:text="재료 선택하기"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_btn"/>
+        app:layout_constraintTop_toBottomOf="@+id/food_title"/>
 
     <Button
         android:id="@+id/get_recipe"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:text="간이레시피 가져오기"
         app:layout_constraintLeft_toRightOf="@+id/ingredient_add"
-        app:layout_constraintTop_toBottomOf="@+id/fullrecipe_title"/>
+        app:layout_constraintTop_toBottomOf="@+id/food_title"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_horizontal_list"
@@ -97,4 +97,22 @@
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_main_list"
         app:layout_constraintVertical_weight="1"/>
 
+    <EditText
+        android:id="@+id/food_title"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="음식 제목"
+        app:layout_constraintTop_toBottomOf="@+id/back_btn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="15dp"/>
+
+    <Spinner
+        android:id="@+id/food_spinner"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintLeft_toRightOf="@+id/food_title"
+        app:layout_constraintTop_toBottomOf="@+id/fullrecipe_title"
+        tools:ignore="InvalidId"/>
 </android.support.constraint.ConstraintLayout>
