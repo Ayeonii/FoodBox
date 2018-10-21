@@ -11,7 +11,9 @@ import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 
-
+/*
+    내 레시피 보기
+ */
 public class MyRecipeActivity extends AppCompatActivity {
 
     RecyclerView myrecipeRecyclerView;

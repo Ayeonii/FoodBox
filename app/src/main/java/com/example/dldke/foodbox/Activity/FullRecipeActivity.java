@@ -29,8 +29,8 @@ public class FullRecipeActivity extends AppCompatActivity  {
 
     private ArrayList<FullRecipeDictionary> mArrayList;
     private FullRecipeAdapter mAdapter;
-    private RecyclerView mRecyclerView, mHorizontalView;
-    private FullRecipeHorizontalAdapter hAdapter;
+    private RecyclerView fullrecipeRecyclerView, recipeIngredientHorizontalView;
+    private FullRecipeHorizontalAdapter fullRecipeHorizontalAdapter;
     private LinearLayoutManager mLayoutManager;
 
     private int MAX_ITEM_COUNT=10;
@@ -42,19 +42,20 @@ public class FullRecipeActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_recipe);
 
+        fullrecipeRecyclerView = (RecyclerView)findViewById(R.id.recyclerview_main_list);
+        fullrecipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mArrayList = new ArrayList<>();
+        mAdapter = new FullRecipeAdapter(this, mArrayList);
+        fullrecipeRecyclerView.setAdapter(mAdapter);
+
+
+        final EditText foodtitle_et = (EditText)findViewById(R.id.food_title);
+
         //DB에 풀레시피 만들기
         final List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
         final List<RecipeDO.Spec> specList = new ArrayList<>();
         final String recipe_id;
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview_main_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mArrayList = new ArrayList<>();
-
-        mAdapter = new FullRecipeAdapter(this, mArrayList);
-        mRecyclerView.setAdapter(mAdapter);
-
-        final EditText foodtitle_et = (EditText)findViewById(R.id.food_title);
 
         /*
         요리 카테고리 만드는 spinner
@@ -65,6 +66,50 @@ public class FullRecipeActivity extends AppCompatActivity  {
         ArrayAdapter<String> spinnerAdapter;
         spinnerAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, foodrecipe_list);
         spinner.setAdapter(spinnerAdapter);
+
+
+        //=======================================================================================
+
+        /*
+        레시피 재료 선택하기
+         */
+        Button Ingredient_add = (Button)findViewById(R.id.ingredient_add);
+        Ingredient_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent choice_ingred = new Intent(getApplicationContext(), PencilRecipeActivity.class);
+                startActivity(choice_ingred);
+            }
+        });
+
+
+        /*
+        선택된 재료 보여주기
+         */
+        recipeIngredientHorizontalView = (RecyclerView)findViewById(R.id.recyclerview_horizontal_list);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        recipeIngredientHorizontalView.setLayoutManager(mLayoutManager);
+
+        fullRecipeHorizontalAdapter = new FullRecipeHorizontalAdapter();
+
+        ArrayList<FullRecipeHorizontalData> data = new ArrayList<>();
+
+        int i = 0;
+        while(i<MAX_ITEM_COUNT){
+            data.add(new FullRecipeHorizontalData(R.drawable.food, i+"번째 데이터"));
+            i++;
+        }
+
+        fullRecipeHorizontalAdapter.setData(data);
+        recipeIngredientHorizontalView.setAdapter(fullRecipeHorizontalAdapter);
+
+
+
+        //=================================================================================================
+
 
         /*
         커뮤니티 객체 만들기
@@ -94,9 +139,9 @@ public class FullRecipeActivity extends AppCompatActivity  {
                         .inflate(R.layout.fullrecipe_edit_box, null, false);
                 builder.setView(view);
                 final Button ButtonSubmit = (Button) view.findViewById(R.id.button_dialog_submit);
-                final EditText editTextID = (EditText) view.findViewById(R.id.edittext_dialog_method);
-                final EditText editTextEnglish = (EditText) view.findViewById(R.id.edittext_dialog_minute);
-                final EditText editTextKorean = (EditText) view.findViewById(R.id.edittext_dialog_fire);
+                final EditText method = (EditText) view.findViewById(R.id.edittext_dialog_method);
+                final EditText minute = (EditText) view.findViewById(R.id.edittext_dialog_minute);
+                final EditText fire = (EditText) view.findViewById(R.id.edittext_dialog_fire);
 
                 ButtonSubmit.setText("삽입");
 
@@ -104,12 +149,12 @@ public class FullRecipeActivity extends AppCompatActivity  {
                 final AlertDialog dialog = builder.create();
                 ButtonSubmit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        String strID = editTextID.getText().toString();
-                        String strEnglish = editTextEnglish.getText().toString();
-                        Integer intEnglish = Integer.parseInt(strEnglish);
-                        String strKorean = editTextKorean.getText().toString();
+                        String methodString = method.getText().toString();
+                        String minuteString = minute.getText().toString();
+                        Integer minuteInt = Integer.parseInt(minuteString);
+                        String fireString = fire.getText().toString();
 
-                        FullRecipeDictionary dict = new FullRecipeDictionary(strID, strEnglish, strKorean );
+                        FullRecipeDictionary dict = new FullRecipeDictionary(methodString, minuteString, fireString );
 
                         //mArrayList.add(0, dict); //첫 줄에 삽입
                         mArrayList.add(dict); //마지막 줄에 삽입
@@ -117,9 +162,9 @@ public class FullRecipeActivity extends AppCompatActivity  {
 
 
                         //풀레시피에 단계별 레시피 등록
-                        RecipeDO.Spec spec = Mapper.createSpec(specIngredientList, strID, strKorean,intEnglish);
+                        RecipeDO.Spec spec = Mapper.createSpec(specIngredientList, methodString, fireString,minuteInt);
                         specList.add(spec);
-                        Log.d(TAG, "방법 : "+strID + "불 세기 : "+strKorean +"시간 : "+intEnglish);
+                        Log.d(TAG, "방법 : "+methodString + "불 세기 : "+fireString +"시간 : "+minuteInt);
 
                         dialog.dismiss();
                     }
@@ -142,43 +187,6 @@ public class FullRecipeActivity extends AppCompatActivity  {
                 startActivity(RefrigeratorActivity);
             }
         });
-
-        /*
-        레시피 재료 선택하기
-         */
-        Button Ingredient_add = (Button)findViewById(R.id.ingredient_add);
-        Ingredient_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent choice_ingred = new Intent(getApplicationContext(), PencilRecipeActivity.class);
-                startActivity(choice_ingred);
-            }
-        });
-
-
-        /*
-        선택된 재료 보여주기
-         */
-        mHorizontalView = (RecyclerView)findViewById(R.id.recyclerview_horizontal_list);
-
-        mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
-        mHorizontalView.setLayoutManager(mLayoutManager);
-
-        hAdapter = new FullRecipeHorizontalAdapter();
-
-        ArrayList<FullRecipeHorizontalData> data = new ArrayList<>();
-
-        int i = 0;
-        while(i<MAX_ITEM_COUNT){
-            data.add(new FullRecipeHorizontalData(R.drawable.food, i+"번째 데이터"));
-            i++;
-        }
-
-        hAdapter.setData(data);
-        mHorizontalView.setAdapter(hAdapter);
-
     }
 }
 
