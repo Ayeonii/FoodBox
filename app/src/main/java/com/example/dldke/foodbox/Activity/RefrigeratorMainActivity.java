@@ -176,6 +176,11 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 startActivity(MainActivity);
             }
             Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
+
+            if(strText.equals("내 레시피 보기")){
+                Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeActivity.class);
+                startActivity(MyRecipeActivity);
+            }
         }
 
     }
