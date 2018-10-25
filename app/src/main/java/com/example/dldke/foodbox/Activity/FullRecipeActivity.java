@@ -1,11 +1,15 @@
 package com.example.dldke.foodbox.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +29,9 @@ import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullRecipeActivity extends AppCompatActivity  {
+import static com.amazonaws.regions.RegionUtils.init;
+
+public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener  {
 
     private ArrayList<FullRecipeDictionary> mArrayList;
     private FullRecipeAdapter mAdapter;
@@ -56,7 +62,6 @@ public class FullRecipeActivity extends AppCompatActivity  {
         final List<RecipeDO.Spec> specList = new ArrayList<>();
         final String recipe_id;
 
-
         /*
         요리 카테고리 만드는 spinner
          */
@@ -69,18 +74,6 @@ public class FullRecipeActivity extends AppCompatActivity  {
 
 
         //=======================================================================================
-
-        /*
-        레시피 재료 선택하기
-         */
-        Button Ingredient_add = (Button)findViewById(R.id.ingredient_add);
-        Ingredient_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent choice_ingred = new Intent(getApplicationContext(), PencilRecipeActivity.class);
-                startActivity(choice_ingred);
-            }
-        });
 
 
         /*
@@ -187,6 +180,19 @@ public class FullRecipeActivity extends AppCompatActivity  {
                 startActivity(RefrigeratorActivity);
             }
         });
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.ingredient_add:
+                Intent choice_ingred = new Intent(getApplicationContext(), PencilRecipeActivity.class);
+                startActivity(choice_ingred);
+            case R.id.get_recipe:
+        }
+
+
     }
 }
 
