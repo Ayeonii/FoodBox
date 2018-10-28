@@ -13,10 +13,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.dldke.foodbox.Adapter.FullRecipeAdapter;
 import com.example.dldke.foodbox.Adapter.FullRecipeHorizontalAdapter;
@@ -25,6 +27,8 @@ import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipeDictionary;
 import com.example.dldke.foodbox.FullRecipeHorizontalData;
 import com.example.dldke.foodbox.R;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,25 +133,44 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 //팝업창 build
                 AlertDialog.Builder builder = new AlertDialog.Builder(FullRecipeActivity.this);
                 View view = LayoutInflater.from(FullRecipeActivity.this)
-                        .inflate(R.layout.fullrecipe_edit_box, null, false);
+                        .inflate(R.layout.fullrecipe_popup, null, false);
                 builder.setView(view);
-                final Button ButtonSubmit = (Button) view.findViewById(R.id.button_dialog_submit);
-                final EditText method = (EditText) view.findViewById(R.id.edittext_dialog_method);
-                final EditText minute = (EditText) view.findViewById(R.id.edittext_dialog_minute);
-                final EditText fire = (EditText) view.findViewById(R.id.edittext_dialog_fire);
+                //final Button ButtonSubmit = (Button) view.findViewById(R.id.button_dialog_submit);
+                //final EditText method = (EditText) view.findViewById(R.id.edittext_dialog_method);
+                //final EditText minute = (EditText) view.findViewById(R.id.edittext_dialog_minute);
+                //final EditText fire = (EditText) view.findViewById(R.id.edittext_dialog_fire);
+
+                final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
+                final Spinner method_sp = (Spinner) view.findViewById(R.id.method_spinner);
+                final Spinner minute_sp = (Spinner) view.findViewById(R.id.minute_spinner);
+                final Spinner fire_sp = (Spinner) view.findViewById(R.id.fire_spinner);
+
+
+                String[] methodStr = getResources().getStringArray(R.array.MethodSpinner);
+                ArrayAdapter<String> madapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, methodStr);
+                method_sp.setAdapter(madapter);
+
+                String[] minuteStr = getResources().getStringArray(R.array.MinuteSpinner);
+                ArrayAdapter<String> miadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, minuteStr);
+                minute_sp.setAdapter(miadapter);
+
+                String[] fireStr = getResources().getStringArray(R.array.FireSpinner);
+                ArrayAdapter<String> fadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fireStr);
+                fire_sp.setAdapter(fadapter);
+
 
                 ButtonSubmit.setText("삽입");
 
-
+                //레시피 작성후 화면과 데이터베이스에 삽입
                 final AlertDialog dialog = builder.create();
                 ButtonSubmit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        String methodString = method.getText().toString();
-                        String minuteString = minute.getText().toString();
-                        Integer minuteInt = Integer.parseInt(minuteString);
-                        String fireString = fire.getText().toString();
+                        String method = method_sp.getSelectedItem().toString();
+                        String minute = minute_sp.getSelectedItem().toString();
+                        Integer minuteInt = Integer.parseInt(minute);
+                        String fire = fire_sp.getSelectedItem().toString();
 
-                        FullRecipeDictionary dict = new FullRecipeDictionary(methodString, minuteString, fireString );
+                        FullRecipeDictionary dict = new FullRecipeDictionary(method, minute, fire);
 
                         //mArrayList.add(0, dict); //첫 줄에 삽입
                         mArrayList.add(dict); //마지막 줄에 삽입
@@ -155,9 +178,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
 
                         //풀레시피에 단계별 레시피 등록
-                        RecipeDO.Spec spec = Mapper.createSpec(specIngredientList, methodString, fireString,minuteInt);
+                        RecipeDO.Spec spec = Mapper.createSpec(specIngredientList, method, fire, minuteInt);
                         specList.add(spec);
-                        Log.d(TAG, "방법 : "+methodString + "불 세기 : "+fireString +"시간 : "+minuteInt);
+                        Log.d(TAG, "방법 : "+method + "불 세기 : "+fire +"시간 : "+minuteInt);
 
                         dialog.dismiss();
                     }
