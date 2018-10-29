@@ -37,7 +37,7 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
     {
         View view = inflater.inflate(R.layout.fragment_side_ingredients, container, false);
 
-            List<InfoDO> freshList = getInfoDOList("fresh");
+            List<InfoDO> freshList = getInfoDOList("side");
 
             makeFoodList(freshList);
 
@@ -81,7 +81,7 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
 
         // RecyclerView 에 들어갈 데이터를 추가한다.
         for(String name : foodName){
-            foodImg = "/storage/emulated/0/Download/"+"감"+"jpg";
+            foodImg = "file:///storage/emulated/0/Download/"+name+".jpg";
             list.add(new PencilItem(name, Uri.parse(foodImg)));
 
         }

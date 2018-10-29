@@ -29,6 +29,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
     private List<InfoDO> freshList, meatList, etcList;
+    static boolean isFirst = true;
     //검색할때 다시 쓰기 위해 static 선언.
 
 
@@ -47,28 +48,27 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
 
 
-            freshList = getInfoDOList("fresh");
+        freshList = getInfoDOList("fresh");
+        meatList = getInfoDOList("meat");
+        etcList = getInfoDOList("etc");
 
-           // meatList = getInfoDOList("meat");
-            //etcList = getInfoDOList("etc");
-            Mapper.downLoadImage("감","/storage/emulated/0/Download/");
-            makeFoodList(freshList);
-            //makeFoodList(meatList);
-            //makeFoodList(etcList);
+        makeFoodList(freshList);
+        makeFoodList(meatList);
+        makeFoodList(etcList);
 
-            Context context = view.getContext();
+        Context context = view.getContext();
 
-            recyclerView = (RecyclerView)view.findViewById(R.id.allRecycler);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerView = (RecyclerView)view.findViewById(R.id.allRecycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(context,5));
 
-            // use a linear layout manager
-            adapter = new PencilRecyclerAdapter(list);
-            recyclerView.setAdapter(adapter);
+        // use a linear layout manager
+        adapter = new PencilRecyclerAdapter(list);
+        recyclerView.setAdapter(adapter);
 
-            Log.e("Frag", "All");
+        Log.e("Frag", "All");
 
-            setData();
+        setData();
 
 
 
@@ -84,9 +84,12 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private void makeFoodList(List<InfoDO> foodList) {
         for(int i =0 ; i< foodList.size(); i++)
         {
-            allfoodList.add(foodList.get(i).getName());
-
+            if(isFirst) {
+                allfoodList.add(foodList.get(i).getName());
+                Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/");
+            }
         }
+        isFirst = false;
     }
 
     private void setData(){
@@ -97,7 +100,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
         // RecyclerView 에 들어갈 데이터를 추가한다.
         for(String name : allfoodList){
-            foodImg = "/storage/emulated/0/Download/"+"감"+"jpg";
+            foodImg = "file:///storage/emulated/0/Download/"+name+".jpg";
             list.add(new PencilItem(name, Uri.parse(foodImg)));
         }
         // 데이터 추가가 완료되었으면 notifyDataSetChanged() 메서드를 호출해 데이터 변경 체크를 실행한다.

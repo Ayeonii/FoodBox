@@ -27,8 +27,8 @@ import com.example.dldke.foodbox.R;
 
 public class PencilRecipeActivity extends AppCompatActivity implements View.OnClickListener{
 
-
-   FrameLayout frag;
+    public static boolean isFull = false;
+    FrameLayout frag;
 
     ViewPager vp;
     ImageButton deleteButton, deletButton_cart;
@@ -139,26 +139,26 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
 
 
     @Override
-        public void onClick(View view) {
+    public void onClick(View view) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         switch (view.getId()) {
-                case R.id.searchBar:
-                    SearchIngredientFragment SearchFragment = new SearchIngredientFragment();
-                    transaction.replace(R.id.child_fragment_container, SearchFragment);
-                    transaction.commit();
-                    break;
-                case R.id.floating:
-                        floating.setVisibility(View.GONE);
-                        popup_layout.setVisibility(View.VISIBLE);
-                        popup_layout.setElevation(8);
-                        popup_cart.setElevation(10);
+            case R.id.searchBar:
+                SearchIngredientFragment SearchFragment = new SearchIngredientFragment();
+                transaction.replace(R.id.child_fragment_container, SearchFragment);
+                transaction.commit();
+                break;
+            case R.id.floating:
+                floating.setVisibility(View.GONE);
+                popup_layout.setVisibility(View.VISIBLE);
+                popup_layout.setElevation(8);
+                popup_cart.setElevation(10);
 
 
-                        Log.e("floating","floating의 Elevation"+floating.getElevation());
+                Log.e("floating","floating의 Elevation"+floating.getElevation());
 
-                    break;
-                case R.id.popup_layout:
+                break;
+            case R.id.popup_layout:
                 floating.setVisibility(View.VISIBLE);
                 popup_layout.setVisibility(View.GONE);
                 popup_layout.setElevation(0);
@@ -173,7 +173,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
 
                 break;
 
-            }
+        }
     }
 
 }

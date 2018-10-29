@@ -80,7 +80,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     if (matchString(allfoodList.get(i),charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "/storage/emulated/0/Download/"+allfoodList.get(i)+"jpg";
+                        foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)+".jpg";
                         list.add(new PencilItem(allfoodList.get(i),Uri.parse(foodImg)));
                     }
             }

@@ -42,7 +42,7 @@ public class EtcListFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_etc_ingredients, container, false);
 
 
-            List<InfoDO> etcList = getInfoDOList("fresh");
+            List<InfoDO> etcList = getInfoDOList("etc");
             makeFoodList(etcList);
 
             Context context = view.getContext();
@@ -84,7 +84,7 @@ public class EtcListFragment extends android.support.v4.app.Fragment {
 
         // RecyclerView 에 들어갈 데이터를 추가한다.
         for(String name : foodName){
-            foodImg = "/storage/emulated/0/Download/"+name+"jpg";
+            foodImg = "file:///storage/emulated/0/Download/"+name+".jpg";
             list.add(new PencilItem(name, Uri.parse(foodImg)));
         }
         // 데이터 추가가 완료되었으면 notifyDataSetChanged() 메서드를 호출해 데이터 변경 체크를 실행한다.

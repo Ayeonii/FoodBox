@@ -79,14 +79,9 @@ public class FreshListFragment extends android.support.v4.app.Fragment {
     }
 
     private void setData(){
-
-        // 재료 이미지 db에서 불러올것
-        Img = getResources().getDrawable( R.drawable.ic_circle_food,getContext().getTheme());//sdk 23이상일 때
-        //Img = getResources().getDrawable( R.drawable.ic_circle_food);//sdk 22이하일 때
-
         // RecyclerView 에 들어갈 데이터를 추가한다.
         for(String name : foodName){
-            foodImg = "/storage/emulated/0/Download/"+"감"+"jpg";
+            foodImg = "file:///storage/emulated/0/Download/"+name+".jpg";
             list.add(new PencilItem(name, Uri.parse(foodImg)));
         }
         // 데이터 추가가 완료되었으면 notifyDataSetChanged() 메서드를 호출해 데이터 변경 체크를 실행한다.
