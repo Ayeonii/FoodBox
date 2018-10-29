@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="MethodSpinner">
+        <item>끓인다</item>
+        <item>볶는다</item>
+        <item>씻는다</item>
+        <item>자른다</item>
+        <item>섞는다</item>
+        <item>데친다</item>
+    </string-array>
+</resources>
