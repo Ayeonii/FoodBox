@@ -2,18 +2,15 @@ package com.example.dldke.foodbox.Fragments;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
-import com.amazonaws.mobile.api.id8z9a74jyqj.EchoTestMobileHubClient;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -27,14 +24,16 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
     //디비에서 이미지 가져오기 전까진  static public으로
     static public Drawable Img;
+
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
     private List<InfoDO> freshList, meatList, etcList;
     //검색할때 다시 쓰기 위해 static 선언.
 
-    static public List<String> allfoodList = new ArrayList<String>();
 
+    static public List<String> allfoodList = new ArrayList<String>();
+    private String foodImg;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -49,11 +48,13 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
 
             freshList = getInfoDOList("fresh");
-            meatList = getInfoDOList("meat");
-            etcList = getInfoDOList("etc");
+
+           // meatList = getInfoDOList("meat");
+            //etcList = getInfoDOList("etc");
+            Mapper.downLoadImage("감","/storage/emulated/0/Download/");
             makeFoodList(freshList);
-            makeFoodList(meatList);
-            makeFoodList(etcList);
+            //makeFoodList(meatList);
+            //makeFoodList(etcList);
 
             Context context = view.getContext();
 
@@ -79,10 +80,12 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
         return Mapper.scanInfo(section);
     }
 
+
     private void makeFoodList(List<InfoDO> foodList) {
         for(int i =0 ; i< foodList.size(); i++)
         {
             allfoodList.add(foodList.get(i).getName());
+
         }
     }
 
@@ -94,7 +97,8 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
         // RecyclerView 에 들어갈 데이터를 추가한다.
         for(String name : allfoodList){
-            list.add(new PencilItem(name, Img));
+            foodImg = "/storage/emulated/0/Download/"+"감"+"jpg";
+            list.add(new PencilItem(name, Uri.parse(foodImg)));
         }
         // 데이터 추가가 완료되었으면 notifyDataSetChanged() 메서드를 호출해 데이터 변경 체크를 실행한다.
         adapter.notifyDataSetChanged();

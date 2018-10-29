@@ -50,7 +50,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
         @Override
         public void onBindViewHolder( ItemViewHolder holder,   final int position) {
             holder.food_name.setText(mItems.get(position).getFoodName());
-            holder.food_img.setImageDrawable(mItems.get(position).getFoodImg());
+            holder.food_img.setImageURI(mItems.get(position).getFoodImg());
 
             if(mItems.get(position).getFoodName().length()>6)
             {
@@ -62,8 +62,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                 public void onClick(View v) {
                     Log.e("clicked",""+mItems.get(position).getFoodName());
                     clickFood.add(new PencilItem(mItems.get(position).getFoodName(),mItems.get(position).getFoodImg()));
-                    clickFoodString.add(mItems.get(position).getFoodName()); //이거 나중에 이미지 디비에서 불러올때 삭제하고
-                                                                            // 위에 clickFood 사용하기
+                    clickFoodString.add(mItems.get(position).getFoodName());
                 }
             });
 

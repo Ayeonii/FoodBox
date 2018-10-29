@@ -1,7 +1,7 @@
 package com.example.dldke.foodbox.Fragments;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,17 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dldke.foodbox.Activity.PencilRecipeActivity;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
-import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static android.view.View.GONE;
 import static com.example.dldke.foodbox.Fragments.AllFoodListFragment.*;
 
 public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
@@ -38,6 +33,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     static RecyclerView.Adapter adapter;
     static String searchText;
     static RecyclerView recyclerView;
+    static String foodImg;
 
 
 
@@ -84,7 +80,8 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     if (matchString(allfoodList.get(i),charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        list.add(new PencilItem(allfoodList.get(i),AllFoodListFragment.Img));
+                        foodImg = "/storage/emulated/0/Download/"+allfoodList.get(i)+"jpg";
+                        list.add(new PencilItem(allfoodList.get(i),Uri.parse(foodImg)));
                     }
             }
         }

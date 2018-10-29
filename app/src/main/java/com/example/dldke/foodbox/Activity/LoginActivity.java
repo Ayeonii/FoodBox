@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +19,6 @@ import com.amazonaws.mobile.client.AWSMobileClient;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
-
-import static com.example.dldke.foodbox.Activity.MainActivity.*;
-import static com.example.dldke.foodbox.Activity.MainActivity.pw;
 
 public class LoginActivity extends AppCompatActivity {
     Button ok_btn;

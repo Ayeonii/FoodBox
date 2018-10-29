@@ -2,6 +2,7 @@ package com.example.dldke.foodbox.Fragments;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
 
     List<String> foodName = new ArrayList<>();
 
+    private String foodImg;
 
 
     @Override
@@ -35,7 +37,7 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
     {
         View view = inflater.inflate(R.layout.fragment_side_ingredients, container, false);
 
-            List<InfoDO> freshList = getInfoDOList("side_dish");
+            List<InfoDO> freshList = getInfoDOList("fresh");
 
             makeFoodList(freshList);
 
@@ -79,7 +81,9 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
 
         // RecyclerView 에 들어갈 데이터를 추가한다.
         for(String name : foodName){
-            list.add(new PencilItem(name, Img));
+            foodImg = "/storage/emulated/0/Download/"+"감"+"jpg";
+            list.add(new PencilItem(name, Uri.parse(foodImg)));
+
         }
         // 데이터 추가가 완료되었으면 notifyDataSetChanged() 메서드를 호출해 데이터 변경 체크를 실행한다.
         adapter.notifyDataSetChanged();
