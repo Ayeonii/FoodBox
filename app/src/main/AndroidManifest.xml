@@ -34,7 +34,6 @@
             android:name=".Activity.PencilRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Activity.MyRecipeActivity" />
-        <activity android:name=".HalfRecipeDialog"></activity>
     </application>
 
 </manifest>

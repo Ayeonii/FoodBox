@@ -10,7 +10,7 @@ import com.example.dldke.foodbox.R;
 
 public class RefrigeratorInsideActivity extends AppCompatActivity {
 
-    private Button btnSidedish, btnEggs, btnBottles, btnMeat, btnFruit;
+    private Button btnSidedish, btnEtc, btnMeat, btnFruit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +18,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         setContentView(R.layout.activity_refrigerator_inside);
 
         btnSidedish = (Button)findViewById(R.id.btn_sidedish);
-        btnEggs = (Button)findViewById(R.id.btn_eggs);
-        btnBottles = (Button)findViewById(R.id.btn_bottles);
+        btnEtc = (Button)findViewById(R.id.btn_etc);
         btnMeat = (Button)findViewById(R.id.btn_meat);
         btnFruit = (Button)findViewById(R.id.btn_fruit);
 
@@ -30,17 +29,10 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
             }
         });
 
-        btnEggs.setOnClickListener(new Button.OnClickListener() {
+        btnEtc.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "계란,유제품", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        btnBottles.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "음료, 소스", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "계란,유제품,음료,소스", Toast.LENGTH_LONG).show();
             }
         });
 
