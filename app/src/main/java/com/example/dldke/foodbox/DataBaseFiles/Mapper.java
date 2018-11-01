@@ -185,6 +185,46 @@ public final class Mapper {
         }
     }
 
+    public static void createChefRecipe(String name, List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> spec)
+    {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a");
+        final String dateS = sdf.format(date).toString();
+
+        final String ID = userId + dateS;
+
+        final String recipe_name = name;
+        final List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> rspecList = spec;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO();
+                recipeItem.setRecipeId(ID);
+                recipeItem.setDate(dateS);
+
+                com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Detail detail = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Detail();
+                detail.setFoodName(recipe_name);
+
+                List<RecipeDO.Spec> specList = detail.getSpecList();
+                for(int i = 0; i < rspecList.size(); i++)
+                {
+                    specList.add(rspecList.get(i));
+                }
+                detail.setSpecList(specList);
+                recipeItem.setDetail(detail);
+
+                Mapper.getDynamoDBMapper().save(recipeItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void attachRecipeImage(String recipeId, final String filePath){
         final String recipe_id = recipeId;
         final String[] key = filePath.split("/");
@@ -334,7 +374,7 @@ public final class Mapper {
         }
     }
 
-    public static List<InfoDO> scanInfo(String section) {
+    public static List<InfoDO> scanSection(String section) {
         final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
 
         final String sectionName = section;
@@ -347,6 +387,37 @@ public final class Mapper {
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(sectionName));
                 scanExpression.addFilterCondition("section", condition);
+                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
+            }
+            @Override
+            public Object getResult(){
+                return itemList;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
+        return itemList;
+    }
+
+   public static List<InfoDO> scanKindOf(String kindOf) {
+        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
+
+        final String kindName = kindOf;
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            List<InfoDO> itemList;
+            @Override
+            public void run() {
+
+                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(kindName));
+                scanExpression.addFilterCondition("kindOf", condition);
                 itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
             }
             @Override
