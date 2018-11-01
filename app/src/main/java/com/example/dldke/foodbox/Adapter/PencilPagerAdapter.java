@@ -1,12 +1,20 @@
 package com.example.dldke.foodbox.Adapter;
 
+import android.content.Context;
+
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 
 import com.example.dldke.foodbox.Fragments.AllFoodListFragment;
 import com.example.dldke.foodbox.Fragments.EtcListFragment;
 import com.example.dldke.foodbox.Fragments.FreshListFragment;
 import com.example.dldke.foodbox.Fragments.MeatListFragment;
 import com.example.dldke.foodbox.Fragments.SideListFragment;
+import com.example.dldke.foodbox.R;
 
 
 public class PencilPagerAdapter extends FragmentStatePagerAdapter {
@@ -58,6 +66,7 @@ public class PencilPagerAdapter extends FragmentStatePagerAdapter {
     {
         return 5;
     }
+
 }
 
 

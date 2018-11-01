@@ -23,6 +23,7 @@ import com.example.dldke.foodbox.R;
 public class LoginActivity extends AppCompatActivity {
     Button ok_btn;
     EditText id_edittext, pw_edittext;
+    boolean isFirst;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +53,6 @@ public class LoginActivity extends AppCompatActivity {
 
         showSignIn();
 
-        ok_btn.setOnClickListener(new Button.OnClickListener(){
-            public void onClick(View v){
-
-                Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
-                startActivity(RefrigeratorMainActivity);
-            }
-        });
-
 
     }
     private void showSignIn() {
@@ -77,7 +70,10 @@ public class LoginActivity extends AppCompatActivity {
                         .canCancel(true)
                         .build();
         SignInUI signinUI = (SignInUI) AWSMobileClient.getInstance()
-                                                      .getClient(LoginActivity.this, SignInUI.class);
+                                                     .getClient(LoginActivity.this, SignInUI.class);
+
+
+
         signinUI.login(LoginActivity.this, RefrigeratorMainActivity.class).authUIConfiguration(config).execute();
         Mapper.setDynamoDBMapper();
         Mapper.setUserId(LoginActivity.this);

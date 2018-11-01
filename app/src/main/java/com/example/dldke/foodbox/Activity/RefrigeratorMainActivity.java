@@ -156,8 +156,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         postit.setOnClickListener(onClickListener);
 
 
-
-
     }
 
 

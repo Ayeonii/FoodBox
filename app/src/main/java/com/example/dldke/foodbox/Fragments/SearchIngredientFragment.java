@@ -39,25 +39,15 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_ingredients, container, false);
-
-
         Context context = view.getContext();
-
         recyclerView = (RecyclerView) view.findViewById(R.id.searchRecycler);
         recyclerView.setHasFixedSize(true);
-
-
         //어댑터 연결
         adapter = new PencilRecyclerAdapter(list);
         recyclerView.setLayoutManager(new GridLayoutManager(context,5));
         recyclerView.setAdapter(adapter);
-
-
         Log.e("Frag", "SearchFrag");
 
         return view;
@@ -132,26 +122,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     else
                         break;
 
-                }
-
-                /*
-                else if(isInitialSound(search.charAt(t))==false && isHangul(value.charAt(i+t))){
-
-                    if(getInitialSound(value.charAt(i+t))==search.charAt(t))
-                        //각각의 초성끼리 같은지 비교한다  ex> 검색어: 가  검색대상: 갈
-                        t++;
-                    else
-                    {
-                        if(value.charAt(i+t)==search.charAt(t))
-                            //그냥 같은지 비교한다.
-                            t++;
-                        else
-                            break;
-                    }
-
-
-                }*/
-                else {
+                } else {
                     //char이 초성이 아니라면
                     if(value.charAt(i+t)==search.charAt(t))
                         //그냥 같은지 비교한다.

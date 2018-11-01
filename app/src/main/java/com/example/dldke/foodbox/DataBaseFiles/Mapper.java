@@ -20,6 +20,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -53,7 +54,6 @@ public final class Mapper {
         CognitoUserPool cognitoUserPool = new CognitoUserPool(context,poolConfig.config.poolId,poolConfig.config.clientId,poolConfig.config.clientSecret);
         CognitoUser user = cognitoUserPool.getCurrentUser();
         userId = user.getUserId();
-
     }
 
     public static void setBucketName(Context context){
@@ -242,21 +242,21 @@ public final class Mapper {
     }
 
     public static void downLoadImage(final String infoName, final String locatePath){
-        final String name = infoName;
+        //final String name = infoName;
+
         Thread thread = new Thread(new Runnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.InfoDO infoItem;
             @Override
             public void run() {
+                URL url;
                 infoItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
                         infoName,
                         "fresh");
-               // Log.d("why",Mapper.bucketName);
-
+                // Log.d("why",Mapper.bucketName);
                 infoItem.getInfoImage().downloadTo(new File(locatePath + infoName + ".jpg"));
             }
-
         });
         thread.start();
         try{
@@ -264,6 +264,7 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
+
 
     }
     public static void createPost(String title, String recipeId) {
@@ -364,6 +365,35 @@ public final class Mapper {
         return itemList;
     }
 
+    public static boolean checkFirst() {
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
+            @Override
+            public void run() {
+                Refri = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                        userId);
+            }
+            @Override
+            public Object getResult(){
+                return Refri.getUserId();
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Object refri_item = thread.getResult();
+        if(refri_item.equals(null)){
+            return true;
+        }
+        return false;
+    }
+
     public static List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> scanRefri() {
 
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
@@ -387,6 +417,7 @@ public final class Mapper {
             e.printStackTrace();
         }
         List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> refri_item = (List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item>)thread.getResult();
+
         return refri_item;
 
     }
@@ -500,7 +531,7 @@ public final class Mapper {
                         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
                         userId);
                 int index = 0;
-                for(int i = 0; i < foodItem.getItem().size(); i++)
+                for(int i =0; i < foodItem.getItem().size(); i++)
                 {
                     if(foodItem.getItem().get(i).getName().equals(itemName)) {
                         foodItem.getItem().remove(i);
@@ -560,6 +591,8 @@ public final class Mapper {
                         userId);
 
                 List<RefrigeratorDO.Item> r_item = refrigeratorItem.getItem();
+
+
                 for(int i = 0; i < foods_list.size(); i++)
                 {
                     r_item.add(foods_list.get(i));
