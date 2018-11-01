@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;

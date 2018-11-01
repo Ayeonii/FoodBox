@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#a9a9a9</color>
+    <color name="colorPrimary">#9f9f9f</color>
     <color name="colorPrimaryDark">#a9a9a9</color>
     <color name="colorAccent">#92b6d5</color>
     <color name="translucent">#e0000000</color>
     <color name="transparent">#00000000</color>
 
 
-    <color name="colorHint">#9b9b9b</color>
-    <color name="colorActivated">#92b6d5</color>
+    <color name="colorHint">#cecdcd</color>
+    <color name="colorActivated">#9dc4e6</color>
     <color name="colorUnderline">#92b6d5</color>
     <color name="colorDraw">#242b33</color>
     <color name="colorText">#92b6d5</color>

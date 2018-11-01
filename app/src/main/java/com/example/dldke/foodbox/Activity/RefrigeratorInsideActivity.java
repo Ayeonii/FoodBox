@@ -1,10 +1,17 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.R;
+
+import java.util.List;
 
 public class RefrigeratorInsideActivity extends AppCompatActivity {
 
@@ -20,6 +27,8 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         btnBottles = (Button)findViewById(R.id.btn_bottles);
         btnMeat = (Button)findViewById(R.id.btn_meat);
         btnFruit = (Button)findViewById(R.id.btn_fruit);
+
+
 
         btnSidedish.setOnClickListener(new Button.OnClickListener() {
             @Override

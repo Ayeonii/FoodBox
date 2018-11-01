@@ -1,7 +1,6 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.Adapter;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -18,9 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.TypeVariable;
+import com.example.dldke.foodbox.FullRecipeDictionary;
+import com.example.dldke.foodbox.R;
+
 import java.util.ArrayList;
-import java.util.Dictionary;
 
 public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.FullRecipeViewHolder> {
 

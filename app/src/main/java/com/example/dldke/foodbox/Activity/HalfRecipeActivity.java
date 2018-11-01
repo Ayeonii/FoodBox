@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.Activity;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.dldke.foodbox.R;
 
 public class HalfRecipeActivity extends AppCompatActivity {
 
