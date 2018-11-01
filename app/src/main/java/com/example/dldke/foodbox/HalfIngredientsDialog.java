@@ -15,9 +15,10 @@ import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HalfIngredientsDialog extends Dialog implements View.OnClickListener {
-    private String[] names = {"Charlie","Andrew","Han","Liz","Thomas","Sky","Andy","Lee","Park"};
+    private List<InfoDO> itemList;
     private RecyclerView.Adapter adapter;
     private ArrayList<HalfRecipeRecyclerItem> mItems = new ArrayList<>();
 
@@ -26,18 +27,17 @@ public class HalfIngredientsDialog extends Dialog implements View.OnClickListene
     private TextView txtCategory, txtCancel, txtOk;
     private RecyclerView recyclerView;
 
-    private String category, content;
+    private String category;
 
     public HalfIngredientsDialog(@NonNull Context context) {
         super(context);
         this.context = context;
     }
 
-    public HalfIngredientsDialog(@NonNull Context context, String category, String content) {
+    public HalfIngredientsDialog(@NonNull Context context, String category) {
         super(context);
         this.context = context;
         this.category = category;
-        this.content = content; //recyclerview로 대체할 예정 지금은 넘겨 받기만 하고 아무것도 하지 않는다.
     }
 
     @Override
@@ -56,14 +56,15 @@ public class HalfIngredientsDialog extends Dialog implements View.OnClickListene
         if(category != null) {
             txtCategory.setText(category);
         }
-        if(content != null) {
-//            List<InfoDO> itemList = Mapper.scanInfo(category);
-//            for(int i = 0; i < itemList.size(); i++)
-//            {
-//                Log.d("recipe", String.format("Refri Item: %s", itemList.get(i).getName()));
-//            }
-            //txtContent.setText(content);
+
+        itemList = Mapper.scanInfo(category);
+        for(int i = 0; i < itemList.size(); i++) {
+            Log.d("recipe", String.format("Refri Item: %s", itemList.get(i).getName()));
+        }
+        if(itemList.size() != 0) {
             setRecyclerView();
+        } else {
+            //그 칸에 들어있는게 없으면 어떻게 처리해야할지(예를들면 반찬칸)
         }
     }
 
@@ -80,11 +81,8 @@ public class HalfIngredientsDialog extends Dialog implements View.OnClickListene
     private void setData() {
         mItems.clear();
 
-        for(String name : names) {
-            mItems.add(new HalfRecipeRecyclerItem(name));
-            mItems.add(new HalfRecipeRecyclerItem(name));
-            mItems.add(new HalfRecipeRecyclerItem(name));
-            mItems.add(new HalfRecipeRecyclerItem(name));
+        for(int i = 0; i < itemList.size(); i++) {
+            mItems.add(new HalfRecipeRecyclerItem(itemList.get(i).getName()));
         }
 
         adapter.notifyDataSetChanged();

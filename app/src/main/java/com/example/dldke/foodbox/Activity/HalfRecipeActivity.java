@@ -42,25 +42,25 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             case R.id.btn_sidedish:
                 reqCategory = "sideDish";
                 reqContent = "sideDish칸 속 재료";
-                dialog = new HalfIngredientsDialog(this, reqCategory, reqContent);
+                dialog = new HalfIngredientsDialog(this, reqCategory);
                 dialog.show();
                 break;
             case R.id.btn_etc:
                 reqCategory = "etc";
                 reqContent = "etc칸 속 재료";
-                dialog = new HalfIngredientsDialog(this, reqCategory, reqContent);
+                dialog = new HalfIngredientsDialog(this, reqCategory);
                 dialog.show();
                 break;
             case R.id.btn_meat:
                 reqCategory = "meat";
                 reqContent = "meat칸 속 재료";
-                dialog = new HalfIngredientsDialog(this, reqCategory, reqContent);
+                dialog = new HalfIngredientsDialog(this, reqCategory);
                 dialog.show();
                 break;
             case R.id.btn_fruit:
                 reqCategory = "fresh";
                 reqContent = "fresh칸 속 재료";
-                dialog = new HalfIngredientsDialog(this, reqCategory, reqContent);
+                dialog = new HalfIngredientsDialog(this, reqCategory);
                 dialog.show();
                 break;
             case R.id.floatingButtonRecipe:
