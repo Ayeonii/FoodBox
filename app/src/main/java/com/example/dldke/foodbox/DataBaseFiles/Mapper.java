@@ -387,11 +387,16 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
-        Object refri_item = thread.getResult();
-        if(refri_item.equals(null)){
+        try{
+            Object refri_item = thread.getResult();
+        }
+        catch(NullPointerException e){
             return true;
         }
-        return false;
+        finally{
+            return false;
+        }
+
     }
 
     public static List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> scanRefri() {
@@ -688,7 +693,6 @@ public final class Mapper {
 
         Thread thread = new Thread(new Runnable() {
             com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO myCommunityDO;
-
             @Override
             public void run() {
                 myCommunityDO = Mapper.getDynamoDBMapper().load(

@@ -1,33 +1,31 @@
 package com.example.dldke.foodbox.Adapter;
 
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.PencilCartItem;
 import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+
 
 
 /*
  * 직접입력 RecyclerAdapter
  */
 public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAdapter.ItemViewHolder> {
-        /****임시임 나중에 clickFoodString 삭제****/
-        public static ArrayList<String> clickFoodString = new ArrayList<>();
-        public static ArrayList<PencilItem> clickFood = new ArrayList<>();
-
+        boolean isAgain = false;
+        static ArrayList<String> clickFoodString = new ArrayList<>();
+        public static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
+        public static ArrayList<String> clickFoodOnly = new ArrayList<>();
+        double foodCnt = 1;
         ArrayList<PencilItem> mItems;
         public PencilRecyclerAdapter(ArrayList<PencilItem> items){
             mItems = items;
@@ -52,9 +50,25 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             holder.food_img.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("clicked",""+mItems.get(position).getFoodName());
-                    clickFood.add(new PencilItem(mItems.get(position).getFoodName(),mItems.get(position).getFoodImg()));
+                    String foodName = mItems.get(position).getFoodName();
+                    //중복처리
+                    for(int i =0 ; i<clickFoodString.size(); i++){
+                        if(foodName.equals(clickFoodString.get(i))){
+                            foodCnt ++;
+                            isAgain = true;
+                            clickFood.get(i).setFoodCount(foodCnt);
+                        }
+                    }
+                    //중복이 아닐 때
+                    if(!isAgain){
+                        clickFoodOnly.add(mItems.get(position).getFoodName());
+                        clickFood.add(new PencilCartItem(mItems.get(position).getFoodName()
+                                ,mItems.get(position).getFoodImg()
+                                ,Mapper.createFood(Mapper.searchFood(foodName),foodCnt).getDueDate()
+                                ,foodCnt));
+                    }
                     clickFoodString.add(mItems.get(position).getFoodName());
+
                 }
             });
         }

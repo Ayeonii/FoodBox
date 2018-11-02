@@ -30,7 +30,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/simple-side-drawer2.jar')
     implementation 'com.android.support:design:27.1.1'
-
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     // Mobile Client for initializing the SDK
     implementation ('com.amazonaws:aws-android-sdk-mobile-client:2.7.+@aar') { transitive = true }
 
