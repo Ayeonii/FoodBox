@@ -91,10 +91,4 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                 food_img = (ImageView) itemView.findViewById(R.id.foodImg);
             }
         }
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> Ayeon
 }

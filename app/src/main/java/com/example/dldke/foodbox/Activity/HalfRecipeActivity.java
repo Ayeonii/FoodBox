@@ -11,7 +11,7 @@ import com.example.dldke.foodbox.R;
 
 public class HalfRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnSidedish, btnEtc, btnMeat, btnFruit;
+    private Button btnSidedish, btnMeat, btnFruit;
     private FloatingActionButton fbtnRecipe;
 
     private String reqCategory, reqContent;
@@ -24,13 +24,11 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_half_recipe);
 
         btnSidedish = (Button) findViewById(R.id.btn_sidedish);
-        btnEtc = (Button) findViewById(R.id.btn_etc);
         btnMeat = (Button) findViewById(R.id.btn_meat);
         btnFruit = (Button) findViewById(R.id.btn_fruit);
         fbtnRecipe = (FloatingActionButton) findViewById(R.id.floatingButtonRecipe);
 
         btnSidedish.setOnClickListener(this);
-        btnEtc.setOnClickListener(this);
         btnMeat.setOnClickListener(this);
         btnFruit.setOnClickListener(this);
         fbtnRecipe.setOnClickListener(this);
@@ -42,12 +40,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             case R.id.btn_sidedish:
                 reqCategory = "sideDish";
                 reqContent = "sideDish칸 속 재료";
-                dialog = new HalfIngredientsDialog(this, reqCategory);
-                dialog.show();
-                break;
-            case R.id.btn_etc:
-                reqCategory = "etc";
-                reqContent = "etc칸 속 재료";
                 dialog = new HalfIngredientsDialog(this, reqCategory);
                 dialog.show();
                 break;
