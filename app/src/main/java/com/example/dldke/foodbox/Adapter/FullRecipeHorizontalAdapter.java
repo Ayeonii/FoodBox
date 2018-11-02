@@ -61,4 +61,7 @@ public class FullRecipeHorizontalAdapter extends RecyclerView.Adapter<FullRecipe
     }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Ayeon

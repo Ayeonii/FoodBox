@@ -23,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     EditText id_edittext, pw_edittext;
     RelativeLayout login_box, login_back;
     boolean inputID=false, inputPW=false;
+    public static Editable id,pw;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
                 login_ok_btn = (Button)findViewById(R.id.ok_btn);
                 login_ok_btn.setOnClickListener(new Button.OnClickListener(){
                     public void onClick(View v){
+//                        id= id_edittext.getText();
+  //                      pw = pw_edittext.getText();
 
+                        Toast.makeText(MainActivity.this, "id: "+id+"pw: "+pw, Toast.LENGTH_SHORT).show();
                         Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(LoginActivity);
                         //Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);

@@ -16,4 +16,8 @@ public class FullRecipeHorizontalData {
     public int getImg() {
         return this.img;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> Ayeon

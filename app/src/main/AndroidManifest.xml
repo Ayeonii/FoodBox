@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dldke.foodbox">
+<<<<<<< HEAD
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+=======
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+>>>>>>> Ayeon
 
     <application
         android:allowBackup="true"
@@ -29,11 +40,18 @@
         <activity android:name=".Activity.JoinActivity" />
         <activity android:name=".Activity.FullRecipeActivity" />
         <activity android:name=".Activity.RefrigeratorInsideActivity" />
+<<<<<<< HEAD
         <activity android:name=".Activity.HalfRecipeActivity" />
         <activity
             android:name=".Activity.PencilRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Activity.MyRecipeActivity" />
+=======
+        <activity android:name=".Activity.HalfRecipeActivity"/>
+        <activity android:name=".Activity.PencilRecipeActivity" android:windowSoftInputMode="adjustNothing"/>
+
+        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />
+>>>>>>> Ayeon
     </application>
 
 </manifest>

@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
+
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -28,9 +29,14 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/simple-side-drawer2.jar')
+<<<<<<< HEAD
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
 
+=======
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+>>>>>>> Ayeon
     // Mobile Client for initializing the SDK
     implementation('com.amazonaws:aws-android-sdk-mobile-client:2.7.+@aar') { transitive = true }
 
@@ -42,8 +48,17 @@ dependencies {
 
     // AmazonDynamoDB dependencies for NoSQL Database
     implementation 'com.amazonaws:aws-android-sdk-ddb-mapper:2.6.+'
+<<<<<<< HEAD
 
     implementation('com.amazonaws:aws-android-sdk-auth-google:2.7.+@aar') { transitive = true }
 
+=======
+    implementation ('com.amazonaws:aws-android-sdk-auth-google:2.7.+@aar') { transitive = true }
+>>>>>>> Ayeon
     implementation 'com.amazonaws:aws-android-sdk-apigateway-core:2.7.+'
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.7.+'
+    implementation 'com.amazonaws:aws-android-sdk-cognito:2.7.+'
+
+
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 }

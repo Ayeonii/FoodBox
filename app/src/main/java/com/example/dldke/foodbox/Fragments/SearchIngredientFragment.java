@@ -1,7 +1,7 @@
 package com.example.dldke.foodbox.Fragments;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,17 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dldke.foodbox.Activity.PencilRecipeActivity;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
-import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static android.view.View.GONE;
 import static com.example.dldke.foodbox.Fragments.AllFoodListFragment.*;
 
 public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
@@ -36,33 +31,23 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     static ArrayList<PencilItem> list = new ArrayList<>();
 
     static RecyclerView.Adapter adapter;
-    static ArrayList<String> foodlist = new ArrayList<String>() ;
     static String searchText;
     static RecyclerView recyclerView;
+    static String foodImg;
 
 
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_ingredients, container, false);
-
-
         Context context = view.getContext();
-
         recyclerView = (RecyclerView) view.findViewById(R.id.searchRecycler);
         recyclerView.setHasFixedSize(true);
-
-
         //어댑터 연결
         adapter = new PencilRecyclerAdapter(list);
         recyclerView.setLayoutManager(new GridLayoutManager(context,5));
         recyclerView.setAdapter(adapter);
-
-
         Log.e("Frag", "SearchFrag");
 
         return view;
@@ -85,7 +70,8 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     if (matchString(allfoodList.get(i),charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        list.add(new PencilItem(allfoodList.get(i),AllFoodListFragment.Img));
+                        foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)+".jpg";
+                        list.add(new PencilItem(allfoodList.get(i),Uri.parse(foodImg)));
                     }
             }
         }
@@ -136,26 +122,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     else
                         break;
 
-                }
-
-                /*
-                else if(isInitialSound(search.charAt(t))==false && isHangul(value.charAt(i+t))){
-
-                    if(getInitialSound(value.charAt(i+t))==search.charAt(t))
-                        //각각의 초성끼리 같은지 비교한다  ex> 검색어: 가  검색대상: 갈
-                        t++;
-                    else
-                    {
-                        if(value.charAt(i+t)==search.charAt(t))
-                            //그냥 같은지 비교한다.
-                            t++;
-                        else
-                            break;
-                    }
-
-
-                }*/
-                else {
+                } else {
                     //char이 초성이 아니라면
                     if(value.charAt(i+t)==search.charAt(t))
                         //그냥 같은지 비교한다.

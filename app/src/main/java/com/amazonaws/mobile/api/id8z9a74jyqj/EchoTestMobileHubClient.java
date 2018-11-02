@@ -15,6 +15,9 @@
 
 package com.amazonaws.mobile.api.id8z9a74jyqj;
 
+import java.util.*;
+
+
 
 @com.amazonaws.mobileconnectors.apigateway.annotation.Service(endpoint = "https://8z9a74jyqj.execute-api.us-east-1.amazonaws.com/Development")
 public interface EchoTestMobileHubClient {

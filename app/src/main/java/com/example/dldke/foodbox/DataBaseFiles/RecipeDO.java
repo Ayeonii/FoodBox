@@ -3,10 +3,16 @@ package com.example.dldke.foodbox.DataBaseFiles;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBDocument;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.S3Link;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @DynamoDBTable(tableName = "foodboxtest-mobilehub-942131300-recipe")
 
@@ -15,7 +21,15 @@ public class RecipeDO {
     private String _date;
     private Detail _detail;
     private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
+    private S3Link recipeImage;
 
+    public S3Link getRecipeImage() {
+        return recipeImage;
+    }
+
+    public void setRecipeImage(S3Link recipeImage) {
+        this.recipeImage = recipeImage;
+    }
 
     @DynamoDBHashKey(attributeName = "recipeId")
     @DynamoDBAttribute(attributeName = "recipeId")
