@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@DynamoDBTable(tableName = "foodboxtest-mobilehub-942131300-post")
+@DynamoDBTable(tableName = "foodboxv-mobilehub-1561206289-post")
 
 public class PostDO {
     private String _postId;

@@ -55,6 +55,10 @@ public final class Mapper {
         CognitoUser user = cognitoUserPool.getCurrentUser();
         userId = user.getUserId();
     }
+    public static String getUserId(){
+        return userId;
+    }
+
 
     public static void setBucketName(Context context){
         JsonParser parser = new JsonParser();
@@ -197,7 +201,7 @@ public final class Mapper {
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
                         recipe_id);
                 Log.d("why",Mapper.bucketName);
-                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.US_Standard,Mapper.bucketName,"kitawo324/test" + key[key.length-1]));
+                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"kitawo324/test" + key[key.length-1]));
                 recipeItem.getRecipeImage().uploadFrom(new File(filePath));
                 Mapper.getDynamoDBMapper().save(recipeItem);
 
@@ -225,7 +229,7 @@ public final class Mapper {
                         infoName,
                         "fresh");
                 Log.d("why",Mapper.bucketName);
-                infoItem.setInfoImage(Mapper.getDynamoDBMapper().createS3Link(Region.US_Standard,Mapper.bucketName,"Info/" + infoName));
+                infoItem.setInfoImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Info/" + infoName));
                 infoItem.getInfoImage().uploadFrom(new File(filePath));
                 Mapper.getDynamoDBMapper().save(infoItem);
 
@@ -334,7 +338,7 @@ public final class Mapper {
         }
     }
 
-    public static List<InfoDO> scanInfo(String section) {
+    public static List<InfoDO> scanSection(String section) {
         final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
 
         final String sectionName = section;
@@ -347,6 +351,37 @@ public final class Mapper {
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(sectionName));
                 scanExpression.addFilterCondition("section", condition);
+                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
+            }
+            @Override
+            public Object getResult(){
+                return itemList;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
+        return itemList;
+    }
+
+    public static List<InfoDO> scanKindOf(String kindOf) {
+        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
+
+        final String kindName = kindOf;
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            List<InfoDO> itemList;
+            @Override
+            public void run() {
+
+                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(kindName));
+                scanExpression.addFilterCondition("kindOf", condition);
                 itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
             }
             @Override

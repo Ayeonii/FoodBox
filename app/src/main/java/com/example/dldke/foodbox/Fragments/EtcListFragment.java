@@ -50,7 +50,7 @@ public class EtcListFragment extends android.support.v4.app.Fragment {
     }
 
     private List<InfoDO> getInfoDOList(String section) {
-        return Mapper.scanInfo(section);
+        return Mapper.scanSection(section);
     }
 
     private void makeFoodList(List<InfoDO> foodList) {

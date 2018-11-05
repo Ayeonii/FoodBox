@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@DynamoDBTable(tableName = "foodboxtest-mobilehub-942131300-recipe")
+@DynamoDBTable(tableName = "foodboxv-mobilehub-1561206289-recipe")
 
 public class RecipeDO {
     private String _recipeId;
