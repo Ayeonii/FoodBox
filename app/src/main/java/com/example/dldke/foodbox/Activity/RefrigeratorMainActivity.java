@@ -2,9 +2,9 @@ package com.example.dldke.foodbox.Activity;
 
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,13 +17,21 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+
+import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
+
+import java.util.ArrayList;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
 
 
     private static final int LAYOUT = R.layout.activity_refrigerator;
+    private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+
+
+
 
 
     /*********************FloatingButtons***********************/
@@ -69,8 +77,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
-
-
+        pencilAdapter.setClickFoodStringNull();
+        pencilAdapter.setClickFoodNull();
 
         /*메뉴*/
         menuTransBack = (LinearLayout)findViewById(R.id.transparentBack);
@@ -85,8 +93,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         SlidingPageAnimationListener animationListener = new SlidingPageAnimationListener();
         leftAnim.setAnimationListener(animationListener);
         rightAnim.setAnimationListener(animationListener);
-
-
 
         /*플로팅 버튼*/
         plusBack = (RelativeLayout)findViewById(R.id.plusLayout);
