@@ -7,24 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.HalfRecipeRecyclerItem;
+import com.example.dldke.foodbox.HalfRecipeIngreItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class HalfRecipeRecyclerAdapter extends RecyclerView.Adapter<HalfRecipeRecyclerAdapter.ItemViewHolder> {
+public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngreAdapter.ItemViewHolder> {
 
-    ArrayList<HalfRecipeRecyclerItem> mItems;
+    ArrayList<HalfRecipeIngreItem> mItems;
 
-    public HalfRecipeRecyclerAdapter(ArrayList<HalfRecipeRecyclerItem> mItems) {
+    public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems) {
         this.mItems = mItems;
     }
 
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.halfrecipe_item_recycler_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.halfrecipe_ingre_item, parent, false);
         return new ItemViewHolder(view);
     }
 

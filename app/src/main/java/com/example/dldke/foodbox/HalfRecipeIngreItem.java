@@ -1,9 +1,9 @@
 package com.example.dldke.foodbox;
 
-public class HalfRecipeRecyclerItem {
+public class HalfRecipeIngreItem {
     private String name;
 
-    public HalfRecipeRecyclerItem(String name) {
+    public HalfRecipeIngreItem(String name) {
         this.name = name;
     }
 

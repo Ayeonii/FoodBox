@@ -10,40 +10,49 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.Adapter.HalfRecipeRecyclerAdapter;
+import com.example.dldke.foodbox.Adapter.HalfRecipeIngreAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HalfIngredientsDialog extends Dialog implements View.OnClickListener {
-    private List<InfoDO> itemList;
+public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListener {
+    private List<RefrigeratorDO.Item> refrigeratorItem;
     private RecyclerView.Adapter adapter;
-    private ArrayList<HalfRecipeRecyclerItem> mItems = new ArrayList<>();
+    private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
 
     private Context context;
 
     private TextView txtCategory, txtCancel, txtOk;
     private RecyclerView recyclerView;
 
-    private String category;
+    private String type;
+    private ArrayList<LocalRefrigeratorItem> localRefrigeratorItems = new ArrayList<>();
 
-    public HalfIngredientsDialog(@NonNull Context context) {
+    public HalfRecipeIngreDialog(@NonNull Context context) {
         super(context);
         this.context = context;
     }
 
-    public HalfIngredientsDialog(@NonNull Context context, String category) {
+    public HalfRecipeIngreDialog(@NonNull Context context, String type) {
         super(context);
         this.context = context;
-        this.category = category;
+        this.type = type;
+    }
+
+    public HalfRecipeIngreDialog(@NonNull Context context, String type, ArrayList arrayList) {
+        super(context);
+        this.context = context;
+        this.type = type;
+        this.localRefrigeratorItems = arrayList;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_half_ingredients_dialog);
+        setContentView(R.layout.halfrecipe_ingre_dialog);
 
         txtCategory = (TextView) findViewById(R.id.textCategory);
         txtCancel = (TextView) findViewById(R.id.textCancel);
@@ -53,25 +62,31 @@ public class HalfIngredientsDialog extends Dialog implements View.OnClickListene
         txtCancel.setOnClickListener(this);
         txtOk.setOnClickListener(this);
 
-        if(category != null) {
-            txtCategory.setText(category);
+        switch (type) {
+            case "sideDish":
+                txtCategory.setText("반찬칸");
+                break;
+            case "dairy":
+                txtCategory.setText("계란,유제품칸");
+                break;
+            case "etc":
+                txtCategory.setText("음료,소스칸");
+                break;
+            case "meat":
+                txtCategory.setText("육류,생선칸");
+                break;
+            case "fresh":
+                txtCategory.setText("과일,야채칸");
+                break;
         }
 
-        itemList = Mapper.scanInfo(category);
-        for(int i = 0; i < itemList.size(); i++) {
-            Log.d("recipe", String.format("Refri Item: %s", itemList.get(i).getName()));
-        }
-        if(itemList.size() != 0) {
-            setRecyclerView();
-        } else {
-            //그 칸에 들어있는게 없으면 어떻게 처리해야할지(예를들면 반찬칸)
-        }
+        setRecyclerView();
     }
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
 
-        adapter = new HalfRecipeRecyclerAdapter(mItems);
+        adapter = new HalfRecipeIngreAdapter(mItems);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
 
@@ -80,9 +95,8 @@ public class HalfIngredientsDialog extends Dialog implements View.OnClickListene
 
     private void setData() {
         mItems.clear();
-
-        for(int i = 0; i < itemList.size(); i++) {
-            mItems.add(new HalfRecipeRecyclerItem(itemList.get(i).getName()));
+        for(int i=0; i<localRefrigeratorItems.size(); i++) {
+           mItems.add(new HalfRecipeIngreItem(localRefrigeratorItems.get(i).getName()));
         }
 
         adapter.notifyDataSetChanged();
