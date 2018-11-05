@@ -22,13 +22,30 @@ import java.util.ArrayList;
  */
 public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAdapter.ItemViewHolder> {
         boolean isAgain = false;
-        static ArrayList<String> clickFoodString = new ArrayList<>();
-        public static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
-        public static ArrayList<String> clickFoodOnly = new ArrayList<>();
-        double foodCnt = 1;
-        ArrayList<PencilItem> mItems;
+        private static ArrayList<String> clickFoodString = new ArrayList<>();
+        private static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
+        // public static ArrayList<String> clickFoodOnly = new ArrayList<>();
+
+        private ArrayList<PencilItem> mItems;
+
+
+        public PencilRecyclerAdapter (){ }
+
         public PencilRecyclerAdapter(ArrayList<PencilItem> items){
             mItems = items;
+        }
+
+        public void setClickFoodStringNull(){
+            clickFoodString.clear();
+        }
+        public ArrayList<String> getClickFoodString(){
+            return clickFoodString;
+        }
+        public void setClickFoodNull(){
+            clickFood.clear();
+        }
+        public ArrayList<PencilCartItem> getClickFood(){
+            return clickFood;
         }
 
         // 새로운 뷰 홀더 생성
@@ -52,23 +69,24 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                 public void onClick(View v) {
                     String foodName = mItems.get(position).getFoodName();
                     //중복처리
+                    double foodCnt;
                     for(int i =0 ; i<clickFoodString.size(); i++){
                         if(foodName.equals(clickFoodString.get(i))){
-                            foodCnt ++;
+                            foodCnt = clickFood.get(i).getFoodCount()+1;
                             isAgain = true;
                             clickFood.get(i).setFoodCount(foodCnt);
                         }
                     }
                     //중복이 아닐 때
                     if(!isAgain){
-                        clickFoodOnly.add(mItems.get(position).getFoodName());
+                        //clickFoodOnly.add(mItems.get(position).getFoodName());
+                        clickFoodString.add(mItems.get(position).getFoodName());
                         clickFood.add(new PencilCartItem(mItems.get(position).getFoodName()
                                 ,mItems.get(position).getFoodImg()
-                                ,Mapper.createFood(Mapper.searchFood(foodName),foodCnt).getDueDate()
-                                ,foodCnt));
+                                ,Mapper.searchFood(foodName).getDueDate()
+                                ,1));
                     }
-                    clickFoodString.add(mItems.get(position).getFoodName());
-
+                    isAgain = false;
                 }
             });
         }

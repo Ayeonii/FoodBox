@@ -44,7 +44,8 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+                app:layout_constraintTop_toBottomOf="@+id/calendarView"
+                android:fontFamily="@font/font_family"/>
 
             <Button
                 android:id="@+id/cancel_btn"
@@ -58,7 +59,8 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/ok_btn"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+                app:layout_constraintTop_toBottomOf="@+id/calendarView"
+                android:fontFamily="@font/font_family"/>
 
         </LinearLayout>
     </LinearLayout>

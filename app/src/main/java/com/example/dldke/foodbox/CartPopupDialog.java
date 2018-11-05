@@ -10,17 +10,20 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.example.dldke.foodbox.Adapter.PencilCartAdapter;
+import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter.clickFood;
-import static com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter.clickFoodOnly;
-
 public class CartPopupDialog {
     private Context context;
+
+    private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
+    private ArrayList<String> clickFoodString = pencilAdapter.getClickFoodString();
+
 
     public CartPopupDialog(Context context) {
         this.context = context;
@@ -67,9 +70,12 @@ public class CartPopupDialog {
                 Log.d("냉장고 넣기 버튼","장바구니 보기 종료");
                 // 커스텀 다이얼로그를 종료한다.
                 List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
-                for(int i =0 ; i<clickFoodOnly.size(); i++) {
-                    clickedList.add(Mapper.createFood(Mapper.searchFood(clickFoodOnly.get(i)), clickFood.get(i).getFoodCount()));
+                for(int i =0 ; i<clickFoodString.size(); i++) {
+                    PencilCartItem food = clickFood.get(i);
+                    clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName()), food.getFoodCount()));
                 }
+
+                Log.e("clickedList",""+clickedList);
                 Mapper.putFood(clickedList);
                 dlg.dismiss();
             }

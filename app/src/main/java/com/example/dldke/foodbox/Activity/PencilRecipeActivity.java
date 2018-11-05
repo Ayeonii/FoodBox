@@ -22,40 +22,28 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 
-import com.example.dldke.foodbox.Adapter.PencilCartAdapter;
+
 import com.example.dldke.foodbox.Adapter.PencilPagerAdapter;
-import com.example.dldke.foodbox.CartCalendarDialog;
-import com.example.dldke.foodbox.CartPopupDialog;
-import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
-import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.Fragments.SearchIngredientFragment;
+
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.CartPopupDialog;
+
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.Fragments.SearchIngredientFragment;
 import com.example.dldke.foodbox.PencilCartItem;
-import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter.clickFood;
-import static com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter.clickFoodOnly;
-
 
 
 public class PencilRecipeActivity extends AppCompatActivity implements View.OnClickListener{
-    public static boolean isFirst = true;
     FrameLayout frag;
     ViewPager vp;
     ImageButton deleteButton;
-  //  Button completeButton,getInsideButton;
     EditText searchBar;
     TabLayout tabLayout;
-    //ConstraintLayout popup_layout;
-    //RecyclerView.Adapter adapter;
     String searchText;
     FloatingActionButton floating;
-    //RecyclerView popup_cart;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,10 +54,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
         tabLayout = (TabLayout)findViewById(R.id.sliding_tabs); //탭 레이아웃
         searchBar = (EditText)findViewById(R.id.searchBar); //서치 창
         deleteButton = (ImageButton)findViewById(R.id.delete_button); //x버튼
-        //completeButton = (Button)findViewById(R.id.completeButton);//확인
-       // getInsideButton = (Button)findViewById(R.id.getInsideButton); //내 냉장고에 넣기
         floating = (FloatingActionButton)findViewById(R.id.floating); //플로팅
-        //popup_layout = (ConstraintLayout)findViewById(R.id.popup_layout); //카드 팝업 레이아웃
         frag = (FrameLayout)findViewById(R.id.child_fragment_container); //검색시 나오는 화면
 
         /**view pager**/
@@ -80,14 +65,14 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
         tabLayout.setupWithViewPager(vp);
         frag.setVisibility(View.GONE);
         searchBar.setOnClickListener(this);
-        //popup_layout.setOnClickListener(this);
         floating.setOnClickListener(this);
-//        completeButton.setOnClickListener(this);
- //       getInsideButton.setOnClickListener(this);
 
+        //Mapper.createRefrigerator();
+        Log.e("Mapper.checkFirst",""+Mapper.checkFirst());
         if(Mapper.checkFirst()){
             Mapper.createRefrigerator();
         }
+
 
         /****************search bar input *****************************/
         searchBar.addTextChangedListener(new TextWatcher() {
@@ -125,6 +110,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override public void onBackPressed() {
+
         Intent refMain = new Intent(PencilRecipeActivity.this, RefrigeratorMainActivity.class);
         refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PencilRecipeActivity.this.startActivity(refMain);
