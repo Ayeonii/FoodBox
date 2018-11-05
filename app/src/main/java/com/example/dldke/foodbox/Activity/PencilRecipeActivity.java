@@ -129,10 +129,12 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
             case R.id.floating:
                 Log.e("다이얼 클릭 ","다이얼 클릭 먹힘");
                 // 커스텀 다이얼로그를 생성한다. 사용자가 만든 클래스이다.
-                CartPopupDialog customDialog = new CartPopupDialog(PencilRecipeActivity.this);
+                //CartPopupDialog customDialog = new CartPopupDialog(PencilRecipeActivity.this);
                 // 커스텀 다이얼로그를 호출한다.
                 // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
-                customDialog.callFunction();
+                //customDialog.callFunction();
+                Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
+                startActivity(intent);
                 break;
         }
     }

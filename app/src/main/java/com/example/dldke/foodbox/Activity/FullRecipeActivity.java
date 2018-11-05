@@ -22,10 +22,15 @@ import android.widget.TextView;
 
 import com.example.dldke.foodbox.Adapter.FullRecipeAdapter;
 import com.example.dldke.foodbox.Adapter.FullRecipeHorizontalAdapter;
+import com.example.dldke.foodbox.Adapter.PencilCartAdapter;
+import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipeDictionary;
 import com.example.dldke.foodbox.FullRecipeHorizontalData;
+import com.example.dldke.foodbox.PencilCartItem;
+import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import org.w3c.dom.Text;
@@ -34,8 +39,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.amazonaws.regions.RegionUtils.init;
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createRecipe;
 
 public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener  {
+
+    public boolean isRecipe = true;
 
     private ArrayList<FullRecipeDictionary> mArrayList;
     private FullRecipeAdapter mAdapter;
@@ -43,9 +52,16 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private FullRecipeHorizontalAdapter fullRecipeHorizontalAdapter;
     private LinearLayoutManager mLayoutManager;
 
+    private ArrayList<PencilItem> clickFood = new ArrayList<>();
+
     private int MAX_ITEM_COUNT=10;
 
     private final String TAG="FullRecipe DB Test";
+
+    //private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    //private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
+    //private ArrayList<PencilItem> Food = pencilAdapter.getFoodname();
+    //private ArrayList<String> clickFoodString = pencilAdapter.getClickFoodString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -60,6 +76,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
 
         final EditText foodtitle_et = (EditText)findViewById(R.id.food_title);
+
+
 
         //DB에 풀레시피 만들기
         final List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
@@ -94,19 +112,38 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
         ArrayList<FullRecipeHorizontalData> data = new ArrayList<>();
 
-        int i = 0;
+        /*int i = 0;
         while(i<MAX_ITEM_COUNT){
             data.add(new FullRecipeHorizontalData(R.drawable.food, i+"번째 데이터"));
             i++;
-        }
+        }*/
 
-        fullRecipeHorizontalAdapter.setData(data);
-        recipeIngredientHorizontalView.setAdapter(fullRecipeHorizontalAdapter);
+        //fullRecipeHorizontalAdapter.setData(data);
+        //recipeIngredientHorizontalView.setAdapter(fullRecipeHorizontalAdapter);
 
-
-
+        RecyclerView.Adapter adapter;
+        recipeIngredientHorizontalView.setHasFixedSize(true);
+        adapter = new PencilRecyclerAdapter(clickFood);
+        recipeIngredientHorizontalView.setLayoutManager(new LinearLayoutManager(this));
+        recipeIngredientHorizontalView.setAdapter(adapter);
         //=================================================================================================
 
+
+        ////간이레시피 만들기
+        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+        //사용자 입력 몇 개 받는지에 따라 반복
+        recipeIngredientList.add(createIngredient("양파", 2.0));
+        recipeIngredientList.add(createIngredient("감자", 2.0));
+
+        String recipeId = Mapper.createRecipe(recipeIngredientList);
+        //입력 다 받았으면 간이레시피 만듦
+        createRecipe(recipeIngredientList);
+
+        //내 커뮤니티 만들기(최초1회만)
+        //Mapper.createMyCommunity();
+        Mapper.createMyCommunity();
+        //내 커뮤니티에 내 간이레시피 등록
+        Mapper.addRecipeInMyCommunity(recipeId);
 
         /*
         커뮤니티 객체 만들기

@@ -63,10 +63,13 @@ public final class Mapper {
         bucketName = element.getAsJsonObject().get("S3TransferUtility").getAsJsonObject().get("Default").getAsJsonObject().get("Bucket").getAsString();
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient createIngredient(InfoDO item, Double count)
+    //String name => InfoDO item
+    //ingredient.setIngredientName(name) => ingredient.setIngredientName(item.getName())
+    public static com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient createIngredient(String name, Double count)
     {
         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient ingredient = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient();
-        ingredient.setIngredientName(item.getName());
+        //ingredient.setIngredientName(item.getName());
+        ingredient.setIngredientName(name);
         ingredient.setIngredientCount(count);
         return ingredient;
     }
