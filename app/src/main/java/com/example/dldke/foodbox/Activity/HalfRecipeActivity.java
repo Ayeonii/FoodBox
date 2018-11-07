@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.HalfRecipeIngreDialog;
+import com.example.dldke.foodbox.HalfRecipeRecipeDialog;
 import com.example.dldke.foodbox.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;
 
@@ -26,6 +27,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private ArrayList<LocalRefrigeratorItem> localSideDish, localDairy, localEtc, localMeat, localFresh;
 
     private HalfRecipeIngreDialog dialog;
+    private HalfRecipeRecipeDialog recipeDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,8 +195,10 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 dialog.show();
 
                 break;
-//            case R.id.floatingButtonRecipe:
-//                break;
+            case R.id.floatingButtonRecipe:
+                recipeDialog = new HalfRecipeRecipeDialog(this);
+                recipeDialog.show();
+                break;
         }
     }
 }
