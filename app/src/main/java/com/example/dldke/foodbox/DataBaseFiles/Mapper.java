@@ -408,6 +408,7 @@ public final class Mapper {
                 Refri = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
                         userId);
+                Log.d("test", "userId : "+ userId);
             }
             @Override
             public Object getResult(){

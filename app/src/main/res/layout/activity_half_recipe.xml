@@ -62,7 +62,7 @@
 
 
                 <Button
-                    android:id="@+id/btn_sauce"
+                    android:id="@+id/btn_etc"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_margin="1dp"
@@ -91,7 +91,7 @@
                 android:background="#37966f"
                 android:gravity="center"
                 android:text="육류,생선"
-                android:textColor="#000000"
+                android:textColor="#ffffff"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -101,7 +101,7 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/btn_fruit"
+                android:id="@+id/btn_fresh"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"

@@ -19,33 +19,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListener {
-    private List<RefrigeratorDO.Item> refrigeratorItem;
-    private RecyclerView.Adapter adapter;
-    private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
 
-    private Context context;
-
-    private TextView txtCategory, txtCancel, txtOk;
+    private TextView txtType, txtEmpty, txtCancel, txtOk;
     private RecyclerView recyclerView;
 
-    private String type;
+    private Context context;
+    private String ingreType;
+    private boolean isEmpty;
+
+    private RecyclerView.Adapter adapter;
     private ArrayList<LocalRefrigeratorItem> localRefrigeratorItems = new ArrayList<>();
+    private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
 
-    public HalfRecipeIngreDialog(@NonNull Context context) {
+    public HalfRecipeIngreDialog(@NonNull Context context, String type, boolean isEmpty) {
         super(context);
         this.context = context;
+        this.ingreType = type;
+        this.isEmpty = isEmpty;
     }
 
-    public HalfRecipeIngreDialog(@NonNull Context context, String type) {
+    public HalfRecipeIngreDialog(@NonNull Context context, String type, boolean isEmpty, ArrayList arrayList) {
         super(context);
         this.context = context;
-        this.type = type;
-    }
-
-    public HalfRecipeIngreDialog(@NonNull Context context, String type, ArrayList arrayList) {
-        super(context);
-        this.context = context;
-        this.type = type;
+        this.ingreType = type;
+        this.isEmpty = isEmpty;
         this.localRefrigeratorItems = arrayList;
     }
 
@@ -54,49 +51,66 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_ingre_dialog);
 
-        txtCategory = (TextView) findViewById(R.id.textCategory);
-        txtCancel = (TextView) findViewById(R.id.textCancel);
-        txtOk = (TextView) findViewById(R.id.textOk);
+        txtType = (TextView) findViewById(R.id.txt_type);
+        txtEmpty = (TextView) findViewById(R.id.txt_empty);
+        txtCancel = (TextView) findViewById(R.id.txt_cancel);
+        txtOk = (TextView) findViewById(R.id.txt_ok);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         txtCancel.setOnClickListener(this);
         txtOk.setOnClickListener(this);
 
-        switch (type) {
+        switch (ingreType) {
             case "sideDish":
-                txtCategory.setText("반찬칸");
+                txtType.setText("반찬칸");
                 break;
             case "dairy":
-                txtCategory.setText("계란,유제품칸");
+                txtType.setText("계란,유제품칸");
                 break;
             case "etc":
-                txtCategory.setText("음료,소스칸");
+                txtType.setText("음료,소스칸");
                 break;
             case "meat":
-                txtCategory.setText("육류,생선칸");
+                txtType.setText("육류,생선칸");
                 break;
             case "fresh":
-                txtCategory.setText("과일,야채칸");
+                txtType.setText("과일,야채칸");
                 break;
         }
 
-        setRecyclerView();
+        //true : txtEmpty, false : recyclerView
+        if (isEmpty) {
+            recyclerView.setVisibility(View.GONE);
+            txtEmpty.setVisibility(View.VISIBLE);
+        } else {
+            txtEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            setRecyclerView();
+        }
     }
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-
         adapter = new HalfRecipeIngreAdapter(mItems);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
+
+        recyclerView.addOnItemTouchListener(
+                new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Log.d("test", position + ", " + localRefrigeratorItems.get(position).getName() + ", " + localRefrigeratorItems.get(position).getCount().toString());
+                    }
+                }
+                ));
 
         setData();
     }
 
     private void setData() {
         mItems.clear();
-        for(int i=0; i<localRefrigeratorItems.size(); i++) {
-           mItems.add(new HalfRecipeIngreItem(localRefrigeratorItems.get(i).getName()));
+        for (int i = 0; i < localRefrigeratorItems.size(); i++) {
+            mItems.add(new HalfRecipeIngreItem(localRefrigeratorItems.get(i).getName()));
         }
 
         adapter.notifyDataSetChanged();
@@ -105,10 +119,10 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.textCancel:
+            case R.id.txt_cancel:
                 cancel();
                 break;
-            case R.id.textOk:
+            case R.id.txt_ok:
                 dismiss();
                 break;
         }
