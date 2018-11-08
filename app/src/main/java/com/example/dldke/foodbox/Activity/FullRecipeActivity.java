@@ -134,23 +134,18 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         //사용자 입력 몇 개 받는지에 따라 반복
         recipeIngredientList.add(createIngredient("양파", 2.0));
         recipeIngredientList.add(createIngredient("감자", 2.0));
+        recipeIngredientList.add(createIngredient("우유", 2.0));
+        recipeIngredientList.add(createIngredient("햄", 2.0));
+        recipeIngredientList.add(createIngredient("버섯", 2.0));
 
-        String recipeId = Mapper.createRecipe(recipeIngredientList);
-        //입력 다 받았으면 간이레시피 만듦
-        createRecipe(recipeIngredientList);
+        //간이레시피 만들기
+        recipe_id = Mapper.createRecipe(recipeIngredientList);
+        Log.d("recipe",recipe_id);
 
         //내 커뮤니티 만들기(최초1회만)
         //Mapper.createMyCommunity();
-        Mapper.createMyCommunity();
         //내 커뮤니티에 내 간이레시피 등록
-        Mapper.addRecipeInMyCommunity(recipeId);
-
-        /*
-        커뮤니티 객체 만들기
-         */
-        List<String> recipe_list = Mapper.searchMyCommunity().getMyRecipes();
-        recipe_id = recipe_list.get(0);
-        Log.d(TAG, "뭔지 모르겠는 데이터!!!!" + Mapper.searchRecipe(recipe_id).getIngredient().get(0).getIngredientName());
+        Mapper.addRecipeInMyCommunity(recipe_id);
 
 
         /*
@@ -172,10 +167,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 View view = LayoutInflater.from(FullRecipeActivity.this)
                         .inflate(R.layout.fullrecipe_popup, null, false);
                 builder.setView(view);
-                //final Button ButtonSubmit = (Button) view.findViewById(R.id.button_dialog_submit);
-                //final EditText method = (EditText) view.findViewById(R.id.edittext_dialog_method);
-                //final EditText minute = (EditText) view.findViewById(R.id.edittext_dialog_minute);
-                //final EditText fire = (EditText) view.findViewById(R.id.edittext_dialog_fire);
 
                 final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
                 final Spinner method_sp = (Spinner) view.findViewById(R.id.method_spinner);
@@ -188,12 +179,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 method_sp.setAdapter(madapter);
 
                 String[] minuteStr = getResources().getStringArray(R.array.MinuteSpinner);
-                ArrayAdapter<String> miadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, minuteStr);
-                minute_sp.setAdapter(miadapter);
+                ArrayAdapter<String> minadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, minuteStr);
+                minute_sp.setAdapter(minadapter);
 
                 String[] fireStr = getResources().getStringArray(R.array.FireSpinner);
-                ArrayAdapter<String> fadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fireStr);
-                fire_sp.setAdapter(fadapter);
+                ArrayAdapter<String> fireadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fireStr);
+                fire_sp.setAdapter(fireadapter);
 
 
                 ButtonSubmit.setText("삽입");
@@ -251,7 +242,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 startActivity(choice_ingred);
             case R.id.get_recipe:
         }
-
 
     }
 }
