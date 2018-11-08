@@ -56,6 +56,10 @@ public final class Mapper {
         CognitoUser user = cognitoUserPool.getCurrentUser();
         userId = user.getUserId();
     }
+    public static String getUserId(){
+        return userId;
+    }
+
 
     public static void setBucketName(Context context){
         JsonParser parser = new JsonParser();
@@ -201,7 +205,7 @@ public final class Mapper {
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
                         recipe_id);
                 Log.d("why",Mapper.bucketName);
-                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.US_Standard,Mapper.bucketName,"kitawo324/test" + key[key.length-1]));
+                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"kitawo324/test" + key[key.length-1]));
                 recipeItem.getRecipeImage().uploadFrom(new File(filePath));
                 Mapper.getDynamoDBMapper().save(recipeItem);
 
@@ -229,7 +233,7 @@ public final class Mapper {
                         infoName,
                         "fresh");
                 Log.d("why",Mapper.bucketName);
-                infoItem.setInfoImage(Mapper.getDynamoDBMapper().createS3Link(Region.US_Standard,Mapper.bucketName,"Info/" + infoName));
+                infoItem.setInfoImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Info/" + infoName));
                 infoItem.getInfoImage().uploadFrom(new File(filePath));
                 Mapper.getDynamoDBMapper().save(infoItem);
 
