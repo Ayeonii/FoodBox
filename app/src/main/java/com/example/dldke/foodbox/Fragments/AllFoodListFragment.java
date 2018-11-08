@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dldke.foodbox.Activity.PencilRecipeActivity;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -21,13 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AllFoodListFragment extends android.support.v4.app.Fragment {
-    static public List<String> allfoodList = new ArrayList<String>();
+    private PencilRecipeActivity pencil = new PencilRecipeActivity();
+    private static List<String> allfoodList = new ArrayList<String>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
     private List<InfoDO> freshList, meatList, etcList;
-    private boolean isFirst = true;
     private String foodImg;
+
+
+    public AllFoodListFragment(){}
+
+    public List<String> getAllFoodList(){
+        return allfoodList;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,10 +46,13 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_ingredients, container, false);
 
-        freshList = getInfoDOList("fresh");
-        meatList = getInfoDOList("meat");
-        etcList = getInfoDOList("etc");
-        makeFoodList(freshList);
+        if(pencil.getEnterTime() == 0) {
+            freshList = getInfoDOList("fresh");
+            meatList = getInfoDOList("meat");
+            etcList = getInfoDOList("etc");
+            makeFoodList(freshList);
+            pencil.setEnterTime(1);
+        }
         /****meat랑 etc에 이미지 경로 추가 되면 주석 풀어주기*****/
         //makeFoodList(meatList);
         //makeFoodList(etcList);
@@ -63,7 +74,6 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
     private void makeFoodList(List<InfoDO> foodList) {
         for(int i =0 ; i< foodList.size(); i++) {
-            if(isFirst) {
                 allfoodList.add(foodList.get(i).getName());
                 File file = new File("/storage/emulated/0/Download/"+foodList.get(i).getName()+".jpg");
                 if(!file.exists()) {
@@ -71,7 +81,6 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
                     //이미지 저장.
                     Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/");
                 }
-            }
         }
     }
 
@@ -81,7 +90,6 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
             foodImg = "file:///storage/emulated/0/Download/"+name+".jpg";
             list.add(new PencilItem(name, Uri.parse(foodImg)));
         }
-        isFirst = false;
         // 데이터 추가가 완료되었으면 notifyDataSetChanged() 메서드를 호출해 데이터 변경 체크를 실행한다.
         adapter.notifyDataSetChanged();
     }

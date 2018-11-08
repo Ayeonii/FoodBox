@@ -15,18 +15,20 @@ import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.dldke.foodbox.Fragments.AllFoodListFragment.*;
 
 public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
-
+    private AllFoodListFragment allList = new AllFoodListFragment();
     private static final char HANGUL_BEGIN_UNICODE = 44032; // 가
     private static final char HANGUL_LAST_UNICODE = 55203; // 힣
     private static final char HANGUL_BASE_UNIT = 588;//각 자음 마다 가지는 글자수
     //자음
     private static final char[] INITIAL_SOUND = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
 
+    private static List<String> allfoodList = new ArrayList<>();
 
     static ArrayList<PencilItem> list = new ArrayList<>();
 
@@ -41,6 +43,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_ingredients, container, false);
+        allfoodList = allList.getAllFoodList();
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.searchRecycler);
         recyclerView.setHasFixedSize(true);

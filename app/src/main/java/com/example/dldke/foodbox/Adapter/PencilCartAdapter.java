@@ -40,6 +40,32 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     // View 의 내용을 해당 포지션의 데이터로 바꿉니다.
     @Override
     public void onBindViewHolder( final ItemViewHolder holder,   final int position) {
+
+
+        Button.OnClickListener onClickListener = new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.dueDate :
+                        Log.e("Dialog","Calendar");
+                        // 커스텀 다이얼로그를 생성한다. 사용자가 만든 클래스이다.
+                        CartCalendarDialog customDialog = new CartCalendarDialog(context);
+                        customDialog.callFunction(holder.food_date);
+                        break ;
+                    case R.id.plus_btn :
+                        int plus = (int)mItems.get(position).getFoodCount()+1;
+                        holder.food_count.setText(plus+"개");
+                        mItems.get(position).setFoodCount(plus);
+                        break ;
+                    case R.id.minus_btn :
+                        int minus = (int)mItems.get(position).getFoodCount()-1;
+                        holder.food_count.setText(minus+"개");
+                        mItems.get(position).setFoodCount(minus);
+                        break ;
+                }
+            }
+        } ;
+
         holder.food_name.setText(mItems.get(position).getFoodName());
         holder.food_img.setImageURI(mItems.get(position).getFoodImg());
         holder.food_count.setText((int)mItems.get(position).getFoodCount()+"개");
@@ -48,15 +74,10 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
             holder.food_name.setTextSize(12);
         }
         //장바구니 목록 클릭시 커스텀 다이얼로그 팝업
-        holder.food_date.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("Dialog","Calendar");
-                // 커스텀 다이얼로그를 생성한다. 사용자가 만든 클래스이다.
-                CartCalendarDialog customDialog = new CartCalendarDialog(context);
-                customDialog.callFunction(holder.food_date);
-            }
-        });
+        holder.food_date.setOnClickListener(onClickListener);
+        holder.plus_btn.setOnClickListener(onClickListener);
+        holder.minus_btn.setOnClickListener(onClickListener);
+
     }
 
     // 데이터 셋의 크기를 리턴
@@ -72,14 +93,16 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         private TextView food_count;
         private TextView food_date;
         private ImageView food_img;
-        private ConstraintLayout cart_Layout;
+        private ImageView plus_btn;
+        private ImageView minus_btn;
         public ItemViewHolder(View itemView) {
             super(itemView);
             food_name = (TextView) itemView.findViewById(R.id.foodText);
             food_img = (ImageView) itemView.findViewById(R.id.foodImg);
             food_count = (TextView) itemView.findViewById(R.id.foodCount);
             food_date = (TextView) itemView.findViewById(R.id.dueDate);
-            cart_Layout = (ConstraintLayout)itemView.findViewById(R.id.cart_ingredient);
+            plus_btn = (ImageView) itemView.findViewById(R.id.plus_btn);
+            minus_btn = (ImageView) itemView.findViewById(R.id.minus_btn);
         }
     }
 }

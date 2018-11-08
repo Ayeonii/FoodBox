@@ -44,6 +44,15 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     TabLayout tabLayout;
     String searchText;
     FloatingActionButton floating;
+    private static int enterCnt = 0;
+
+    public PencilRecipeActivity(){}
+
+    public void setEnterTime(int enterCnt){
+        this.enterCnt = enterCnt;
+    }
+
+    public int getEnterTime(){ return enterCnt;}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
