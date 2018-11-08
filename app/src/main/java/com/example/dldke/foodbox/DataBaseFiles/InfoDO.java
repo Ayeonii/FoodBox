@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@DynamoDBTable(tableName = "foodboxtest-mobilehub-942131300-Info")
+@DynamoDBTable(tableName = "foodboxv-mobilehub-1561206289-Info")
 
 public class InfoDO {
     private String _name;
