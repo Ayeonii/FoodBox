@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.HalfRecipeDialogListener;
 import com.example.dldke.foodbox.HalfRecipeIngreDialog;
 import com.example.dldke.foodbox.HalfRecipeRecipeDialog;
 import com.example.dldke.foodbox.LocalRefrigeratorItem;
@@ -28,6 +29,8 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private HalfRecipeIngreDialog dialog;
     private HalfRecipeRecipeDialog recipeDialog;
+
+    private Boolean[] checkSideDish, checkDairy, checkEtc, checkMeat, checkFresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,27 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         Log.d("test", "onCreate");
         scanToLocalRefrigerator();
+        setCheckArray();
+    }
+
+    public void setCheckArray() {
+        checkSideDish = new Boolean[localSideDish.size()];
+        checkDairy = new Boolean[localDairy.size()];
+        checkEtc = new Boolean[localEtc.size()];
+        checkMeat = new Boolean[localMeat.size()];
+        checkFresh = new Boolean[localFresh.size()];
+
+        for (int i=0; i<localSideDish.size(); i++)
+            checkSideDish[i] = false;
+        for (int i=0; i<localDairy.size(); i++)
+            checkDairy[i] = false;
+        for (int i=0; i<localEtc.size(); i++)
+            checkEtc[i] = false;
+        for (int i=0; i<localMeat.size(); i++)
+            checkMeat[i] = false;
+        for (int i=0; i<localFresh.size(); i++)
+            checkFresh[i] = false;
+
     }
 
     public void scanToLocalRefrigerator() {
@@ -125,9 +149,21 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     for (int i = 0; i < localSideDish.size(); i++) {
                         Log.d("test", localSideDish.get(i).getName());
-                        dialog = new HalfRecipeIngreDialog(this, "sideDish", false, localSideDish);
                     }
+                    dialog = new HalfRecipeIngreDialog(this, "sideDish", false, localSideDish, checkSideDish);
                 }
+
+                dialog.setDialogListener(new HalfRecipeDialogListener() {
+                    @Override
+                    public void onPositiveClicked(String type, Boolean[] check) {
+                        setResult(type, check);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+
+                    }
+                });
                 dialog.show();
 
                 break;
@@ -141,9 +177,21 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     for (int i = 0; i < localDairy.size(); i++) {
                         Log.d("test", localDairy.get(i).getName());
-                        dialog = new HalfRecipeIngreDialog(this, "dairy", false, localDairy);
                     }
+                    dialog = new HalfRecipeIngreDialog(this, "dairy", false, localDairy, checkDairy);
                 }
+
+                dialog.setDialogListener(new HalfRecipeDialogListener() {
+                    @Override
+                    public void onPositiveClicked(String type, Boolean[] check) {
+                        setResult(type, check);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+
+                    }
+                });
                 dialog.show();
 
                 break;
@@ -157,9 +205,21 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     for (int i = 0; i < localEtc.size(); i++) {
                         Log.d("test", localEtc.get(i).getName());
-                        dialog = new HalfRecipeIngreDialog(this, "etc", false, localEtc);
                     }
+                    dialog = new HalfRecipeIngreDialog(this, "etc", false, localEtc, checkEtc);
                 }
+
+                dialog.setDialogListener(new HalfRecipeDialogListener() {
+                    @Override
+                    public void onPositiveClicked(String type, Boolean[] check) {
+                        setResult(type, check);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+
+                    }
+                });
                 dialog.show();
 
                 break;
@@ -173,9 +233,21 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     for (int i = 0; i < localMeat.size(); i++) {
                         Log.d("test", localMeat.get(i).getName());
-                        dialog = new HalfRecipeIngreDialog(this, "meat", false, localMeat);
                     }
+                    dialog = new HalfRecipeIngreDialog(this, "meat", false, localMeat, checkMeat);
                 }
+
+                dialog.setDialogListener(new HalfRecipeDialogListener() {
+                    @Override
+                    public void onPositiveClicked(String type, Boolean[] check) {
+                        setResult(type, check);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+
+                    }
+                });
                 dialog.show();
 
                 break;
@@ -189,15 +261,87 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     for (int i = 0; i < localFresh.size(); i++) {
                         Log.d("test", localFresh.get(i).getName());
-                        dialog = new HalfRecipeIngreDialog(this, "fresh", false, localFresh);
                     }
+                    dialog = new HalfRecipeIngreDialog(this, "fresh", false, localFresh, checkFresh);
                 }
+
+                dialog.setDialogListener(new HalfRecipeDialogListener() {
+                    @Override
+                    public void onPositiveClicked(String type, Boolean[] check) {
+                        setResult(type, check);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+
+                    }
+                });
                 dialog.show();
 
                 break;
             case R.id.floatingButtonRecipe:
                 recipeDialog = new HalfRecipeRecipeDialog(this);
                 recipeDialog.show();
+                break;
+        }
+    }
+
+    private void setResult(String type, Boolean[] check) {
+        switch (type) {
+            case "sideDish":
+                for(int i=0; i<localSideDish.size(); i++) {
+                    if (check[i] != checkSideDish[i]) {
+                        if (check[i])
+                            checkSideDish[i] = true;
+                        else
+                            checkSideDish[i] = false;
+                    }
+                }
+
+                break;
+            case "dairy":
+                for(int i=0; i<localDairy.size(); i++) {
+                    if (check[i] != checkDairy[i]) {
+                        if (check[i])
+                            checkDairy[i] = true;
+                        else
+                            checkDairy[i] = false;
+                    }
+                }
+
+                break;
+            case "etc":
+                for(int i=0; i<localEtc.size(); i++) {
+                    if (check[i] != checkEtc[i]) {
+                        if (check[i])
+                            checkEtc[i] = true;
+                        else
+                            checkEtc[i] = false;
+                    }
+                }
+
+                break;
+            case "meat":
+                for(int i=0; i<localMeat.size(); i++) {
+                    if (check[i] != checkMeat[i]) {
+                        if (check[i])
+                            checkMeat[i] = true;
+                        else
+                            checkMeat[i] = false;
+                    }
+                }
+
+                break;
+            case "fresh":
+                for(int i=0; i<localFresh.size(); i++) {
+                    if (check[i] != checkFresh[i]) {
+                        if (check[i])
+                            checkFresh[i] = true;
+                        else
+                            checkFresh[i] = false;
+                    }
+                }
+
                 break;
         }
     }
