@@ -31,8 +31,8 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         holder.mName.setText(mItems.get(position).getName());
-        int iCount = mItems.get(position).getCount();
-        String strCount = Integer.toString(iCount);
+        Double iCount = mItems.get(position).getCount();
+        String strCount = Double.toString(iCount);
 
         holder.mCount.setText(strCount);
     }

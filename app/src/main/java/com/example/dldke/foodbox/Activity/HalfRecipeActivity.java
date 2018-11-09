@@ -31,6 +31,8 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private HalfRecipeRecipeDialog recipeDialog;
 
     private Boolean[] checkSideDish, checkDairy, checkEtc, checkMeat, checkFresh;
+    private ArrayList<LocalRefrigeratorItem> selectedItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,10 +282,41 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
                 break;
             case R.id.floatingButtonRecipe:
-                recipeDialog = new HalfRecipeRecipeDialog(this);
+                setSelectedItem();
+
+                for (int i=0; i<selectedItem.size(); i++) {
+                    Log.d("test", i + " : selectedItem : " + selectedItem.get(i).getName());
+                }
+
+                recipeDialog = new HalfRecipeRecipeDialog(this, selectedItem);
                 recipeDialog.show();
                 break;
         }
+    }
+
+    private void setSelectedItem() {
+        selectedItem = new ArrayList<>();
+
+        for (int i=0; i<localSideDish.size(); i++)
+            if (checkSideDish[i])
+                selectedItem.add(new LocalRefrigeratorItem(localSideDish.get(i).getName(), localSideDish.get(i).getCount()));
+
+        for (int i=0; i<localDairy.size(); i++)
+            if (checkDairy[i])
+                selectedItem.add(new LocalRefrigeratorItem(localDairy.get(i).getName(), localDairy.get(i).getCount()));
+
+        for (int i=0; i<localEtc.size(); i++)
+            if (checkEtc[i])
+                selectedItem.add(new LocalRefrigeratorItem(localEtc.get(i).getName(), localEtc.get(i).getCount()));
+
+        for (int i=0; i<localMeat.size(); i++)
+            if (checkMeat[i])
+                selectedItem.add(new LocalRefrigeratorItem(localMeat.get(i).getName(), localMeat.get(i).getCount()));
+
+        for (int i=0; i<localFresh.size(); i++)
+            if (checkFresh[i])
+                selectedItem.add(new LocalRefrigeratorItem(localFresh.get(i).getName(), localFresh.get(i).getCount()));
+
     }
 
     private void setResult(String type, Boolean[] check) {

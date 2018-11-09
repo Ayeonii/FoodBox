@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.Adapter.HalfRecipeIngreAdapter;
@@ -20,7 +21,8 @@ import java.util.List;
 
 public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListener {
 
-    private TextView txtType, txtEmpty, txtCancel, txtOk;
+    private TextView txtType, txtEmpty, txtBackEmpty, txtCancel, txtOk;
+    private LinearLayout linearLayout1, linearLayout2;
     private RecyclerView recyclerView;
 
     private Context context;
@@ -72,10 +74,14 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
         txtType = (TextView) findViewById(R.id.txt_type);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
         txtCancel = (TextView) findViewById(R.id.txt_cancel);
+        txtBackEmpty = (TextView) findViewById(R.id.txt_back_empty);
         txtOk = (TextView) findViewById(R.id.txt_ok);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        linearLayout1 = (LinearLayout) findViewById(R.id.layout1);
+        linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
 
         txtCancel.setOnClickListener(this);
+        txtBackEmpty.setOnClickListener(this);
         txtOk.setOnClickListener(this);
 
         switch (ingreType) {
@@ -100,9 +106,13 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
         if (isEmpty) {
             recyclerView.setVisibility(View.GONE);
             txtEmpty.setVisibility(View.VISIBLE);
+            linearLayout1.setVisibility(View.GONE);
+            linearLayout2.setVisibility(View.VISIBLE);
         } else {
             txtEmpty.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            linearLayout1.setVisibility(View.VISIBLE);
+            linearLayout2.setVisibility(View.GONE);
             setRecyclerView();
         }
     }
@@ -150,6 +160,9 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txt_cancel:
+                cancel();
+                break;
+            case R.id.txt_back_empty:
                 cancel();
                 break;
             case R.id.txt_ok:

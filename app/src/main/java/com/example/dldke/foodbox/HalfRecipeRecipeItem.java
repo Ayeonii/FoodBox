@@ -2,9 +2,9 @@ package com.example.dldke.foodbox;
 
 public class HalfRecipeRecipeItem {
     private String name;
-    private int count;
+    private Double count;
 
-    public HalfRecipeRecipeItem(String name, int count) {
+    public HalfRecipeRecipeItem(String name, Double count) {
         this.name = name;
         this.count = count;
     }
@@ -13,7 +13,7 @@ public class HalfRecipeRecipeItem {
         return name;
     }
 
-    public int getCount() {
+    public Double getCount() {
         return count;
     }
 }
