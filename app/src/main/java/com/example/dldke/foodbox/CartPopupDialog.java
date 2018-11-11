@@ -2,6 +2,7 @@ package com.example.dldke.foodbox;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.Activity.PencilRecipeActivity;
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.Adapter.PencilCartAdapter;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
@@ -21,8 +24,8 @@ import java.util.List;
 
 public class CartPopupDialog {
     private Context context;
-
-
+    private boolean isEnd = false;
+    private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
 
@@ -33,6 +36,9 @@ public class CartPopupDialog {
         this.context = context;
     }
 
+    public boolean getisEnd(){
+        return isEnd;
+    }
     // 호출할 다이얼로그 함수를 정의한다.
     public void callFunction() {
         RecyclerView.Adapter adapter;
@@ -40,7 +46,6 @@ public class CartPopupDialog {
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dlg.setContentView(R.layout.custom_dialog_cartpopup);
         dlg.show();
-        Toast.makeText(context, "클릭한거 길이: "+ clickFood.size(), Toast.LENGTH_SHORT).show();
 
         final RecyclerView cart_list_view = (RecyclerView) dlg.findViewById(R.id.cart_recycler);
         final Button getInside = (Button) dlg.findViewById(R.id.getInsideButton);
@@ -60,7 +65,6 @@ public class CartPopupDialog {
         getInside.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "getclicItems길이: "+ clickItems.size(), Toast.LENGTH_SHORT).show();
                 List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
                 for(int i =0 ; i<clickItems.size(); i++) {
                     PencilCartItem food = clickItems.get(i);
@@ -73,9 +77,12 @@ public class CartPopupDialog {
                 }
                 Log.e("clickedList",""+clickedList);
                 Mapper.putFood(clickedList);
-               // pencilAdapter.getClickFoodString().clear();
+
                 pencilAdapter.getClickFood().clear();
+                isEnd = true;
+
                 dlg.dismiss();
+
             }
         });
     }

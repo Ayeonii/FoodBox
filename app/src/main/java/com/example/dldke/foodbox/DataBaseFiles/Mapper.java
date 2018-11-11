@@ -434,42 +434,7 @@ public final class Mapper {
 
         return false;
     }
-/*
-    public static List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> searchRefri(final String name) {
 
-
-        final String foodName = name;
-
-        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
-            List<RefrigeratorDO.Item> itemList;
-            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
-            @Override
-            public void run() {
-                Refri = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
-                        userId);
-                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(foodName));
-                scanExpression.addFilterCondition("name", condition);
-                itemList = Mapper.getDynamoDBMapper().scan(RefrigeratorDO.Item.class, scanExpression);
-            }
-            @Override
-            public Object getResult(){
-                return itemList;
-            }
-        });
-
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        List<RefrigeratorDO.Item> item_info = (List<RefrigeratorDO.Item>)thread.getResult();
-
-        return item_info;
-    }
-*/
     public static List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> scanRefri() {
 
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {

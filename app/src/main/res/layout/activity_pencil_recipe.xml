@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="@color/colorWhite">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating"
@@ -69,9 +70,12 @@
 
         android:id="@+id/pager"
 
-        android:layout_width="326dp"
+        android:layout_width="0dp"
 
         android:layout_height="0dp"
+        android:background="@color/colorWhite"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,11 +88,14 @@
     <FrameLayout
         android:id="@+id/child_fragment_container"
         android:layout_width="0dp"
-        android:layout_height="507dp"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:background="@color/colorWhite"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchBar"
         app:layout_constraintVertical_bias="0.0">

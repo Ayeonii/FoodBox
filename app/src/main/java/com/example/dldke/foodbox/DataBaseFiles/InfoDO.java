@@ -8,10 +8,6 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.S3Link;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 @DynamoDBTable(tableName = "foodboxv-mobilehub-1561206289-Info")
 
 public class InfoDO {

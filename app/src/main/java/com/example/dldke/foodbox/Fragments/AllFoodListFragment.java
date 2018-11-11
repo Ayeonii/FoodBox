@@ -38,7 +38,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     public List<String[]> getMeatList(){ return makeFoodListString(meatList, "meat"); }
     public List<String[]> getFreshList(){ return makeFoodListString(freshList,"fresh"); }
     public List<String[]> getEtcList(){ return makeFoodListString(etcList,"etc"); }
-    public List<String[]> getSideList(){ return makeFoodListString(sideList,"side"); }
+    public List<String[]> getSideList(){ return makeFoodListString(sideList,"sideDish"); }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
             makeFoodList(freshList, "fresh");
             makeFoodList(meatList,"meat");
             makeFoodList(etcList,"etc");
-            makeFoodList(etcList,"sideDish");
+            makeFoodList(sideList,"sideDish");
             pencil.setEnterTime(1);
         }
         Context context = view.getContext();

@@ -46,8 +46,6 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.dueDate :
-                        Log.e("Dialog","Calendar");
-                        // 커스텀 다이얼로그를 생성한다. 사용자가 만든 클래스이다.
                         CartCalendarDialog customDialog = new CartCalendarDialog(context);
                         customDialog.callFunction(holder.food_date, mItems.get(position));
                         break ;
