@@ -32,6 +32,8 @@
         <activity android:name=".Activity.FullRecipeActivity" />
         <activity android:name=".Activity.RefrigeratorInsideActivity" />
         <activity android:name=".Activity.HalfRecipeActivity"/>
+        <activity android:name=".Activity.MyRecipeActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity android:name=".Activity.PencilRecipeActivity" android:windowSoftInputMode="adjustNothing"/>
 
         <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />

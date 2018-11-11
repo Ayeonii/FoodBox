@@ -46,8 +46,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
     public boolean isRecipe = true;
 
-    private ArrayList<FullRecipeDictionary> mArrayList;
-    private FullRecipeAdapter mAdapter;
+    private static ArrayList<FullRecipeDictionary> mArrayList;
+    private static FullRecipeAdapter mAdapter;
     private RecyclerView fullrecipeRecyclerView, recipeIngredientHorizontalView;
     private FullRecipeHorizontalAdapter fullRecipeHorizontalAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -162,7 +162,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(View v) {
 
-                //팝업창 build
+                //레시피 다이얼로그 build
                 AlertDialog.Builder builder = new AlertDialog.Builder(FullRecipeActivity.this);
                 View view = LayoutInflater.from(FullRecipeActivity.this)
                         .inflate(R.layout.fullrecipe_popup, null, false);
