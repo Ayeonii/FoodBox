@@ -31,7 +31,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
         private static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
         private static Date inputDBDate ;
         private static String inputDBDateString;
-        // public static ArrayList<String> clickFoodOnly = new ArrayList<>();
+        //public static ArrayList<String> clickFoodOnly = new ArrayList<>();
 
         private ArrayList<PencilItem> mItems;
 
@@ -47,15 +47,9 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             mItems = items;
         }
 
-        public void setClickFoodStringNull(){
-            clickFoodString.clear();
-        }
-        public ArrayList<String> getClickFoodString(){
+        /*public ArrayList<String> getClickFoodString(){
             return clickFoodString;
-        }
-        public void setClickFoodNull(){
-            clickFood.clear();
-        }
+        }*/
         public ArrayList<PencilCartItem> getClickFood(){
             return clickFood;
         }
@@ -85,12 +79,10 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                     Log.e("foodName", ""+foodName);
                     Log.e("position", ""+position);
 
-               //     Log.e("DueDate", ""+Mapper.searchFood(foodName, ).getSection());
-
                     //중복처리
                     double foodCnt;
-                    for(int i =0 ; i<clickFoodString.size(); i++){
-                        if(foodName.equals(clickFoodString.get(i))){
+                    for(int i =0 ; i<clickFood.size(); i++){
+                        if(foodName.equals(clickFood.get(i).getFoodName())){
                             foodCnt = clickFood.get(i).getFoodCount()+1;
                             isAgain = true;
                             clickFood.get(i).setFoodCount(foodCnt);
@@ -98,14 +90,19 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                     }
                     //중복이 아닐 때
                     if(!isAgain){
-                        int dueDate = Mapper.searchFood(mItems.get(position).getFoodName(),mItems.get(position).getFoodSection()).getDueDate();
+                        int dueDate;
+                        try {
+                             dueDate = Mapper.searchFood(mItems.get(position).getFoodName(), mItems.get(position).getFoodSection()).getDueDate();
+                        } catch (NullPointerException e) {
+                             dueDate = 0;
+                        }
                         Log.e("유통기한", ""+dueDate);
                         cal.add(cal.DATE,dueDate);
                         inputDBDate = cal.getTime(); //연산된 날자를 생성.
                         inputDBDateString = formatter.format(inputDBDate);
 
                         //clickFoodOnly.add(mItems.get(position).getFoodName());
-                        clickFoodString.add(mItems.get(position).getFoodName());
+                        //clickFoodString.add(mItems.get(position).getFoodName());
                         clickFood.add(new PencilCartItem(mItems.get(position).getFoodName()
                                 ,mItems.get(position).getFoodImg()
                                 ,inputDBDateString

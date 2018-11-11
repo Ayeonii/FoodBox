@@ -1,7 +1,6 @@
 package com.example.dldke.foodbox.Adapter;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.CartCalendarDialog;
-import com.example.dldke.foodbox.CurrentDate;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.PencilCartItem;
 import com.example.dldke.foodbox.R;
 
@@ -24,14 +21,15 @@ import java.util.ArrayList;
  * 직접입력 장바구니 팝업 어댑터
  */
 public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.ItemViewHolder> {
+    private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     private Context context;
-    private ArrayList<PencilCartItem> mItems;
-
+    private static ArrayList<PencilCartItem> mItems;
 
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){
-        mItems = cartItems;
+        this.mItems = cartItems;
     }
 
+    public ArrayList<PencilCartItem> getCartItems(){return mItems; }
     // 새로운 뷰 홀더 생성
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,8 +41,6 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     // View 의 내용을 해당 포지션의 데이터로 바꿉니다.
     @Override
     public void onBindViewHolder( final ItemViewHolder holder,   final int position) {
-
-
         Button.OnClickListener onClickListener = new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,6 +61,11 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                         holder.food_count.setText(minus+"개");
                         mItems.get(position).setFoodCount(minus);
                         break ;
+                    case R.id.deleteButton :
+                        mItems.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, mItems.size());
+                        break ;
                 }
             }
         } ;
@@ -80,24 +81,20 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         holder.food_date.setOnClickListener(onClickListener);
         holder.plus_btn.setOnClickListener(onClickListener);
         holder.minus_btn.setOnClickListener(onClickListener);
+        holder.delete_btn.setOnClickListener(onClickListener);
 
     }
 
-    // 데이터 셋의 크기를 리턴
     @Override
     public int getItemCount() {
         return mItems.size();
     }
 
-    // 커스텀 뷰홀더
-    // item layout 에 존재하는 위젯들을 바인딩
     class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView food_name;
-        private TextView food_count;
-        private TextView food_date;
-        private ImageView food_img;
-        private ImageView plus_btn;
-        private ImageView minus_btn;
+        private TextView food_name, food_count, food_date;
+        private ImageView food_img, plus_btn, minus_btn;
+        private Button delete_btn;
+
         public ItemViewHolder(View itemView) {
             super(itemView);
             food_name = (TextView) itemView.findViewById(R.id.foodText);
@@ -106,6 +103,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
             food_date = (TextView) itemView.findViewById(R.id.dueDate);
             plus_btn = (ImageView) itemView.findViewById(R.id.plus_btn);
             minus_btn = (ImageView) itemView.findViewById(R.id.minus_btn);
+            delete_btn = (Button) itemView.findViewById(R.id.deleteButton);
         }
     }
 }

@@ -24,7 +24,6 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
-    private boolean isFirst = true;
     private String foodImg;
     List<String[]> foodName = new ArrayList<String[]>();
 
@@ -37,7 +36,7 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
         recyclerView.setHasFixedSize(true);
         // use a linear layout manager
         adapter = new PencilRecyclerAdapter(list);
-        recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "sideDish");
         setData();

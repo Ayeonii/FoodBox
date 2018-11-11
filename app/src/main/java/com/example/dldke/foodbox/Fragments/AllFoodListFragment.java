@@ -38,7 +38,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     public List<String[]> getMeatList(){ return makeFoodListString(meatList, "meat"); }
     public List<String[]> getFreshList(){ return makeFoodListString(freshList,"fresh"); }
     public List<String[]> getEtcList(){ return makeFoodListString(etcList,"etc"); }
-    public List<String[]> getSideList(){ return makeFoodListString(etcList,"side"); }
+    public List<String[]> getSideList(){ return makeFoodListString(sideList,"side"); }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
             meatList = getInfoDOList("meat");
             etcList = getInfoDOList("etc");
             sideList = getInfoDOList("sideDish");
+
             makeFoodList(freshList, "fresh");
             makeFoodList(meatList,"meat");
             makeFoodList(etcList,"etc");
@@ -63,7 +64,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
         Context context = view.getContext();
         recyclerView = (RecyclerView)view.findViewById(R.id.allRecycler);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         adapter = new PencilRecyclerAdapter(list);
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "All");
@@ -79,6 +80,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private void makeFoodList(List<InfoDO> foodList, String section) {
         for(int i =0 ; i< foodList.size(); i++) {
                 allfoodList.add(new String[]{foodList.get(i).getName(), section});
+                /**********이미지 추가후 주석 삭제**********/
                 /*
                 File file = new File("/storage/emulated/0/Download/"+foodList.get(i).getName()+".jpg");
                 if(!file.exists()) {

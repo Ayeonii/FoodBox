@@ -36,7 +36,7 @@ public class MeatListFragment extends  android.support.v4.app.Fragment  {
         recyclerView = (RecyclerView) view.findViewById(R.id.meatRecycler);
         recyclerView.setHasFixedSize(true);
         adapter = new PencilRecyclerAdapter(list);
-        recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "meat");
         setData();

@@ -78,9 +78,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
-        pencilAdapter.setClickFoodStringNull();
-        pencilAdapter.setClickFoodNull();
-
+        //pencilAdapter.getClickFoodString().clear();
+        pencilAdapter.getClickFood().clear();
         /*메뉴*/
         menuTransBack = (LinearLayout)findViewById(R.id.transparentBack);
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, LIST_MENU) ;

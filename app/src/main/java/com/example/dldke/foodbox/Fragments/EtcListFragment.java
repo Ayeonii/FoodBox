@@ -27,7 +27,6 @@ public class EtcListFragment extends android.support.v4.app.Fragment {
     private String foodImg;
     List<String[]> foodName = new ArrayList<String[]>();
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +39,7 @@ public class EtcListFragment extends android.support.v4.app.Fragment {
         Context context = view.getContext();
         recyclerView = (RecyclerView)view.findViewById(R.id.etcRecycler);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         adapter = new PencilRecyclerAdapter(list);
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "Etc");

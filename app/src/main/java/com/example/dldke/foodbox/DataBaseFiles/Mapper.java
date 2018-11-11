@@ -507,10 +507,11 @@ public final class Mapper {
             com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem;
             @Override
             public void run() {
-                foodItem = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
-                        foodName,
-                        sectionName);
+                    foodItem = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
+                            foodName,
+                            sectionName);
+
             }
 
             @Override
@@ -649,9 +650,26 @@ public final class Mapper {
     public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
-        food.setName(item.getName());
-        food.setSection(item.getSection());
-        food.setKindOf(item.getKindOf());
+            food.setName(item.getName());
+            food.setSection(item.getSection());
+            food.setKindOf(item.getKindOf());
+            food.setDueDate(dueDate);
+            food.setCount(count);
+
+        Log.e("getName",""+food.getName());
+        Log.e("getSection",""+food.getSection());
+        Log.e("getDueDate",""+food.getDueDate());
+        Log.e("getCount",""+food.getCount());
+
+        return food;
+    }
+
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createNonFood(String name,String section,Double count, String dueDate) {
+
+        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
+        food.setName(name);
+        food.setSection(section);
+;
         food.setDueDate(dueDate);
         food.setCount(count);
 

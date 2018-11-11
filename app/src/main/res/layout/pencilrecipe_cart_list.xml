@@ -72,7 +72,7 @@
             android:gravity="center"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/modifyButton"
+            app:layout_constraintEnd_toStartOf="@+id/deleteButton"
             app:layout_constraintLeft_toRightOf="@id/dueDate"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.413" />
@@ -84,7 +84,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/modifyButton"
+            app:layout_constraintEnd_toStartOf="@+id/deleteButton"
             app:layout_constraintStart_toEndOf="@+id/foodCount"
             app:layout_constraintTop_toBottomOf="@+id/plus_btn"
             app:srcCompat="@drawable/circle_minus" />
@@ -95,13 +95,13 @@
             android:layout_height="20dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/modifyButton"
+            app:layout_constraintEnd_toStartOf="@+id/deleteButton"
             app:layout_constraintStart_toEndOf="@+id/foodCount"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle_plus" />
 
         <Button
-            android:id="@+id/modifyButton"
+            android:id="@+id/deleteButton"
             android:layout_width="45dp"
             android:layout_height="36dp"
             android:layout_marginTop="8dp"
