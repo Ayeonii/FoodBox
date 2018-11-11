@@ -28,7 +28,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     //자음
     private static final char[] INITIAL_SOUND = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
 
-    private static List<String> allfoodList = new ArrayList<>();
+    private static List<String[]> allfoodList = new ArrayList<String[]>();
 
     static ArrayList<PencilItem> list = new ArrayList<>();
 
@@ -70,11 +70,11 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         else {
             // 리스트의 모든 데이터를 검색함.
             for (int i = 0; i < allfoodList.size(); i++) {
-                    if (matchString(allfoodList.get(i),charText)) {
+                    if (matchString(allfoodList.get(i)[0],charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
                         foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)+".jpg";
-                        list.add(new PencilItem(allfoodList.get(i),Uri.parse(foodImg)));
+                        list.add(new PencilItem(allfoodList.get(i)[0],Uri.parse(foodImg),allfoodList.get(i)[1]));
                     }
             }
         }

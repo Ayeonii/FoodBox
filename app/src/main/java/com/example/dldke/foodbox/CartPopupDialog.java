@@ -72,11 +72,13 @@ public class CartPopupDialog {
                 List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
                 for(int i =0 ; i<clickFoodString.size(); i++) {
                     PencilCartItem food = clickFood.get(i);
-                    clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName()), food.getFoodCount()));
+                    clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount()));
                 }
 
                 Log.e("clickedList",""+clickedList);
                 Mapper.putFood(clickedList);
+                pencilAdapter.setClickFoodStringNull();
+                pencilAdapter.setClickFoodNull();
                 dlg.dismiss();
             }
         });

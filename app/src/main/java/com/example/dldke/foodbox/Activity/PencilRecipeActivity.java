@@ -51,7 +51,6 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     public void setEnterTime(int enterCnt){
         this.enterCnt = enterCnt;
     }
-
     public int getEnterTime(){ return enterCnt;}
 
     @Override

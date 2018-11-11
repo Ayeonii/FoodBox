@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.Adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.CurrentDate;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.PencilCartItem;
 import com.example.dldke.foodbox.PencilItem;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
  */
 public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAdapter.ItemViewHolder> {
         boolean isAgain = false;
+        private static CurrentDate currentDate = new CurrentDate();
         private static ArrayList<String> clickFoodString = new ArrayList<>();
         private static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
         // public static ArrayList<String> clickFoodOnly = new ArrayList<>();
@@ -68,6 +71,11 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                 @Override
                 public void onClick(View v) {
                     String foodName = mItems.get(position).getFoodName();
+                    Log.e("foodName", ""+foodName);
+                    Log.e("position", ""+position);
+
+               //     Log.e("DueDate", ""+Mapper.searchFood(foodName, ).getSection());
+
                     //중복처리
                     double foodCnt;
                     for(int i =0 ; i<clickFoodString.size(); i++){
@@ -83,8 +91,9 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                         clickFoodString.add(mItems.get(position).getFoodName());
                         clickFood.add(new PencilCartItem(mItems.get(position).getFoodName()
                                 ,mItems.get(position).getFoodImg()
-                                ,Mapper.searchFood(foodName).getDueDate()
-                                ,1));
+                                ,Mapper.searchFood(foodName,mItems.get(position).getFoodSection()).getDueDate()
+                                ,1
+                                ,mItems.get(position).getFoodSection()));
                     }
                     isAgain = false;
                 }

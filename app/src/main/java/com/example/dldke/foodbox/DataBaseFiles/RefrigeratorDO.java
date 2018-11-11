@@ -45,7 +45,7 @@ public class RefrigeratorDO {
         private Double _count;
         private String _section;
         private String _kindOf;
-        private Integer _dueDate;
+        private String _dueDate;
 
         @DynamoDBAttribute(attributeName = "name")
         @DynamoDBIndexHashKey(attributeName = "name", globalSecondaryIndexName = "name-count")
@@ -74,10 +74,10 @@ public class RefrigeratorDO {
         public void setKindOf(final String _kindOf) { this._kindOf = _kindOf; }
 
         @DynamoDBAttribute(attributeName = "dueDate")
-        public Integer getDueDate() {
+        public String getDueDate() {
             return _dueDate;
         }
-        public void setDueDate(final Integer _dueDate) {
+        public void setDueDate(final String _dueDate) {
             this._dueDate = _dueDate;
         }
 

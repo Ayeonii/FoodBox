@@ -8,13 +8,15 @@ public class PencilCartItem {
     private String foodName;
     private int foodDate;
     private double foodCount;
+    private String foodSection;
 
 
-    public PencilCartItem (String foodName, Uri foodImg, int foodDate, double foodCount){
+    public PencilCartItem (String foodName, Uri foodImg, int foodDate, double foodCount, String foodSection){
         this.foodImg = foodImg;
         this.foodName = foodName;
         this.foodDate = foodDate;
         this.foodCount = foodCount;
+        this.foodSection = foodSection;
     }
 
     public String getFoodName() {
@@ -33,4 +35,6 @@ public class PencilCartItem {
     public int getFoodDate() {
         return foodDate;
     }
+
+    public String getFoodSection (){ return foodSection;}
 }

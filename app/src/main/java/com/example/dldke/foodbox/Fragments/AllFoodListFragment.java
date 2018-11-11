@@ -23,19 +23,22 @@ import java.util.List;
 
 public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private PencilRecipeActivity pencil = new PencilRecipeActivity();
-    private static List<String> allfoodList = new ArrayList<String>();
+    private static List<String[]> allfoodList = new ArrayList<String[]>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
-    private List<InfoDO> freshList, meatList, etcList;
+    private static List<InfoDO> freshList, meatList, etcList, sideList;
     private String foodImg;
-
 
     public AllFoodListFragment(){}
 
-    public List<String> getAllFoodList(){
+    public List<String[]> getAllFoodList(){
         return allfoodList;
     }
+    public List<String[]> getMeatList(){ return makeFoodListString(meatList, "meat"); }
+    public List<String[]> getFreshList(){ return makeFoodListString(freshList,"fresh"); }
+    public List<String[]> getEtcList(){ return makeFoodListString(etcList,"etc"); }
+    public List<String[]> getSideList(){ return makeFoodListString(etcList,"side"); }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,13 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
             freshList = getInfoDOList("fresh");
             meatList = getInfoDOList("meat");
             etcList = getInfoDOList("etc");
-            makeFoodList(freshList);
+            sideList = getInfoDOList("sideDish");
+            makeFoodList(freshList, "fresh");
+            makeFoodList(meatList,"meat");
+            makeFoodList(etcList,"etc");
+            makeFoodList(etcList,"sideDish");
             pencil.setEnterTime(1);
         }
-        /****meat랑 etc에 이미지 경로 추가 되면 주석 풀어주기*****/
-        //makeFoodList(meatList);
-        //makeFoodList(etcList);
         Context context = view.getContext();
         recyclerView = (RecyclerView)view.findViewById(R.id.allRecycler);
         recyclerView.setHasFixedSize(true);
@@ -72,25 +76,32 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
         return Mapper.scanSection(section);
     }
 
-    private void makeFoodList(List<InfoDO> foodList) {
+    private void makeFoodList(List<InfoDO> foodList, String section) {
         for(int i =0 ; i< foodList.size(); i++) {
-                allfoodList.add(foodList.get(i).getName());
+                allfoodList.add(new String[]{foodList.get(i).getName(), section});
+                /*
                 File file = new File("/storage/emulated/0/Download/"+foodList.get(i).getName()+".jpg");
                 if(!file.exists()) {
                     Log.e("들어옴",""+file.getAbsolutePath());
                     //이미지 저장.
                     Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/");
                 }
+                */
         }
     }
 
-    private void setData(){
-        // RecyclerView 에 들어갈 데이터를 추가한다.
-        for(String name : allfoodList){
-            foodImg = "file:///storage/emulated/0/Download/"+name+".jpg";
-            list.add(new PencilItem(name, Uri.parse(foodImg)));
+    private List<String[]> makeFoodListString(List<InfoDO> foodList, String section){
+        List<String[]> foodListString = new ArrayList<String[]>();
+        for(int i =0 ; i< foodList.size(); i++) {
+            foodListString.add(new String[]{foodList.get(i).getName(), section});
         }
-        // 데이터 추가가 완료되었으면 notifyDataSetChanged() 메서드를 호출해 데이터 변경 체크를 실행한다.
+        return foodListString;
+    }
+    private void setData(){
+        for(int i =0 ; i<allfoodList.size(); i++ ){
+            foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
+            list.add(new PencilItem(allfoodList.get(i)[0], Uri.parse(foodImg),allfoodList.get(i)[1] ));
+        }
         adapter.notifyDataSetChanged();
     }
 }

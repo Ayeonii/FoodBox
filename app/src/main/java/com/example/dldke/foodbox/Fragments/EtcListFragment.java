@@ -20,11 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EtcListFragment extends android.support.v4.app.Fragment {
+    private AllFoodListFragment allFoodListFragment = new AllFoodListFragment();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
     private String foodImg;
-    List<String> foodName = new ArrayList<String>();
+    List<String[]> foodName = new ArrayList<String[]>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,13 +36,11 @@ public class EtcListFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_etc_ingredients, container, false);
-        List<InfoDO> etcList = getInfoDOList("etc");
-        makeFoodList(etcList);
+        foodName = allFoodListFragment.getEtcList();
         Context context = view.getContext();
         recyclerView = (RecyclerView)view.findViewById(R.id.etcRecycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(context,5));
-        // use a linear layout manager
         adapter = new PencilRecyclerAdapter(list);
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "Etc");
@@ -49,20 +49,10 @@ public class EtcListFragment extends android.support.v4.app.Fragment {
         return view;
     }
 
-    private List<InfoDO> getInfoDOList(String section) {
-        return Mapper.scanSection(section);
-    }
-
-    private void makeFoodList(List<InfoDO> foodList) {
-        for(int i =0 ; i< foodList.size(); i++) {
-            foodName.add(foodList.get(i).getName());
-        }
-    }
-
     private void setData(){
-        for(String name : foodName){
-            foodImg = "file:///storage/emulated/0/Download/"+name+".jpg";
-            list.add(new PencilItem(name, Uri.parse(foodImg)));
+        for(int i =0 ; i<foodName.size(); i++ ){
+            foodImg = "file:///storage/emulated/0/Download/"+foodName.get(i)[0]+".jpg";
+            list.add(new PencilItem(foodName.get(i)[0], Uri.parse(foodImg),foodName.get(i)[1] ));
         }
         adapter.notifyDataSetChanged();
     }
