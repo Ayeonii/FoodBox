@@ -11,49 +11,63 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 public class CartCalendarDialog {
     private Context context;
-
-    public CartCalendarDialog(Context context) {
+    private CurrentDate currentDate = new CurrentDate();
+    private String inputDBDateString;
+    public CartCalendarDialog( Context context) {
         this.context = context;
     }
 
+
     // 호출할 다이얼로그 함수를 정의한다.
-    public void callFunction(final TextView foodDate) {
+    public void callFunction(final TextView foodDate, final PencilCartItem mItems) {
 
-        Log.e("tag","callFunction");
-        // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
+        inputDBDateString = mItems.getFoodDate();
+
         final Dialog dlg = new Dialog(context);
-
-        // 액티비티의 타이틀바를 숨긴다.
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        // 커스텀 다이얼로그의 레이아웃을 설정한다.
         dlg.setContentView(R.layout.custom_dialog_cart);
-
-        // 커스텀 다이얼로그를 노출한다.
         dlg.show();
-        Log.e("tag","커스텀 다이얼 노출 됨");
-        // 커스텀 다이얼로그의 각 위젯들을 정의한다.
+
+
         final CalendarView calendar = (CalendarView) dlg.findViewById(R.id.calendarView);
         final Button cancel = (Button) dlg.findViewById(R.id.cancel_btn);
         final Button ok = (Button)dlg.findViewById(R.id.ok_btn);
 
+        final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                Toast.makeText(context, year+"/"+(month+1)+"/"+dayOfMonth, Toast.LENGTH_SHORT).show();
-                //클릭한 날짜로 바꾸기 => 추후에 디비의 날짜 차이를 계산 해서 띄워야함.
-                foodDate.setText(year+"/"+(month+1)+"/"+dayOfMonth);
-            }
+                long diff, diffDays;
+                Date clickedDate;
+                try {
+                    clickedDate = formatter.parse(""+year+""+(month+1)+""+dayOfMonth);
+                    inputDBDateString = formatter.format(clickedDate);
+                    Date curDay = formatter.parse(currentDate.getCurrenDate());
 
+                    diff = clickedDate.getTime() - curDay.getTime();
+                    diffDays = diff / (24 * 60 * 60 * 1000);
+
+                    foodDate.setText("D-"+diffDays);
+                    mItems.setFoodDate(inputDBDateString);
+                } catch (ParseException e){
+                    e.printStackTrace();
+                }
+            }
         });
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("확인버튼","달력 종료");
-                // 커스텀 다이얼로그를 종료한다.
+
                 dlg.dismiss();
             }
         });

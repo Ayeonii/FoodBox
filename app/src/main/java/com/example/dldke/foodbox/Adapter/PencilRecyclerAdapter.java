@@ -15,8 +15,10 @@ import com.example.dldke.foodbox.PencilCartItem;
 import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 /*
@@ -27,12 +29,19 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
         private static CurrentDate currentDate = new CurrentDate();
         private static ArrayList<String> clickFoodString = new ArrayList<>();
         private static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
+        private static Date inputDBDate ;
+        private static String inputDBDateString;
         // public static ArrayList<String> clickFoodOnly = new ArrayList<>();
 
         private ArrayList<PencilItem> mItems;
 
+        private GregorianCalendar cal = new GregorianCalendar();
+        private SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
-        public PencilRecyclerAdapter (){ }
+
+
+
+    public PencilRecyclerAdapter (){ }
 
         public PencilRecyclerAdapter(ArrayList<PencilItem> items){
             mItems = items;
@@ -67,9 +76,11 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                 holder.food_name.setTextSize(12);
             }
 
+
             holder.food_img.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     String foodName = mItems.get(position).getFoodName();
                     Log.e("foodName", ""+foodName);
                     Log.e("position", ""+position);
@@ -87,13 +98,20 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                     }
                     //중복이 아닐 때
                     if(!isAgain){
+                        int dueDate = Mapper.searchFood(mItems.get(position).getFoodName(),mItems.get(position).getFoodSection()).getDueDate();
+                        Log.e("유통기한", ""+dueDate);
+                        cal.add(cal.DATE,dueDate);
+                        inputDBDate = cal.getTime(); //연산된 날자를 생성.
+                        inputDBDateString = formatter.format(inputDBDate);
+
                         //clickFoodOnly.add(mItems.get(position).getFoodName());
                         clickFoodString.add(mItems.get(position).getFoodName());
                         clickFood.add(new PencilCartItem(mItems.get(position).getFoodName()
                                 ,mItems.get(position).getFoodImg()
-                                ,Mapper.searchFood(foodName,mItems.get(position).getFoodSection()).getDueDate()
+                                ,inputDBDateString
                                 ,1
-                                ,mItems.get(position).getFoodSection()));
+                                ,mItems.get(position).getFoodSection()
+                                ,dueDate));
                     }
                     isAgain = false;
                 }

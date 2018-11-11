@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.CartCalendarDialog;
+import com.example.dldke.foodbox.CurrentDate;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.PencilCartItem;
 import com.example.dldke.foodbox.R;
 
@@ -23,7 +25,8 @@ import java.util.ArrayList;
  */
 public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.ItemViewHolder> {
     private Context context;
-    ArrayList<PencilCartItem> mItems;
+    private ArrayList<PencilCartItem> mItems;
+
 
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){
         mItems = cartItems;
@@ -50,7 +53,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                         Log.e("Dialog","Calendar");
                         // 커스텀 다이얼로그를 생성한다. 사용자가 만든 클래스이다.
                         CartCalendarDialog customDialog = new CartCalendarDialog(context);
-                        customDialog.callFunction(holder.food_date);
+                        customDialog.callFunction(holder.food_date, mItems.get(position));
                         break ;
                     case R.id.plus_btn :
                         int plus = (int)mItems.get(position).getFoodCount()+1;
@@ -69,7 +72,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         holder.food_name.setText(mItems.get(position).getFoodName());
         holder.food_img.setImageURI(mItems.get(position).getFoodImg());
         holder.food_count.setText((int)mItems.get(position).getFoodCount()+"개");
-        holder.food_date.setText("D-"+mItems.get(position).getFoodDate());
+        holder.food_date.setText("D-"+mItems.get(position).getFoodDueDays());
         if(mItems.get(position).getFoodName().length()>6) {
             holder.food_name.setTextSize(12);
         }

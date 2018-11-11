@@ -646,13 +646,13 @@ public final class Mapper {
         }
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count) {
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
         food.setName(item.getName());
         food.setSection(item.getSection());
         food.setKindOf(item.getKindOf());
-        food.setDueDate(item.getDueDate()+currentDate.getCurrenDate());
+        food.setDueDate(dueDate);
         food.setCount(count);
 
         Log.e("getName",""+food.getName());
@@ -674,13 +674,10 @@ public final class Mapper {
                         userId);
 
                 List<RefrigeratorDO.Item> r_item = refrigeratorItem.getItem();
-
-
                 for(int i = 0; i < foods_list.size(); i++) {
                     r_item.add(foods_list.get(i));
                     Log.e("putFoodIn"+i+"번째",""+r_item.get(i));
                 }
-
                 refrigeratorItem.setItem(r_item);
                 Mapper.getDynamoDBMapper().save(refrigeratorItem);
             }
