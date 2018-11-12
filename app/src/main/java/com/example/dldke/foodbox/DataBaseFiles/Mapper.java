@@ -447,6 +447,7 @@ public final class Mapper {
                 Refri = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
                         userId);
+                Log.d("test", "Mapper.scanRefri");
                 Log.d("test", "userId : "+ userId);
             }
             @Override
@@ -470,7 +471,7 @@ public final class Mapper {
     public static InfoDO searchFood(String name, String section) {
 
         final String foodName = name;
-        //final String sectionName = section;
+        final String sectionName = section;
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem;
@@ -599,12 +600,12 @@ public final class Mapper {
     public static void createRefrigerator() {
         final com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO refrigeratorItem = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO();
 
-        Log.e("createRefrigerator", "create들어옴");
         refrigeratorItem.setUserId(userId);
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d("test", "Mapper.createRefrigerator");
                 Mapper.getDynamoDBMapper().save(refrigeratorItem);
             }
         });
