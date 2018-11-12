@@ -1,39 +1,28 @@
 package com.example.dldke.foodbox.Activity;
 
 import android.content.Intent;
-import android.icu.text.IDNA;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-
-
+import android.widget.Toast;
 
 import com.example.dldke.foodbox.Adapter.PencilPagerAdapter;
-
-import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.CartPopupDialog;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.Fragments.SearchIngredientFragment;
-import com.example.dldke.foodbox.PencilCartItem;
 import com.example.dldke.foodbox.R;
 
-import java.util.ArrayList;
 
 
 public class PencilRecipeActivity extends AppCompatActivity implements View.OnClickListener{
@@ -44,6 +33,15 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     TabLayout tabLayout;
     String searchText;
     FloatingActionButton floating;
+    private static int enterCnt = 0;
+    private static CartPopupDialog customDialog;
+
+    public PencilRecipeActivity(){}
+
+    public void setEnterTime(int enterCnt){
+        this.enterCnt = enterCnt;
+    }
+    public int getEnterTime(){ return enterCnt;}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +54,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
         deleteButton = (ImageButton)findViewById(R.id.delete_button); //x버튼
         floating = (FloatingActionButton)findViewById(R.id.floating); //플로팅
         frag = (FrameLayout)findViewById(R.id.child_fragment_container); //검색시 나오는 화면
-
+        customDialog = new CartPopupDialog(PencilRecipeActivity.this);
         /**view pager**/
         vp = (ViewPager)findViewById(R.id.pager);
         vp.setAdapter(new PencilPagerAdapter(getSupportFragmentManager()));
@@ -107,6 +105,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         });
+    
     }
 
     @Override public void onBackPressed() {
@@ -127,14 +126,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                 transaction.commit();
                 break;
             case R.id.floating:
-                Log.e("다이얼 클릭 ","다이얼 클릭 먹힘");
-                // 커스텀 다이얼로그를 생성한다. 사용자가 만든 클래스이다.
-                //CartPopupDialog customDialog = new CartPopupDialog(PencilRecipeActivity.this);
-                // 커스텀 다이얼로그를 호출한다.
-                // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
-                //customDialog.callFunction();
-                Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
-                startActivity(intent);
+                customDialog.callFunction();
                 break;
         }
     }

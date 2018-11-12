@@ -14,6 +14,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.s3.model.Region;
+import com.example.dldke.foodbox.CurrentDate;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -22,12 +23,11 @@ import com.google.gson.annotations.SerializedName;
 import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public final class Mapper {
-
+    private static CurrentDate currentDate = new CurrentDate();
     private static DynamoDBMapper dynamoDBMapper;
     private static String userId;
     private static String bucketName;
@@ -437,42 +437,7 @@ public final class Mapper {
 
         return false;
     }
-/*
-    public static List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> searchRefri(final String name) {
 
-
-        final String foodName = name;
-
-        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
-            List<RefrigeratorDO.Item> itemList;
-            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
-            @Override
-            public void run() {
-                Refri = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
-                        userId);
-                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(foodName));
-                scanExpression.addFilterCondition("name", condition);
-                itemList = Mapper.getDynamoDBMapper().scan(RefrigeratorDO.Item.class, scanExpression);
-            }
-            @Override
-            public Object getResult(){
-                return itemList;
-            }
-        });
-
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        List<RefrigeratorDO.Item> item_info = (List<RefrigeratorDO.Item>)thread.getResult();
-
-        return item_info;
-    }
-*/
     public static List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> scanRefri() {
 
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
@@ -501,18 +466,20 @@ public final class Mapper {
 
     }
 
-    public static InfoDO searchFood(String name) {
+    public static InfoDO searchFood(String name, String section) {
 
         final String foodName = name;
+        final String sectionName = section;
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem;
             @Override
             public void run() {
-                foodItem = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
-                        foodName,
-                        "fresh");
+                    foodItem = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
+                            foodName,
+                            sectionName);
+
             }
 
             @Override
@@ -531,9 +498,9 @@ public final class Mapper {
         return foodItem;
     }
 
-    public static void updateDueDate(String name, Integer dueDate) {
+    public static void updateDueDate(String name, String dueDate) {
         final String itemName = name;
-        final Integer newDueDate = dueDate;
+        final String newDueDate = dueDate;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -648,13 +615,30 @@ public final class Mapper {
         }
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count) {
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
-        food.setName(item.getName());
-        food.setSection(item.getSection());
-        food.setKindOf(item.getKindOf());
-        food.setDueDate(item.getDueDate());
+            food.setName(item.getName());
+            food.setSection(item.getSection());
+            food.setKindOf(item.getKindOf());
+            food.setDueDate(dueDate);
+            food.setCount(count);
+
+        Log.e("getName",""+food.getName());
+        Log.e("getSection",""+food.getSection());
+        Log.e("getDueDate",""+food.getDueDate());
+        Log.e("getCount",""+food.getCount());
+
+        return food;
+    }
+
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createNonFood(String name,String section,Double count, String dueDate) {
+
+        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
+        food.setName(name);
+        food.setSection(section);
+;
+        food.setDueDate(dueDate);
         food.setCount(count);
 
         Log.e("getName",""+food.getName());
@@ -676,13 +660,10 @@ public final class Mapper {
                         userId);
 
                 List<RefrigeratorDO.Item> r_item = refrigeratorItem.getItem();
-
-
                 for(int i = 0; i < foods_list.size(); i++) {
                     r_item.add(foods_list.get(i));
                     Log.e("putFoodIn"+i+"번째",""+r_item.get(i));
                 }
-
                 refrigeratorItem.setItem(r_item);
                 Mapper.getDynamoDBMapper().save(refrigeratorItem);
             }

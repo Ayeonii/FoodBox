@@ -15,44 +15,40 @@ import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.dldke.foodbox.Fragments.AllFoodListFragment.*;
 
 public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
-
+    private AllFoodListFragment allList = new AllFoodListFragment();
     private static final char HANGUL_BEGIN_UNICODE = 44032; // 가
     private static final char HANGUL_LAST_UNICODE = 55203; // 힣
     private static final char HANGUL_BASE_UNIT = 588;//각 자음 마다 가지는 글자수
-    //자음
     private static final char[] INITIAL_SOUND = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
 
-
+    private static List<String[]> allfoodList = new ArrayList<String[]>();
     static ArrayList<PencilItem> list = new ArrayList<>();
-
     static RecyclerView.Adapter adapter;
     static String searchText;
     static RecyclerView recyclerView;
     static String foodImg;
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_ingredients, container, false);
+        allfoodList = allList.getAllFoodList();
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.searchRecycler);
         recyclerView.setHasFixedSize(true);
         //어댑터 연결
         adapter = new PencilRecyclerAdapter(list);
-        recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "SearchFrag");
 
         return view;
     }
-
 
     /********************Searching method *****************************/
     static public void search(String charText) {
@@ -67,12 +63,17 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         else {
             // 리스트의 모든 데이터를 검색함.
             for (int i = 0; i < allfoodList.size(); i++) {
-                    if (matchString(allfoodList.get(i),charText)) {
+                    if (matchString(allfoodList.get(i)[0],charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)+".jpg";
-                        list.add(new PencilItem(allfoodList.get(i),Uri.parse(foodImg)));
+                        foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
+                        list.add(new PencilItem(allfoodList.get(i)[0],Uri.parse(foodImg),allfoodList.get(i)[1]));
                     }
+            }
+            if(list.size() == 0){
+                  //검색된 것이 아무것도 없을때,
+                    foodImg = "file:///storage/emulated/0/Download/" + "감" + ".jpg"; //나중 default 이미지 넣기
+                    list.add(new PencilItem(searchText, Uri.parse(foodImg), "sideDish"));
             }
         }
         // 리스트 데이터가 변경되었으므로 어댑터 갱신.
