@@ -228,7 +228,7 @@ public final class Mapper {
                 infoItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
                         infoName,
-                        "fresh");
+                        "etc");
                 Log.d("why",Mapper.bucketName);
                 infoItem.setInfoImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Info/" + infoName));
                 infoItem.getInfoImage().uploadFrom(new File(filePath));
