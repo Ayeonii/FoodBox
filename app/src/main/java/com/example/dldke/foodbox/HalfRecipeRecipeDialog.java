@@ -25,17 +25,11 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
     private RecyclerView recyclerView;
 
     private Context context;
-    private boolean isEmpty;
 
     private RecyclerView.Adapter adapter;
     private ArrayList<HalfRecipeRecipeItem> mItems = new ArrayList<>();
 
     private ArrayList<LocalRefrigeratorItem> selectedItem = new ArrayList<>();
-
-    public HalfRecipeRecipeDialog(@NonNull Context context) {
-        super(context);
-        this.context = context;
-    }
 
     public HalfRecipeRecipeDialog(@NonNull Context context, ArrayList arrayList) {
         super(context);
@@ -60,7 +54,6 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         txtBackEmpty.setOnClickListener(this);
         txtComplete.setOnClickListener(this);
 
-        //true : txtEmpty, false : recyclerView
         if (selectedItem.size()==0) {
             recyclerView.setVisibility(View.GONE);
             txtEmpty.setVisibility(View.VISIBLE);
@@ -82,15 +75,6 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
-
-//        recyclerView.addOnItemTouchListener(
-//                new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(View view, int position) {
-//                        Log.d("test", position + ", " + localRefrigeratorItems.get(position).getName() + ", " + localRefrigeratorItems.get(position).getCount().toString());
-//                    }
-//                }
-//                ));
 
         setData();
     }
