@@ -522,10 +522,10 @@ public final class Mapper {
         }
     }
 
-    public static void updateCount(String name, Integer count)
+    public static void updateCount(String name, Double count)
     {
         final String itemName = name;
-        final Integer minus = count;
+        final Double minus = count;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
