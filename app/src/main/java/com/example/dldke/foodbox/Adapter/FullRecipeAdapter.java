@@ -1,9 +1,11 @@
 package com.example.dldke.foodbox.Adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -12,9 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.FullRecipeDictionary;
@@ -27,21 +31,22 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     private ArrayList<FullRecipeDictionary> mList;
     private Context mContext;
 
+    private final String TAG = "FullRecipeAdapter";
+
     public class FullRecipeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener { // 1. 리스너 추가
 
-        protected TextView mId;
-        protected TextView mEnglish;
-        protected TextView mKorean;
-        protected ImageView imgFood;
+        protected TextView Method;
+        protected TextView Mintue;
+        protected TextView Fire;
+        protected ImageView StepImage;
 
 
         public FullRecipeViewHolder(View view) {
             super(view);
-
-            this.mId = (TextView) view.findViewById(R.id.textview_recyclerview_method);
-            this.mEnglish = (TextView) view.findViewById(R.id.textview_recyclerview_mintue);
-            this.mKorean = (TextView) view.findViewById(R.id.textview_recyclerview_fire);
-            this.imgFood = (ImageView) view.findViewById(R.id.imgview_foodimg);
+            this.Method = (TextView) view.findViewById(R.id.textview_recyclerview_method);
+            this.Mintue = (TextView) view.findViewById(R.id.textview_recyclerview_mintue);
+            this.Fire = (TextView) view.findViewById(R.id.textview_recyclerview_fire);
+            this.StepImage = (ImageView) view.findViewById(R.id.imgview_foodimg);
 
             view.setOnCreateContextMenuListener(this); //2. 리스너 등록
         }
@@ -62,29 +67,50 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
             public boolean onMenuItemClick(MenuItem item) {
 
                 switch (item.getItemId()) {
+                    //수정 눌렀을 때
                     case 1001:
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                         View view = LayoutInflater.from(mContext)
-                                .inflate(R.layout.fullrecipe_edit_box, null, false);
+                                .inflate(R.layout.fullrecipe_popup, null, false);
                         builder.setView(view);
-                        final Button ButtonSubmit = (Button) view.findViewById(R.id.button_dialog_submit);
-                        final EditText editTextID = (EditText) view.findViewById(R.id.edittext_dialog_method);
-                        final EditText editTextEnglish = (EditText) view.findViewById(R.id.edittext_dialog_minute);
-                        final EditText editTextKorean = (EditText) view.findViewById(R.id.edittext_dialog_fire);
+                        final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
+                        final Spinner MethodSpinner = (Spinner) view.findViewById(R.id.method_spinner);
+                        final Spinner MinuteSpinner = (Spinner) view.findViewById(R.id.minute_spinner);
+                        final Spinner FireSpinner = (Spinner) view.findViewById(R.id.fire_spinner);
 
-                        editTextID.setText(mList.get(getAdapterPosition()).getMethod());
-                        editTextEnglish.setText(mList.get(getAdapterPosition()).getMinute());
-                        editTextKorean.setText(mList.get(getAdapterPosition()).getFire());
+                        String[] methodstr = view.getResources().getStringArray(R.array.MethodSpinner);
+                        ArrayAdapter<String> madapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, methodstr);
+                        MethodSpinner.setAdapter(madapter);
 
+                        Log.d(TAG, "Method 스피너이다아아아"+methodstr);
+
+                        String[] minutestr = view.getResources().getStringArray(R.array.MinuteSpinner);
+                        final ArrayAdapter<String> minadapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, minutestr);
+                        MinuteSpinner.setAdapter(minadapter);
+
+                        String[] firestr = view.getResources().getStringArray(R.array.FireSpinner);
+                        final ArrayAdapter<String> fireadapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, firestr);
+                        FireSpinner.setAdapter(fireadapter);
+
+
+                        //수정완료 후 진행되는 이벤트
                         final AlertDialog dialog = builder.create();
                         ButtonSubmit.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
-                                String strID = editTextID.getText().toString();
-                                String strEnglish = editTextEnglish.getText().toString();
-                                String strKorean = editTextKorean.getText().toString();
 
-                                FullRecipeDictionary dict = new FullRecipeDictionary(strID, strEnglish, strKorean );
+                                String method = MethodSpinner.getSelectedItem().toString();
+                                String minute = MinuteSpinner.getSelectedItem().toString();
+                                String fire = FireSpinner.getSelectedItem().toString();
+
+
+                                Log.d(TAG, "방법:"+method+"시간: "+minute+"불세기: "+fire);
+
+                                //String strID = method_str.getText().toString();
+                                //String strEnglish = minute_str.getText().toString();
+                                //String strKorean = fire_str.getText().toString();
+
+                                FullRecipeDictionary dict = new FullRecipeDictionary(method, minute, fire);
 
                                 mList.set(getAdapterPosition(), dict);
                                 notifyItemChanged(getAdapterPosition());
@@ -97,8 +123,9 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
 
                         break;
 
-                    case 1002:
 
+                        //삭제 눌렀을 때
+                    case 1002:
                         mList.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
                         notifyItemRangeChanged(getAdapterPosition(), mList.size());
@@ -129,17 +156,17 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     @Override
     public void onBindViewHolder(@NonNull FullRecipeViewHolder viewholder, int position) {
 
-        viewholder.mId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        viewholder.mEnglish.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        viewholder.mKorean.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        viewholder.Method.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        viewholder.Mintue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        viewholder.Fire.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
 
-        viewholder.mId.setGravity(Gravity.CENTER);
-        viewholder.mEnglish.setGravity(Gravity.CENTER);
-        viewholder.mKorean.setGravity(Gravity.CENTER);
+        viewholder.Method.setGravity(Gravity.CENTER);
+        viewholder.Mintue.setGravity(Gravity.CENTER);
+        viewholder.Fire.setGravity(Gravity.CENTER);
 
-        viewholder.mId.setText(mList.get(position).getMethod());
-        viewholder.mEnglish.setText(mList.get(position).getMinute());
-        viewholder.mKorean.setText(mList.get(position).getFire());
+        viewholder.Method.setText(mList.get(position).getMethod());
+        viewholder.Mintue.setText(mList.get(position).getMinute());
+        viewholder.Fire.setText(mList.get(position).getFire());
 
     }
 

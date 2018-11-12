@@ -23,14 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.MainActivity" />
-        <activity android:name=".Activity.LoginActivity" />
+        <activity android:name=".Activity.MainActivity" android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".Activity.LoginActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Activity.RefrigeratorMainActivity" />
-        <activity android:name=".Activity.JoinActivity" />
+        <activity android:name=".Activity.JoinActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Activity.FullRecipeActivity" />
         <activity android:name=".Activity.RefrigeratorInsideActivity" />
         <activity android:name=".Activity.MyRecipeActivity" />
         <activity android:name=".Activity.HalfRecipeActivity"/>
+        <activity android:name=".Activity.MyRecipeActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity android:name=".Activity.PencilRecipeActivity" android:windowSoftInputMode="adjustNothing"/>
 
         <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />

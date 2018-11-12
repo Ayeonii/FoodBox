@@ -2,9 +2,11 @@ package com.example.dldke.foodbox.Activity;
 
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,13 +19,21 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.auth.core.SignInStateChangeListener;
 import com.example.dldke.foodbox.R;
+
+import java.util.ArrayList;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
 
 
     private static final int LAYOUT = R.layout.activity_refrigerator;
+    private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+
+
+
 
 
     /*********************FloatingButtons***********************/
@@ -69,9 +79,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
-
-
-
+        //pencilAdapter.getClickFoodString().clear();
+        pencilAdapter.getClickFood().clear();
         /*메뉴*/
         menuTransBack = (LinearLayout)findViewById(R.id.transparentBack);
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, LIST_MENU) ;
@@ -85,8 +94,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         SlidingPageAnimationListener animationListener = new SlidingPageAnimationListener();
         leftAnim.setAnimationListener(animationListener);
         rightAnim.setAnimationListener(animationListener);
-
-
 
         /*플로팅 버튼*/
         plusBack = (RelativeLayout)findViewById(R.id.plusLayout);
@@ -168,10 +175,16 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             String strText = (String) parent.getItemAtPosition(position) ;
 
             if(strText.equals("로그아웃")){
+                IdentityManager.getDefaultIdentityManager().signOut();
                 Intent MainActivity = new Intent(getApplicationContext(), MainActivity.class);
                 //로그아웃 후, 뒤로가기 누르면 다시 로그인 된 상태로 가는 것을 방지
                 MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(MainActivity);
+            }
+
+            if(strText.equals("내 레시피 보기")){
+                Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeActivity.class);
+                startActivity(MyRecipeBoxActivity);
             }
             Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
 

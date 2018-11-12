@@ -21,25 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FreshListFragment extends android.support.v4.app.Fragment {
-    private boolean isFirst = true;
-    private Drawable Img;
+    private AllFoodListFragment allFoodListFragment = new AllFoodListFragment();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
     private String foodImg;
-    List<String> foodName = new ArrayList<String>();
+    List<String[]> foodName = new ArrayList<String[]>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fresh_ingredients, container, false);
-        List<InfoDO> freshList = getInfoDOList("fresh");
-        makeFoodList(freshList);
+        foodName = allFoodListFragment.getFreshList();
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.freshRecycler);
         recyclerView.setHasFixedSize(true);
-        // use a linear layout manager
         adapter = new PencilRecyclerAdapter(list);
-        recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "fresh");
         setData();
@@ -47,24 +44,11 @@ public class FreshListFragment extends android.support.v4.app.Fragment {
         return view;
     }
 
-    private List<InfoDO> getInfoDOList(String section) {
-        return Mapper.scanInfo(section);
-    }
-
-    private void makeFoodList(List<InfoDO> foodList) {
-        if(isFirst) {
-            for (int i = 0; i < foodList.size(); i++) {
-                foodName.add(foodList.get(i).getName());
-            }
-        }
-    }
-
     private void setData(){
-        for(String name : foodName){
-            foodImg = "file:///storage/emulated/0/Download/"+name+".jpg";
-            list.add(new PencilItem(name, Uri.parse(foodImg)));
+        for(int i =0 ; i<foodName.size(); i++ ){
+            foodImg = "file:///storage/emulated/0/Download/"+foodName.get(i)[0]+".jpg";
+            list.add(new PencilItem(foodName.get(i)[0], Uri.parse(foodImg),foodName.get(i)[1] ));
         }
-        isFirst = false;
         adapter.notifyDataSetChanged();
     }
 }

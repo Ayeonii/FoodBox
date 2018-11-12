@@ -7,11 +7,12 @@ public class PencilItem {
 
     private Uri foodImg;
     private String foodName;
+    private String foodSection;
 
-
-    public PencilItem (String foodName, Uri foodImg){
+    public PencilItem (String foodName, Uri foodImg, String foodSection){
         this.foodImg = foodImg;
         this.foodName = foodName;
+        this.foodSection = foodSection;
     }
 
     public String getFoodName() {
@@ -19,4 +20,6 @@ public class PencilItem {
     }
 
     public Uri getFoodImg() { return foodImg; }
+
+    public String getFoodSection() { return foodSection; }
 }

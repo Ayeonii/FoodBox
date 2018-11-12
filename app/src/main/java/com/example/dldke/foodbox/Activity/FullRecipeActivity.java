@@ -22,10 +22,15 @@ import android.widget.TextView;
 
 import com.example.dldke.foodbox.Adapter.FullRecipeAdapter;
 import com.example.dldke.foodbox.Adapter.FullRecipeHorizontalAdapter;
+import com.example.dldke.foodbox.Adapter.PencilCartAdapter;
+import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipeDictionary;
 import com.example.dldke.foodbox.FullRecipeHorizontalData;
+import com.example.dldke.foodbox.PencilCartItem;
+import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import org.w3c.dom.Text;
@@ -34,18 +39,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.amazonaws.regions.RegionUtils.init;
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createRecipe;
 
 public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ArrayList<FullRecipeDictionary> mArrayList;
-    private FullRecipeAdapter mAdapter;
+    public boolean isRecipe = true;
+
+    private static ArrayList<FullRecipeDictionary> mArrayList;
+    private static FullRecipeAdapter mAdapter;
     private RecyclerView fullrecipeRecyclerView, recipeIngredientHorizontalView;
     private FullRecipeHorizontalAdapter fullRecipeHorizontalAdapter;
     private LinearLayoutManager mLayoutManager;
 
-    private int MAX_ITEM_COUNT = 10;
+    private ArrayList<PencilItem> clickFood = new ArrayList<>();
+
+    private int MAX_ITEM_COUNT=10;
 
     private final String TAG = "FullRecipe DB Test";
+
+    //private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    //private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
+    //private ArrayList<PencilItem> Food = pencilAdapter.getFoodname();
+    //private ArrayList<String> clickFoodString = pencilAdapter.getClickFoodString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +76,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
 
         final EditText foodtitle_et = (EditText) findViewById(R.id.food_title);
+
+
 
         //DB에 풀레시피 만들기
         final List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
@@ -94,25 +112,40 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
         ArrayList<FullRecipeHorizontalData> data = new ArrayList<>();
 
-        int i = 0;
-        while (i < MAX_ITEM_COUNT) {
-            data.add(new FullRecipeHorizontalData(R.drawable.food, i + "번째 데이터"));
+        /*int i = 0;
+        while(i<MAX_ITEM_COUNT){
+            data.add(new FullRecipeHorizontalData(R.drawable.food, i+"번째 데이터"));
             i++;
-        }
+        }*/
 
-        fullRecipeHorizontalAdapter.setData(data);
-        recipeIngredientHorizontalView.setAdapter(fullRecipeHorizontalAdapter);
+        //fullRecipeHorizontalAdapter.setData(data);
+        //recipeIngredientHorizontalView.setAdapter(fullRecipeHorizontalAdapter);
 
-
+        RecyclerView.Adapter adapter;
+        recipeIngredientHorizontalView.setHasFixedSize(true);
+        adapter = new PencilRecyclerAdapter(clickFood);
+        recipeIngredientHorizontalView.setLayoutManager(new LinearLayoutManager(this));
+        recipeIngredientHorizontalView.setAdapter(adapter);
         //=================================================================================================
 
 
-        /*
-        커뮤니티 객체 만들기
-         */
-        List<String> recipe_list = Mapper.searchMyCommunity().getMyRecipes();
-        recipe_id = recipe_list.get(0);
-        Log.d(TAG, "뭔지 모르겠는 데이터!!!!" + Mapper.searchRecipe(recipe_id).getIngredient().get(0).getIngredientName());
+        ////간이레시피 만들기
+        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+        //사용자 입력 몇 개 받는지에 따라 반복
+        recipeIngredientList.add(createIngredient("양파", 2.0));
+        recipeIngredientList.add(createIngredient("감자", 2.0));
+        recipeIngredientList.add(createIngredient("우유", 2.0));
+        recipeIngredientList.add(createIngredient("햄", 2.0));
+        recipeIngredientList.add(createIngredient("버섯", 2.0));
+
+        //간이레시피 만들기
+        recipe_id = Mapper.createRecipe(recipeIngredientList);
+        Log.d("recipe",recipe_id);
+
+        //내 커뮤니티 만들기(최초1회만)
+        //Mapper.createMyCommunity();
+        //내 커뮤니티에 내 간이레시피 등록
+        Mapper.addRecipeInMyCommunity(recipe_id);
 
 
         /*
@@ -129,16 +162,11 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(View v) {
 
-
-                //팝업창 build
+                //레시피 다이얼로그 build
                 AlertDialog.Builder builder = new AlertDialog.Builder(FullRecipeActivity.this);
                 View view = LayoutInflater.from(FullRecipeActivity.this)
                         .inflate(R.layout.fullrecipe_popup, null, false);
                 builder.setView(view);
-                //final Button ButtonSubmit = (Button) view.findViewById(R.id.button_dialog_submit);
-                //final EditText method = (EditText) view.findViewById(R.id.edittext_dialog_method);
-                //final EditText minute = (EditText) view.findViewById(R.id.edittext_dialog_minute);
-                //final EditText fire = (EditText) view.findViewById(R.id.edittext_dialog_fire);
 
                 final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
                 final Spinner method_sp = (Spinner) view.findViewById(R.id.method_spinner);
@@ -151,12 +179,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 method_sp.setAdapter(madapter);
 
                 String[] minuteStr = getResources().getStringArray(R.array.MinuteSpinner);
-                ArrayAdapter<String> miadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, minuteStr);
-                minute_sp.setAdapter(miadapter);
+                ArrayAdapter<String> minadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, minuteStr);
+                minute_sp.setAdapter(minadapter);
 
                 String[] fireStr = getResources().getStringArray(R.array.FireSpinner);
-                ArrayAdapter<String> fadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fireStr);
-                fire_sp.setAdapter(fadapter);
+                ArrayAdapter<String> fireadapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fireStr);
+                fire_sp.setAdapter(fireadapter);
 
 
                 ButtonSubmit.setText("삽입");
@@ -213,7 +241,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 startActivity(choice_ingred);
             case R.id.get_recipe:
         }
-
 
     }
 }

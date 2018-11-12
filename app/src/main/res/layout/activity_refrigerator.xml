@@ -71,7 +71,8 @@
                 android:layout_marginTop="15dp"
                 android:text="풀 레시피"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:fontFamily="@font/font_family"/>
 
 
         </LinearLayout>
@@ -116,7 +117,8 @@
                 android:layout_marginTop="15dp"
                 android:text="간이 레시피"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:fontFamily="@font/font_family"/>
 
 
         </LinearLayout>
@@ -174,7 +176,8 @@
                 android:elevation="10dp"
                 android:text="카메라 입력"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:fontFamily="@font/font_family"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabCamera"
@@ -219,7 +222,8 @@
                 android:layout_marginTop="15dp"
                 android:text="직접 입력"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:fontFamily="@font/font_family"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabPencil"
@@ -313,7 +317,8 @@
             fab:layout_constraintEnd_toEndOf="@+id/postit"
             fab:layout_constraintHorizontal_bias="0.391"
             fab:layout_constraintStart_toStartOf="@+id/postit"
-            fab:layout_constraintTop_toTopOf="@+id/postit" />
+            fab:layout_constraintTop_toTopOf="@+id/postit"
+            android:fontFamily="@font/font_family"/>
 
         <TextView
             android:id="@+id/textView2"
@@ -327,7 +332,8 @@
             fab:layout_constraintEnd_toEndOf="@+id/postit"
             fab:layout_constraintHorizontal_bias="0.45"
             fab:layout_constraintStart_toStartOf="@+id/postit"
-            fab:layout_constraintTop_toBottomOf="@+id/durationText" />
+            fab:layout_constraintTop_toBottomOf="@+id/durationText"
+            android:fontFamily="@font/font_family"/>
 
         <TextView
             android:id="@+id/textView3"
@@ -341,7 +347,8 @@
             fab:layout_constraintEnd_toEndOf="@+id/postit"
             fab:layout_constraintHorizontal_bias="0.443"
             fab:layout_constraintStart_toStartOf="@+id/postit"
-            fab:layout_constraintTop_toBottomOf="@+id/textView2" />
+            fab:layout_constraintTop_toBottomOf="@+id/textView2"
+            android:fontFamily="@font/font_family"/>
 
         <TextView
             android:id="@+id/textView4"
@@ -355,7 +362,8 @@
             fab:layout_constraintEnd_toEndOf="@+id/postit"
             fab:layout_constraintHorizontal_bias="0.443"
             fab:layout_constraintStart_toStartOf="@+id/postit"
-            fab:layout_constraintTop_toBottomOf="@+id/textView3" />
+            fab:layout_constraintTop_toBottomOf="@+id/textView3"
+            android:fontFamily="@font/font_family"/>
 
 
     </android.support.constraint.ConstraintLayout>
@@ -382,7 +390,8 @@
             <ListView
                 android:id="@+id/optionList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:fontFamily="@font/font_family"/>
         </LinearLayout>
     </LinearLayout>
 
