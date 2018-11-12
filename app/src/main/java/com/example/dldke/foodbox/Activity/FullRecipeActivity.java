@@ -42,7 +42,7 @@ import static com.amazonaws.regions.RegionUtils.init;
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createRecipe;
 
-public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener  {
+public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
     public boolean isRecipe = true;
 
@@ -56,7 +56,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private int MAX_ITEM_COUNT=10;
 
-    private final String TAG="FullRecipe DB Test";
+    private final String TAG = "FullRecipe DB Test";
 
     //private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     //private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
@@ -64,18 +64,18 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     //private ArrayList<String> clickFoodString = pencilAdapter.getClickFoodString();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_recipe);
 
-        fullrecipeRecyclerView = (RecyclerView)findViewById(R.id.recyclerview_main_list);
+        fullrecipeRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_main_list);
         fullrecipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mArrayList = new ArrayList<>();
         mAdapter = new FullRecipeAdapter(this, mArrayList);
         fullrecipeRecyclerView.setAdapter(mAdapter);
 
 
-        final EditText foodtitle_et = (EditText)findViewById(R.id.food_title);
+        final EditText foodtitle_et = (EditText) findViewById(R.id.food_title);
 
 
 
@@ -87,8 +87,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         /*
         요리 카테고리 만드는 spinner
          */
-        Spinner spinner = (Spinner)findViewById(R.id.food_spinner);
-        String[] foodrecipe_list = new String[]{"메인요리","국/찌개","반찬","간식"};
+        Spinner spinner = (Spinner) findViewById(R.id.food_spinner);
+        String[] foodrecipe_list = new String[]{"메인요리", "국/찌개", "반찬", "간식"};
 
         ArrayAdapter<String> spinnerAdapter;
         spinnerAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, foodrecipe_list);
@@ -101,7 +101,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         /*
         선택된 재료 보여주기
          */
-        recipeIngredientHorizontalView = (RecyclerView)findViewById(R.id.recyclerview_horizontal_list);
+        recipeIngredientHorizontalView = (RecyclerView) findViewById(R.id.recyclerview_horizontal_list);
 
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -157,7 +157,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         /*
         풀레시피 detail 작성 팝업창
          */
-        Button ingredient_btn = (Button)findViewById(R.id.button_main_insert);
+        Button ingredient_btn = (Button) findViewById(R.id.button_main_insert);
         ingredient_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,7 +208,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                         //풀레시피에 단계별 레시피 등록
                         RecipeDO.Spec spec = Mapper.createSpec(specIngredientList, method, fire, minuteInt);
                         specList.add(spec);
-                        Log.d(TAG, "방법 : "+method + "불 세기 : "+fire +"시간 : "+minuteInt);
+                        Log.d(TAG, "방법 : " + method + "불 세기 : " + fire + "시간 : " + minuteInt);
 
                         dialog.dismiss();
                     }
@@ -221,7 +221,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         /*
         작성 완료시 풀레시피 데이터 DB에 저장하기
          */
-        Button ok_btn = (Button)findViewById(R.id.recipe_ok);
+        Button ok_btn = (Button) findViewById(R.id.recipe_ok);
         ok_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,12 +231,11 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 startActivity(RefrigeratorActivity);
             }
         });
-
     }
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.ingredient_add:
                 Intent choice_ingred = new Intent(getApplicationContext(), PencilRecipeActivity.class);
                 startActivity(choice_ingred);
@@ -245,3 +244,4 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
     }
 }
+
