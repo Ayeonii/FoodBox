@@ -70,16 +70,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             holder.food_name.setTextSize(12);
         }
 
-        // View 의 내용을 해당 포지션의 데이터로 바꿉니다.
-        @Override
-        public void onBindViewHolder( ItemViewHolder holder,   final int position) {
-            holder.food_name.setText(mItems.get(position).getFoodName());
-            holder.food_img.setImageURI(mItems.get(position).getFoodImg());
-            if(mItems.get(position).getFoodName().length()>6) {
-                holder.food_name.setTextSize(12);
-            }
-
-
             holder.food_img.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -121,18 +111,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                     }
                     isAgain = false;
                 }
-                //중복이 아닐 때
-                if(!isAgain){
-                    //clickFoodOnly.add(mItems.get(position).getFoodName());
-                    clickFoodString.add(mItems.get(position).getFoodName());
-                    clickFood.add(new PencilCartItem(mItems.get(position).getFoodName()
-                            ,mItems.get(position).getFoodImg()
-                            ,Mapper.searchFood(foodName).getDueDate()
-                            ,1));
-                    clickRecipeFood.add(new PencilItem(mItems.get(position).getFoodName(),mItems.get(position).getFoodImg()));
-                }
-                isAgain = false;
-            }
         });
     }
 
