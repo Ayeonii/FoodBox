@@ -22,12 +22,13 @@ android:gravity="center">
     android:background="@color/transparent"
     app:srcCompat="@drawable/transparent_background" />
 
-<TextView
-    android:id="@+id/foodText"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/foodImg"
-    android:layout_centerHorizontal="true"
-    android:gravity="center"
-    android:textSize="13sp" />
+    <TextView
+        android:id="@+id/foodText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/foodImg"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:fontFamily="@font/font_family"/>
 </RelativeLayout>

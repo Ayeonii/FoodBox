@@ -3,14 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/colorWhite">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating"
         android:layout_width="57dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="28dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="28dp"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,10 +23,11 @@
         style="@style/EditTextStyle"
         android:layout_width="353dp"
         android:layout_height="39dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
         android:background="#ededed"
+        android:fontFamily="@font/font_family"
         android:hint=" 재료를 입력해 주세요"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,12 +73,14 @@
         android:layout_width="0dp"
 
         android:layout_height="0dp"
+        android:background="@color/colorWhite"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sliding_tabs"
-        app:layout_constraintVertical_bias="0.306">
+        app:layout_constraintVertical_bias="0.0">
 
 
     </android.support.v4.view.ViewPager>
@@ -85,9 +90,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:background="@color/colorWhite"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchBar"
         app:layout_constraintVertical_bias="0.0">

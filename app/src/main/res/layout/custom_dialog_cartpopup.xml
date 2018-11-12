@@ -51,7 +51,8 @@
                 android:text="내 냉장고에 넣기"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/font_family"/>
 
             <Button
                 android:id="@+id/completeButton"
@@ -62,7 +63,8 @@
                 android:text="확인"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/font_family"/>
         </LinearLayout>
 
     </LinearLayout>
