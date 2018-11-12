@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.Activity;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -47,7 +48,6 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pencil_recipe);
-
         searchText = "";
         tabLayout = (TabLayout)findViewById(R.id.sliding_tabs); //탭 레이아웃
         searchBar = (EditText)findViewById(R.id.searchBar); //서치 창
@@ -56,7 +56,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
         frag = (FrameLayout)findViewById(R.id.child_fragment_container); //검색시 나오는 화면
         customDialog = new CartPopupDialog(PencilRecipeActivity.this);
         /**view pager**/
-        vp = (ViewPager)findViewById(R.id.pager);
+        vp = (ViewPager) findViewById(R.id.pager);
         vp.setAdapter(new PencilPagerAdapter(getSupportFragmentManager()));
         vp.setCurrentItem(0);
         //탭 레이아웃과 뷰페이저 연결
@@ -77,14 +77,16 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
                 String text;
                 text = searchBar.getText().toString();
-                if(text.length() == 0)
+                if (text.length() == 0)
                     frag.setVisibility(View.GONE);
                 else
                     frag.setVisibility(View.VISIBLE);
@@ -113,7 +115,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
         Intent refMain = new Intent(PencilRecipeActivity.this, RefrigeratorMainActivity.class);
         refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PencilRecipeActivity.this.startActivity(refMain);
-        overridePendingTransition(R.anim.bottom_to_up,R.anim.up_to_bottom);
+        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
     }
 
     @Override
