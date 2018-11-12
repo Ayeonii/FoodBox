@@ -227,7 +227,7 @@ public final class Mapper {
                 infoItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
                         infoName,
-                        "fresh");
+                        "etc");
                 Log.d("why",Mapper.bucketName);
                 infoItem.setInfoImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Info/" + infoName));
                 infoItem.getInfoImage().uploadFrom(new File(filePath));
@@ -465,6 +465,7 @@ public final class Mapper {
     public static InfoDO searchFood(String name) {
 
         final String foodName = name;
+        //final String sectionName = section;
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem;
