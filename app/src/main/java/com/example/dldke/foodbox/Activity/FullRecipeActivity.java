@@ -44,8 +44,13 @@ import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createRecipe;
 
 public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public boolean isRecipe = true;
+    public FullRecipeActivity(){ }
 
+    public boolean getRecipe(){
+        return true;
+    }
+
+    private String user_id;
     private static ArrayList<FullRecipeDictionary> mArrayList;
     private static FullRecipeAdapter mAdapter;
     private RecyclerView fullrecipeRecyclerView, recipeIngredientHorizontalView;
@@ -54,14 +59,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private ArrayList<PencilItem> clickFood = new ArrayList<>();
 
-    private int MAX_ITEM_COUNT=10;
-
     private final String TAG = "FullRecipe DB Test";
 
-    //private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
-    //private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
-    //private ArrayList<PencilItem> Food = pencilAdapter.getFoodname();
-    //private ArrayList<String> clickFoodString = pencilAdapter.getClickFoodString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +77,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         final EditText foodtitle_et = (EditText) findViewById(R.id.food_title);
 
 
+        //Check MyCommunity Create
+        try{
+            user_id = Mapper.searchMyCommunity().getUserId();
+        }catch(NullPointerException e){
+            Mapper.createMyCommunity();
+        }
 
         //DB에 풀레시피 만들기
         final List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
@@ -142,8 +147,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         recipe_id = Mapper.createRecipe(recipeIngredientList);
         Log.d("recipe",recipe_id);
 
-        //내 커뮤니티 만들기(최초1회만)
-        //Mapper.createMyCommunity();
         //내 커뮤니티에 내 간이레시피 등록
         Mapper.addRecipeInMyCommunity(recipe_id);
 
