@@ -1,21 +1,25 @@
 package com.example.dldke.foodbox;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 public class PencilItem {
 
-    private Drawable foodImg;
+    private Uri foodImg;
     private String foodName;
+    private String foodSection;
 
-
-    public PencilItem (String foodName, Drawable foodImg){
+    public PencilItem (String foodName, Uri foodImg, String foodSection){
         this.foodImg = foodImg;
         this.foodName = foodName;
+        this.foodSection = foodSection;
     }
 
     public String getFoodName() {
         return foodName;
     }
 
-    public Drawable getFoodImg() { return foodImg; }
+    public Uri getFoodImg() { return foodImg; }
+
+    public String getFoodSection() { return foodSection; }
 }

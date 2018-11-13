@@ -49,7 +49,6 @@
         android:background="@drawable/background_color"
         android:text="세번째"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imgview_foodimg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textview_recyclerview_mintue" />
 
@@ -64,7 +63,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@android:drawable/ic_menu_gallery"
+        android:src="@drawable/strawberry"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textview_recyclerview_fire"

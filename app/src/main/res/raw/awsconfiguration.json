@@ -1,0 +1,55 @@
+{
+  "UserAgent": "MobileHub/1.0",
+  "Version": "1.0",
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "PoolId": "ap-northeast-2:98ae3f5f-dcd6-4a54-aa25-8c3672dc9163",
+        "Region": "ap-northeast-2"
+      }
+    }
+  },
+  "IdentityManager": {
+    "Default": {}
+  },
+  "CognitoUserPool": {
+    "Default": {
+      "PoolId": "ap-northeast-2_F6SYNAuOl",
+      "AppClientId": "2oimr9dbh3715keatfmdgnmv3q",
+      "AppClientSecret": "1pssmmqr9bj0tccnk2no0dnloehp428aehidtsqaa6lufr80q4gk",
+      "Region": "ap-northeast-2"
+    }
+  },
+  "S3TransferUtility": {
+    "Default": {
+      "Bucket": "foodboxv-userfiles-mobilehub-1561206289",
+      "Region": "ap-northeast-2"
+    }
+  },
+  "DynamoDBObjectMapper": {
+    "Default": {
+      "Region": "ap-northeast-2"
+    }
+  },
+  "PinpointAnalytics": {
+    "Default": {
+      "AppId": "3b9bdcea7b914cbba1674bb1e6c82089",
+      "Region": "us-east-1"
+    }
+  },
+  "PinpointTargeting": {
+    "Default": {
+      "Region": "us-east-1"
+    }
+  },
+  "UserFileManager": {
+    "Default": {
+      "Bucket": "foodboxv-userfiles-mobilehub-1561206289",
+      "Region": "ap-northeast-2"
+    }
+  },
+  "GoogleSignIn": {
+    "ClientId-WebApp": "163609238969-k6rh5mc7t59i964qse2fnn7b59jdmkml.apps.googleusercontent.com",
+    "Permissions": "email,profile,openid"
+  }
+}

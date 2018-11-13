@@ -1,99 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="12dp"
-    android:stretchColumns="*"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    android:layout_height="match_parent">
 
-    <TableRow
-        android:layout_height="0dp"
-        android:layout_weight="3">
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingButtonRecipe"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="27dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/mini_recipe" />
 
-        <Button
-            android:id="@+id/btn_sidedish"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="1dp"
-            android:background="#FFFBE6"
-            android:gravity="center"
-            android:text="반찬"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="12dp"
+        android:stretchColumns="*"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="3">
 
             <Button
-                android:id="@+id/btn_eggs"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:id="@+id/btn_sidedish"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="1dp"
-                android:background="#fd5523"
+                android:background="#FFFBE6"
                 android:gravity="center"
-                android:text="계란,유제품"
+                android:text="반찬"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_dairy"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="#fd5523"
+                    android:gravity="center"
+                    android:text="계란,유제품"
+                    android:textColor="#000000"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+
+                <Button
+                    android:id="@+id/btn_etc"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="#fd5523"
+                    android:gravity="center"
+                    android:text="음료,소스"
+                    android:textColor="#000000"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
             <Button
-                android:id="@+id/btn_bottles"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:id="@+id/btn_meat"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="1dp"
-                android:background="#fd5523"
+                android:layout_span="2"
+                android:background="#37966f"
                 android:gravity="center"
-                android:text="음료,소스"
-                android:textColor="#000000"
+                android:text="육류,생선"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btn_fresh"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_span="2"
+                android:background="#356859"
+                android:gravity="center"
+                android:text="과일,야채"
+                android:textColor="#ffffff"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+        </TableRow>
 
-    </TableRow>
-
-    <TableRow
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <Button
-            android:id="@+id/btn_meat"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="1dp"
-            android:layout_span="2"
-            android:background="#37966f"
-            android:gravity="center"
-            android:text="육류,생선"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-    </TableRow>
-
-    <TableRow
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <Button
-            android:id="@+id/btn_fruit"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="1dp"
-            android:layout_span="2"
-            android:background="#356859"
-            android:gravity="center"
-            android:text="과일,야채"
-            android:textColor="#ffffff"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-    </TableRow>
-
-</TableLayout>
+    </TableLayout>
+</android.support.constraint.ConstraintLayout>
