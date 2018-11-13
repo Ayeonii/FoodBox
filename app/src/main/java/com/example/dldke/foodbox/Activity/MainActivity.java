@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 //                        id= id_edittext.getText();
   //                      pw = pw_edittext.getText();
 
-                        Toast.makeText(MainActivity.this, "id: "+id+"pw: "+pw, Toast.LENGTH_SHORT).show();
                         Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(LoginActivity);
                         //Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);

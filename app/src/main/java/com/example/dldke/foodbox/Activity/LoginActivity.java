@@ -36,14 +36,14 @@ public class LoginActivity extends AppCompatActivity {
         IdentityManager.getDefaultIdentityManager().addSignInStateChangeListener(new SignInStateChangeListener() {
             @Override
             public void onUserSignedIn() {
-                //Log.d(LOG_TAG, "User Signed In");
+                Log.d("login", "User Signed In");
             }
 
             // Sign-out listener
             @Override
             public void onUserSignedOut() {
 
-                //Log.d(LOG_TAG, "User Signed Out");
+                Log.d("logout", "User Signed Out");
                 showSignIn();
             }
         });
@@ -77,5 +77,6 @@ public class LoginActivity extends AppCompatActivity {
         signinUI.login(LoginActivity.this, RefrigeratorMainActivity.class).authUIConfiguration(config).execute();
         Mapper.setDynamoDBMapper();
         Mapper.setUserId(LoginActivity.this);
+        Mapper.setBucketName(LoginActivity.this);
     }
 }

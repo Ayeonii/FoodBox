@@ -3,6 +3,8 @@ package com.example.dldke.foodbox.DataBaseFiles;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBDocument;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
 import java.util.ArrayList;
@@ -10,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@DynamoDBTable(tableName = "foodboxtest-mobilehub-942131300-refrigerator")
+@DynamoDBTable(tableName = "foodboxv-mobilehub-1561206289-refrigerator")
 
 public class RefrigeratorDO {
-    private String _userId;
+    private String _userId ;
     private List<Item> _item = new ArrayList<Item>();
 
 
@@ -37,18 +39,21 @@ public class RefrigeratorDO {
 
 
     @DynamoDBDocument
+    //@DynamoDBTable(tableName = "foodboxtest-mobilehub-942131300-refrigerator")
     public static class Item {
         private String _name;
         private Double _count;
         private String _section;
         private String _kindOf;
-        private Integer _dueDate;
+        private String _dueDate;
 
         @DynamoDBAttribute(attributeName = "name")
+        @DynamoDBIndexHashKey(attributeName = "name", globalSecondaryIndexName = "name-count")
         public String getName() { return _name; }
         public void setName(final String _name) { this._name = _name; }
 
         @DynamoDBAttribute(attributeName = "count")
+        @DynamoDBRangeKey(attributeName = "count")
         public Double getCount() {
             return _count;
         }
@@ -69,10 +74,10 @@ public class RefrigeratorDO {
         public void setKindOf(final String _kindOf) { this._kindOf = _kindOf; }
 
         @DynamoDBAttribute(attributeName = "dueDate")
-        public Integer getDueDate() {
+        public String getDueDate() {
             return _dueDate;
         }
-        public void setDueDate(final Integer _dueDate) {
+        public void setDueDate(final String _dueDate) {
             this._dueDate = _dueDate;
         }
 
