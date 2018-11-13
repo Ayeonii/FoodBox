@@ -17,9 +17,9 @@ import java.util.ArrayList;
 
 public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeRecipeAdapter.ItemViewHolder> {
 
-    ArrayList<HalfRecipeRecipeItem> mItems;
-    Double editCount;
-    String strEditCount;
+    private ArrayList<HalfRecipeRecipeItem> mItems;
+    private Double editCount;
+    private String strEditCount;
 
     public HalfRecipeRecipeAdapter(ArrayList<HalfRecipeRecipeItem> mItems) {
         this.mItems = mItems;
@@ -34,37 +34,35 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
 
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
+        //재료의 이름 세팅
+        holder.txtName.setText(mItems.get(position).getName());
+        //재료 보유 개수 세팅
         final Double iCount = mItems.get(position).getCount();
         String strCount = Double.toString(iCount);
-
-        editCount = 1.0;
-        strEditCount = Double.toString(editCount);
-
-        holder.txtName.setText(mItems.get(position).getName());
         holder.txtCount.setText(strCount);
-        holder.txtCountEdit.setText(strEditCount);
 
+        //기본으로 사용할 개수 1.0으로 세팅
+        editCount = 1.0;
+        mItems.get(position).setEditCount(editCount);
+
+        //plus, minus 버튼 클릭으로 사용할 재료 개수 정하기
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editCount < iCount) {
-                    editCount += 0.5;
-                    strEditCount = Double.toString(editCount);
-                    holder.txtCountEdit.setText(strEditCount);
-                    Log.d("test", "adapter plus : position : " + position + " : " + strEditCount);
-                }
+                double plus = mItems.get(position).getEditCount() + 0.5;
+                strEditCount = Double.toString(plus);
+                holder.txtCountEdit.setText(strEditCount);
+                mItems.get(position).setEditCount(plus);
             }
         });
 
         holder.btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editCount > 0) {
-                    editCount -= 0.5;
-                    strEditCount = Double.toString(editCount);
-                    holder.txtCountEdit.setText(strEditCount);
-                    Log.d("test", "adapter minus : position : " + position + " : " + strEditCount);
-                }
+                double minus = mItems.get(position).getEditCount() - 0.5;
+                strEditCount = Double.toString(minus);
+                holder.txtCountEdit.setText(strEditCount);
+                mItems.get(position).setEditCount(minus);
             }
         });
     }
