@@ -2,6 +2,7 @@ package com.example.dldke.foodbox;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,10 +14,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.Activity.HalfRecipeActivity;
 import com.example.dldke.foodbox.Adapter.HalfRecipeIngreAdapter;
 import com.example.dldke.foodbox.Adapter.HalfRecipeRecipeAdapter;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
 public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
 
@@ -30,6 +37,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
     private ArrayList<HalfRecipeRecipeItem> mItems = new ArrayList<>();
 
     private ArrayList<LocalRefrigeratorItem> selectedItem = new ArrayList<>();
+    private HalfRecipeDialogListener dialogListener;
 
     public HalfRecipeRecipeDialog(@NonNull Context context, ArrayList arrayList) {
         super(context);
@@ -89,6 +97,10 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         adapter.notifyDataSetChanged();
     }
 
+    public void setDialogListener(HalfRecipeDialogListener dialogListener) {
+        this.dialogListener = dialogListener;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -99,6 +111,28 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 cancel();
                 break;
             case R.id.txt_complete:
+                for(int i=0; i<mItems.size(); i++) {
+                    Log.d("test", mItems.get(i).getName() + ", " + mItems.get(i).getCount().toString() +  ", " + mItems.get(i).getEditCount().toString());
+                }
+
+                //refrigerator 테이블 접근 (재료 소진)
+                for(int i=0; i<mItems.size(); i++) {
+                    Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
+                }
+
+                //recipe 테이블 접근
+                List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+                for(int i=0; i<mItems.size(); i++) {
+                    recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
+                }
+                String recipe_id = Mapper.createRecipe(recipeIngredientList);
+                Log.d("test", recipe_id);
+
+                //myCommunity 테이블 접근
+                Mapper.addRecipeInMyCommunity(recipe_id);
+
+                //Activity로 넘기기 위함 -> 나중에 수정할 수도 있음
+                dialogListener.onCompleteClicked(1);
                 dismiss();
                 break;
         }
