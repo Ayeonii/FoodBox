@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.Activity;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.HalfRecipeCompleteActivity;
 import com.example.dldke.foodbox.HalfRecipeDialogListener;
 import com.example.dldke.foodbox.HalfRecipeIngreDialog;
 import com.example.dldke.foodbox.HalfRecipeRecipeDialog;
@@ -149,7 +151,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_sidedish:
-                Toast.makeText(getApplicationContext(), "sideDish", Toast.LENGTH_SHORT).show();
                 Log.d("test", "======sideDish======");
 
                 if(localSideDish.size()==0) {
@@ -169,7 +170,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     }
 
                     @Override
-                    public void onNegativeClicked() {
+                    public void onCompleteClicked(int result) {
 
                     }
                 });
@@ -177,7 +178,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
                 break;
             case R.id.btn_dairy:
-                Toast.makeText(getApplicationContext(), "dairy", Toast.LENGTH_SHORT).show();
                 Log.d("test", "======dairy======");
 
                 if(localDairy.size()==0) {
@@ -197,7 +197,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     }
 
                     @Override
-                    public void onNegativeClicked() {
+                    public void onCompleteClicked(int result) {
 
                     }
                 });
@@ -205,7 +205,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
                 break;
             case R.id.btn_etc:
-                Toast.makeText(getApplicationContext(), "etc", Toast.LENGTH_SHORT).show();
                 Log.d("test", "======etc======");
 
                 if(localEtc.size()==0) {
@@ -225,7 +224,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     }
 
                     @Override
-                    public void onNegativeClicked() {
+                    public void onCompleteClicked(int result) {
 
                     }
                 });
@@ -233,7 +232,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
                 break;
             case R.id.btn_meat:
-                Toast.makeText(getApplicationContext(), "meat", Toast.LENGTH_SHORT).show();
                 Log.d("test", "======meat======");
 
                 if(localMeat.size()==0) {
@@ -253,7 +251,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     }
 
                     @Override
-                    public void onNegativeClicked() {
+                    public void onCompleteClicked(int result) {
 
                     }
                 });
@@ -261,7 +259,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
                 break;
             case R.id.btn_fresh:
-                Toast.makeText(getApplicationContext(), "fresh", Toast.LENGTH_SHORT).show();
                 Log.d("test", "======fresh======");
 
                 if(localFresh.size()==0) {
@@ -281,7 +278,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     }
 
                     @Override
-                    public void onNegativeClicked() {
+                    public void onCompleteClicked(int result) {
 
                     }
                 });
@@ -296,7 +293,23 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 }
 
                 recipeDialog = new HalfRecipeRecipeDialog(this, selectedItem);
+                recipeDialog.setDialogListener(new HalfRecipeDialogListener() {
+                    @Override
+                    public void onPositiveClicked(String type, Boolean[] check) {
+
+                    }
+
+                    @Override
+                    public void onCompleteClicked(int result) {
+                        if (result == 1) {
+                            Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
+//                            halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            startActivity(halfRecipeCompleteActivity);
+                        }
+                    }
+                });
                 recipeDialog.show();
+
                 break;
         }
     }

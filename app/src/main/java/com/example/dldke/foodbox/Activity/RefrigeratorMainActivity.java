@@ -19,10 +19,7 @@ import android.widget.Toast;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
-
-import java.util.ArrayList;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
@@ -297,9 +294,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.bottom_to_up,R.anim.up_to_bottom);
                     break ;
                 case R.id.fabMini:
-                    //Toast.makeText(RefrigeratorMainActivity.this, "간이 레시피 누름", Toast.LENGTH_SHORT).show();
-                    Intent halfActivity = new Intent(getApplicationContext(),HalfRecipeActivity.class);
-                    startActivity(halfActivity);
+                    Intent halfRecipeActivity = new Intent(getApplicationContext(),HalfRecipeActivity.class);
+                    halfRecipeActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(halfRecipeActivity);
                     //다음 화면이 아래에서 올라오는 애니메이션
                     overridePendingTransition(R.anim.bottom_to_up,R.anim.up_to_bottom);
                     break ;
