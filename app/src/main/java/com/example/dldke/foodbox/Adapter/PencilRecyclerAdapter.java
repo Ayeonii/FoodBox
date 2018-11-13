@@ -1,5 +1,8 @@
 package com.example.dldke.foodbox.Adapter;
 
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,10 +49,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
         public PencilRecyclerAdapter(ArrayList<PencilItem> items){
             mItems = items;
         }
-
-        /*public ArrayList<String> getClickFoodString(){
-            return clickFoodString;
-        }*/
         public ArrayList<PencilCartItem> getClickFood(){
             return clickFood;
         }
@@ -69,8 +68,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
         if(mItems.get(position).getFoodName().length()>6) {
             holder.food_name.setTextSize(12);
         }
-
-            holder.food_img.setOnClickListener(new Button.OnClickListener() {
+        holder.food_img.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
