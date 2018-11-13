@@ -22,7 +22,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -786,6 +788,69 @@ public final class Mapper {
 
     }
 
+    public static void createMemo() {
+        final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = new com.example.dldke.foodbox.DataBaseFiles.MemoDO();
+
+        memoItem.setUserId(userId);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Mapper.getDynamoDBMapper().save(memoItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateUrgentMemo() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                        userId);
+
+                List<RecipeDO.Ingredient> urgent = new ArrayList<>();
+                List<RefrigeratorDO.Item> all = scanRefri();
+
+                for(int t = 0; t < all.size(); t++)
+                {
+                    String oldstring = all.get(t).getDueDate();
+                    Date date = null;
+                    try {
+                        date = new SimpleDateFormat("yyyyMMdd").parse(oldstring);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Date today = new Date();
+                    long result = (date.getTime() - today.getTime());
+                    int calDate = (int)(Math.ceil(result/(24*60*60*1000.0)));
+
+                    if(calDate <= 3)
+                    {
+                        RecipeDO.Ingredient ig = new RecipeDO.Ingredient();
+                        ig.setIngredientCount(all.get(t).getCount());
+                        ig.setIngredientDuedate(all.get(t).getDueDate());
+                        ig.setIngredientName(all.get(t).getName());
+                        urgent.add(ig);
+                    }
+                }
+                memoItem.setUrgent(urgent);
+                Mapper.getDynamoDBMapper().save(memoItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     private class PoolConfig{
         @SerializedName("Default")

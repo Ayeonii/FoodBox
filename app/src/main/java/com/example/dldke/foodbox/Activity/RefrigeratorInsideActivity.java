@@ -31,6 +31,8 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         btnSidedish.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Mapper.createMemo();
+                Mapper.updateUrgentMemo();
                 Toast.makeText(getApplicationContext(), "반찬", Toast.LENGTH_LONG).show();
             }
         });

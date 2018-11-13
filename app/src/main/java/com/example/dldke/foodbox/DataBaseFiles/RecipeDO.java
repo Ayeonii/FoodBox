@@ -136,6 +136,7 @@ public class RecipeDO {
     public static class Ingredient {
         private String _ingredientName;
         private Double _ingredientCount;
+        private String _ingredientDuedate;
 
         @DynamoDBAttribute(attributeName = "ingredientName")
         public String getIngredientName() {
@@ -152,6 +153,14 @@ public class RecipeDO {
 
         public void setIngredientCount(final Double _ingredientCount) {
             this._ingredientCount = _ingredientCount;
+        }
+        @DynamoDBAttribute(attributeName = "ingredientDuedate")
+        public String getIngredientDuedate() {
+            return _ingredientDuedate;
+        }
+
+        public void setIngredientDuedate(final String _ingredientDuedate) {
+            this._ingredientDuedate = _ingredientDuedate;
         }
     }
 }
