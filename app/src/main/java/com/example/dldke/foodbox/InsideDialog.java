@@ -30,7 +30,7 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     private ArrayList<LocalRefrigeratorItem> localRefrigeratorItems = new ArrayList<>();
     private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
 
-    private HalfRecipeDialogListener dialogListener;
+    private InsideItemDialog itemDialog;
 
     public InsideDialog(@NonNull Context context, String type, boolean isEmpty) {
         super(context);
@@ -109,10 +109,24 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         recyclerView.addOnItemTouchListener(
                 new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
                     @Override
-                    public void onItemClick(View view, int position) {
-                        String name = localRefrigeratorItems.get(position).getName();
-                        Double count = localRefrigeratorItems.get(position).getCount();
-                        Log.d("test", position + ", " + name + ", " + count.toString());
+                    public void onItemClick(View view, final int position) {
+                        final String getName = localRefrigeratorItems.get(position).getName();
+                        final Double getCount = localRefrigeratorItems.get(position).getCount();
+                        final String getDueDate = localRefrigeratorItems.get(position).getDueDate();
+                        Log.d("test", position + ", " + getName + ", " + getCount.toString() + ", " + getDueDate);
+
+                        itemDialog = new InsideItemDialog(context, getName, getCount, getDueDate);
+                        itemDialog.setDialogListener(new InsideDialogListener() {
+                            @Override
+                            public void onPositiveClicked(int delCheck, Double count, String dueDate) {
+                                if (delCheck==1) {  
+                                    localRefrigeratorItems.remove(position);
+                                    setData();
+                                    setRecyclerView();
+                                }
+                            }
+                        });
+                        itemDialog.show();
                     }
                 }
                 ));
@@ -127,10 +141,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         }
 
         adapter.notifyDataSetChanged();
-    }
-
-    public void setDialogListener(HalfRecipeDialogListener dialogListener) {
-        this.dialogListener = dialogListener;
     }
 
     @Override

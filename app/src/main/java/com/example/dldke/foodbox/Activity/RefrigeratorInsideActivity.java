@@ -49,72 +49,13 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         btnMeat.setOnClickListener(this);
         btnFresh.setOnClickListener(this);
 
-        scanToLocalRefrigerator();
-    }
-
-    public void scanToLocalRefrigerator() {
-
+        //scanToLocalRefrigerator();
         try {
             refrigeratorItem = Mapper.scanRefri();
         } catch (NullPointerException e) {
             //해당 아이디의 create된 냉장고가 없을 경우 create해야됨
             Mapper.createRefrigerator();
             refrigeratorItem = Mapper.scanRefri();
-        }
-
-        localSideDish = new ArrayList<>();
-        localDairy = new ArrayList<>();
-        localEtc = new ArrayList<>();
-        localMeat = new ArrayList<>();
-        localFresh = new ArrayList<>();
-
-        Log.d("test", "refrigeratorItem.size : " + refrigeratorItem.size());
-        for (int i = 0; i < refrigeratorItem.size(); i++) {
-            Log.d("test", "index : " + i);
-            try {
-                if (refrigeratorItem.get(i).getSection().equals("sideDish")) {
-                    Log.d("test", "sideDish : " + refrigeratorItem.get(i).getName());
-                    localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                }
-            } catch (NullPointerException e) {
-                Log.d("test", "sideDish null: " + e.getMessage());
-            }
-
-            try {
-                if (refrigeratorItem.get(i).getKindOf().equals("dairy")) {
-                    Log.d("test", "dairy : " + refrigeratorItem.get(i).getName());
-                    localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                }
-            } catch (NullPointerException e) {
-                Log.d("test", "dairy null: " + e.getMessage());
-            }
-
-            try {
-                if (refrigeratorItem.get(i).getKindOf().equals("beverage") || refrigeratorItem.get(i).getKindOf().equals("sauce")) {
-                    Log.d("test", "etc : " + refrigeratorItem.get(i).getName());
-                    localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                }
-            } catch (NullPointerException e) {
-                Log.d("test", "etc null: " + e.getMessage());
-            }
-
-            try {
-                if (refrigeratorItem.get(i).getSection().equals("meat")) {
-                    Log.d("test", "meat : " + refrigeratorItem.get(i).getName());
-                    localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                }
-            } catch (NullPointerException e) {
-                Log.d("test", "meat null: " + e.getMessage());
-            }
-
-            try {
-                if (refrigeratorItem.get(i).getSection().equals("fresh")) {
-                    Log.d("test", "fresh : " + refrigeratorItem.get(i).getName());
-                    localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                }
-            } catch (NullPointerException e) {
-                Log.d("test", "fresh null: " + e.getMessage());
-            }
         }
     }
 
@@ -123,6 +64,19 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         switch (view.getId()) {
             case R.id.btn_sidedish:
                 Log.d("test", "======sideDish======");
+                refrigeratorItem = Mapper.scanRefri();
+                localSideDish = new ArrayList<>();
+                for (int i = 0; i < refrigeratorItem.size(); i++) {
+                    Log.d("test", "index : " + i);
+                    try {
+                        if (refrigeratorItem.get(i).getSection().equals("sideDish")) {
+                            Log.d("test", "sideDish : " + refrigeratorItem.get(i).getName());
+                            localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("test", "sideDish null: " + e.getMessage());
+                    }
+                }
 
                 if (localSideDish.size() == 0) {
                     Log.d("test", "empty");
@@ -140,6 +94,19 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
 
             case R.id.btn_dairy:
                 Log.d("test", "======dairy======");
+                refrigeratorItem = Mapper.scanRefri();
+                localDairy = new ArrayList<>();
+                for (int i = 0; i < refrigeratorItem.size(); i++) {
+                    Log.d("test", "index : " + i);
+                    try {
+                        if (refrigeratorItem.get(i).getKindOf().equals("dairy")) {
+                            Log.d("test", "dairy : " + refrigeratorItem.get(i).getName());
+                            localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("test", "dairy null: " + e.getMessage());
+                    }
+                }
 
                 if (localDairy.size() == 0) {
                     Log.d("test", "empty");
@@ -155,6 +122,19 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                 break;
             case R.id.btn_etc:
                 Log.d("test", "======etc======");
+                refrigeratorItem = Mapper.scanRefri();
+                localEtc = new ArrayList<>();
+                for (int i = 0; i < refrigeratorItem.size(); i++) {
+                    Log.d("test", "index : " + i);
+                    try {
+                        if (refrigeratorItem.get(i).getKindOf().equals("beverage") || refrigeratorItem.get(i).getKindOf().equals("sauce")) {
+                            Log.d("test", "etc : " + refrigeratorItem.get(i).getName());
+                            localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("test", "etc null: " + e.getMessage());
+                    }
+                }
 
                 if (localEtc.size() == 0) {
                     Log.d("test", "empty");
@@ -171,6 +151,19 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                 break;
             case R.id.btn_meat:
                 Log.d("test", "======meat======");
+                refrigeratorItem = Mapper.scanRefri();
+                localMeat = new ArrayList<>();
+                for (int i = 0; i < refrigeratorItem.size(); i++) {
+                    Log.d("test", "index : " + i);
+                    try {
+                        if (refrigeratorItem.get(i).getSection().equals("meat")) {
+                            Log.d("test", "meat : " + refrigeratorItem.get(i).getName());
+                            localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("test", "meat null: " + e.getMessage());
+                    }
+                }
 
                 if (localMeat.size() == 0) {
                     Log.d("test", "empty");
@@ -186,6 +179,19 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                 break;
             case R.id.btn_fresh:
                 Log.d("test", "======fresh======");
+                refrigeratorItem = Mapper.scanRefri();
+                localFresh = new ArrayList<>();
+                for (int i = 0; i < refrigeratorItem.size(); i++) {
+                    Log.d("test", "index : " + i);
+                    try {
+                        if (refrigeratorItem.get(i).getSection().equals("fresh")) {
+                            Log.d("test", "fresh : " + refrigeratorItem.get(i).getName());
+                            localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("test", "fresh null: " + e.getMessage());
+                    }
+                }
 
                 if (localFresh.size() == 0) {
                     Log.d("test", "empty");
