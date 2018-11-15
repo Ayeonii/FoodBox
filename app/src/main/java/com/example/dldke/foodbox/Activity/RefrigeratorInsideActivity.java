@@ -12,10 +12,7 @@ import com.amazonaws.mobile.client.AWSMobileClient;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.HalfRecipeCompleteActivity;
-import com.example.dldke.foodbox.HalfRecipeDialogListener;
-import com.example.dldke.foodbox.HalfRecipeIngreDialog;
-import com.example.dldke.foodbox.HalfRecipeRecipeDialog;
+
 import com.example.dldke.foodbox.InsideDialog;
 import com.example.dldke.foodbox.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;

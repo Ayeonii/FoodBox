@@ -301,7 +301,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     public void onCompleteClicked(int result) {
                         if (result == 1) {
                             Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
-//                            halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             startActivity(halfRecipeCompleteActivity);
                         }
                     }

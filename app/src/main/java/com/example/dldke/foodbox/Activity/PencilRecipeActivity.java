@@ -35,6 +35,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     String searchText;
     FloatingActionButton floating;
     private static int enterCnt = 0;
+    private static boolean isFull = false;
     private static CartPopupDialog customDialog;
 
     public PencilRecipeActivity(){}
@@ -43,6 +44,10 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
         this.enterCnt = enterCnt;
     }
     public int getEnterTime(){ return enterCnt;}
+
+    public void setIsFull(boolean isFull){
+        this.isFull = isFull;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,9 +132,12 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                 transaction.commit();
                 break;
             case R.id.floating:
-                //customDialog.callFunction();
-                Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
-                startActivity(intent);
+                if(!isFull)
+                    customDialog.callFunction(getApplicationContext());
+                else {
+                    Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
+                    startActivity(intent);
+                }
                 break;
         }
     }

@@ -62,6 +62,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                         pencilAdapter.setClickCnt(pencilAdapter.getClickCnt()-1);
                         break ;
                     case R.id.deleteButton :
+                        pencilAdapter.setClickCnt(pencilAdapter.getClickCnt()-(int)mItems.get(position).getFoodCount());
                         mItems.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mItems.size());

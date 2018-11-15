@@ -61,10 +61,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private String imagePath;
 
     private final String TAG = "FullRecipe DB Test";
+
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
 
     private ArrayList<PencilItem> clickFood = new ArrayList<>();
 
+    private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -241,8 +243,10 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ingredient_add:
+                pencilRecipeActivity.setIsFull(true);
                 Intent PencilRecipeActivity = new Intent(getApplicationContext(), PencilRecipeActivity.class);
                 startActivity(PencilRecipeActivity);
+
             case R.id.get_recipe:
                 Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
                 startActivity(MyRecipeActivity);
