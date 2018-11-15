@@ -13,14 +13,14 @@
  * permissions and limitations under the License.
  */
 
-package com.amazonaws.mobile.api.id8z9a74jyqj;
+package com.amazonaws.mobile.api.ido8hcvwsv0c;
 
 import java.util.*;
 
 
 
-@com.amazonaws.mobileconnectors.apigateway.annotation.Service(endpoint = "https://8z9a74jyqj.execute-api.us-east-1.amazonaws.com/Development")
-public interface EchoTestMobileHubClient {
+@com.amazonaws.mobileconnectors.apigateway.annotation.Service(endpoint = "https://o8hcvwsv0c.execute-api.ap-northeast-2.amazonaws.com/Development")
+public interface CrawlerMobileHubClient {
 
 
     /**
