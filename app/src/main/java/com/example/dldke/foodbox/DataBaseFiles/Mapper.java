@@ -784,16 +784,18 @@ public final class Mapper {
         return commuItem;
     }
 
-    public static List<com.example.dldke.foodbox.DataBaseFiles.PostDO> searchPost(String title) {
-        final String postTitle = title;
+    public static List<com.example.dldke.foodbox.DataBaseFiles.PostDO> searchPost(String attribute, String identifier) {
+        final String postAttribute = attribute;
+        final String postIdentifier = identifier;
+
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
 
             List<com.example.dldke.foodbox.DataBaseFiles.PostDO> post;
             @Override
             public void run() {
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(postTitle));
-                scanExpression.addFilterCondition("title", condition);
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(postIdentifier));
+                scanExpression.addFilterCondition(postAttribute, condition);
                 post = Mapper.getDynamoDBMapper().scan(com.example.dldke.foodbox.DataBaseFiles.PostDO.class, scanExpression);
             }
 
