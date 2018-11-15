@@ -67,10 +67,9 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
 
         //Mapper.createRefrigerator();
         Log.e("Mapper.checkFirst",""+Mapper.checkFirst());
-        if(Mapper.checkFirst()){
-            Mapper.createRefrigerator();
-        }
-
+            if (Mapper.checkFirst()) {
+                Mapper.createRefrigerator();
+            }
 
         /****************search bar input *****************************/
         searchBar.addTextChangedListener(new TextWatcher() {

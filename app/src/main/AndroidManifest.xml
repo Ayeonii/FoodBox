@@ -43,6 +43,9 @@
             android:name=".Activity.PencilRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".HalfRecipeCompleteActivity"/>
+        <activity
+            android:name=".Activity.CommunityActivity"
+            android:windowSoftInputMode="adjustNothing" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"

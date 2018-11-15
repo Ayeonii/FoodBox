@@ -123,7 +123,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
         RecyclerView.Adapter adapter;
         recipeIngredientHorizontalView.setHasFixedSize(true);
-        adapter = new PencilRecyclerAdapter(clickFood);
+        adapter = new PencilRecyclerAdapter(clickFood, FullRecipeActivity.this);
         recipeIngredientHorizontalView.setLayoutManager(new LinearLayoutManager(this));
         recipeIngredientHorizontalView.setAdapter(adapter);
         //=================================================================================================

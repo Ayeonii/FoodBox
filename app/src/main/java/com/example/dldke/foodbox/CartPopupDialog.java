@@ -79,6 +79,7 @@ public class CartPopupDialog {
                 Mapper.putFood(clickedList);
 
                 pencilAdapter.getClickFood().clear();
+                pencilAdapter.setClickCnt(0);
                 isEnd = true;
 
                 dlg.dismiss();

@@ -193,6 +193,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeActivity.class);
                 startActivity(MyRecipeActivity);
             }
+            if(strText.equals("Community")){
+                Intent communityActivity = new Intent(getApplicationContext(), CommunityActivity.class);
+                startActivity(communityActivity);
+            }
         }
 
     }

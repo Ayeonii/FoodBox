@@ -35,7 +35,7 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
         recyclerView = (RecyclerView) view.findViewById(R.id.sideRecycler);
         recyclerView.setHasFixedSize(true);
         // use a linear layout manager
-        adapter = new PencilRecyclerAdapter(list);
+        adapter = new PencilRecyclerAdapter(list,view.getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "sideDish");
