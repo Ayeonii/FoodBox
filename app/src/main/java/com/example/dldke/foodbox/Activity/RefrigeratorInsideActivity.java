@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.R;
@@ -30,12 +28,11 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         btnMeat = (Button)findViewById(R.id.btn_meat);
         btnFruit = (Button)findViewById(R.id.btn_fruit);
 
-
-
         btnSidedish.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Mapper.createMemo();
+                Mapper.updateUrgentMemo();
                 Toast.makeText(getApplicationContext(), "반찬", Toast.LENGTH_LONG).show();
             }
         });

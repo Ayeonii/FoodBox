@@ -22,7 +22,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -182,6 +184,46 @@ public final class Mapper {
                 detail.setSpecList(specList);
 
                 recipeItem.setDetail(detail);
+                Mapper.getDynamoDBMapper().save(recipeItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void createChefRecipe(String name, List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> spec)
+    {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a");
+        final String dateS = sdf.format(date).toString();
+
+        final String ID = userId + dateS;
+
+        final String recipe_name = name;
+        final List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> rspecList = spec;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO();
+                recipeItem.setRecipeId(ID);
+                recipeItem.setDate(dateS);
+
+                com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Detail detail = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Detail();
+                detail.setFoodName(recipe_name);
+
+                List<RecipeDO.Spec> specList = detail.getSpecList();
+                for(int i = 0; i < rspecList.size(); i++)
+                {
+                    specList.add(rspecList.get(i));
+                }
+                detail.setSpecList(specList);
+                recipeItem.setDetail(detail);
+
                 Mapper.getDynamoDBMapper().save(recipeItem);
             }
         });
@@ -373,37 +415,6 @@ public final class Mapper {
         return itemList;
     }
 
-    public static List<InfoDO> scanKindOf(String kindOf) {
-        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
-
-        final String kindName = kindOf;
-
-        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
-            List<InfoDO> itemList;
-            @Override
-            public void run() {
-
-                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(kindName));
-                scanExpression.addFilterCondition("kindOf", condition);
-                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
-            }
-            @Override
-            public Object getResult(){
-                return itemList;
-            }
-        });
-
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
-        return itemList;
-    }
-
     public static boolean checkFirst() {
 
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
@@ -447,6 +458,7 @@ public final class Mapper {
                 Refri = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
                         userId);
+                Log.d("test", "Mapper.scanRefri");
                 Log.d("test", "userId : "+ userId);
             }
             @Override
@@ -470,7 +482,7 @@ public final class Mapper {
     public static InfoDO searchFood(String name, String section) {
 
         final String foodName = name;
-        //final String sectionName = section;
+        final String sectionName = section;
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem;
@@ -599,12 +611,12 @@ public final class Mapper {
     public static void createRefrigerator() {
         final com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO refrigeratorItem = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO();
 
-        Log.e("createRefrigerator", "create들어옴");
         refrigeratorItem.setUserId(userId);
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d("test", "Mapper.createRefrigerator");
                 Mapper.getDynamoDBMapper().save(refrigeratorItem);
             }
         });
@@ -776,6 +788,69 @@ public final class Mapper {
 
     }
 
+    public static void createMemo() {
+        final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = new com.example.dldke.foodbox.DataBaseFiles.MemoDO();
+
+        memoItem.setUserId(userId);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Mapper.getDynamoDBMapper().save(memoItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateUrgentMemo() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                        userId);
+
+                List<RecipeDO.Ingredient> urgent = new ArrayList<>();
+                List<RefrigeratorDO.Item> all = scanRefri();
+
+                for(int t = 0; t < all.size(); t++)
+                {
+                    String oldstring = all.get(t).getDueDate();
+                    Date date = null;
+                    try {
+                        date = new SimpleDateFormat("yyyyMMdd").parse(oldstring);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Date today = new Date();
+                    long result = (date.getTime() - today.getTime());
+                    int calDate = (int)(Math.ceil(result/(24*60*60*1000.0)));
+
+                    if(calDate <= 3)
+                    {
+                        RecipeDO.Ingredient ig = new RecipeDO.Ingredient();
+                        ig.setIngredientCount(all.get(t).getCount());
+                        ig.setIngredientDuedate(all.get(t).getDueDate());
+                        ig.setIngredientName(all.get(t).getName());
+                        urgent.add(ig);
+                    }
+                }
+                memoItem.setUrgent(urgent);
+                Mapper.getDynamoDBMapper().save(memoItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     private class PoolConfig{
         @SerializedName("Default")
