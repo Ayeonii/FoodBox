@@ -249,9 +249,9 @@ public final class Mapper {
 
     }
 
-    public static void downLoadImage(final String infoName, final String locatePath){
+    public static void downLoadImage(final String infoName, final String locatePath, final String sectionName){
         //final String name = infoName;
-
+        final String section = sectionName;
         Thread thread = new Thread(new Runnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.InfoDO infoItem;
@@ -261,7 +261,7 @@ public final class Mapper {
                 infoItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
                         infoName,
-                        "fresh");
+                        section);
                 // Log.d("why",Mapper.bucketName);
                 infoItem.getInfoImage().downloadTo(new File(locatePath + infoName + ".jpg"));
             }

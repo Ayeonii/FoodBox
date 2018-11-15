@@ -19,7 +19,8 @@ android:gravity="center">
     android:layout_marginRight="12dp"
     android:layout_marginStart="12dp"
     android:layout_marginTop="12dp"
-    android:background="@color/transparent"
+    android:backgroundTint="@color/colorWhite"
+    android:background="@drawable/make_radius"
     app:srcCompat="@drawable/transparent_background" />
 
     <TextView
