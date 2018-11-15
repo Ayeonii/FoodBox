@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -30,19 +31,18 @@
             android:name=".Activity.LoginActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Activity.RefrigeratorMainActivity" />
-        <activity
-            android:name=".Activity.JoinActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".Activity.FullRecipeActivity" />
+        <activity android:name=".Activity.FullRecipeActivity"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Activity.RefrigeratorInsideActivity" />
         <activity android:name=".Activity.HalfRecipeActivity" />
         <activity
-            android:name=".Activity.MyRecipeActivity"
+            android:name=".Activity.MyRecipeBoxActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Activity.PencilRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".HalfRecipeCompleteActivity"/>
+        <activity android:name=".Activity.HalfRecipeCompleteActivity"/>
+        <activity android:name=".Activity.RecipeDetailActivity"/>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"

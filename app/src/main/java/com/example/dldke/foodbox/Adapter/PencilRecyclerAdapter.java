@@ -73,8 +73,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                 public void onClick(View v) {
 
                     String foodName = mItems.get(position).getFoodName();
-                    Log.e("foodName", ""+foodName);
-                    Log.e("position", ""+position);
 
                     //중복처리
                     double foodCnt;

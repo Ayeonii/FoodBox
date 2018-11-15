@@ -2,7 +2,7 @@ package com.example.dldke.foodbox;
 
 import android.graphics.drawable.Drawable;
 
-public class FullRecipeDictionary {
+public class FullRecipeData {
 
     private String Method;
     private String Minute;
@@ -25,7 +25,7 @@ public class FullRecipeDictionary {
         return StepImage;
     }
 
-    public FullRecipeDictionary(String method, String minute, String fire) {
+    public FullRecipeData(String method, String minute, String fire) {
         this.Method = method;
         this.Minute = minute;
         this.Fire = fire;
