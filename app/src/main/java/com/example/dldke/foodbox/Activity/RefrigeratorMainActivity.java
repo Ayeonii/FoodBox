@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
-import com.amazonaws.mobile.auth.core.SignInStateChangeListener;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
 
@@ -180,13 +179,13 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             }
 
             if(strText.equals("내 레시피 보기")){
-                Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeActivity.class);
+                Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.MyRecipeBoxActivity.class);
                 startActivity(MyRecipeBoxActivity);
             }
             Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
 
             if(strText.equals("내 레시피 보기")){
-                Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeActivity.class);
+                Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
                 startActivity(MyRecipeActivity);
             }
         }

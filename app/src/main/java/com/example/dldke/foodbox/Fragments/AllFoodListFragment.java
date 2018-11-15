@@ -78,7 +78,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     }
 
     private void makeFoodList(List<InfoDO> foodList, String section) {
-        for(int i =0 ; i< foodList.size(); i++) {
+            for(int i =0 ; i< foodList.size(); i++) {
                 allfoodList.add(new String[]{foodList.get(i).getName(), section});
                 /**********이미지 추가후 주석 삭제**********/
                 /*
@@ -89,7 +89,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
                     Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/");
                 }
                 */
-        }
+            }
     }
 
     private List<String[]> makeFoodListString(List<InfoDO> foodList, String section){

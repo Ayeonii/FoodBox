@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.HalfRecipeCompleteActivity;
 import com.example.dldke.foodbox.HalfRecipeDialogListener;
 import com.example.dldke.foodbox.HalfRecipeIngreDialog;
 import com.example.dldke.foodbox.HalfRecipeRecipeDialog;

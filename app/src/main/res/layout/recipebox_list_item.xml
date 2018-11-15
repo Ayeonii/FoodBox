@@ -22,13 +22,21 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="8dp"
             android:text="풀레시피"
             android:textSize="18dp"
             android:textStyle="bold"
             android:textColor="@android:color/white"/>
+        <Button
+            android:id="@+id/recipe_into"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="자세히 보기"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 
