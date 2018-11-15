@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.HalfRecipeCompleteActivity;
 import com.example.dldke.foodbox.HalfRecipeDialogListener;
 import com.example.dldke.foodbox.HalfRecipeIngreDialog;
 import com.example.dldke.foodbox.HalfRecipeRecipeDialog;
@@ -88,14 +86,14 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             //내 냉장고 보기에도 동일하게 적용해야됨
             //해당 아이디의 create된 냉장고가 없을 경우 create해야됨
             Mapper.createRefrigerator();
-        } finally {
             refrigeratorItem = Mapper.scanRefri();
-            localSideDish = new ArrayList<>();
-            localDairy = new ArrayList<>();
-            localEtc = new ArrayList<>();
-            localMeat = new ArrayList<>();
-            localFresh = new ArrayList<>();
         }
+
+        localSideDish = new ArrayList<>();
+        localDairy = new ArrayList<>();
+        localEtc = new ArrayList<>();
+        localMeat = new ArrayList<>();
+        localFresh = new ArrayList<>();
 
         Log.d("test", "refrigeratorItem.size : " + refrigeratorItem.size());
         for (int i = 0; i < refrigeratorItem.size(); i++) {

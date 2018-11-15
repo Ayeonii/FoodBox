@@ -8,15 +8,19 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dldke.foodbox.Adapter.RecipeBoxAdapter;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.R;
 import com.example.dldke.foodbox.RecipeBoxData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FullRecipeBoxFragment extends Fragment {
     public FullRecipeBoxFragment(){ }
@@ -24,6 +28,8 @@ public class FullRecipeBoxFragment extends Fragment {
     private RecyclerView recyclerview;
     private RecyclerView.Adapter adapter;
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
+
+    private String TAG="FullRecipeBox";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,8 +54,20 @@ public class FullRecipeBoxFragment extends Fragment {
     }
 
     private void prepareData(){
-        data.add(new RecipeBoxData("풀레시피1", R.drawable.strawberry));
-        data.add(new RecipeBoxData("풀레시피2", R.drawable.strawberry));
-        data.add(new RecipeBoxData("풀레시피3", R.drawable.strawberry));
+
+        List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
+        for(int i =0 ; i<myrecipe.size(); i++){
+            try{
+
+                String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
+                data.add(new RecipeBoxData(foodname, R.drawable.strawberry));
+                Log.e(TAG, "레시피 이름"+foodname);
+
+            }catch(NullPointerException e){
+                Log.d(TAG,"음식이름이 없습니다.");
+            }
+        }
     }
+
+
 }

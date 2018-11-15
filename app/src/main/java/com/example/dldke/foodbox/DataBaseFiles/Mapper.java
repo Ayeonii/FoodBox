@@ -205,7 +205,7 @@ public final class Mapper {
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
                         recipe_id);
                 Log.d("why",Mapper.bucketName);
-                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"kitawo324/test" + key[key.length-1]));
+                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Recipes" + key[key.length-1]));
                 recipeItem.getRecipeImage().uploadFrom(new File(filePath));
                 Mapper.getDynamoDBMapper().save(recipeItem);
 

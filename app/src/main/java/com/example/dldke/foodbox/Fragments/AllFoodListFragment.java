@@ -78,18 +78,17 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     }
 
     private void makeFoodList(List<InfoDO> foodList, String section) {
-        for(int i =0 ; i< foodList.size(); i++) {
+            for(int i =0 ; i< foodList.size(); i++) {
                 allfoodList.add(new String[]{foodList.get(i).getName(), section});
                 /**********이미지 추가후 주석 삭제**********/
 
-                File file = new File("/storage/emulated/0/Download/"+foodList.get(i).getName()+".jpg");
-                if(!file.exists()) {
-                    Log.e("들어옴",""+file.getAbsolutePath());
+                File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
+                if (!file.exists()) {
+                    Log.e("들어옴", "" + file.getAbsolutePath());
                     //이미지 저장.
                     Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/", section);
                 }
-
-        }
+            }
     }
 
     private List<String[]> makeFoodListString(List<InfoDO> foodList, String section){
