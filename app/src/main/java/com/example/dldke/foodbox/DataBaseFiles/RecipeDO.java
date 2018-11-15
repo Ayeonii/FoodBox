@@ -22,6 +22,7 @@ public class RecipeDO {
     private Detail _detail;
     private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
     private S3Link recipeImage;
+    private boolean Ing;
 
     public S3Link getRecipeImage() {
         return recipeImage;
@@ -51,6 +52,14 @@ public class RecipeDO {
     @DynamoDBAttribute(attributeName = "detail")
     public Detail getDetail() {
         return _detail;
+    }
+
+    public void setIng(final boolean Ing) {
+        this.Ing = Ing;
+    }
+    @DynamoDBAttribute(attributeName = "Ing")
+    public boolean getIng() {
+        return Ing;
     }
 
     public void setDetail(final Detail _detail) {
