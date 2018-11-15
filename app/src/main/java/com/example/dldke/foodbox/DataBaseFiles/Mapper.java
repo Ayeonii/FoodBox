@@ -657,6 +657,34 @@ public final class Mapper {
         }
     }
 
+    public static void deleteFavorite(String postId) {
+        final String post_Id = postId;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO communityItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                        userId);
+                int index = 0;
+                for(int i =0; i < communityItem.getFavorites().size(); i++)
+                {
+                    if(communityItem.getFavorites().get(i).equals(post_Id)) {
+                        communityItem.getFavorites().remove(i);
+                        break;
+                    }
+                }
+                Mapper.getDynamoDBMapper().save(communityItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void createRefrigerator() {
         final com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO refrigeratorItem = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO();
 
@@ -746,6 +774,29 @@ public final class Mapper {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                Mapper.getDynamoDBMapper().save(myCommunityDO);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void addFavoriteInMyCommunity(final String postId) {
+
+        Thread thread = new Thread(new Runnable() {
+            com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO myCommunityDO;
+            @Override
+            public void run() {
+                myCommunityDO = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                        userId);
+                List<String> tmpList = myCommunityDO.getFavorites();
+                tmpList.add(postId);
+                myCommunityDO.setFavorites(tmpList);
                 Mapper.getDynamoDBMapper().save(myCommunityDO);
             }
         });
