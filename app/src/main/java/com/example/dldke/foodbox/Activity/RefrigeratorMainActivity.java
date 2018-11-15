@@ -184,13 +184,13 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             }
 
             if(strText.equals("내 레시피 보기")){
-                Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeActivity.class);
+                Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.MyRecipeBoxActivity.class);
                 startActivity(MyRecipeBoxActivity);
             }
             Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
 
             if(strText.equals("내 레시피 보기")){
-                Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeActivity.class);
+                Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
                 startActivity(MyRecipeActivity);
             }
             if(strText.equals("Community")){

@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,15 +9,21 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.example.dldke.foodbox.Activity.RecipeDetailActivity;
 import com.example.dldke.foodbox.Adapter.RecipeBoxAdapter;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.R;
 import com.example.dldke.foodbox.RecipeBoxData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HalfRecipeBoxFragment extends Fragment {
 
@@ -25,6 +32,9 @@ public class HalfRecipeBoxFragment extends Fragment {
     private RecyclerView recyclerview;
     private RecyclerView.Adapter adapter;
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
+
+    private String TAG = "HalfRecipeBox";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,8 +59,21 @@ public class HalfRecipeBoxFragment extends Fragment {
     }
 
     private void prepareData(){
-        data.add(new RecipeBoxData("간이레시피1", R.drawable.strawberry));
-        data.add(new RecipeBoxData("간이레시피2", R.drawable.strawberry));
-        data.add(new RecipeBoxData("간이레시피3", R.drawable.strawberry));
+
+        List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
+        for(int i =0 ; i<myrecipe.size(); i++){
+           try{
+
+                String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
+
+            }catch(NullPointerException e){
+
+               Log.d(TAG,"음식이름이 없습니다." );
+               Log.e(TAG, ""+myrecipe.get(i));
+               data.add(new RecipeBoxData(myrecipe.get(i), R.drawable.strawberry));
+            }
+        }
     }
+
+
 }

@@ -2,7 +2,6 @@ package com.example.dldke.foodbox.Adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +13,12 @@ import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 
-public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngreAdapter.ItemViewHolder> {
+public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHolder> {
 
     ArrayList<HalfRecipeIngreItem> mItems;
-    Boolean[] checkIngre = new Boolean[50];
 
-    public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems) {
+    public InsideAdapter(ArrayList<HalfRecipeIngreItem> mItems) {
         this.mItems = mItems;
-    }
-
-    public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems, int arraySize, Boolean[] check) {
-        this.mItems = mItems;
-        System.arraycopy(check, 0, this.checkIngre, 0, arraySize);
     }
 
     @NonNull
@@ -38,11 +31,6 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         holder.mNameTv.setText(mItems.get(position).getName());
-
-        if (checkIngre[position])
-            holder.ivCheck.setVisibility(View.VISIBLE);
-        else
-            holder.ivCheck.setVisibility(View.GONE);
     }
 
     @Override
@@ -52,12 +40,10 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView mNameTv;
-        private ImageView ivCheck;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             mNameTv = (TextView) itemView.findViewById(R.id.itemNameTv);
-            ivCheck = (ImageView) itemView.findViewById(R.id.img_check);
         }
     }
 }

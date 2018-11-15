@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,10 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.Activity.MyRecipeActivity;
-import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
-
-import org.w3c.dom.Text;
+import com.example.dldke.foodbox.R;
 
 public class HalfRecipeCompleteActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,7 +30,7 @@ public class HalfRecipeCompleteActivity extends AppCompatActivity implements Vie
         switch (view.getId()) {
             case R.id.txt_go_recipe:
                 Log.d("test", "txt_go_recipe clicked");
-                Intent myRecipeActivity = new Intent(getApplicationContext(), MyRecipeActivity.class);
+                Intent myRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
                 myRecipeActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(myRecipeActivity);
                 break;

@@ -1,7 +1,6 @@
 package com.example.dldke.foodbox.Adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -16,19 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.FullRecipeDictionary;
+import com.example.dldke.foodbox.FullRecipeData;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 
 public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.FullRecipeViewHolder> {
 
-    private ArrayList<FullRecipeDictionary> mList;
+    private ArrayList<FullRecipeData> mList;
     private Context mContext;
 
     private final String TAG = "FullRecipeAdapter";
@@ -110,7 +108,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
                                 //String strEnglish = minute_str.getText().toString();
                                 //String strKorean = fire_str.getText().toString();
 
-                                FullRecipeDictionary dict = new FullRecipeDictionary(method, minute, fire);
+                                FullRecipeData dict = new FullRecipeData(method, minute, fire);
 
                                 mList.set(getAdapterPosition(), dict);
                                 notifyItemChanged(getAdapterPosition());
@@ -137,7 +135,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
         };
     }
 
-    public FullRecipeAdapter(Context context, ArrayList<FullRecipeDictionary> list) {
+    public FullRecipeAdapter(Context context, ArrayList<FullRecipeData> list) {
         mList = list;
         mContext = context;
     }
