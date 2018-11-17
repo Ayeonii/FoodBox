@@ -3,6 +3,7 @@ package com.example.dldke.foodbox;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
@@ -91,7 +92,8 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         mItems.clear();
 
         for (int i = 0; i < selectedItem.size(); i++) {
-            mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount()));
+            String foodImgUri = "file:///storage/emulated/0/Download/"+selectedItem.get(i).getName()+".jpg";
+            mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount(),  Uri.parse(foodImgUri)));
         }
 
         adapter.notifyDataSetChanged();

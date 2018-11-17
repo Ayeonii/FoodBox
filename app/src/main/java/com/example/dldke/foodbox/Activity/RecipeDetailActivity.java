@@ -33,9 +33,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         TextView recipe_title = (TextView)findViewById(R.id.recipe_title);
         TextView ingredient_name = (TextView)findViewById(R.id.ingredient_name);
-        TextView ingredient_name2 = (TextView)findViewById(R.id.ingredient_name2);
-        TextView ingredient_number = (TextView)findViewById(R.id.ingredient_number);
-        TextView ingredient_number2 = (TextView)findViewById(R.id.ingredient_number2);
+        //TextView ingredient_name2 = (TextView)findViewById(R.id.ingredient_name2);
+        //TextView ingredient_number = (TextView)findViewById(R.id.ingredient_number);
+       //TextView ingredient_number2 = (TextView)findViewById(R.id.ingredient_number2);
 
         recipe_title.setText(recipe_id+"상세 내용");
 

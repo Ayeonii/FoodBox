@@ -1,12 +1,16 @@
 package com.example.dldke.foodbox;
 
+import android.net.Uri;
+
 public class HalfRecipeRecipeItem {
     private String name;
     private Double count, editCount;
+    private Uri image;
 
-    public HalfRecipeRecipeItem(String name, Double count) {
+    public HalfRecipeRecipeItem(String name, Double count, Uri image) {
         this.name = name;
         this.count = count;
+        this.image = image;
     }
 
     public String getName() {
@@ -15,6 +19,10 @@ public class HalfRecipeRecipeItem {
 
     public Double getCount() {
         return count;
+    }
+
+    public Uri getImage(){
+        return image;
     }
 
     public Double getEditCount() {
