@@ -74,14 +74,12 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
         return ingredients.size();
     }
 
-    public Integer AddIngredient(List<RecipeDO.Ingredient> ingredientList){
+    public void AddIngredient(List<RecipeDO.Ingredient> ingredientList){
 
         for(int i = 0; i<ingredientList.size(); i++){
             String name = ingredientList.get(i).getIngredientName();
             foodImg = "file:///storage/emulated/0/Download/"+ingredientList.get(i).getIngredientName()+".jpg";
             IngredientData.add(new FullRecipeIngredientData(name,  Uri.parse(foodImg)));
         }
-
-        return IngredientData.size();
     }
 }
