@@ -24,6 +24,7 @@ import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.amazonaws.mobile.auth.core.SignInStateChangeListener;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 
@@ -80,6 +81,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        Mapper.setUserId(getApplicationContext());
+
+
+        //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
         //pencilAdapter.getClickFoodString().clear();
         pencilAdapter.getClickFood().clear();
         /*메뉴*/
@@ -141,7 +146,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         ListClickListener listClickListener = new ListClickListener();
 
         /************버튼 리스너들 시작**************/
-
 
         fabPlus.setOnClickListener(onClickListener);
         plusBack.setOnClickListener(onClickListener);

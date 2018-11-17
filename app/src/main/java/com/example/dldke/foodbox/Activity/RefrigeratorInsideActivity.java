@@ -1,31 +1,18 @@
 package com.example.dldke.foodbox.Activity;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
-import com.amazonaws.http.HttpMethodName;
-import com.amazonaws.mobile.api.ido8hcvwsv0c.CrawlerMobileHubClient;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
-import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
-import com.amazonaws.mobileconnectors.apigateway.ApiResponse;
-import com.amazonaws.util.IOUtils;
-import com.amazonaws.util.StringUtils;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-
 import com.example.dldke.foodbox.InsideDialog;
 import com.example.dldke.foodbox.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class RefrigeratorInsideActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -81,21 +68,9 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "sideDish null: " + e.getMessage());
                     }
                 }
-
-                if (localSideDish.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "sideDish", true);
-                } else {
-                    for (int i = 0; i < localSideDish.size(); i++) {
-                        Log.d("test", localSideDish.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "sideDish", false, localSideDish);
-                }
-                dialog.show();
+                showDialog("sideDish", localSideDish);
 
                 break;
-
-
             case R.id.btn_dairy:
                 Log.d("test", "======dairy======");
                 refrigeratorItem = Mapper.scanRefri();
@@ -111,17 +86,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "dairy null: " + e.getMessage());
                     }
                 }
-
-                if (localDairy.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "dairy", true);
-                } else {
-                    for (int i = 0; i < localDairy.size(); i++) {
-                        Log.d("test", localDairy.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "dairy", false, localDairy);
-                }
-                dialog.show();
+                showDialog("dairy", localDairy);
 
                 break;
             case R.id.btn_etc:
@@ -139,18 +104,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "etc null: " + e.getMessage());
                     }
                 }
-
-                if (localEtc.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "etc", true);
-                } else {
-                    for (int i = 0; i < localEtc.size(); i++) {
-                        Log.d("test", localEtc.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "etc", false, localEtc);
-                }
-
-                dialog.show();
+                showDialog("etc", localEtc);
 
                 break;
             case R.id.btn_meat:
@@ -168,17 +122,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "meat null: " + e.getMessage());
                     }
                 }
-
-                if (localMeat.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "meat", true);
-                } else {
-                    for (int i = 0; i < localMeat.size(); i++) {
-                        Log.d("test", localMeat.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "meat", false, localMeat);
-                }
-                dialog.show();
+                showDialog("meat", localMeat);
 
                 break;
             case R.id.btn_fresh:
@@ -196,80 +140,24 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "fresh null: " + e.getMessage());
                     }
                 }
-
-                if (localFresh.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "fresh", true);
-                } else {
-                    for (int i = 0; i < localFresh.size(); i++) {
-                        Log.d("test", localFresh.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "fresh", false, localFresh);
-                }
-                dialog.show();
+                showDialog("fresh", localFresh);
 
                 break;
         }
     }
-    public void callCloudLogic() {
-        // Create components of api request
-        final String method = "GET";
 
-        final String path = "/crawler";
+    public void showDialog(String type, ArrayList<LocalRefrigeratorItem> typeArray) {
+        Log.d("test", "======"+type+"======");
 
-        final String body = "";
-        final byte[] content = body.getBytes(StringUtils.UTF8);
-
-        final Map parameters = new HashMap<>();
-        parameters.put("lang", "en_US");
-        parameters.put("FoodName","사과");
-
-        final Map headers = new HashMap<>();
-
-        // Use components to create the api request
-        ApiRequest localRequest =
-                new ApiRequest(apiClient.getClass().getSimpleName())
-                        .withPath(path)
-                        .withHttpMethod(HttpMethodName.valueOf(method))
-                        .withHeaders(headers)
-                        .addHeader("Content-Type", "application/json")
-                        .withParameters(parameters);
-
-        // Only set body if it has content.
-        if (body.length() > 0) {
-            localRequest = localRequest
-                    .addHeader("Content-Length", String.valueOf(content.length))
-                    .withBody(content);
-        }
-
-        final ApiRequest request = localRequest;
-
-        // Make network call on background thread
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.d(LOG_TAG,
-                            "Invoking API w/ Request : " +
-                                    request.getHttpMethod() + ":" +
-                                    request.getPath());
-
-                    final ApiResponse response = apiClient.execute(request);
-
-                    final InputStream responseContentStream = response.getContent();
-
-                    if (responseContentStream != null) {
-                        final String responseData = IOUtils.toString(responseContentStream);
-                        Log.d(LOG_TAG, "Response : " + responseData);
-                    }
-
-                    Log.d(LOG_TAG, response.getStatusCode() + " " + response.getStatusText());
-
-                } catch (final Exception exception) {
-                    Log.e(LOG_TAG, exception.getMessage(), exception);
-                    exception.printStackTrace();
-                }
+        if (typeArray.size() == 0) {
+            Log.d("test", "empty");
+            dialog = new InsideDialog(this, type, true);
+        } else {
+            for (int i = 0; i < typeArray.size(); i++) {
+                Log.d("test", typeArray.get(i).getName());
             }
-        }).start();
+            dialog = new InsideDialog(this, type, false, typeArray);
+        }
+        dialog.show();
     }
 }
