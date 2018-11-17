@@ -1,21 +1,12 @@
 package com.example.dldke.foodbox.Activity;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.HalfRecipeCompleteActivity;
-import com.example.dldke.foodbox.HalfRecipeDialogListener;
-import com.example.dldke.foodbox.HalfRecipeIngreDialog;
-import com.example.dldke.foodbox.HalfRecipeRecipeDialog;
 import com.example.dldke.foodbox.InsideDialog;
 import com.example.dldke.foodbox.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;
@@ -77,21 +68,9 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "sideDish null: " + e.getMessage());
                     }
                 }
-
-                if (localSideDish.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "sideDish", true);
-                } else {
-                    for (int i = 0; i < localSideDish.size(); i++) {
-                        Log.d("test", localSideDish.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "sideDish", false, localSideDish);
-                }
-                dialog.show();
+                showDialog("sideDish", localSideDish);
 
                 break;
-
-
             case R.id.btn_dairy:
                 Log.d("test", "======dairy======");
                 refrigeratorItem = Mapper.scanRefri();
@@ -107,17 +86,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "dairy null: " + e.getMessage());
                     }
                 }
-
-                if (localDairy.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "dairy", true);
-                } else {
-                    for (int i = 0; i < localDairy.size(); i++) {
-                        Log.d("test", localDairy.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "dairy", false, localDairy);
-                }
-                dialog.show();
+                showDialog("dairy", localDairy);
 
                 break;
             case R.id.btn_etc:
@@ -135,18 +104,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "etc null: " + e.getMessage());
                     }
                 }
-
-                if (localEtc.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "etc", true);
-                } else {
-                    for (int i = 0; i < localEtc.size(); i++) {
-                        Log.d("test", localEtc.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "etc", false, localEtc);
-                }
-
-                dialog.show();
+                showDialog("etc", localEtc);
 
                 break;
             case R.id.btn_meat:
@@ -164,17 +122,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "meat null: " + e.getMessage());
                     }
                 }
-
-                if (localMeat.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "meat", true);
-                } else {
-                    for (int i = 0; i < localMeat.size(); i++) {
-                        Log.d("test", localMeat.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "meat", false, localMeat);
-                }
-                dialog.show();
+                showDialog("meat", localMeat);
 
                 break;
             case R.id.btn_fresh:
@@ -192,19 +140,24 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                         Log.d("test", "fresh null: " + e.getMessage());
                     }
                 }
-
-                if (localFresh.size() == 0) {
-                    Log.d("test", "empty");
-                    dialog = new InsideDialog(this, "fresh", true);
-                } else {
-                    for (int i = 0; i < localFresh.size(); i++) {
-                        Log.d("test", localFresh.get(i).getName());
-                    }
-                    dialog = new InsideDialog(this, "fresh", false, localFresh);
-                }
-                dialog.show();
+                showDialog("fresh", localFresh);
 
                 break;
         }
+    }
+
+    public void showDialog(String type, ArrayList<LocalRefrigeratorItem> typeArray) {
+        Log.d("test", "======"+type+"======");
+
+        if (typeArray.size() == 0) {
+            Log.d("test", "empty");
+            dialog = new InsideDialog(this, type, true);
+        } else {
+            for (int i = 0; i < typeArray.size(); i++) {
+                Log.d("test", typeArray.get(i).getName());
+            }
+            dialog = new InsideDialog(this, type, false, typeArray);
+        }
+        dialog.show();
     }
 }

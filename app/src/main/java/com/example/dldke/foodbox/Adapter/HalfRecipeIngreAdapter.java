@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.Adapter;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,8 +38,10 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.mNameTv.setText(mItems.get(position).getName());
-
+        String foodName = mItems.get(position).getName();
+        String foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+        holder.mNameTv.setText(foodName);
+        holder.food_Img.setImageURI(Uri.parse(foodImgUri));
         if (checkIngre[position])
             holder.ivCheck.setVisibility(View.VISIBLE);
         else
@@ -53,11 +56,13 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView mNameTv;
         private ImageView ivCheck;
+        private ImageView food_Img;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             mNameTv = (TextView) itemView.findViewById(R.id.itemNameTv);
             ivCheck = (ImageView) itemView.findViewById(R.id.img_check);
+            food_Img = (ImageView) itemView.findViewById(R.id.img_food);
         }
     }
 }

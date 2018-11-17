@@ -2,6 +2,7 @@ package com.example.dldke.foodbox;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -114,8 +115,9 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                         final Double getCount = localRefrigeratorItems.get(position).getCount();
                         final String getDueDate = localRefrigeratorItems.get(position).getDueDate();
                         Log.d("test", position + ", " + getName + ", " + getCount.toString() + ", " + getDueDate);
-
-                        itemDialog = new InsideItemDialog(context, getName, getCount, getDueDate);
+                        String foodUri = "file:///storage/emulated/0/Download/"+getName+".jpg";
+                        Uri foodImgUri = Uri.parse(foodUri);
+                        itemDialog = new InsideItemDialog(context, getName, getCount, getDueDate, foodImgUri  );
                         itemDialog.setDialogListener(new InsideDialogListener() {
                             @Override
                             public void onPositiveClicked(int delCheck, Double count, String dueDate) {

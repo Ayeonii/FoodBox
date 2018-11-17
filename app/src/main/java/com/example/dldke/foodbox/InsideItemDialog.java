@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,8 +26,8 @@ import java.util.ArrayList;
 public class InsideItemDialog extends Dialog implements View.OnClickListener {
 
     private TextView txtName, txtCount, txtDueDate, txtOk;
-    private ImageView ivCountEdit, ivDueDateEdit, ivDelete;
-
+    private ImageView ivCountEdit, ivDueDateEdit, ivDelete, clickImg;
+    private Uri imgUri;
     private Context context;
     private String mName, mDueDate;
     private Double mCount;
@@ -38,12 +40,13 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         this.context = context;
     }
 
-    public InsideItemDialog(@NonNull Context context, String name, Double count, String dueDate) {
+    public InsideItemDialog(@NonNull Context context, String name, Double count, String dueDate, Uri foodImg) {
         super(context);
         this.context = context;
         this.mName = name;
         this.mCount = count;
         this.mDueDate = dueDate;
+        this.imgUri = foodImg;
     }
 
     @Override
@@ -58,11 +61,15 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         ivCountEdit = (ImageView) findViewById(R.id.iv_count_edit);
         ivDueDateEdit = (ImageView) findViewById(R.id.iv_dueDate_edit);
         ivDelete = (ImageView) findViewById(R.id.iv_delete);
+        clickImg = (ImageView)findViewById(R.id.img_food);
+        clickImg.setImageURI(imgUri);
+
 
         ivCountEdit.setOnClickListener(this);
         ivDueDateEdit.setOnClickListener(this);
         ivDelete.setOnClickListener(this);
         txtOk.setOnClickListener(this);
+
 
         txtName.setText(mName);
         txtCount.setText("보유개수 " + mCount);

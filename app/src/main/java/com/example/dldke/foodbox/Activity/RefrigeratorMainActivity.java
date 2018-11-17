@@ -24,6 +24,7 @@ import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.amazonaws.mobile.auth.core.SignInStateChangeListener;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 
@@ -80,6 +81,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        Mapper.setUserId(getApplicationContext());
+
+
+        //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
         //pencilAdapter.getClickFoodString().clear();
         pencilAdapter.getClickFood().clear();
         /*메뉴*/
@@ -142,7 +147,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
         /************버튼 리스너들 시작**************/
 
-
         fabPlus.setOnClickListener(onClickListener);
         plusBack.setOnClickListener(onClickListener);
         fabCamera.setOnClickListener(onClickListener);
@@ -189,9 +193,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             }
             Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
 
-            if(strText.equals("내 레시피 보기")){
-                Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
-                startActivity(MyRecipeActivity);
+            if(strText.equals("Community")){
+                Intent communityActivity = new Intent(getApplicationContext(), CommunityActivity.class);
+                startActivity(communityActivity);
             }
         }
 
@@ -293,8 +297,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     break ;
                 case R.id.fabFull:
                     //Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();
-                    Intent fullActivity = new Intent(getApplicationContext(),FullRecipeActivity.class);
-                    startActivity(fullActivity);
+                    Intent myRecipeBoxActivity = new Intent(getApplicationContext(),MyRecipeBoxActivity.class);
+                    startActivity(myRecipeBoxActivity);
                     //다음 화면이 아래에서 올라오는 애니메이션
                     overridePendingTransition(R.anim.bottom_to_up,R.anim.up_to_bottom);
                     break ;

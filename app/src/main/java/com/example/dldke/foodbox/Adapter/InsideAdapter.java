@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.Adapter;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.HalfRecipeIngreItem;
+import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -30,7 +32,10 @@ public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHo
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.mNameTv.setText(mItems.get(position).getName());
+        String foodName = mItems.get(position).getName();
+        holder.mNameTv.setText(foodName);
+        String foodUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+        holder.food_Img.setImageURI(Uri.parse(foodUri));
     }
 
     @Override
@@ -40,10 +45,11 @@ public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHo
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView mNameTv;
-
+        private ImageView food_Img;
         public ItemViewHolder(View itemView) {
             super(itemView);
             mNameTv = (TextView) itemView.findViewById(R.id.itemNameTv);
+            food_Img = (ImageView) itemView.findViewById(R.id.img_food);
         }
     }
 }

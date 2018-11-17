@@ -22,9 +22,9 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
 
     private String TAG = "FullRecipeIngredientAdapter";
     private Context context;
-    private static List<RecipeDO.Ingredient> ingredients;
+    private static List<RecipeDO.Ingredient> ingredients = new ArrayList<>();
     //재료 이름과 이미지 받아오기 위한 저장소
-    private static List<FullRecipeIngredientData> IngredientData;
+    private static List<FullRecipeIngredientData> IngredientData = new ArrayList<>();
 
     //해당레시피 ID와 등록된 재료 받아오기
     //private RecipeDetailActivity recipeDetailActivity = new RecipeDetailActivity();

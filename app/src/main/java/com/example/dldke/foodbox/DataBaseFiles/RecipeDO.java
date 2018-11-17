@@ -22,6 +22,7 @@ public class RecipeDO {
     private Detail _detail;
     private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
     private S3Link recipeImage;
+    private boolean Ing;
 
     public S3Link getRecipeImage() {
         return recipeImage;
@@ -51,6 +52,14 @@ public class RecipeDO {
     @DynamoDBAttribute(attributeName = "detail")
     public Detail getDetail() {
         return _detail;
+    }
+
+    public void setIng(final boolean Ing) {
+        this.Ing = Ing;
+    }
+    @DynamoDBAttribute(attributeName = "Ing")
+    public boolean getIng() {
+        return Ing;
     }
 
     public void setDetail(final Detail _detail) {
@@ -136,6 +145,7 @@ public class RecipeDO {
     public static class Ingredient {
         private String _ingredientName;
         private Double _ingredientCount;
+        private String _ingredientDuedate;
 
         @DynamoDBAttribute(attributeName = "ingredientName")
         public String getIngredientName() {
@@ -152,6 +162,14 @@ public class RecipeDO {
 
         public void setIngredientCount(final Double _ingredientCount) {
             this._ingredientCount = _ingredientCount;
+        }
+        @DynamoDBAttribute(attributeName = "ingredientDuedate")
+        public String getIngredientDuedate() {
+            return _ingredientDuedate;
+        }
+
+        public void setIngredientDuedate(final String _ingredientDuedate) {
+            this._ingredientDuedate = _ingredientDuedate;
         }
     }
 }
