@@ -40,7 +40,7 @@ public class CartPopupDialog {
         return isEnd;
     }
     // 호출할 다이얼로그 함수를 정의한다.
-    public void callFunction() {
+    public void callFunction(final Context activityContext) {
         RecyclerView.Adapter adapter;
         final Dialog dlg = new Dialog(context);
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -77,10 +77,12 @@ public class CartPopupDialog {
                 }
                 Log.e("clickedList",""+clickedList);
                 Mapper.putFood(clickedList);
-
+                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 pencilAdapter.getClickFood().clear();
-                isEnd = true;
-
+                pencilAdapter.setClickCnt(0);
+                Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);
+                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(refMain);
                 dlg.dismiss();
 
             }

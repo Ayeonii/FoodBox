@@ -292,9 +292,9 @@ public final class Mapper {
 
     }
 
-    public static void downLoadImage(final String infoName, final String locatePath){
+    public static void downLoadImage(final String infoName, final String locatePath, final String sectionName){
         //final String name = infoName;
-
+        final String section = sectionName;
         Thread thread = new Thread(new Runnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.InfoDO infoItem;
@@ -304,7 +304,7 @@ public final class Mapper {
                 infoItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
                         infoName,
-                        "fresh");
+                        section);
                 // Log.d("why",Mapper.bucketName);
                 infoItem.getInfoImage().downloadTo(new File(locatePath + infoName + ".jpg"));
             }
@@ -422,9 +422,15 @@ public final class Mapper {
             com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
             @Override
             public void run() {
-                Refri = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
-                        userId);
+                try {
+                    Refri = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                            userId);
+                }catch (NullPointerException e){
+                    Refri = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                            userId);
+                }
             }
             @Override
             public Object getResult(){
@@ -657,6 +663,34 @@ public final class Mapper {
         }
     }
 
+    public static void deleteFavorite(String postId) {
+        final String post_Id = postId;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO communityItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                        userId);
+                int index = 0;
+                for(int i =0; i < communityItem.getFavorites().size(); i++)
+                {
+                    if(communityItem.getFavorites().get(i).equals(post_Id)) {
+                        communityItem.getFavorites().remove(i);
+                        break;
+                    }
+                }
+                Mapper.getDynamoDBMapper().save(communityItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void createRefrigerator() {
         final com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO refrigeratorItem = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO();
 
@@ -757,6 +791,29 @@ public final class Mapper {
         }
     }
 
+    public static void addFavoriteInMyCommunity(final String postId) {
+
+        Thread thread = new Thread(new Runnable() {
+            com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO myCommunityDO;
+            @Override
+            public void run() {
+                myCommunityDO = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                        userId);
+                List<String> tmpList = myCommunityDO.getFavorites();
+                tmpList.add(postId);
+                myCommunityDO.setFavorites(tmpList);
+                Mapper.getDynamoDBMapper().save(myCommunityDO);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO searchMyCommunity() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
 
@@ -784,16 +841,18 @@ public final class Mapper {
         return commuItem;
     }
 
-    public static List<com.example.dldke.foodbox.DataBaseFiles.PostDO> searchPost(String title) {
-        final String postTitle = title;
+    public static List<com.example.dldke.foodbox.DataBaseFiles.PostDO> searchPost(String attribute, String identifier) {
+        final String postAttribute = attribute;
+        final String postIdentifier = identifier;
+
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
 
             List<com.example.dldke.foodbox.DataBaseFiles.PostDO> post;
             @Override
             public void run() {
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(postTitle));
-                scanExpression.addFilterCondition("title", condition);
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(postIdentifier));
+                scanExpression.addFilterCondition(postAttribute, condition);
                 post = Mapper.getDynamoDBMapper().scan(com.example.dldke.foodbox.DataBaseFiles.PostDO.class, scanExpression);
             }
 

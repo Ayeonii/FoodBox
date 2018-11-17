@@ -42,7 +42,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.searchRecycler);
         recyclerView.setHasFixedSize(true);
         //어댑터 연결
-        adapter = new PencilRecyclerAdapter(list);
+        adapter = new PencilRecyclerAdapter(list,view.getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "SearchFrag");

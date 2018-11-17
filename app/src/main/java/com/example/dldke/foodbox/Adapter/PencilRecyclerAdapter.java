@@ -1,13 +1,19 @@
 package com.example.dldke.foodbox.Adapter;
 
+import android.content.Context;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dldke.foodbox.CurrentDate;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -19,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.zip.Inflater;
 
 
 /*
@@ -31,6 +38,8 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
         private static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
         private static Date inputDBDate ;
         private static String inputDBDateString;
+        private Context context;
+        private static int clickCnt = 0;
         //public static ArrayList<String> clickFoodOnly = new ArrayList<>();
 
     private ArrayList<PencilItem> mItems;
@@ -43,16 +52,17 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
 
     public PencilRecyclerAdapter (){ }
 
-        public PencilRecyclerAdapter(ArrayList<PencilItem> items){
+        public PencilRecyclerAdapter(ArrayList<PencilItem> items , Context context){
             mItems = items;
+            this.context = context;
         }
-
-        /*public ArrayList<String> getClickFoodString(){
-            return clickFoodString;
-        }*/
         public ArrayList<PencilCartItem> getClickFood(){
             return clickFood;
         }
+        public int getClickCnt(){
+            return clickCnt;
+        }
+        public void setClickCnt(int num){this.clickCnt = num;}
 
     // 새로운 뷰 홀더 생성
     @Override
@@ -64,18 +74,20 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
     // View 의 내용을 해당 포지션의 데이터로 바꿉니다.
     @Override
     public void onBindViewHolder( ItemViewHolder holder,   final int position) {
+
         holder.food_name.setText(mItems.get(position).getFoodName());
         holder.food_img.setImageURI(mItems.get(position).getFoodImg());
         if(mItems.get(position).getFoodName().length()>6) {
             holder.food_name.setTextSize(12);
         }
-
-            holder.food_img.setOnClickListener(new Button.OnClickListener() {
+        holder.food_img.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     String foodName = mItems.get(position).getFoodName();
-
+                    View view = View.inflate(context,R.layout.custom_toast,null);
+                    TextView toastText=(TextView)view.findViewById(R.id.toast_text);
+                    Toast toast = new Toast(context);
+                    makeToast(view,toastText,toast);
                     //중복처리
                     double foodCnt;
                     for(int i =0 ; i<clickFood.size(); i++){
@@ -130,6 +142,16 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             food_img = (ImageView) itemView.findViewById(R.id.foodImg);
         }
     }
+
+    public void makeToast(View view, TextView toastText, Toast toast){
+        toast.setView(view);
+        toastText.setText("+"+(clickCnt+1));
+        toast.setGravity(Gravity.TOP ,300,55);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+        clickCnt++;
+    }
+
 
 
 

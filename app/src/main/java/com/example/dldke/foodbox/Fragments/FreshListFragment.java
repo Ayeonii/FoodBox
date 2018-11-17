@@ -35,7 +35,7 @@ public class FreshListFragment extends android.support.v4.app.Fragment {
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.freshRecycler);
         recyclerView.setHasFixedSize(true);
-        adapter = new PencilRecyclerAdapter(list);
+        adapter = new PencilRecyclerAdapter(list,view.getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
         Log.e("Frag", "fresh");

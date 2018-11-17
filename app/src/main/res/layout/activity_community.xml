@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/community_searchBar"
+        style="@style/EditTextStyle"
+        android:layout_width="353dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/make_radius"
+        android:backgroundTint="#ededed"
+        android:fontFamily="@font/font_family"
+        android:hint=" 검색어를 입력해주세요."
+        android:paddingLeft="5dp"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/delete_button"
+        android:layout_width="43dp"
+        android:layout_height="38dp"
+        android:background="#00000000"
+        app:layout_constraintBottom_toBottomOf="@+id/community_searchBar"
+        app:layout_constraintEnd_toEndOf="@+id/community_searchBar"
+        app:layout_constraintTop_toTopOf="@+id/community_searchBar"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_delete_all_blue" />
+
+    <android.support.v4.view.ViewPager
+
+        android:id="@+id/communityPager"
+
+        android:layout_width="0dp"
+
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorHint"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/community_searchBar"
+        app:layout_constraintVertical_bias="0.0">
+
+
+    </android.support.v4.view.ViewPager>
+
+
+</android.support.constraint.ConstraintLayout>

@@ -86,14 +86,14 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             //내 냉장고 보기에도 동일하게 적용해야됨
             //해당 아이디의 create된 냉장고가 없을 경우 create해야됨
             Mapper.createRefrigerator();
-        } finally {
             refrigeratorItem = Mapper.scanRefri();
-            localSideDish = new ArrayList<>();
-            localDairy = new ArrayList<>();
-            localEtc = new ArrayList<>();
-            localMeat = new ArrayList<>();
-            localFresh = new ArrayList<>();
         }
+
+        localSideDish = new ArrayList<>();
+        localDairy = new ArrayList<>();
+        localEtc = new ArrayList<>();
+        localMeat = new ArrayList<>();
+        localFresh = new ArrayList<>();
 
         Log.d("test", "refrigeratorItem.size : " + refrigeratorItem.size());
         for (int i = 0; i < refrigeratorItem.size(); i++) {
@@ -301,7 +301,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     public void onCompleteClicked(int result) {
                         if (result == 1) {
                             Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
-//                            halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             startActivity(halfRecipeCompleteActivity);
                         }
                     }

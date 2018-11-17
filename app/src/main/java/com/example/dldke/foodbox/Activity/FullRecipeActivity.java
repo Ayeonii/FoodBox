@@ -41,8 +41,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     //데이터 유지가 필요한 변수 foodtitle, mArrayList, foodimg, spinner
     private String user_id;   //create check 부분 간이로 넘기고 없애기
 
-     static EditText foodtitle;
-     static Spinner spinner;
+    static EditText foodtitle;
+    static Spinner spinner;
 
     static ArrayList<FullRecipeData> mArrayList;
     private static FullRecipeAdapter mAdapter;
@@ -61,10 +61,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private String imagePath;
 
     private final String TAG = "FullRecipe DB Test";
+
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
 
     private ArrayList<PencilItem> clickFood = new ArrayList<>();
 
+    private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -241,8 +243,10 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ingredient_add:
+                pencilRecipeActivity.setIsFull(true);
                 Intent PencilRecipeActivity = new Intent(getApplicationContext(), PencilRecipeActivity.class);
                 startActivity(PencilRecipeActivity);
+
             case R.id.get_recipe:
                 Intent MyRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
                 startActivity(MyRecipeActivity);
@@ -322,4 +326,3 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     }
 
 }
-
