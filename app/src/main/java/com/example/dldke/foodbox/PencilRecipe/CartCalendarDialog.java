@@ -32,7 +32,7 @@ public class CartCalendarDialog {
 
         final Dialog dlg = new Dialog(context);
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dlg.setContentView(R.layout.custom_dialog_cart);
+        dlg.setContentView(R.layout.pencilrecipe_dialog_calendar);
         dlg.show();
 
 

@@ -1,0 +1,89 @@
+package com.example.dldke.foodbox.Community;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.example.dldke.foodbox.R;
+
+import java.util.ArrayList;
+
+public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecyclerAdapter.ItemViewHolder> {
+    private ArrayList<CommunityItem> mItems;
+    private Context context;
+    private Bitmap bitmapImg;
+
+    public CommunityRecyclerAdapter(ArrayList<CommunityItem> items , Context context){
+        mItems = items;
+        this.context = context;
+    }
+    @Override
+    public CommunityRecyclerAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.community_newsfeed_list_item,parent,false);
+        return new CommunityRecyclerAdapter.ItemViewHolder(view);
+    }
+
+    // View 의 내용을 해당 포지션의 데이터로 바꿈.
+    @Override
+    public void onBindViewHolder(final CommunityRecyclerAdapter.ItemViewHolder holder, final int position) {
+        holder.communityUserId.setText(mItems.get(position).getUserId()+" 님이 레시피를 공유했습니다.");
+        holder.communityFoodName.setText(mItems.get(position).getFoodName());
+        holder.communityFoodTitle.setText(mItems.get(position).getFoodTitle());
+
+        holder.star_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.star_btn.isSelected()) {
+                    holder.star_btn.setSelected(false);
+                }
+                else
+                    holder.star_btn.setSelected(true);
+            }
+        });
+        if(mItems.get(position).getCommunity_foodImg() == -1) {
+            holder.communityFoodImg.setBackground(context.getResources().getDrawable(R.drawable.splash_background, null));
+        } else{
+            holder.communityFoodImg.setBackground(context.getResources().getDrawable(mItems.get(position).getCommunity_foodImg(), null));
+            //holder.communityFoodImg.setImageResource(mItems.get(position).getCommunity_foodImg());
+        }
+        if(mItems.get(position).getCommunity_profile() ==-1)
+            holder.communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
+        else
+            holder.communityProfile.setImageDrawable(context.getResources().getDrawable(mItems.get(position).getCommunity_profile(),null));
+
+    }
+
+    // 데이터 셋의 크기를 리턴
+    @Override
+    public int getItemCount() {
+        return mItems.size();
+    }
+
+    // 커스텀 뷰홀더
+    // item layout 에 존재하는 위젯들을 바인딩
+    class ItemViewHolder extends RecyclerView.ViewHolder {
+        private ImageView communityFoodImg;
+        private ImageView communityProfile;
+        private TextView communityUserId;
+        private TextView communityFoodTitle;
+        private TextView communityFoodName;
+        private ImageView star_btn;
+
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+            communityFoodImg = (ImageView) itemView.findViewById(R.id.community_food_image);
+            communityProfile = (ImageView) itemView.findViewById(R.id.newsfeed_profile_image);
+            communityUserId = (TextView) itemView.findViewById(R.id.user_id);
+            communityFoodTitle = (TextView) itemView.findViewById(R.id.communityFoodTitle);
+            communityFoodName = (TextView)itemView.findViewById(R.id.communityFoodName);
+            star_btn = (ImageView)itemView.findViewById(R.id.star_btn);
+        }
+    }
+}

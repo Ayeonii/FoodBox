@@ -38,14 +38,14 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
 
     public PencilRecipeActivity(){}
 
+    public void setIsFull(boolean isFull){
+        this.isFull = isFull;
+    }
+
     public void setEnterTime(int enterCnt){
         this.enterCnt = enterCnt;
     }
     public int getEnterTime(){ return enterCnt;}
-
-    public void setIsFull(boolean isFull){
-        this.isFull = isFull;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,10 +69,10 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
         floating.setOnClickListener(this);
 
         //Mapper.createRefrigerator();
-        Log.e("Mapper.checkFirst",""+Mapper.checkFirst());
-            if (Mapper.checkFirst()) {
-                Mapper.createRefrigerator();
-            }
+
+        if (Mapper.checkFirst()) {
+            Mapper.createRefrigerator();
+        }
 
         /****************search bar input *****************************/
         searchBar.addTextChangedListener(new TextWatcher() {

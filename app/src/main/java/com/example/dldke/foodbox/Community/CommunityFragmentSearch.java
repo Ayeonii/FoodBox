@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox.PencilRecipe;
+package com.example.dldke.foodbox.Community;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dldke.foodbox.PencilRecipe.AllFoodListFragment;
+import com.example.dldke.foodbox.PencilRecipe.PencilItem;
+import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
+public class CommunityFragmentSearch extends android.support.v4.app.Fragment {
+
 
     private AllFoodListFragment allList = new AllFoodListFragment();
     private static final char HANGUL_BEGIN_UNICODE = 44032; // 가
@@ -32,7 +36,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.pencilrecipe_fragment_search, container, false);
+        View view = inflater.inflate(R.layout.community_fragment_search, container, false);
         allfoodList = allList.getAllFoodList();
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.searchRecycler);
@@ -59,17 +63,17 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         else {
             // 리스트의 모든 데이터를 검색함.
             for (int i = 0; i < allfoodList.size(); i++) {
-                    if (matchString(allfoodList.get(i)[0],charText)) {
-                        //검색된 데이터 리스트에 추가
-                        //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
-                        list.add(new PencilItem(allfoodList.get(i)[0],Uri.parse(foodImg),allfoodList.get(i)[1]));
-                    }
+                if (matchString(allfoodList.get(i)[0],charText)) {
+                    //검색된 데이터 리스트에 추가
+                    //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
+                    foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
+                    list.add(new PencilItem(allfoodList.get(i)[0],Uri.parse(foodImg),allfoodList.get(i)[1]));
+                }
             }
             if(list.size() == 0){
-                  //검색된 것이 아무것도 없을때,
-                    foodImg = "file:///storage/emulated/0/Download/" + "감" + ".jpg"; //나중 default 이미지 넣기
-                    list.add(new PencilItem(searchText, Uri.parse(foodImg), "sideDish"));
+                //검색된 것이 아무것도 없을때,
+                foodImg = "file:///storage/emulated/0/Download/" + "감" + ".jpg"; //나중 default 이미지 넣기
+                list.add(new PencilItem(searchText, Uri.parse(foodImg), "sideDish"));
             }
         }
         // 리스트 데이터가 변경되었으므로 어댑터 갱신.
@@ -135,6 +139,5 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         }
         return false; //일치하는 것을 찾지 못했으면 false를 리턴한다.
     }
-
 
 }
