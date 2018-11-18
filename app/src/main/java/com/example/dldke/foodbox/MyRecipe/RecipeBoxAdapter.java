@@ -3,6 +3,7 @@ package com.example.dldke.foodbox.MyRecipe;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,12 @@ public class RecipeBoxAdapter extends RecyclerView.Adapter<RecipeBoxAdapter.View
     private ArrayList<RecipeBoxData> recipedata = new ArrayList<>();
     private static String recipe_id;
 
+    String TAG = "RecipeBoxAdapter";
+
+    public RecipeBoxAdapter(ArrayList<RecipeBoxData> recipedata){
+        this.recipedata = recipedata;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView name;
         public ImageView image;
@@ -45,19 +52,21 @@ public class RecipeBoxAdapter extends RecyclerView.Adapter<RecipeBoxAdapter.View
         public void onClick(View view){
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) Toast.makeText(context,"포지션"+position, Toast.LENGTH_SHORT).show();
+
             recipe_id = recipedata.get(position).getRecipeId();
+            Intent RecipeBoxFullRecipeDetailActivity = new Intent(context, RecipeBoxFullRecipeDetailActivity.class);
+            context.startActivity(RecipeBoxFullRecipeDetailActivity);
+
+
             //recipe_id = recipedata.get(position).getName();
             //Intent RecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);
             //context.startActivity(RecipeDetailActivity);
-            Intent RecipeBoxFullRecipeDetailActivity = new Intent(context, RecipeBoxFullRecipeDetailActivity.class);
-            context.startActivity(RecipeBoxFullRecipeDetailActivity);
+
 
         }
     }
 
-    public RecipeBoxAdapter(ArrayList<RecipeBoxData> recipedata){
-        this.recipedata = recipedata;
-    }
+
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipebox_list_item, parent, false);

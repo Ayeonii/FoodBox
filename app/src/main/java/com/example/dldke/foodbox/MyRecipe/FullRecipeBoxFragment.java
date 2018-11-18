@@ -24,7 +24,7 @@ public class FullRecipeBoxFragment extends Fragment {
 
 
     private RecyclerView recyclerview;
-    private RecyclerView.Adapter adapter;
+    private RecipeBoxAdapter adapter;
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
 
     private String TAG="FullRecipeBox";
@@ -37,7 +37,6 @@ public class FullRecipeBoxFragment extends Fragment {
         recyclerview = (RecyclerView)view.findViewById(R.id.recycler_view);
         recyclerview.setHasFixedSize(true);
         adapter = new RecipeBoxAdapter(data);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerview.setLayoutManager(layoutManager);
         recyclerview.setItemAnimator(new DefaultItemAnimator());
@@ -51,6 +50,7 @@ public class FullRecipeBoxFragment extends Fragment {
         prepareData();
     }
 
+    //Detail이 없으면 간이레시피, Detail이 있으면 풀레시피 fragment로 보여지기 위한 작업
     private void prepareData(){
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
@@ -58,7 +58,7 @@ public class FullRecipeBoxFragment extends Fragment {
             try{
                 String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
                 data.add(new RecipeBoxData(foodname, R.drawable.strawberry, myrecipe.get(i)));
-                Log.e(TAG, "레시피 이름"+foodname);
+                Log.e(TAG, "레시피 이름: "+foodname+"  레시피 아이디: "+myrecipe.get(i));
 
             }catch(NullPointerException e){
                 Log.d(TAG,"음식이름이 없습니다.");

@@ -3,6 +3,7 @@ package com.example.dldke.foodbox.MyRecipe;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 public class RecipeBoxPagerAdapter extends FragmentStatePagerAdapter {
     private int fragmentCount;
@@ -24,6 +25,7 @@ public class RecipeBoxPagerAdapter extends FragmentStatePagerAdapter {
                 return null;
         }
     }
+
 
     public int getCount(){
         return fragmentCount;
