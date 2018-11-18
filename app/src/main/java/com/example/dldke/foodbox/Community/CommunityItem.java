@@ -9,13 +9,18 @@ public class CommunityItem {
     private String foodName;
     private int community_foodImg;
     private int community_profile;
-
-    public CommunityItem (String userId, String foodTitle, String foodName, int community_foodImg, int community_profile){
+    private boolean isFavorite;
+    public CommunityItem (String userId
+            ,String foodTitle
+            ,String foodName
+            ,int community_foodImg
+            ,int community_profile, boolean isFavorite){
         this.userId = userId;
         this.foodTitle = foodTitle;
         this.foodName = foodName;
         this.community_foodImg = community_foodImg;
         this.community_profile = community_profile;
+        this.isFavorite = isFavorite;
     }
 
     public String getUserId() { return userId; }
@@ -30,4 +35,8 @@ public class CommunityItem {
 
     public int getCommunity_profile(){return community_profile;}
 
+    public void setFavorite(boolean isFavorite){
+        this.isFavorite = isFavorite;
+    }
+    public boolean getFavorite() { return isFavorite; }
 }
