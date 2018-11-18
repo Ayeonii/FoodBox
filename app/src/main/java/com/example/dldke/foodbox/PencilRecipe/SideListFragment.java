@@ -25,7 +25,7 @@ public class SideListFragment extends  android.support.v4.app.Fragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_side_ingredients, container, false);
+        View view = inflater.inflate(R.layout.pencilrecipe_fragment_sidedish, container, false);
         foodName = allFoodListFragment.getSideList();
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.sideRecycler);

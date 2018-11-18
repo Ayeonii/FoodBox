@@ -25,7 +25,7 @@ public class MeatListFragment extends  android.support.v4.app.Fragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_meat_ingredients, container, false);
+        View view = inflater.inflate(R.layout.pencilrecipe_fragment_meat, container, false);
         foodName = allFoodListFragment.getMeatList();
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.meatRecycler);

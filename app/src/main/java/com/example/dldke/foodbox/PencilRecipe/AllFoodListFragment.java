@@ -44,7 +44,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all_ingredients, container, false);
+        View view = inflater.inflate(R.layout.pencilrecipe_fragment_all, container, false);
 
         if(pencil.getEnterTime() == 0) {
             freshList = getInfoDOList("fresh");

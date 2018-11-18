@@ -17,7 +17,7 @@
         android:background="@drawable/make_radius"
         android:backgroundTint="#ededed"
         android:fontFamily="@font/font_family"
-        android:hint=" 검색어를 입력해주세요."
+        android:hint=" 검색어를 입력하세요."
         android:paddingLeft="5dp"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/delete_button"
+        android:id="@+id/community_delete_button"
         android:layout_width="43dp"
         android:layout_height="38dp"
         android:background="#00000000"
@@ -35,25 +35,56 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_delete_all_blue" />
 
-    <android.support.v4.view.ViewPager
-
-        android:id="@+id/communityPager"
-
+    <LinearLayout
+        android:id="@+id/btn_tab"
         android:layout_width="0dp"
-
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorHint"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/home_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            app:srcCompat="@drawable/ic_home" />
+
+        <ImageView
+            android:id="@+id/favorite_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            app:srcCompat="@drawable/ic_heart" />
+
+        <ImageView
+            android:id="@+id/recommend_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            app:srcCompat="@drawable/ic_recommend" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frag_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorHint"
+        app:layout_constraintBottom_toTopOf="@+id/btn_tab"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/community_searchBar"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/community_searchBar">
 
-
-    </android.support.v4.view.ViewPager>
+    </FrameLayout>
 
 
 </android.support.constraint.ConstraintLayout>
