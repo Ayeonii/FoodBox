@@ -1,8 +1,5 @@
 package com.example.dldke.foodbox.Fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,12 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.example.dldke.foodbox.Activity.RecipeDetailActivity;
 import com.example.dldke.foodbox.Adapter.RecipeBoxAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
-import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.R;
 import com.example.dldke.foodbox.RecipeBoxData;
 
@@ -70,7 +64,7 @@ public class HalfRecipeBoxFragment extends Fragment {
 
                Log.d(TAG,"음식이름이 없습니다." );
                Log.e(TAG, ""+myrecipe.get(i));
-               data.add(new RecipeBoxData(myrecipe.get(i), R.drawable.strawberry));
+               data.add(new RecipeBoxData(myrecipe.get(i), R.drawable.strawberry, myrecipe.get(i)));
             }
         }
     }

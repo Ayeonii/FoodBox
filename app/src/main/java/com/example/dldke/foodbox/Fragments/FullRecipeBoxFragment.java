@@ -25,6 +25,7 @@ import java.util.List;
 public class FullRecipeBoxFragment extends Fragment {
     public FullRecipeBoxFragment(){ }
 
+
     private RecyclerView recyclerview;
     private RecyclerView.Adapter adapter;
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
@@ -58,9 +59,8 @@ public class FullRecipeBoxFragment extends Fragment {
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
         for(int i =0 ; i<myrecipe.size(); i++){
             try{
-
                 String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
-                data.add(new RecipeBoxData(foodname, R.drawable.strawberry));
+                data.add(new RecipeBoxData(foodname, R.drawable.strawberry, myrecipe.get(i)));
                 Log.e(TAG, "레시피 이름"+foodname);
 
             }catch(NullPointerException e){

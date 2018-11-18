@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyRecipeBoxDetailAdapter extends RecyclerView.Adapter<MyRecipeBoxDetailAdapter.ViewHolder> {
+public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<RecipeBoxHalfRecipeDetailAdapter.ViewHolder> {
 
     List<RecipeDO.Ingredient> items;
     List<HalfRecipeRecipeItem> recipeItems = new ArrayList<>();
 
-    public MyRecipeBoxDetailAdapter(List<RecipeDO.Ingredient> ingredientdata){
+    public RecipeBoxHalfRecipeDetailAdapter(List<RecipeDO.Ingredient> ingredientdata){
         this.items = ingredientdata;
     }
 
