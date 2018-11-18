@@ -9,14 +9,15 @@
     android:background="@color/colorPrimary">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/community_layout"
         android:layout_width="match_parent"
-        android:layout_height="217dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/cardview_light_background"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/food_image"
+            android:id="@+id/community_food_image"
             android:layout_width="139dp"
             android:layout_height="142dp"
             android:layout_marginStart="8dp"
@@ -60,44 +61,56 @@
 
         <TextView
             android:id="@+id/user_id"
-            android:layout_width="134dp"
+            android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_margin="8dp"
             android:layout_marginStart="4dp"
-            android:layout_marginBottom="4dp"
-            android:textSize="18dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             cardview:layout_constraintBottom_toBottomOf="parent"
             cardview:layout_constraintEnd_toEndOf="parent"
-            cardview:layout_constraintHorizontal_bias="0.044"
+            cardview:layout_constraintHorizontal_bias="0.0"
             cardview:layout_constraintStart_toEndOf="@+id/profile_image" />
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="83dp"
+            android:id="@+id/foodName_txt"
+            android:layout_width="3dp"
             android:layout_height="21dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="112dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
-            android:text="TextView"
-            cardview:layout_constraintEnd_toStartOf="@+id/food_image"
-            cardview:layout_constraintHorizontal_bias="0.566"
+            android:text=""
+            cardview:layout_constraintEnd_toStartOf="@+id/community_food_image"
+            cardview:layout_constraintHorizontal_bias="0.0"
             cardview:layout_constraintStart_toStartOf="parent"
             cardview:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/foodName_txt"
+            android:id="@+id/foodTitle"
             android:layout_width="167dp"
             android:layout_height="73dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="28dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="TextView"
+            android:text=""
             cardview:layout_constraintBottom_toTopOf="@+id/view"
             cardview:layout_constraintStart_toStartOf="parent"
-            cardview:layout_constraintTop_toBottomOf="@+id/title"
-            cardview:layout_constraintVertical_bias="0.25" />
+            cardview:layout_constraintTop_toBottomOf="@+id/foodName_txt"
+            cardview:layout_constraintVertical_bias="0.275" />
+
+        <ImageView
+            android:id="@+id/star_btn"
+            android:layout_width="30dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            cardview:layout_constraintBottom_toBottomOf="parent"
+            cardview:layout_constraintEnd_toEndOf="parent"
+            cardview:layout_constraintTop_toTopOf="@+id/view"
+            cardview:srcCompat="@drawable/ic_star_empty" />
 
     </android.support.constraint.ConstraintLayout>
 

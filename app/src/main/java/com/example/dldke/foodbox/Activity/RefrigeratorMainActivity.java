@@ -19,10 +19,20 @@ import android.widget.Toast;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
 
+<<<<<<< HEAD
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
 import com.example.dldke.foodbox.MyRefrigerator.RefrigeratorInsideActivity;
+=======
+import com.example.dldke.foodbox.Community.CommunityActivity;
+import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
+import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
+import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
+import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
+>>>>>>> Ayeon
 import com.example.dldke.foodbox.R;
 
 
@@ -186,7 +196,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             }
 
             if(strText.equals("내 레시피 보기")){
-                Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.MyRecipeBoxActivity.class);
+                Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity.class);
                 startActivity(MyRecipeBoxActivity);
             }
             Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();

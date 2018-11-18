@@ -14,7 +14,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.s3.model.Region;
-import com.example.dldke.foodbox.CurrentDate;
+import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -24,7 +24,6 @@ import java.io.File;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -422,19 +421,14 @@ public final class Mapper {
             com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
             @Override
             public void run() {
-                try {
+
                     Refri = Mapper.getDynamoDBMapper().load(
                             com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
                             userId);
-                }catch (NullPointerException e){
-                    Refri = Mapper.getDynamoDBMapper().load(
-                            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
-                            userId);
-                }
+
             }
             @Override
             public Object getResult(){
-                Log.e("Refir.getUserId", ""+Refri.getUserId());
                 return Refri.getUserId();
             }
         });
