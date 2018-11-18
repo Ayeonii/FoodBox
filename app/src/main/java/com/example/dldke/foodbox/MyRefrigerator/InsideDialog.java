@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.MyRefrigerator;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.Adapter.HalfRecipeIngreAdapter;
-import com.example.dldke.foodbox.Adapter.InsideAdapter;
+import com.example.dldke.foodbox.HalfRecipe.HalfRecipeIngreItem;
+import com.example.dldke.foodbox.HalfRecipe.HalfRecipeRecyclerListener;
+import com.example.dldke.foodbox.LocalRefrigeratorItem;
+import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 
@@ -53,8 +55,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_ingre_dialog);
 
-        Log.d("test", "dialog onCreate");
-
         txtType = (TextView) findViewById(R.id.txt_type);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
         txtCancel = (TextView) findViewById(R.id.txt_cancel);
@@ -65,7 +65,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
 
         txtCancel.setVisibility(View.INVISIBLE);
-        //txtCancel.setOnClickListener(this);
         txtBackEmpty.setOnClickListener(this);
         txtOk.setOnClickListener(this);
 
@@ -117,7 +116,7 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                         Log.d("test", position + ", " + getName + ", " + getCount.toString() + ", " + getDueDate);
                         String foodUri = "file:///storage/emulated/0/Download/"+getName+".jpg";
                         Uri foodImgUri = Uri.parse(foodUri);
-                        itemDialog = new InsideItemDialog(context, getName, getCount, getDueDate, foodImgUri  );
+                        itemDialog = new InsideItemDialog(context, getName, getCount, getDueDate, foodImgUri);
                         itemDialog.setDialogListener(new InsideDialogListener() {
                             @Override
                             public void onPositiveClicked(int delCheck, Double count, String dueDate) {
@@ -148,9 +147,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.txt_cancel:
-//                cancel();
-//                break;
             case R.id.txt_back_empty:
                 cancel();
                 break;

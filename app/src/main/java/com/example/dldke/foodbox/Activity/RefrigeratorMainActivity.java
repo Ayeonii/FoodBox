@@ -18,13 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
-import com.amazonaws.mobile.auth.core.SignInStateChangeListener;
 
-import com.amazonaws.mobile.auth.core.IdentityManager;
-import com.amazonaws.mobile.auth.core.SignInStateChangeListener;
-import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.Adapter.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
+import com.example.dldke.foodbox.MyRefrigerator.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.R;
 
 

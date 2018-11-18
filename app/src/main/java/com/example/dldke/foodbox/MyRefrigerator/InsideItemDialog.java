@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.MyRefrigerator;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,27 +7,20 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.Adapter.InsideAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
+import com.example.dldke.foodbox.R;
 
 public class InsideItemDialog extends Dialog implements View.OnClickListener {
 
     private TextView txtName, txtCount, txtDueDate, txtOk;
-    private ImageView ivCountEdit, ivDueDateEdit, ivDelete, clickImg;
+    private ImageView imgCountEdit, imgDueDateEdit, imgDelete, imgFood;
     private Uri imgUri;
+
     private Context context;
     private String mName, mDueDate;
     private Double mCount;
@@ -40,13 +33,13 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         this.context = context;
     }
 
-    public InsideItemDialog(@NonNull Context context, String name, Double count, String dueDate, Uri foodImg) {
+    public InsideItemDialog(@NonNull Context context, String name, Double count, String dueDate, Uri imgUri) {
         super(context);
         this.context = context;
         this.mName = name;
         this.mCount = count;
         this.mDueDate = dueDate;
-        this.imgUri = foodImg;
+        this.imgUri = imgUri;
     }
 
     @Override
@@ -58,18 +51,16 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         txtCount = (TextView) findViewById(R.id.txt_count);
         txtDueDate = (TextView) findViewById(R.id.txt_dueDate);
         txtOk = (TextView) findViewById(R.id.txt_ok);
-        ivCountEdit = (ImageView) findViewById(R.id.iv_count_edit);
-        ivDueDateEdit = (ImageView) findViewById(R.id.iv_dueDate_edit);
-        ivDelete = (ImageView) findViewById(R.id.iv_delete);
-        clickImg = (ImageView)findViewById(R.id.img_food);
-        clickImg.setImageURI(imgUri);
+        imgCountEdit = (ImageView) findViewById(R.id.iv_count_edit);
+        imgDueDateEdit = (ImageView) findViewById(R.id.iv_dueDate_edit);
+        imgDelete = (ImageView) findViewById(R.id.iv_delete);
+        imgFood = (ImageView)findViewById(R.id.img_food);
+        imgFood.setImageURI(imgUri);
 
-
-        ivCountEdit.setOnClickListener(this);
-        ivDueDateEdit.setOnClickListener(this);
-        ivDelete.setOnClickListener(this);
+        imgCountEdit.setOnClickListener(this);
+        imgDueDateEdit.setOnClickListener(this);
+        imgDelete.setOnClickListener(this);
         txtOk.setOnClickListener(this);
-
 
         txtName.setText(mName);
         txtCount.setText("보유개수 " + mCount);
@@ -102,16 +93,17 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
                 alertDialog.setPositiveButton("확인", new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d("test", "진짜 디비 연결해서 삭제되는 부분");
                         Mapper.deleteFood(mName);
                         delResult = 1;
+                        dialogListener.onPositiveClicked(delResult, mCount, mDueDate);
+                        dismiss();
                     }
                 });
                 alertDialog.setNegativeButton("취소", null);
                 alertDialog.show();
                 break;
             case R.id.txt_ok:
-                dialogListener.onPositiveClicked(delResult, mCount, mDueDate);
+                //dialogListener.onPositiveClicked(delResult, mCount, mDueDate);
                 dismiss();
                 break;
         }

@@ -1,12 +1,10 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.HalfRecipe;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,11 +12,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.Activity.HalfRecipeActivity;
-import com.example.dldke.foodbox.Adapter.HalfRecipeIngreAdapter;
-import com.example.dldke.foodbox.Adapter.HalfRecipeRecipeAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.LocalRefrigeratorItem;
+import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,16 +1,13 @@
-package com.example.dldke.foodbox.Adapter;
+package com.example.dldke.foodbox.HalfRecipe;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.HalfRecipeIngreItem;
-import com.example.dldke.foodbox.HalfRecipeRecipeItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;

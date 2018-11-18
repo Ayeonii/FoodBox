@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.HalfRecipe;
 
 public class HalfRecipeIngreItem {
     private String name;

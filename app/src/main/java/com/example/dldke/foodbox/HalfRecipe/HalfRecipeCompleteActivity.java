@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox.Activity;
+package com.example.dldke.foodbox.HalfRecipe;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.Activity.MyRecipeBoxActivity;
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.R;
 
 public class HalfRecipeCompleteActivity extends AppCompatActivity implements View.OnClickListener {

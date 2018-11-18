@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.HalfRecipe;
 
 public interface HalfRecipeDialogListener {
     public void onPositiveClicked(String type, Boolean[] check);

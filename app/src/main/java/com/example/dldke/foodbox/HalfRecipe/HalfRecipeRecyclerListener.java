@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.HalfRecipe;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

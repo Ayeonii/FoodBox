@@ -33,15 +33,15 @@
         <activity android:name=".Activity.RefrigeratorMainActivity" />
         <activity android:name=".Activity.FullRecipeActivity"
             android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".Activity.RefrigeratorInsideActivity" />
-        <activity android:name=".Activity.HalfRecipeActivity" />
+        <activity android:name=".MyRefrigerator.RefrigeratorInsideActivity" />
+        <activity android:name=".HalfRecipe.HalfRecipeActivity" />
         <activity
             android:name=".Activity.MyRecipeBoxActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Activity.PencilRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".Activity.HalfRecipeCompleteActivity"/>
+        <activity android:name=".HalfRecipe.HalfRecipeCompleteActivity"/>
         <activity android:name=".Activity.RecipeDetailActivity"/>
         <activity
             android:name=".Activity.CommunityActivity"

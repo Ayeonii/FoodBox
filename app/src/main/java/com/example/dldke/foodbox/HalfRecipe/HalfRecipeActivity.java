@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox.Activity;
+package com.example.dldke.foodbox.HalfRecipe;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -10,9 +10,6 @@ import android.widget.Button;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.HalfRecipeDialogListener;
-import com.example.dldke.foodbox.HalfRecipeIngreDialog;
-import com.example.dldke.foodbox.HalfRecipeRecipeDialog;
 import com.example.dldke.foodbox.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;
 

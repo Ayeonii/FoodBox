@@ -20,17 +20,15 @@
 
     <LinearLayout
         android:layout_width="320dp"
-        android:layout_height="100dp"
+        android:layout_height="320dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="16dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:weightSum="6">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -39,7 +37,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:clickable="true"
                 app:civ_border_color="@color/transparent"
                 app:civ_border_width="2dp" />
 
@@ -53,7 +50,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:orientation="vertical">

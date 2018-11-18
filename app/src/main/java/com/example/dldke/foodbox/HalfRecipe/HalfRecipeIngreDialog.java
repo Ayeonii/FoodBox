@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox;
+package com.example.dldke.foodbox.HalfRecipe;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -11,13 +11,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.Adapter.HalfRecipeIngreAdapter;
-import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
-import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.LocalRefrigeratorItem;
+import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListener {
 
