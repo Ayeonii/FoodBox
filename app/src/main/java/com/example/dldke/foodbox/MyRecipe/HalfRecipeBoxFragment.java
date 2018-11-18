@@ -24,7 +24,7 @@ public class HalfRecipeBoxFragment extends Fragment {
     public HalfRecipeBoxFragment(){}
 
     private RecyclerView recyclerview;
-    private RecyclerView.Adapter adapter;
+    private RecipeBoxAdapter adapter;
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
 
     private String TAG = "HalfRecipeBox";
@@ -38,7 +38,6 @@ public class HalfRecipeBoxFragment extends Fragment {
         recyclerview = (RecyclerView)view.findViewById(R.id.recycler_view2);
         recyclerview.setHasFixedSize(true);
         adapter = new RecipeBoxAdapter(data);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerview.setLayoutManager(layoutManager);
         recyclerview.setItemAnimator(new DefaultItemAnimator());
@@ -52,6 +51,7 @@ public class HalfRecipeBoxFragment extends Fragment {
         prepareData();
     }
 
+    //Detail이 없으면 간이레시피, Detail이 있으면 풀레시피 fragment로 보여지기 위한 작업
     private void prepareData(){
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();

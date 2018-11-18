@@ -19,7 +19,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
 
     //풀레시피함에서 선택된 레시피 아이디 받아오기
     private RecipeBoxAdapter recipeBoxAdapter = new RecipeBoxAdapter();
-    private String recipe_id = recipeBoxAdapter.getRecipeId();
+    private String recipe_id;
     RecipeDO.Detail detail;
 
     RecyclerView detail_recyclerview;
@@ -30,18 +30,18 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_box_fullrecipe_detail);
-        Log.e(TAG, "레시피 아이디 제대로 받아왔니니니니"+recipe_id);
-        detail = Mapper.searchRecipe(recipe_id).getDetail();
-        Log.e(TAG, "풀레시피 음식 이름"+detail.getFoodName());
         Toolbar toolbar = (Toolbar)findViewById(R.id.fullrecipe_detail_toolbar);
         setSupportActionBar(toolbar);
+
+        recipe_id = recipeBoxAdapter.getRecipeId();
+        detail = Mapper.searchRecipe(recipe_id).getDetail();
+
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.fullrecipe_detail_collasping_toolbar);
         String foodName = detail.getFoodName();
         collapsingToolbarLayout.setTitle(foodName);
         collapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
 
-        Log.e(TAG, "여기까지는 왔니니니니");
 
         detail_recyclerview = (RecyclerView)findViewById(R.id.fullrecipe_detail_view);
         detail_recyclerview.setLayoutManager(new LinearLayoutManager(this));
