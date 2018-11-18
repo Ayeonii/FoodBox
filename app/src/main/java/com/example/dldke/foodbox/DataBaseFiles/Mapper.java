@@ -422,19 +422,14 @@ public final class Mapper {
             com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
             @Override
             public void run() {
-                try {
+
                     Refri = Mapper.getDynamoDBMapper().load(
                             com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
                             userId);
-                }catch (NullPointerException e){
-                    Refri = Mapper.getDynamoDBMapper().load(
-                            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
-                            userId);
-                }
+
             }
             @Override
             public Object getResult(){
-                Log.e("Refir.getUserId", ""+Refri.getUserId());
                 return Refri.getUserId();
             }
         });
