@@ -31,21 +31,21 @@
             android:name=".Activity.LoginActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Activity.RefrigeratorMainActivity" />
-        <activity android:name=".Activity.FullRecipeActivity"
+        <activity android:name=".FullRecipe.FullRecipeActivity"
             android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".Activity.RefrigeratorInsideActivity" />
-        <activity android:name=".Activity.HalfRecipeActivity" />
+        <activity android:name=".MyRefrigeratorInside.RefrigeratorInsideActivity" />
+        <activity android:name=".HalfRecipe.HalfRecipeActivity" />
         <activity
-            android:name=".Activity.MyRecipeBoxActivity"
+            android:name=".MyRecipe.MyRecipeBoxActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".Activity.PencilRecipeActivity"
+            android:name=".PencilRecipe.PencilRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".Activity.HalfRecipeCompleteActivity"/>
-        <activity android:name=".Activity.RecipeBoxHalfRecipeDetailActivity"/>
-        <activity android:name=".Activity.RecipeBoxFullRecipeDetailActivity"/>
+        <activity android:name=".HalfRecipe.HalfRecipeCompleteActivity"/>
+        <activity android:name=".MyRecipe.RecipeBoxHalfRecipeDetailActivity"/>
+        <activity android:name=".MyRecipe.RecipeBoxFullRecipeDetailActivity"/>
         <activity
-            android:name=".Activity.CommunityActivity"
+            android:name=".Community.CommunityActivity"
             android:windowSoftInputMode="adjustNothing" />
 
         <service
