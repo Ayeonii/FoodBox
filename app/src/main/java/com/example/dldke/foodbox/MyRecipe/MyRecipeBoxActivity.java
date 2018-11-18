@@ -6,16 +6,24 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxPagerAdapter;
+import com.example.dldke.foodbox.MyRecipe.RecipeBoxAdapter;
 import com.example.dldke.foodbox.R;
 
 public class MyRecipeBoxActivity extends AppCompatActivity {
+
     ViewPager viewPager;
     TabLayout tablayout;
     Toolbar toolbar;
+
+    public static int position;
+
+    public int getPosition(){
+        return position;
+    }
 
     private String TAG = "MyRecipeBoxActivity";
 
@@ -47,6 +55,10 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                position = tab.getPosition();
+                RecipeBoxAdapter recipeBoxAdapter = new RecipeBoxAdapter();
+                recipeBoxAdapter.setTabPosition(position);
+                Log.e(TAG, "포지션을 얻었다 : "+position);
             }
 
             @Override
@@ -60,10 +72,13 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
             }
         });
     }
+
+    //뒤로 가기 버튼 눌렀을 시 메인화면으로 넘어가기
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Intent RefrigMain = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+            RefrigMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(RefrigMain);
         }
         return super.onOptionsItemSelected(item);

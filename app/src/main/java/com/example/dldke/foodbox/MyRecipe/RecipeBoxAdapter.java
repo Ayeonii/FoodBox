@@ -18,20 +18,26 @@ import java.util.ArrayList;
 
 public class RecipeBoxAdapter extends RecyclerView.Adapter<RecipeBoxAdapter.ViewHolder> {
     public RecipeBoxAdapter(){}
+    public RecipeBoxAdapter(ArrayList<RecipeBoxData> recipedata){
+        this.recipedata = recipedata;
+    }
 
     public String getRecipeId(){
         return recipe_id;
+    }
+
+    public void setTabPosition(int tabPosition){
+        this.tabPosition = tabPosition;
     }
 
     //등록된 간이레시피 ID 가져오기 위한 설정
     private ArrayList<RecipeBoxData> recipedata = new ArrayList<>();
     private static String recipe_id;
 
-    String TAG = "RecipeBoxAdapter";
+    //탭 포지션에 따라 recipe_id 넘겨주는 값 다름
+    private int tabPosition;
 
-    public RecipeBoxAdapter(ArrayList<RecipeBoxData> recipedata){
-        this.recipedata = recipedata;
-    }
+    String TAG = "RecipeBoxAdapter";
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView name;
@@ -54,15 +60,17 @@ public class RecipeBoxAdapter extends RecyclerView.Adapter<RecipeBoxAdapter.View
             if(position != RecyclerView.NO_POSITION) Toast.makeText(context,"포지션"+position, Toast.LENGTH_SHORT).show();
 
             recipe_id = recipedata.get(position).getRecipeId();
-            Intent RecipeBoxFullRecipeDetailActivity = new Intent(context, RecipeBoxFullRecipeDetailActivity.class);
-            context.startActivity(RecipeBoxFullRecipeDetailActivity);
+            Log.e(TAG, ""+recipe_id);
+            Log.e(TAG, ""+tabPosition);
 
-
-            //recipe_id = recipedata.get(position).getName();
-            //Intent RecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);
-            //context.startActivity(RecipeDetailActivity);
-
-
+            if(tabPosition == 0){
+                Intent RecipeBoxHalfRecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);
+                context.startActivity(RecipeBoxHalfRecipeDetailActivity);
+            }
+            else if(tabPosition == 1){
+                Intent RecipeBoxFullRecipeDetailActivity = new Intent(context, RecipeBoxFullRecipeDetailActivity.class);
+                context.startActivity(RecipeBoxFullRecipeDetailActivity);
+            }
         }
     }
 
