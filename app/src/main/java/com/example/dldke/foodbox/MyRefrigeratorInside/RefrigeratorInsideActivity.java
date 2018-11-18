@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.MyRefrigeratorInside.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
 
     private List<RefrigeratorDO.Item> refrigeratorItem;
     private ArrayList<LocalRefrigeratorItem> localSideDish, localDairy, localEtc, localMeat, localFresh;
+    private ArrayList<String> dupliArray = new ArrayList<>();
 
     private InsideDialog dialog;
 
@@ -38,13 +40,11 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         btnMeat.setOnClickListener(this);
         btnFresh.setOnClickListener(this);
 
-        //scanToLocalRefrigerator();
+        //해당 아이디의 create된 냉장고가 없을 경우 create해야됨
         try {
             refrigeratorItem = Mapper.scanRefri();
         } catch (NullPointerException e) {
-            //해당 아이디의 create된 냉장고가 없을 경우 create해야됨
             Mapper.createRefrigerator();
-            refrigeratorItem = Mapper.scanRefri();
         }
     }
 
@@ -53,109 +53,66 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         switch (view.getId()) {
             case R.id.btn_sidedish:
                 Log.d("test", "======sideDish======");
-                refrigeratorItem = Mapper.scanRefri();
-                localSideDish = new ArrayList<>();
-                for (int i = 0; i < refrigeratorItem.size(); i++) {
-                    Log.d("test", "index : " + i);
-                    try {
-                        if (refrigeratorItem.get(i).getSection().equals("sideDish")) {
-                            Log.d("test", "sideDish : " + refrigeratorItem.get(i).getName());
-                            localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                        }
-                    } catch (NullPointerException e) {
-                        Log.d("test", "sideDish null: " + e.getMessage());
-                    }
-                }
+                scanToLocalRefrigerator("sideDish");
                 showDialog("sideDish", localSideDish);
-
-                break;
-            case R.id.btn_dairy:
-                Log.d("test", "======dairy======");
-                refrigeratorItem = Mapper.scanRefri();
-                localDairy = new ArrayList<>();
-                for (int i = 0; i < refrigeratorItem.size(); i++) {
-                    Log.d("test", "index : " + i);
-                    try {
-                        if (refrigeratorItem.get(i).getKindOf().equals("dairy")) {
-                            Log.d("test", "dairy : " + refrigeratorItem.get(i).getName());
-                            localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                        }
-                    } catch (NullPointerException e) {
-                        Log.d("test", "dairy null: " + e.getMessage());
-                    }
-                }
-                showDialog("dairy", localDairy);
-
-                break;
-            case R.id.btn_etc:
-                Log.d("test", "======etc======");
-                refrigeratorItem = Mapper.scanRefri();
-                localEtc = new ArrayList<>();
-                for (int i = 0; i < refrigeratorItem.size(); i++) {
-                    Log.d("test", "index : " + i);
-                    try {
-                        if (refrigeratorItem.get(i).getKindOf().equals("beverage") || refrigeratorItem.get(i).getKindOf().equals("sauce")) {
-                            Log.d("test", "etc : " + refrigeratorItem.get(i).getName());
-                            localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                        }
-                    } catch (NullPointerException e) {
-                        Log.d("test", "etc null: " + e.getMessage());
-                    }
-                }
-                showDialog("etc", localEtc);
-
-                break;
-            case R.id.btn_meat:
-                Log.d("test", "======meat======");
-                refrigeratorItem = Mapper.scanRefri();
-                localMeat = new ArrayList<>();
-                for (int i = 0; i < refrigeratorItem.size(); i++) {
-                    Log.d("test", "index : " + i);
-                    try {
-                        if (refrigeratorItem.get(i).getSection().equals("meat")) {
-                            Log.d("test", "meat : " + refrigeratorItem.get(i).getName());
-                            localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                        }
-                    } catch (NullPointerException e) {
-                        Log.d("test", "meat null: " + e.getMessage());
-                    }
-                }
-                showDialog("meat", localMeat);
-
-                break;
-            case R.id.btn_fresh:
-                Log.d("test", "======fresh======");
-                refrigeratorItem = Mapper.scanRefri();
-                localFresh = new ArrayList<>();
-                for (int i = 0; i < refrigeratorItem.size(); i++) {
-                    Log.d("test", "index : " + i);
-                    try {
-                        if (refrigeratorItem.get(i).getSection().equals("fresh")) {
-                            Log.d("test", "fresh : " + refrigeratorItem.get(i).getName());
-                            localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
-                        }
-                    } catch (NullPointerException e) {
-                        Log.d("test", "fresh null: " + e.getMessage());
-                    }
-                }
-                showDialog("fresh", localFresh);
 
                 break;
         }
     }
 
-    public void showDialog(String type, ArrayList<LocalRefrigeratorItem> typeArray) {
+    public void showDialog(String type, ArrayList<LocalRefrigeratorItem> localArray) {
         Log.d("test", "======"+type+"======");
 
-        if (typeArray.size() == 0) {
-            Log.d("test", "empty");
+        if (localArray.size() == 0)
             dialog = new InsideDialog(this, type, true);
-        } else {
-            for (int i = 0; i < typeArray.size(); i++) {
-                Log.d("test", typeArray.get(i).getName());
-            }
-            dialog = new InsideDialog(this, type, false, typeArray);
-        }
+        else
+            dialog = new InsideDialog(this, type, false, localArray);
+
         dialog.show();
+    }
+
+    public void scanToLocalRefrigerator(String type) {
+        refrigeratorItem = Mapper.scanRefri();
+
+        switch (type) {
+            case "sideDish":
+                localSideDish = new ArrayList<>();
+                for (int i = 0; i < refrigeratorItem.size(); i++) {
+                    try {
+                        if (refrigeratorItem.get(i).getSection().equals(type)) {
+                            if (duplicateCheck(refrigeratorItem.get(i).getName(), localSideDish)) {
+                                dupliArray.add(refrigeratorItem.get(i).getName());
+                            } else {
+                                localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                            }
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("test", "sideDish null: " + e.getMessage());
+                    }
+                }
+
+                //Log출력하는 부분
+                Log.d("test", "duplicate===========");
+                for (int i=0; i<dupliArray.size(); i++) {
+                    Log.d("test", dupliArray.get(i));
+                }
+                Log.d("test", "localSideDish===========");
+                for (int i=0; i<localSideDish.size(); i++) {
+                    Log.d("test", localSideDish.get(i).getName());
+                }
+                break;
+        }
+    }
+
+    public boolean duplicateCheck(String foodName, ArrayList<LocalRefrigeratorItem> localArray) {
+        // (유통기한때문에) localArray에 같은 이름이 이미 있으면 true, 아니면 false
+        // true : localArray에 넣지 말고 dupliArray에 넣는다.
+        // false : localArray에만 넣는다.
+        for (int i = 0; i < localArray.size(); i++) {
+            if (localArray.get(i).getName().equals(foodName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
