@@ -3,10 +3,12 @@ package com.example.dldke.foodbox;
 public class RecipeBoxData {
     String name;
     Integer image;
+    String recipeId;
 
-    public RecipeBoxData(String name, Integer image){
+    public RecipeBoxData(String name, Integer image, String recipeId){
         this.name = name;
         this.image = image;
+        this.recipeId = recipeId;
     }
 
     public String getName() {
@@ -23,5 +25,9 @@ public class RecipeBoxData {
 
     public void setImage(Integer image) {
         this.image = image;
+    }
+
+    public String getRecipeId(){
+        return recipeId;
     }
 }

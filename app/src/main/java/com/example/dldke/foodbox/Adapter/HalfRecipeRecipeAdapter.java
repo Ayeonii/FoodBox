@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.HalfRecipeIngreItem;
@@ -45,6 +46,8 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
         editCount = 1.0;
         mItems.get(position).setEditCount(editCount);
 
+        holder.imgFood.setImageURI(mItems.get(position).getImage());
+
         //plus, minus 버튼 클릭으로 사용할 재료 개수 정하기
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +78,7 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView txtName, txtCount, txtCountEdit;
         private Button btnPlus, btnMinus;
+        private ImageView imgFood;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -83,6 +87,7 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
             txtCountEdit = (TextView) itemView.findViewById(R.id.txt_count_edit);
             btnPlus = (Button) itemView.findViewById(R.id.btn_plus);
             btnMinus = (Button) itemView.findViewById(R.id.btn_minus);
+            imgFood = (ImageView) itemView.findViewById(R.id.img_food);
         }
     }
 }

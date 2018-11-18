@@ -27,7 +27,6 @@ import com.example.dldke.foodbox.Adapter.FullRecipeIngredientAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipeData;
-import com.example.dldke.foodbox.FullRecipeIngredientData;
 import com.example.dldke.foodbox.PencilItem;
 import com.example.dldke.foodbox.R;
 
@@ -51,8 +50,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private static List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
     private static List<RecipeDO.Spec> specList = new ArrayList<>();
 
-    private RecipeDetailActivity recipeDetailActivity = new RecipeDetailActivity();
-    private String recipeId = recipeDetailActivity.getRecipeId();
+    private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
+    private String recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
     //private String recipeId;
 
     private final int CAMERA_CODE = 1;

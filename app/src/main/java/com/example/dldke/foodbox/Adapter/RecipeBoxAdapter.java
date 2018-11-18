@@ -3,6 +3,7 @@ package com.example.dldke.foodbox.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dldke.foodbox.Activity.RecipeDetailActivity;
+import com.example.dldke.foodbox.Activity.RecipeBoxFullRecipeDetailActivity;
+import com.example.dldke.foodbox.Activity.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.R;
 import com.example.dldke.foodbox.RecipeBoxData;
 
@@ -47,9 +49,13 @@ public class RecipeBoxAdapter extends RecyclerView.Adapter<RecipeBoxAdapter.View
         public void onClick(View view){
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) Toast.makeText(context,"포지션"+position, Toast.LENGTH_SHORT).show();
-            recipe_id = recipedata.get(position).getName();
-            Intent RecipeDetailActivity = new Intent(context, RecipeDetailActivity.class);
-            context.startActivity(RecipeDetailActivity);
+            recipe_id = recipedata.get(position).getRecipeId();
+            //recipe_id = recipedata.get(position).getName();
+            //Intent RecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);
+            //context.startActivity(RecipeDetailActivity);
+            Intent RecipeBoxFullRecipeDetailActivity = new Intent(context, RecipeBoxFullRecipeDetailActivity.class);
+            context.startActivity(RecipeBoxFullRecipeDetailActivity);
+
         }
     }
 
