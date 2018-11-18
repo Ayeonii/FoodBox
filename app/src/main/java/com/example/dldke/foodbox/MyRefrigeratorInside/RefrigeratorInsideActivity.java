@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.MyRefrigeratorInside.LocalRefrigeratorItem;
+import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
