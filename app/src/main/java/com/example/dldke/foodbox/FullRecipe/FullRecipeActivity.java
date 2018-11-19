@@ -155,7 +155,11 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
                         //선택된 재료 저장
-                        if(isChecked) SelectedItems.add(i);
+
+                        if(isChecked) {
+                            SelectedItems.add(i);
+                        }
+
                     }
                 });
 
@@ -184,7 +188,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 fire_sp.setAdapter(fireadapter);
 
 
-                //레시피 작성후 화면과 데이터베이스에 삽입
+                //레시피 작성후, 화면과 데이터베이스에 삽입
                 ButtonSubmit.setText("삽입");
                 final AlertDialog dialog = builder.create();
                 ButtonSubmit.setOnClickListener(new View.OnClickListener() {
@@ -194,6 +198,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                             specIngredientList.add(Mapper.searchRecipe(recipeId).getIngredient().get(num));
                             Log.e(TAG, ""+Mapper.searchRecipe(recipeId).getIngredient().get(num));
                         }
+
+
                         String method = method_sp.getSelectedItem().toString();
                         String minute = minute_sp.getSelectedItem().toString();
                         Integer minuteInt = Integer.parseInt(minute);
@@ -209,6 +215,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                         RecipeDO.Spec spec = Mapper.createSpec(specIngredientList, method, fire, minuteInt);
                         specList.add(spec);
                         Log.d(TAG, "방법 : " + method + "불 세기 : " + fire + "시간 : " + minuteInt);
+
+                        SelectedItems.clear();
+                        specIngredientList.clear();
 
                         dialog.dismiss();
                     }
