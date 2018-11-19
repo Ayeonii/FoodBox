@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.FullRecipe;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
@@ -37,9 +39,7 @@ import java.util.List;
 
 public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     //데이터 유지가 필요한 변수 foodtitle, mArrayList, foodimg, spinner
-    private String user_id;   //create check 부분 간이로 넘기고 없애기
 
     static EditText foodtitle;
     static Spinner spinner;
@@ -47,14 +47,18 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     static ArrayList<FullRecipeData> mArrayList;
     private static FullRecipeAdapter mAdapter;
     private static RecyclerView fullrecipeRecyclerView, recipe_ingredient_view;
+    private FullRecipeIngredientAdapter recipeIngredientAdapter;
 
     private static List<RecipeDO.Ingredient> specIngredientList = new ArrayList<>();
     private static List<RecipeDO.Spec> specList = new ArrayList<>();
 
+    //간이레시피함에서 선택된 레시피 아이디 받아오기
     private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
     private String recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
+    private List<RecipeDO.Ingredient> data;
     //private String recipeId;
 
+    //전체요리 이미지, 단계별 이미지 가져오기
     private final int CAMERA_CODE = 1;
     private final int GALLERY_CODE = 2;
     static ImageView food_img;
@@ -62,11 +66,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private final String TAG = "FullRecipe DB Test";
 
-    private FullRecipeIngredientAdapter recipeIngredientAdapter;
-
-    private ArrayList<PencilItem> clickFood = new ArrayList<>();
-
     private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,16 +114,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
 
 
-        //Check MyCommunity Create
-        try{
-            user_id = Mapper.searchMyCommunity().getUserId();
-        }catch(NullPointerException e){
-            Mapper.createMyCommunity();
-        }
-
-
-
-        //=====================================================================================================
 
         /*
         선택된 재료 보여주기
@@ -131,29 +123,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recipe_ingredient_view.setLayoutManager(mLayoutManager);
 
-        List<RecipeDO.Ingredient> data = Mapper.searchRecipe(recipeId).getIngredient();
+        data = Mapper.searchRecipe(recipeId).getIngredient();
         recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
         recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
-
-
-
-        //======================================================================================================
-
-        ////간이레시피 만들기
-        //List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
-        //사용자 입력 몇 개 받는지에 따라 반복
-        //recipeIngredientList.add(Mapper.createIngredient("양파", 2.0));
-        //recipeIngredientList.add(Mapper.createIngredient("감자", 2.0));
-
-        //입력 다 받았으면 간이레시피 만듦
-        //recipeId = Mapper.createRecipe(recipeIngredientList);
-
-         /*
-        풀레시피에 간이레시피에 등록된 식재료 입력
-         */
-        //specIngredientList.add(Mapper.searchRecipe(recipeId).getIngredient().get(0));
-        //specIngredientList.add(Mapper.searchRecipe(recipeId).getIngredient().get(1));
-
 
 
 
@@ -168,11 +140,31 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
                 //레시피 다이얼로그 build
                 AlertDialog.Builder builder = new AlertDialog.Builder(FullRecipeActivity.this);
-                View view = LayoutInflater.from(FullRecipeActivity.this)
-                        .inflate(R.layout.fullrecipe_popup, null, false);
+                builder.setTitle("레시피를 작성하세요");
+
+                //다이얼로그 안에 체크박스 만들기
+                final List<String> specItems = new ArrayList<>();
+                for(int i = 0; i<data.size(); i++){
+                    specItems.add(data.get(i).getIngredientName());
+                }
+                final CharSequence[] items =  specItems.toArray(new String[specItems.size()]);
+                final List SelectedItems  = new ArrayList();
+
+
+                builder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+                        //선택된 재료 저장
+                        if(isChecked) SelectedItems.add(i);
+                    }
+                });
+
+                //다이얼로그 안에 스피너 만들기
+                View view = LayoutInflater.from(FullRecipeActivity.this).inflate(R.layout.fullrecipe_popup, null, false);
                 builder.setView(view);
 
                 final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
+                final Button ButtonCancel = (Button) view.findViewById(R.id.cancel_btn);
                 final Spinner method_sp = (Spinner) view.findViewById(R.id.method_spinner);
                 final Spinner minute_sp = (Spinner) view.findViewById(R.id.minute_spinner);
                 final Spinner fire_sp = (Spinner) view.findViewById(R.id.fire_spinner);
@@ -197,6 +189,11 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 final AlertDialog dialog = builder.create();
                 ButtonSubmit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+
+                        for(int num = 0; num<SelectedItems.size(); num++){
+                            specIngredientList.add(Mapper.searchRecipe(recipeId).getIngredient().get(num));
+                            Log.e(TAG, ""+Mapper.searchRecipe(recipeId).getIngredient().get(num));
+                        }
                         String method = method_sp.getSelectedItem().toString();
                         String minute = minute_sp.getSelectedItem().toString();
                         Integer minuteInt = Integer.parseInt(minute);
@@ -217,9 +214,20 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                     }
                 });
 
+                //저장된 리스트 지우기
+                SelectedItems.remove(SelectedItems);
+
+                ButtonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
                 dialog.show();
             }
         });
+
 
         /*
         풀레시피 작성 완료 시, 데이터에 저장하기
@@ -230,7 +238,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View v) {
                 String FoodTitle = foodtitle.getText().toString();
                 Mapper.createFullRecipe(recipeId, FoodTitle, specList);
-                Mapper.attachRecipeImage(recipeId, imagePath);
+                //Mapper.attachRecipeImage(recipeId, imagePath);
                 //내 커뮤니티에 풀레시피 등록
                 Mapper.addRecipeInMyCommunity(recipeId);
                 Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
@@ -238,6 +246,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             }
         });
     }
+
 
     @Override
     public void onClick(View v) {

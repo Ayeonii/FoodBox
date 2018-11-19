@@ -18,6 +18,8 @@ import java.util.List;
 
 public class HalfRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private String user_id;
+
     private Button btnSidedish, btnDairy, btnEtc, btnMeat, btnFresh;
     private FloatingActionButton fbtnRecipe;
 
@@ -35,6 +37,13 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_half_recipe);
+
+        //Check MyCommunity Create
+        try{
+            user_id = Mapper.searchMyCommunity().getUserId();
+        }catch(NullPointerException e){
+            Mapper.createMyCommunity();
+        }
 
         btnSidedish = (Button) findViewById(R.id.btn_sidedish);
         btnDairy = (Button) findViewById(R.id.btn_dairy);
