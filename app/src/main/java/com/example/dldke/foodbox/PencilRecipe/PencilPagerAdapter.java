@@ -23,8 +23,6 @@ public class PencilPagerAdapter extends FragmentStatePagerAdapter {
                 return new FreshListFragment();
             case 3:
                 return new EtcListFragment();
-            case 4:
-                return new SideListFragment();
             default:
                 return null;
         }
@@ -42,8 +40,6 @@ public class PencilPagerAdapter extends FragmentStatePagerAdapter {
                 return "과일/채소";
             case 3:
                 return "음료/유제품";
-            case 4:
-                return "반찬";
             default:
                 return null;
         }

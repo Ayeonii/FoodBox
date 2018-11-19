@@ -33,7 +33,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private HalfRecipeIngreDialog ingreDialog;
     private HalfRecipeRecipeDialog recipeDialog;
 
-    private String user_id;
+
 
 
     @Override
