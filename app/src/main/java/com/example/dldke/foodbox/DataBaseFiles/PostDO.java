@@ -22,8 +22,8 @@ public class PostDO {
     private String _date;
     private String _recipeId;
     private String _title;
-
     private String _writer;
+    private Integer _postLevel;
 
     @DynamoDBHashKey(attributeName = "postId")
     @DynamoDBAttribute(attributeName = "postId")
@@ -41,6 +41,14 @@ public class PostDO {
 
     public void setCommentList(final List<Comment> _commentList) {
         this._commentList = _commentList;
+    }
+
+    @DynamoDBAttribute(attributeName = "postLevel")
+    public Integer getPostLevel() {
+        return _postLevel;
+    }
+    public void setPostLevel(final Integer _postLevel) {
+        this._postLevel = _postLevel;
     }
 
     @DynamoDBAttribute(attributeName = "date")
@@ -76,6 +84,8 @@ public class PostDO {
     public void setWriter(final String _writer) {
         this._writer = _writer;
     }
+
+
 
     @DynamoDBDocument
     public static class Comment {
