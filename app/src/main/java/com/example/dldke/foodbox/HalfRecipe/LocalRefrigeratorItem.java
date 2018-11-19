@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox.MyRefrigeratorInside;
+package com.example.dldke.foodbox.HalfRecipe;
 
 public class LocalRefrigeratorItem {
     private String name;

@@ -49,20 +49,24 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                double plus = mItems.get(position).getEditCount() + 0.5;
-                strEditCount = Double.toString(plus);
-                holder.txtCountEdit.setText(strEditCount);
-                mItems.get(position).setEditCount(plus);
+                if (mItems.get(position).getEditCount() < mItems.get(position).getCount()) {
+                    double plus = mItems.get(position).getEditCount() + 0.5;
+                    strEditCount = Double.toString(plus);
+                    holder.txtCountEdit.setText(strEditCount);
+                    mItems.get(position).setEditCount(plus);
+                }
             }
         });
 
         holder.btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                double minus = mItems.get(position).getEditCount() - 0.5;
-                strEditCount = Double.toString(minus);
-                holder.txtCountEdit.setText(strEditCount);
-                mItems.get(position).setEditCount(minus);
+                if (mItems.get(position).getEditCount() > 0.5) {
+                    double minus = mItems.get(position).getEditCount() - 0.5;
+                    strEditCount = Double.toString(minus);
+                    holder.txtCountEdit.setText(strEditCount);
+                    mItems.get(position).setEditCount(minus);
+                }
             }
         });
     }

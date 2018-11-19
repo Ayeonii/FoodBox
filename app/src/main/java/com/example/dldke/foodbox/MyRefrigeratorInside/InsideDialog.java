@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeIngreItem;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeRecyclerListener;
+import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
