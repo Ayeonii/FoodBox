@@ -8,13 +8,17 @@
     android:orientation="vertical">
 
     <TextView
+<<<<<<< Updated upstream
         android:id="@+id/txt_type"
+=======
+>>>>>>> Stashed changes
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:paddingLeft="24dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
+<<<<<<< Updated upstream
         android:text="카테고리명"
         android:textColor="#000"
         android:textSize="20sp" />
@@ -50,6 +54,34 @@
 
         <LinearLayout
             android:id="@+id/layout1"
+=======
+        android:text="재료소진순서"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="유통기한이 여러개인 재료를 일부 선택하셨습니다.\n어떤 순서로 소진할 지 골라주세요!"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="320dp"
+        android:layout_height="300dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+>>>>>>> Stashed changes
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -84,6 +116,7 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
+<<<<<<< Updated upstream
         <LinearLayout
             android:id="@+id/layout2"
             android:layout_width="match_parent"
@@ -108,6 +141,8 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
+=======
+>>>>>>> Stashed changes
     </RelativeLayout>
 
 </LinearLayout>

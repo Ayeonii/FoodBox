@@ -1,5 +1,9 @@
 package com.example.dldke.foodbox.HalfRecipe;
 
+<<<<<<< Updated upstream
+=======
+import android.net.Uri;
+>>>>>>> Stashed changes
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +17,7 @@ import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 
+<<<<<<< Updated upstream
 public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeRecipeAdapter.ItemViewHolder> {
 
     private ArrayList<HalfRecipeRecipeItem> mItems;
@@ -20,18 +25,30 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
     private String strEditCount;
 
     public HalfRecipeRecipeAdapter(ArrayList<HalfRecipeRecipeItem> mItems) {
+=======
+public class HalfRecipeDueDateAdapter extends RecyclerView.Adapter<HalfRecipeDueDateAdapter.ItemViewHolder> {
+
+    private ArrayList<HalfRecipeDueDateItem> mItems;
+
+    public HalfRecipeDueDateAdapter(ArrayList<HalfRecipeDueDateItem> mItems) {
+>>>>>>> Stashed changes
         this.mItems = mItems;
     }
 
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+<<<<<<< Updated upstream
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.halfrecipe_recipe_item, parent, false);
+=======
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.halfrecipe_duedate_item, parent, false);
+>>>>>>> Stashed changes
         return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
+<<<<<<< Updated upstream
         //재료의 이름 세팅
         holder.txtName.setText(mItems.get(position).getName());
         //재료 보유 개수 세팅
@@ -69,6 +86,12 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
                 }
             }
         });
+=======
+        String foodName = mItems.get(position).getName();
+        String foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+        holder.txtName.setText(foodName);
+        holder.imgFood.setImageURI(Uri.parse(foodImgUri));
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -77,17 +100,24 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
+<<<<<<< Updated upstream
         private TextView txtName, txtCount, txtCountEdit;
         private Button btnPlus, btnMinus;
+=======
+        private TextView txtName;
+>>>>>>> Stashed changes
         private ImageView imgFood;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             txtName = (TextView) itemView.findViewById(R.id.txt_name);
+<<<<<<< Updated upstream
             txtCount = (TextView) itemView.findViewById(R.id.txt_count);
             txtCountEdit = (TextView) itemView.findViewById(R.id.txt_count_edit);
             btnPlus = (Button) itemView.findViewById(R.id.btn_plus);
             btnMinus = (Button) itemView.findViewById(R.id.btn_minus);
+=======
+>>>>>>> Stashed changes
             imgFood = (ImageView) itemView.findViewById(R.id.img_food);
         }
     }

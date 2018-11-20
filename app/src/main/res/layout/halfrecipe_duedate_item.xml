@@ -34,6 +34,7 @@
         android:gravity="center"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+<<<<<<< Updated upstream
         android:layout_weight="3"
         android:orientation="horizontal">
 
@@ -99,6 +100,27 @@
             android:background="@drawable/btn_round"
             android:layout_width="30dp"
             android:layout_height="30dp" />
+=======
+        android:layout_weight="4"
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:text="임박한것부터"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="신선한것부터"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+>>>>>>> Stashed changes
 
     </LinearLayout>
 

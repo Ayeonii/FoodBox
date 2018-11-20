@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+<<<<<<< Updated upstream
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,11 +21,26 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
 
     private TextView txtEmpty, txtBack, txtBackEmpty, txtComplete;
     private LinearLayout linearLayout1, linearLayout2;
+=======
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.example.dldke.foodbox.R;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListener {
+
+    private TextView txtCancel, txtOk;
+>>>>>>> Stashed changes
     private RecyclerView recyclerView;
 
     private Context context;
 
     private RecyclerView.Adapter adapter;
+<<<<<<< Updated upstream
     private ArrayList<HalfRecipeRecipeItem> mItems = new ArrayList<>();
 
     private ArrayList<LocalRefrigeratorItem> selectedItem = new ArrayList<>();
@@ -35,12 +51,27 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         super(context);
         this.context = context;
         this.selectedItem = arrayList;
+=======
+    private ArrayList<HalfRecipeDueDateItem> mItems = new ArrayList<>();
+    private HalfRecipeDialogListener dialogListener;
+    private ArrayList<String> dupliArray = new ArrayList<>();
+
+    public HalfRecipeDueDateDialog(@NonNull Context context) {
+        super(context);
+        this.context = context;
+    }
+
+    public HalfRecipeDueDateDialog(@NonNull Context context, ArrayList<String> dupliArray) {
+        super(context);
+        this.context = context;
+>>>>>>> Stashed changes
         this.dupliArray = dupliArray;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< Updated upstream
         setContentView(R.layout.halfrecipe_recipe_dialog);
 
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
@@ -67,11 +98,27 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
             linearLayout2.setVisibility(View.GONE);
             setRecyclerView();
         }
+=======
+        setContentView(R.layout.halfrecipe_duedate_dialog);
+
+        txtCancel = (TextView) findViewById(R.id.txt_cancel);
+        txtOk = (TextView) findViewById(R.id.txt_ok);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        txtCancel.setOnClickListener(this);
+        txtOk.setOnClickListener(this);
+
+        setRecyclerView();
+>>>>>>> Stashed changes
     }
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
+<<<<<<< Updated upstream
         adapter = new HalfRecipeRecipeAdapter(mItems);
+=======
+        adapter = new HalfRecipeDueDateAdapter(mItems);
+>>>>>>> Stashed changes
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
@@ -83,9 +130,14 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
     private void setData() {
         mItems.clear();
 
+<<<<<<< Updated upstream
         for (int i = 0; i < selectedItem.size(); i++) {
             String foodImgUri = "file:///storage/emulated/0/Download/"+selectedItem.get(i).getName()+".jpg";
             mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount(), Uri.parse(foodImgUri)));
+=======
+        for (int i = 0; i < dupliArray.size(); i++) {
+            mItems.add(new HalfRecipeDueDateItem(dupliArray.get(i)));
+>>>>>>> Stashed changes
         }
 
         adapter.notifyDataSetChanged();
@@ -98,6 +150,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+<<<<<<< Updated upstream
             case R.id.txt_back:
                 cancel();
                 break;
@@ -122,6 +175,12 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
                 //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
                 dialogListener.onCompleteClicked(result, mItems, dueDateCheckArray);
+=======
+            case R.id.txt_cancel:
+                cancel();
+                break;
+            case R.id.txt_ok:
+>>>>>>> Stashed changes
                 dismiss();
                 break;
         }

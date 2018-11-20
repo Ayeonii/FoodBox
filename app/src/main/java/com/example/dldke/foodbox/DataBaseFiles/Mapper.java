@@ -541,10 +541,11 @@ public final class Mapper {
         }
     }
 
-    public static void updateCount(String name, Double count)
+    public static void updateCount(String name, Double count, String dueDate)
     {
         final String itemName = name;
         final Double minus = count;
+        final String itemDueDate = dueDate;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -558,7 +559,7 @@ public final class Mapper {
 
                 for(int i = 0; i < foodItem.getItem().size(); i++)
                 {
-                    if(foodItem.getItem().get(i).getName().equals(itemName)) {
+                    if(foodItem.getItem().get(i).getName().equals(itemName) && foodItem.getItem().get(i).getDueDate().equals(itemDueDate)) {
                         count = foodItem.getItem().get(i).getCount();
                         index = i;
                         break;

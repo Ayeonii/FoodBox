@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private HalfRecipeIngreDialog ingreDialog;
     private HalfRecipeRecipeDialog recipeDialog;
+    private HalfRecipeDueDateDialog dueDateDialog;
 
     private String user_id;
 
@@ -273,15 +276,19 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     }
 
                     @Override
-                    public void onCompleteClicked(int result, ArrayList<String> dueDateCheckArray) {
+                    public void onCompleteClicked(int result, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
                         Log.d("test", "result : " + result);
-//                        if (result == 1) {
+                        if (result == 1) {
+                            goHalfRecipeMaking(mItems);
+
 //                            Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
 //                            halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 //                            startActivity(halfRecipeCompleteActivity);
-//                        } else if(result == 2) {
-//
-//                        }
+                        }
+                        else if (result == 2) {
+                            //dueDateCheckArray.size만큼 재료소진순서 물어보기
+                            showDueDateDialog(dueDateCheckArray);
+                        }
                     }
                 });
                 recipeDialog.show();
@@ -303,7 +310,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             }
 
             @Override
-            public void onCompleteClicked(int result, ArrayList<String> dueDateCheckArray) {
+            public void onCompleteClicked(int result, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
 
             }
         });
@@ -434,5 +441,33 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 selectedItem.add(new LocalRefrigeratorItem(nameFresh.get(i), totalCount));
             }
         }
+    }
+
+    private void goHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
+        Log.d("test", "mItems start==================");
+        for(int i=0; i<mItems.size(); i++) {
+            Log.d("test", mItems.get(i).getName()+", "+mItems.get(i).getCount()+", "+mItems.get(i).getEditCount());
+        }
+        Log.d("test", "mItems end==================");
+//        //refrigerator 테이블 접근 (재료 소진)
+//        for (int i = 0; i < mItems.size(); i++) {
+//            Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
+//        }
+//
+//        //recipe 테이블 접근
+//        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+//        for (int i = 0; i < mItems.size(); i++) {
+//            recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
+//        }
+//        String recipe_id = Mapper.createRecipe(recipeIngredientList);
+//        Log.d("test", recipe_id);
+//
+//        //myCommunity 테이블 접근
+//        Mapper.addRecipeInMyCommunity(recipe_id);
+    }
+
+    public void showDueDateDialog(ArrayList<String> dueDateCheckArray) {
+        dueDateDialog = new HalfRecipeDueDateDialog(this, dueDateCheckArray);
+        dueDateDialog.show();
     }
 }
