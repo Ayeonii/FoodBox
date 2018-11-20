@@ -78,7 +78,7 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Intent RefrigMain = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
-            RefrigMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            RefrigMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(RefrigMain);
         }
         return super.onOptionsItemSelected(item);

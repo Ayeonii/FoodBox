@@ -45,6 +45,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     static Spinner spinner;
 
     static ArrayList<FullRecipeData> mArrayList;
+    String testStr = "";
+
     private static FullRecipeAdapter mAdapter;
     private static RecyclerView fullrecipeRecyclerView, recipe_ingredient_view;
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
@@ -142,14 +144,14 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 AlertDialog.Builder builder = new AlertDialog.Builder(FullRecipeActivity.this);
                 builder.setTitle("레시피를 작성하세요");
 
-                //다이얼로그 안에 체크박스 만들기
                 final List<String> specItems = new ArrayList<>();
+                final List<String> tempItems = new ArrayList<>();
+                //다이얼로그 안에 체크박스 만들기
                 for(int i = 0; i<data.size(); i++){
                     specItems.add(data.get(i).getIngredientName());
                 }
-                final CharSequence[] items =  specItems.toArray(new String[specItems.size()]);
+                final CharSequence[] items =  specItems.toArray(new String[specItems.size()]);  //체크박스 만들기
                 final List SelectedItems  = new ArrayList();
-
 
                 builder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
@@ -158,6 +160,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
                         if(isChecked) {
                             SelectedItems.add(i);
+                            tempItems.add(specItems.get(i));//레시피 단계 작성후에 text로 보여지는 재료 이걸로 쓰자
+
+                            Log.e(TAG, "재료 이름 가져와 "+tempItems);
                         }
 
                     }
@@ -199,6 +204,15 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                             Log.e(TAG, ""+Mapper.searchRecipe(recipeId).getIngredient().get(num));
                         }
 
+                        for(int num = 0; num < SelectedItems.size(); num++){
+                            int index = (int)SelectedItems.get(num);
+                            Log.e(TAG, "SelectedItems이다다"+SelectedItems.get(num).toString());
+                            testStr = testStr.concat(tempItems.get(num));
+                            Log.e(TAG, "하나씩 붙어라"+testStr);
+                        }
+
+
+                        //Log.e(TAG, "선택된 재료들 모음이야"+testStr);
 
                         String method = method_sp.getSelectedItem().toString();
                         String minute = minute_sp.getSelectedItem().toString();
@@ -216,15 +230,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                         specList.add(spec);
                         Log.d(TAG, "방법 : " + method + "불 세기 : " + fire + "시간 : " + minuteInt);
 
-                        SelectedItems.clear();
                         specIngredientList.clear();
-
+                        testStr = "";
                         dialog.dismiss();
                     }
                 });
 
-                //저장된 리스트 지우기
-                SelectedItems.remove(SelectedItems);
 
                 ButtonCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -232,6 +243,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                         dialog.dismiss();
                     }
                 });
+
 
                 dialog.show();
             }

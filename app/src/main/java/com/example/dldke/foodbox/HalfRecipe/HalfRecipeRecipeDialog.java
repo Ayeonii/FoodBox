@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
 public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
 
+    private EditText editRecipeName;
     private TextView txtEmpty, txtBack, txtBackEmpty, txtComplete;
     private LinearLayout linearLayout1, linearLayout2;
     private RecyclerView recyclerView;
@@ -48,6 +50,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_recipe_dialog);
 
+        editRecipeName = (EditText) findViewById(R.id.recipe_name_edit);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
         txtBack = (TextView) findViewById(R.id.txt_back);
         txtBackEmpty = (TextView) findViewById(R.id.txt_back_empty);
@@ -111,7 +114,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 break;
             case R.id.txt_complete:
                 for(int i=0; i<mItems.size(); i++) {
-                    Log.d("test", mItems.get(i).getName() + ", " + mItems.get(i).getCount().toString() +  ", " + mItems.get(i).getEditCount().toString());
+                    //Log.d("test", mItems.get(i).getName() + ", " + mItems.get(i).getCount().toString() +  ", " + mItems.get(i).getEditCount().toString());
                 }
 
                 //refrigerator 테이블 접근 (재료 소진)

@@ -18,6 +18,14 @@
         android:textColor="#000"
         android:textSize="20sp" />
 
+        <EditText
+            android:id="@+id/recipe_name_edit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:hint="레시피 이름을 입력하세요"
+            android:layout_gravity="center"/>
+
     <RelativeLayout
         android:layout_width="320dp"
         android:layout_height="wrap_content"

@@ -30,6 +30,8 @@ public class RecipeBoxAdapter extends RecyclerView.Adapter<RecipeBoxAdapter.View
         this.tabPosition = tabPosition;
     }
 
+    private MyRecipeBoxActivity myRecipeBoxActivity = new MyRecipeBoxActivity();
+
     //등록된 간이레시피 ID 가져오기 위한 설정
     private ArrayList<RecipeBoxData> recipedata = new ArrayList<>();
     private static String recipe_id;
@@ -59,9 +61,10 @@ public class RecipeBoxAdapter extends RecyclerView.Adapter<RecipeBoxAdapter.View
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) Toast.makeText(context,"포지션"+position, Toast.LENGTH_SHORT).show();
 
+            tabPosition = myRecipeBoxActivity.getPosition();
             recipe_id = recipedata.get(position).getRecipeId();
             Log.e(TAG, ""+recipe_id);
-            Log.e(TAG, ""+tabPosition);
+            Log.e(TAG, "포지션 제대로 얻었다"+tabPosition);
 
             if(tabPosition == 0){
                 Intent RecipeBoxHalfRecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);

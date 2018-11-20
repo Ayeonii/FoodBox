@@ -317,6 +317,32 @@ public final class Mapper {
 
 
     }
+
+    //레시피 이미지 다운로드 할 수 있는 함수
+    public static void downLoadImageRecipe(final String recipeId, final String locatePath){
+
+        Thread thread = new Thread(new Runnable() {
+
+            com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
+            @Override
+            public void run() {
+                URL url;
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipeId);
+                // Log.d("why",Mapper.bucketName);
+                recipeItem.getRecipeImage().downloadTo(new File(locatePath + ".jpg"));
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
     public static void createPost(String title, String recipeId) {
         final String post_title = title;
         final String ID = recipeId;
