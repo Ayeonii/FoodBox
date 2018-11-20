@@ -98,7 +98,7 @@ public final class Mapper {
     }
 
 
-    public static String createRecipe(List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient> ingredient) {
+    public static String createRecipe(List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient> ingredient, String simpleName) {
         final com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO();
 
         Date date = new Date();
@@ -107,6 +107,7 @@ public final class Mapper {
 
         recipeItem.setRecipeId(userId + dateS);
         recipeItem.setDate(dateS);
+        recipeItem.setSimpleName(simpleName);
 
         List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient> tmpIngredientList = recipeItem.getIngredient();
         int size = ingredient.size();

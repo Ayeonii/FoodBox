@@ -32,7 +32,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private Boolean[] checkSideDish, checkDairy, checkEtc, checkMeat, checkFresh;
     private ArrayList<LocalRefrigeratorItem> selectedItem;
 
-    private String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

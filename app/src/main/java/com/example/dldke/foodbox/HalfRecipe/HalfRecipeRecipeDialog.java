@@ -113,6 +113,8 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 cancel();
                 break;
             case R.id.txt_complete:
+                String simpleName = editRecipeName.getText().toString();
+
                 for(int i=0; i<mItems.size(); i++) {
                     //Log.d("test", mItems.get(i).getName() + ", " + mItems.get(i).getCount().toString() +  ", " + mItems.get(i).getEditCount().toString());
                 }
@@ -127,7 +129,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 for(int i=0; i<mItems.size(); i++) {
                     recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
                 }
-                String recipe_id = Mapper.createRecipe(recipeIngredientList);
+                String recipe_id = Mapper.createRecipe(recipeIngredientList, simpleName);
                 Log.d("test", recipe_id);
 
                 //myCommunity 테이블 접근
