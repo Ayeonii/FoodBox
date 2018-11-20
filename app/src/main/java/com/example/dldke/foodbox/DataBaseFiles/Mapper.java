@@ -541,7 +541,7 @@ public final class Mapper {
         }
     }
 
-    public static void updateCount(String name, Double count, String dueDate)
+    public static void updateCountwithDueDate(String name, String dueDate, Double count)
     {
         final String itemName = name;
         final Double minus = count;
@@ -560,6 +560,46 @@ public final class Mapper {
                 for(int i = 0; i < foodItem.getItem().size(); i++)
                 {
                     if(foodItem.getItem().get(i).getName().equals(itemName) && foodItem.getItem().get(i).getDueDate().equals(itemDueDate)) {
+                        count = foodItem.getItem().get(i).getCount();
+                        index = i;
+                        break;
+                    }
+                }
+                count = count - minus;
+                foodItem.getItem().get(index).setCount(count);
+
+                if(foodItem.getItem().get(index).getCount() == 0)
+                    foodItem.getItem().remove(index);
+
+                Mapper.getDynamoDBMapper().save(foodItem, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES));
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateCount(String name, Double count)
+    {
+        final String itemName = name;
+        final Double minus = count;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO foodItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                        userId);
+
+                double count = 0;
+                int index = 0;
+
+                for(int i = 0; i < foodItem.getItem().size(); i++)
+                {
+                    if(foodItem.getItem().get(i).getName().equals(itemName)) {
                         count = foodItem.getItem().get(i).getCount();
                         index = i;
                         break;

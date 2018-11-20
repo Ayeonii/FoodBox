@@ -8,50 +8,22 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-<<<<<<< Updated upstream
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.dldke.foodbox.R;
-
 import java.util.ArrayList;
 
-public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
-
-    private TextView txtEmpty, txtBack, txtBackEmpty, txtComplete;
-    private LinearLayout linearLayout1, linearLayout2;
-=======
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.example.dldke.foodbox.R;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListener {
 
     private TextView txtCancel, txtOk;
->>>>>>> Stashed changes
     private RecyclerView recyclerView;
 
     private Context context;
 
     private RecyclerView.Adapter adapter;
-<<<<<<< Updated upstream
-    private ArrayList<HalfRecipeRecipeItem> mItems = new ArrayList<>();
-
-    private ArrayList<LocalRefrigeratorItem> selectedItem = new ArrayList<>();
-    private HalfRecipeDialogListener dialogListener;
-    private ArrayList<String> dupliArray = new ArrayList<>();
-
-    public HalfRecipeRecipeDialog(@NonNull Context context, ArrayList arrayList, ArrayList dupliArray) {
-        super(context);
-        this.context = context;
-        this.selectedItem = arrayList;
-=======
     private ArrayList<HalfRecipeDueDateItem> mItems = new ArrayList<>();
     private HalfRecipeDialogListener dialogListener;
     private ArrayList<String> dupliArray = new ArrayList<>();
@@ -64,41 +36,12 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
     public HalfRecipeDueDateDialog(@NonNull Context context, ArrayList<String> dupliArray) {
         super(context);
         this.context = context;
->>>>>>> Stashed changes
         this.dupliArray = dupliArray;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< Updated upstream
-        setContentView(R.layout.halfrecipe_recipe_dialog);
-
-        txtEmpty = (TextView) findViewById(R.id.txt_empty);
-        txtBack = (TextView) findViewById(R.id.txt_back);
-        txtBackEmpty = (TextView) findViewById(R.id.txt_back_empty);
-        txtComplete = (TextView) findViewById(R.id.txt_complete);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        linearLayout1 = (LinearLayout) findViewById(R.id.layout1);
-        linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
-
-        txtBack.setOnClickListener(this);
-        txtBackEmpty.setOnClickListener(this);
-        txtComplete.setOnClickListener(this);
-
-        if (selectedItem.size()==0) {
-            recyclerView.setVisibility(View.GONE);
-            txtEmpty.setVisibility(View.VISIBLE);
-            linearLayout1.setVisibility(View.GONE);
-            linearLayout2.setVisibility(View.VISIBLE);
-        } else {
-            txtEmpty.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            linearLayout1.setVisibility(View.VISIBLE);
-            linearLayout2.setVisibility(View.GONE);
-            setRecyclerView();
-        }
-=======
         setContentView(R.layout.halfrecipe_duedate_dialog);
 
         txtCancel = (TextView) findViewById(R.id.txt_cancel);
@@ -109,16 +52,11 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
         txtOk.setOnClickListener(this);
 
         setRecyclerView();
->>>>>>> Stashed changes
     }
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-<<<<<<< Updated upstream
-        adapter = new HalfRecipeRecipeAdapter(mItems);
-=======
         adapter = new HalfRecipeDueDateAdapter(mItems);
->>>>>>> Stashed changes
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
@@ -130,14 +68,8 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
     private void setData() {
         mItems.clear();
 
-<<<<<<< Updated upstream
-        for (int i = 0; i < selectedItem.size(); i++) {
-            String foodImgUri = "file:///storage/emulated/0/Download/"+selectedItem.get(i).getName()+".jpg";
-            mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount(), Uri.parse(foodImgUri)));
-=======
         for (int i = 0; i < dupliArray.size(); i++) {
             mItems.add(new HalfRecipeDueDateItem(dupliArray.get(i)));
->>>>>>> Stashed changes
         }
 
         adapter.notifyDataSetChanged();
@@ -150,38 +82,15 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-<<<<<<< Updated upstream
-            case R.id.txt_back:
-                cancel();
-                break;
-            case R.id.txt_back_empty:
-                cancel();
-                break;
-            case R.id.txt_complete:
-                int result = 1;
-                ArrayList<String> dueDateCheckArray = new ArrayList<>();
-                for (int i=0; i<mItems.size(); i++) {
-                    for(int j=0; j<dupliArray.size(); j++) {
-                        if (mItems.get(i).getName().equals(dupliArray.get(j))) {    //중복명단에 있는 아이템이니?
-                            if (mItems.get(i).getEditCount() < mItems.get(i).getCount()) {  //그게 보유개수보다 적게 사용한다햇니?
-                                result = 2;
-                                dueDateCheckArray.add(mItems.get(i).getName());
-                            }
-                        }
-                    }
-                }
-
-                // result = 1 : 유통기한이 여러개인게 없거나 있어도 보유개수 모두 사용했을때
-                // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
-                //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
-                dialogListener.onCompleteClicked(result, mItems, dueDateCheckArray);
-=======
             case R.id.txt_cancel:
                 cancel();
                 break;
             case R.id.txt_ok:
->>>>>>> Stashed changes
-                dismiss();
+                for (int i=0; i<mItems.size(); i++) {
+                    Log.d("test", "name : " + mItems.get(i).getName() + ", which : " + mItems.get(i).getWhich());
+                }
+                dialogListener.onDueDateOKClicked(mItems);
+                //dismiss();
                 break;
         }
     }
