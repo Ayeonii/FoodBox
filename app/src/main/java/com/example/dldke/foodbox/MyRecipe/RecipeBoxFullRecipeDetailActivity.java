@@ -10,13 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxAdapter;
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxFullRecipeDetailAdapter;
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.R;
@@ -25,7 +24,7 @@ import com.example.dldke.foodbox.R;
 public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
 
     //풀레시피함에서 선택된 레시피 아이디 받아오기
-    private RecipeBoxAdapter recipeBoxAdapter = new RecipeBoxAdapter();
+    private MyRecipeBoxFullRecipeAdapter myRecipeBoxFullRecipeAdapter = new MyRecipeBoxFullRecipeAdapter();
     private String recipe_id;
     RecipeDO.Detail detail;
 
@@ -37,10 +36,11 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_box_fullrecipe_detail);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.fullrecipe_detail_toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.recipe_box_fullrecipe_detail_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recipe_id = recipeBoxAdapter.getRecipeId();
+        recipe_id = myRecipeBoxFullRecipeAdapter.getRecipeId();
         detail = Mapper.searchRecipe(recipe_id).getDetail();
 
 
@@ -91,5 +91,15 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+            MyRecipeBoxActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(MyRecipeBoxActivity);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

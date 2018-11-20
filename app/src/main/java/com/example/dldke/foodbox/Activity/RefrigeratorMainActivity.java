@@ -192,7 +192,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity.class);
                 startActivity(MyRecipeBoxActivity);
             }
-            Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(RefrigeratorMainActivity.this, strText+"눌렸어용", Toast.LENGTH_SHORT).show();
 
             if(strText.equals("Community")){
                 Intent communityActivity = new Intent(getApplicationContext(), CommunityActivity.class);
@@ -290,7 +290,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     startActivityForResult(cameraIntent,4321);
                     break ;
                 case R.id.fabPencil:
-                    Toast.makeText(RefrigeratorMainActivity.this, "직접입력 누름", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(RefrigeratorMainActivity.this, "직접입력 누름", Toast.LENGTH_SHORT).show();
                     Intent PencilActivity = new Intent(getApplicationContext(),PencilRecipeActivity.class);
                     startActivity(PencilActivity);
                     //다음 화면이 아래에서 올라오는 애니메이션

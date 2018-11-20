@@ -40,7 +40,7 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
      }
 
      public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_detail_item, parent, false);
+         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_box_halfrecipe_detail_item, parent, false);
          AddIngredient(items);
          return new ViewHolder(v);
      }

@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
@@ -30,7 +29,6 @@ import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
-import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.io.IOException;
@@ -169,7 +167,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 });
 
                 //다이얼로그 안에 스피너 만들기
-                View view = LayoutInflater.from(FullRecipeActivity.this).inflate(R.layout.fullrecipe_popup, null, false);
+                View view = LayoutInflater.from(FullRecipeActivity.this).inflate(R.layout.fullrecipe_step_popup, null, false);
                 builder.setView(view);
 
                 final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);

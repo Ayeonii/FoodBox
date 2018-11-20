@@ -50,7 +50,7 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
 
         // 사용할 아이템의 뷰를 생성해준다.
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fullrecipe_ingredient_list, parent, false);
+                .inflate(R.layout.fullrecipe_ingredient_list_item, parent, false);
         AddIngredient(ingredients);
 
         ViewHolder holder = new ViewHolder(view);
