@@ -24,8 +24,6 @@ import java.util.List;
 
 public class HalfRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String user_id;
-
     private Button btnSidedish, btnDairy, btnEtc, btnMeat, btnFresh;
     private FloatingActionButton fbtnRecipe;
 
@@ -49,13 +47,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_half_recipe);
-
-        //Check MyCommunity Create
-        try{
-            user_id = Mapper.searchMyCommunity().getUserId();
-        }catch(NullPointerException e){
-            Mapper.createMyCommunity();
-        }
 
         btnSidedish = (Button) findViewById(R.id.btn_sidedish);
         btnDairy = (Button) findViewById(R.id.btn_dairy);
@@ -289,31 +280,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void showIngredientDialog(ArrayList<String> nameArray, Boolean[] checkArray, String type) {
-        if (nameArray.size() == 0)
-            ingreDialog = new HalfRecipeIngreDialog(this, type, true);
-        else
-            ingreDialog = new HalfRecipeIngreDialog(this, type, false, nameArray, checkArray);
-
-        ingreDialog.setDialogListener(new HalfRecipeDialogListener() {
-            @Override
-            public void onPositiveClicked(String type, Boolean[] check) {
-                setResult(type, check);
-            }
-
-            @Override
-            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
-
-            }
-
-            @Override
-            public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
-
-            }
-        });
-        ingreDialog.show();
-    }
-
     private void setResult(String type, Boolean[] check) {
         switch (type) {
             case "sideDish":
@@ -440,50 +406,29 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void goHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
-        Log.d("test", "mItems start==================");
-        for (int i = 0; i < mItems.size(); i++) {
-            Log.d("test", mItems.get(i).getName() + ", " + mItems.get(i).getCount() + ", " + mItems.get(i).getEditCount());
-        }
-        Log.d("test", "mItems end==================");
+    public void showIngredientDialog(ArrayList<String> nameArray, Boolean[] checkArray, String type) {
+        if (nameArray.size() == 0)
+            ingreDialog = new HalfRecipeIngreDialog(this, type, true);
+        else
+            ingreDialog = new HalfRecipeIngreDialog(this, type, false, nameArray, checkArray);
 
-        if (dueDateCheckArray.size() == 0) {
-            //refrigerator 테이블 접근 (재료 소진)
-            for (int i = 0; i < mItems.size(); i++) {
-                Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
+        ingreDialog.setDialogListener(new HalfRecipeDialogListener() {
+            @Override
+            public void onPositiveClicked(String type, Boolean[] check) {
+                setResult(type, check);
             }
-        } else {
-            // 중복 배열에 있는 거 제외하고 나머지에 대해 정상적으로 update
-            for (int i = 0; i < mItems.size(); i++) {
-                int has = 0;
-                for (int j = 0; j < dueDateCheckArray.size(); j++) {
-                    if (mItems.get(i).getName().equals(dueDateCheckArray.get(j)))
-                        has = 1;
-                }
 
-                if (has == 0) {
-                    Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
-                }
+            @Override
+            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
+
             }
-        }
 
+            @Override
+            public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
 
-        //recipe 테이블 접근
-        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
-        for (int i = 0; i < mItems.size(); i++) {
-            recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
-        }
-//*한솔이수정
-//        String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeName);
-        String recipe_id = Mapper.createRecipe(recipeIngredientList);
-        Log.d("test", recipe_id);
-
-        //myCommunity 테이블 접근
-        Mapper.addRecipeInMyCommunity(recipe_id);
-
-        Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
-        halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(halfRecipeCompleteActivity);
+            }
+        });
+        ingreDialog.show();
     }
 
     public void showRecipeDialog() {
@@ -600,6 +545,51 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
 
         return true;
+    }
+
+    private void goHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
+        Log.d("test", "mItems start==================");
+        for (int i = 0; i < mItems.size(); i++) {
+            Log.d("test", mItems.get(i).getName() + ", " + mItems.get(i).getCount() + ", " + mItems.get(i).getEditCount());
+        }
+        Log.d("test", "mItems end==================");
+
+        if (dueDateCheckArray.size() == 0) {
+            //refrigerator 테이블 접근 (재료 소진)
+            for (int i = 0; i < mItems.size(); i++) {
+                Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
+            }
+        } else {
+            // 중복 배열에 있는 거 제외하고 나머지에 대해 정상적으로 update
+            for (int i = 0; i < mItems.size(); i++) {
+                int has = 0;
+                for (int j = 0; j < dueDateCheckArray.size(); j++) {
+                    if (mItems.get(i).getName().equals(dueDateCheckArray.get(j)))
+                        has = 1;
+                }
+
+                if (has == 0) {
+                    Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
+                }
+            }
+        }
+
+
+        //recipe 테이블 접근
+        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+        for (int i = 0; i < mItems.size(); i++) {
+            recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
+        }
+
+        String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
+        Log.d("test", recipe_id);
+
+        //myCommunity 테이블 접근
+        Mapper.addRecipeInMyCommunity(recipe_id);
+
+        Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
+        halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(halfRecipeCompleteActivity);
     }
 
 }
