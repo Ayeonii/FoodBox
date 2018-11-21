@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -62,6 +63,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private final int CAMERA_CODE = 1;
     private final int GALLERY_CODE = 2;
     static ImageView food_img;
+    static ImageView food_img_real;
     private String imagePath;
 
     private final String TAG = "FullRecipe DB Test";
@@ -82,6 +84,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             갤러리에서 이미지 가져오기
          */
         food_img = (ImageView)findViewById(R.id.food_img);
+         food_img_real = (ImageView)findViewById(R.id.food_img_real);
         food_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -321,7 +324,10 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
         //food_img.setImageBitmap(rotate(bitmap, exifDegree));
-        food_img.setImageBitmap(bitmap);
+        food_img.setVisibility(View.INVISIBLE);
+        food_img_real.setVisibility(View.VISIBLE);
+        food_img_real.setImageBitmap(bitmap);
+
     }
 
     private int exifOrientationToDegrees(int exifOrientation) {

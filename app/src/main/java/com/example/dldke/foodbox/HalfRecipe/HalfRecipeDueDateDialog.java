@@ -2,10 +2,6 @@ package com.example.dldke.foodbox.HalfRecipe;
 
 import android.app.Dialog;
 import android.content.Context;
-<<<<<<< HEAD
-=======
-import android.net.Uri;
->>>>>>> hansol
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,10 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-<<<<<<< HEAD
-=======
-import android.widget.LinearLayout;
->>>>>>> hansol
 import android.widget.TextView;
 import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
@@ -34,14 +26,6 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
     private HalfRecipeDialogListener dialogListener;
     private ArrayList<String> dupliArray = new ArrayList<>();
 
-<<<<<<< HEAD
-=======
-    public HalfRecipeDueDateDialog(@NonNull Context context) {
-        super(context);
-        this.context = context;
-    }
-
->>>>>>> hansol
     public HalfRecipeDueDateDialog(@NonNull Context context, ArrayList<String> dupliArray) {
         super(context);
         this.context = context;
@@ -95,12 +79,6 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
                 cancel();
                 break;
             case R.id.txt_ok:
-<<<<<<< HEAD
-=======
-                for (int i=0; i<mItems.size(); i++) {
-                    Log.d("test", "name : " + mItems.get(i).getName() + ", which : " + mItems.get(i).getWhich());
-                }
->>>>>>> hansol
                 dialogListener.onDueDateOKClicked(mItems);
                 //dismiss();
                 break;

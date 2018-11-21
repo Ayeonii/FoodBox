@@ -24,7 +24,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
-    private static List<InfoDO> freshList, meatList, etcList, sideList;
+    private static List<InfoDO> freshList, meatList, etcList;
     private String foodImg;
 
     public AllFoodListFragment(){}
