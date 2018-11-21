@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.HalfRecipe.DCItem;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeIngreItem;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeRecyclerListener;
 import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
@@ -30,7 +31,8 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     private boolean isEmpty;
 
     private RecyclerView.Adapter adapter;
-    private ArrayList<LocalRefrigeratorItem> localRefrigeratorItems = new ArrayList<>();
+    private ArrayList<LocalRefrigeratorItem> localArray = new ArrayList<>();
+    private ArrayList<String> nameArray = new ArrayList<>();
     private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
 
     private InsideItemDialog itemDialog;
@@ -42,12 +44,13 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         this.isEmpty = isEmpty;
     }
 
-    public InsideDialog(@NonNull Context context, String type, boolean isEmpty, ArrayList arrayList) {
+    public InsideDialog(@NonNull Context context, String type, boolean isEmpty, ArrayList<LocalRefrigeratorItem> localArray, ArrayList<String> nameArray) {
         super(context);
         this.context = context;
         this.ingreType = type;
         this.isEmpty = isEmpty;
-        this.localRefrigeratorItems = arrayList;
+        this.localArray = localArray;
+        this.nameArray = nameArray;
     }
 
     @Override
@@ -67,7 +70,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
 
         txtCancel.setVisibility(View.INVISIBLE);
-        //txtCancel.setOnClickListener(this);
         txtBackEmpty.setOnClickListener(this);
         txtOk.setOnClickListener(this);
 
@@ -113,23 +115,13 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                 new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
-                        final String getName = localRefrigeratorItems.get(position).getName();
-                        final Double getCount = localRefrigeratorItems.get(position).getCount();
-                        final String getDueDate = localRefrigeratorItems.get(position).getDueDate();
-                        Log.d("test", position + ", " + getName + ", " + getCount.toString() + ", " + getDueDate);
-                        String foodUri = "file:///storage/emulated/0/Download/"+getName+".jpg";
-                        Uri foodImgUri = Uri.parse(foodUri);
-                        itemDialog = new InsideItemDialog(context, getName, getCount, getDueDate, foodImgUri  );
-                        itemDialog.setDialogListener(new InsideDialogListener() {
-                            @Override
-                            public void onPositiveClicked(int delCheck, Double count, String dueDate) {
-                                if (delCheck==1) {  
-                                    localRefrigeratorItems.remove(position);
-                                    setData();
-                                    setRecyclerView();
-                                }
+                        ArrayList<DCItem> dcArray = new ArrayList<>();
+                        for (int i=0; i<localArray.size(); i++) {
+                            if (localArray.get(i).getName().equals(nameArray.get(position))) {
+                                dcArray.add(new DCItem(localArray.get(i).getDueDate(), localArray.get(i).getCount()));
                             }
-                        });
+                        }
+                        itemDialog = new InsideItemDialog(context, nameArray.get(position), dcArray);
                         itemDialog.show();
                     }
                 }
@@ -140,8 +132,9 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
 
     private void setData() {
         mItems.clear();
-        for (int i = 0; i < localRefrigeratorItems.size(); i++) {
-            mItems.add(new HalfRecipeIngreItem(localRefrigeratorItems.get(i).getName()));
+
+        for (int i = 0; i < nameArray.size(); i++) {
+            mItems.add(new HalfRecipeIngreItem(nameArray.get(i)));
         }
 
         adapter.notifyDataSetChanged();
@@ -150,9 +143,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.txt_cancel:
-//                cancel();
-//                break;
             case R.id.txt_back_empty:
                 cancel();
                 break;

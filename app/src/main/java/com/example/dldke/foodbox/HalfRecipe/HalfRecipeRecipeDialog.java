@@ -13,21 +13,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
-import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
 public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
 
-    private EditText editRecipeName;
     private TextView txtEmpty, txtBack, txtBackEmpty, txtComplete;
+    private EditText editRecipeName;
     private LinearLayout linearLayout1, linearLayout2;
     private RecyclerView recyclerView;
 
@@ -52,11 +45,11 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_recipe_dialog);
 
-        editRecipeName = (EditText) findViewById(R.id.recipe_name_edit);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
         txtBack = (TextView) findViewById(R.id.txt_back);
         txtBackEmpty = (TextView) findViewById(R.id.txt_back_empty);
         txtComplete = (TextView) findViewById(R.id.txt_complete);
+        editRecipeName = (EditText) findViewById(R.id.recipe_name_edit);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayout1 = (LinearLayout) findViewById(R.id.layout1);
         linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
@@ -119,8 +112,8 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 ArrayList<String> dueDateCheckArray = new ArrayList<>();
                 for (int i=0; i<mItems.size(); i++) {
                     for(int j=0; j<dupliArray.size(); j++) {
-                        if (mItems.get(i).getName().equals(dupliArray.get(j))) {
-                            if (mItems.get(i).getEditCount() < mItems.get(i).getCount()) {
+                        if (mItems.get(i).getName().equals(dupliArray.get(j))) {    //중복명단에 있는 아이템이니?
+                            if (mItems.get(i).getEditCount() < mItems.get(i).getCount()) {  //그게 보유개수보다 적게 사용한다햇니?
                                 result = 2;
                                 dueDateCheckArray.add(mItems.get(i).getName());
                             }
@@ -128,23 +121,12 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                     }
                 }
 
-//                    //refrigerator 테이블 접근 (재료 소진)
-//                    for (int i = 0; i < mItems.size(); i++) {
-//                        Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
-//                    }
-//
-//                    //recipe 테이블 접근
-//                    List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
-//                    for (int i = 0; i < mItems.size(); i++) {
-//                        recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
-//                    }
-//                    String recipe_id = Mapper.createRecipe(recipeIngredientList);
-//                    Log.d("test", recipe_id);
-//
-//                    //myCommunity 테이블 접근
-//                    Mapper.addRecipeInMyCommunity(recipe_id);
+                String simpleName = editRecipeName.getText().toString();
 
-                dialogListener.onCompleteClicked(result, dueDateCheckArray);
+                // result = 1 : 유통기한이 여러개인게 없거나 있어도 보유개수 모두 사용했을때
+                // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
+                //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
+                dialogListener.onCompleteClicked(result, simpleName, mItems, dueDateCheckArray);
                 dismiss();
                 break;
         }

@@ -71,11 +71,11 @@ public final class Mapper {
     }
 
     //String name => InfoDO item
-    //ingredient.setIngredientName(name) => ingredient.setIngredientName(item.getName())
+    //ingredient.setIngredientName(name) => ingredient.setIngredientName(item.getFoodname())
     public static com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient createIngredient(String name, Double count)
     {
         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient ingredient = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient();
-        //ingredient.setIngredientName(item.getName());
+        //ingredient.setIngredientName(item.getFoodname());
         ingredient.setIngredientName(name);
         ingredient.setIngredientCount(count);
         return ingredient;
@@ -568,6 +568,47 @@ public final class Mapper {
         }
     }
 
+    public static void updateCountwithDueDate(String name, String dueDate, Double count)
+    {
+        final String itemName = name;
+        final Double minus = count;
+        final String itemDueDate = dueDate;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO foodItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                        userId);
+
+                double count = 0;
+                int index = 0;
+
+                for(int i = 0; i < foodItem.getItem().size(); i++)
+                {
+                    if(foodItem.getItem().get(i).getName().equals(itemName) && foodItem.getItem().get(i).getDueDate().equals(itemDueDate)) {
+                        count = foodItem.getItem().get(i).getCount();
+                        index = i;
+                        break;
+                    }
+                }
+                count = count - minus;
+                foodItem.getItem().get(index).setCount(count);
+
+                if(foodItem.getItem().get(index).getCount() == 0)
+                    foodItem.getItem().remove(index);
+
+                Mapper.getDynamoDBMapper().save(foodItem, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES));
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void updateCount(String name, Double count)
     {
         final String itemName = name;
@@ -812,7 +853,7 @@ public final class Mapper {
             food.setDueDate(dueDate);
             food.setCount(count);
 
-        Log.e("getName",""+food.getName());
+        Log.e("getFoodname",""+food.getName());
         Log.e("getSection",""+food.getSection());
         Log.e("getDueDate",""+food.getDueDate());
         Log.e("getCount",""+food.getCount());
@@ -829,7 +870,7 @@ public final class Mapper {
         food.setDueDate(dueDate);
         food.setCount(count);
 
-        Log.e("getName",""+food.getName());
+        Log.e("getFoodname",""+food.getName());
         Log.e("getSection",""+food.getSection());
         Log.e("getDueDate",""+food.getDueDate());
         Log.e("getCount",""+food.getCount());
