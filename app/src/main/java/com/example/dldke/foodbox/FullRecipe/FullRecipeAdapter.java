@@ -32,19 +32,14 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
 
     public class FullRecipeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener { // 1. 리스너 추가
 
-        protected TextView Method;
-        protected TextView Mintue;
-        protected TextView Fire;
+        protected TextView StepDetail;
         protected ImageView StepImage;
 
 
         public FullRecipeViewHolder(View view) {
             super(view);
-            this.Method = (TextView) view.findViewById(R.id.textview_recyclerview_method);
-            this.Mintue = (TextView) view.findViewById(R.id.textview_recyclerview_mintue);
-            this.Fire = (TextView) view.findViewById(R.id.textview_recyclerview_fire);
+            this.StepDetail = (TextView) view.findViewById(R.id.full_recipe_step_detail);
             this.StepImage = (ImageView) view.findViewById(R.id.imgview_foodimg);
-
             view.setOnCreateContextMenuListener(this); //2. 리스너 등록
         }
 
@@ -69,7 +64,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                         View view = LayoutInflater.from(mContext)
-                                .inflate(R.layout.fullrecipe_popup, null, false);
+                                .inflate(R.layout.fullrecipe_step_popup, null, false);
                         builder.setView(view);
                         final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
                         final Spinner MethodSpinner = (Spinner) view.findViewById(R.id.method_spinner);
@@ -143,7 +138,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     public FullRecipeViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.fullrecipe_item_list, viewGroup, false);
+                .inflate(R.layout.fullrecipe_step_list_item, viewGroup, false);
 
         FullRecipeViewHolder viewHolder = new FullRecipeViewHolder(view);
 
@@ -153,17 +148,9 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     @Override
     public void onBindViewHolder(@NonNull FullRecipeViewHolder viewholder, int position) {
 
-        viewholder.Method.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        viewholder.Mintue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        viewholder.Fire.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-
-        viewholder.Method.setGravity(Gravity.CENTER);
-        viewholder.Mintue.setGravity(Gravity.CENTER);
-        viewholder.Fire.setGravity(Gravity.CENTER);
-
-        viewholder.Method.setText(mList.get(position).getMethod());
-        viewholder.Mintue.setText(mList.get(position).getMinute());
-        viewholder.Fire.setText(mList.get(position).getFire());
+        viewholder.StepDetail.setText(mList.get(position).getStepDescription());
+        viewholder.StepDetail.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        viewholder.StepDetail.setGravity(Gravity.CENTER);
 
     }
 

@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
@@ -30,7 +29,6 @@ import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
-import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.io.IOException;
@@ -45,6 +43,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     static Spinner spinner;
 
     static ArrayList<FullRecipeData> mArrayList;
+    String testStr = "";
+
     private static FullRecipeAdapter mAdapter;
     private static RecyclerView fullrecipeRecyclerView, recipe_ingredient_view;
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
@@ -114,7 +114,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
 
 
-
         /*
         선택된 재료 보여주기
          */
@@ -126,7 +125,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         data = Mapper.searchRecipe(recipeId).getIngredient();
         recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
         recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
-
 
 
 
@@ -142,25 +140,32 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 AlertDialog.Builder builder = new AlertDialog.Builder(FullRecipeActivity.this);
                 builder.setTitle("레시피를 작성하세요");
 
-                //다이얼로그 안에 체크박스 만들기
                 final List<String> specItems = new ArrayList<>();
+                final List<String> tempItems = new ArrayList<>();
+                //다이얼로그 안에 체크박스 만들기
                 for(int i = 0; i<data.size(); i++){
                     specItems.add(data.get(i).getIngredientName());
                 }
-                final CharSequence[] items =  specItems.toArray(new String[specItems.size()]);
+                final CharSequence[] items =  specItems.toArray(new String[specItems.size()]);  //체크박스 만들기
                 final List SelectedItems  = new ArrayList();
-
 
                 builder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
                         //선택된 재료 저장
-                        if(isChecked) SelectedItems.add(i);
+
+                        if(isChecked) {
+                            SelectedItems.add(i);
+                            tempItems.add(specItems.get(i));//레시피 단계 작성후에 text로 보여지는 재료 이걸로 쓰자
+
+                            Log.e(TAG, "재료 이름 가져와 "+tempItems);
+                        }
+
                     }
                 });
 
                 //다이얼로그 안에 스피너 만들기
-                View view = LayoutInflater.from(FullRecipeActivity.this).inflate(R.layout.fullrecipe_popup, null, false);
+                View view = LayoutInflater.from(FullRecipeActivity.this).inflate(R.layout.fullrecipe_step_popup, null, false);
                 builder.setView(view);
 
                 final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
@@ -184,38 +189,51 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 fire_sp.setAdapter(fireadapter);
 
 
-                //레시피 작성후 화면과 데이터베이스에 삽입
+                //FullRecipe Detail 작성 후, 화면과 데이터베이스에 삽입
                 ButtonSubmit.setText("삽입");
                 final AlertDialog dialog = builder.create();
                 ButtonSubmit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
+                        String step_descriptoin="";
+
                         for(int num = 0; num<SelectedItems.size(); num++){
                             specIngredientList.add(Mapper.searchRecipe(recipeId).getIngredient().get(num));
                             Log.e(TAG, ""+Mapper.searchRecipe(recipeId).getIngredient().get(num));
                         }
+
+                        for(int num = 0; num < SelectedItems.size(); num++){
+                            int index = (int)SelectedItems.get(num);
+                            Log.e(TAG, "SelectedItems이다다"+SelectedItems.get(num).toString());
+                            testStr = testStr.concat(tempItems.get(num));
+                            Log.e(TAG, "하나씩 붙어라"+testStr);
+                        }
+
+
                         String method = method_sp.getSelectedItem().toString();
                         String minute = minute_sp.getSelectedItem().toString();
                         Integer minuteInt = Integer.parseInt(minute);
                         String fire = fire_sp.getSelectedItem().toString();
 
-                        FullRecipeData dict = new FullRecipeData(method, minute, fire);
+                        //FullRecipeData dict = new FullRecipeData(method, minute, fire);
+                        step_descriptoin = testStr+" 을/를 "+minute+" 분 동안"+method+" (불 세기: "+fire+" )";
+                        FullRecipeData dict = new FullRecipeData(step_descriptoin);
 
                         //mArrayList.add(0, dict); //첫 줄에 삽입
                         mArrayList.add(dict); //마지막 줄에 삽입
                         mAdapter.notifyDataSetChanged(); //변경된 데이터를 화면에 반영
 
-                        //풀레시피에 단계별 레시피 등록
+                        //FullRecipe step DB 저장
                         RecipeDO.Spec spec = Mapper.createSpec(specIngredientList, method, fire, minuteInt);
                         specList.add(spec);
-                        Log.d(TAG, "방법 : " + method + "불 세기 : " + fire + "시간 : " + minuteInt);
+                        Log.d(TAG, ""+step_descriptoin);
 
+                        specIngredientList.clear();
+                        testStr = "";
                         dialog.dismiss();
                     }
                 });
 
-                //저장된 리스트 지우기
-                SelectedItems.remove(SelectedItems);
 
                 ButtonCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -223,6 +241,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                         dialog.dismiss();
                     }
                 });
+
 
                 dialog.show();
             }

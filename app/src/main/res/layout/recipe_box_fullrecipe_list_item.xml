@@ -21,7 +21,7 @@
             android:src="@drawable/strawberry" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/full_recipe_title"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -30,14 +30,6 @@
             android:textColor="@android:color/black"
             android:textSize="18dp"
             android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/recipe_into"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
-            android:text="자세히 보기" />
 
     </LinearLayout>
 

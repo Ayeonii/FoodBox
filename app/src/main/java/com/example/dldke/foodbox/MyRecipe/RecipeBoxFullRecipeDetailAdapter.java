@@ -44,7 +44,7 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int position){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipebox_fullrecipe_detail_card_layout, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_box_fullrecipe_detail_card_layout, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
 
         AddStep(specList);

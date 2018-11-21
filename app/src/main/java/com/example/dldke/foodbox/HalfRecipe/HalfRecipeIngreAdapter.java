@@ -26,7 +26,7 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.halfrecipe_ingre_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.halfrecipe_ingredient_item, parent, false);
         return new ItemViewHolder(view);
     }
 
