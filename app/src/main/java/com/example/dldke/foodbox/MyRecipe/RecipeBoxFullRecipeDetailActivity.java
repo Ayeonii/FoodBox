@@ -81,6 +81,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
                 Mapper.createPost(" "+title, recipe_id);
 
                 Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity.class);
+                MyRecipeBoxActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(MyRecipeBoxActivity);
             }
         });
