@@ -114,7 +114,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
 
 
-
         /*
         선택된 재료 보여주기
          */
@@ -126,7 +125,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         data = Mapper.searchRecipe(recipeId).getIngredient();
         recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
         recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
-
 
 
 
@@ -191,11 +189,13 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 fire_sp.setAdapter(fireadapter);
 
 
-                //레시피 작성후, 화면과 데이터베이스에 삽입
+                //FullRecipe Detail 작성 후, 화면과 데이터베이스에 삽입
                 ButtonSubmit.setText("삽입");
                 final AlertDialog dialog = builder.create();
                 ButtonSubmit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+
+                        String step_descriptoin="";
 
                         for(int num = 0; num<SelectedItems.size(); num++){
                             specIngredientList.add(Mapper.searchRecipe(recipeId).getIngredient().get(num));
@@ -210,23 +210,23 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                         }
 
 
-                        //Log.e(TAG, "선택된 재료들 모음이야"+testStr);
-
                         String method = method_sp.getSelectedItem().toString();
                         String minute = minute_sp.getSelectedItem().toString();
                         Integer minuteInt = Integer.parseInt(minute);
                         String fire = fire_sp.getSelectedItem().toString();
 
-                        FullRecipeData dict = new FullRecipeData(method, minute, fire);
+                        //FullRecipeData dict = new FullRecipeData(method, minute, fire);
+                        step_descriptoin = testStr+" 을/를 "+minute+" 분 동안"+method+" (불 세기: "+fire+" )";
+                        FullRecipeData dict = new FullRecipeData(step_descriptoin);
 
                         //mArrayList.add(0, dict); //첫 줄에 삽입
                         mArrayList.add(dict); //마지막 줄에 삽입
                         mAdapter.notifyDataSetChanged(); //변경된 데이터를 화면에 반영
 
-                        //풀레시피에 단계별 레시피 등록
+                        //FullRecipe step DB 저장
                         RecipeDO.Spec spec = Mapper.createSpec(specIngredientList, method, fire, minuteInt);
                         specList.add(spec);
-                        Log.d(TAG, "방법 : " + method + "불 세기 : " + fire + "시간 : " + minuteInt);
+                        Log.d(TAG, ""+step_descriptoin);
 
                         specIngredientList.clear();
                         testStr = "";
