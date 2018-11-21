@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.HalfRecipe.DCItem;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
