@@ -77,7 +77,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "예를 선택했습니다.", Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), edittext.getText().toString(), Toast.LENGTH_SHORT).show();
                 String title = edittext.getText().toString();
-                Mapper.createPost(title, recipe_id);
+                Mapper.createPost(" "+title, recipe_id);
             }
         });
         builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {

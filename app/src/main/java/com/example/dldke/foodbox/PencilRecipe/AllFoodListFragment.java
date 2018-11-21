@@ -46,6 +46,13 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pencilrecipe_fragment_all, container, false);
 
+
+        //default 이미지 다운
+        File defaultFile = new File("/storage/emulated/0/Download/" + "default" + ".jpg");
+        if (!defaultFile.exists()) {
+            Mapper.downLoadImage("default", "/storage/emulated/0/Download/", "sideDish");
+        }
+        
         if(pencil.getEnterTime() == 0) {
             freshList = getInfoDOList("fresh");
             meatList = getInfoDOList("meat");
@@ -54,6 +61,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
             makeFoodList(freshList, "fresh");
             makeFoodList(meatList,"meat");
             makeFoodList(etcList,"etc");
+
             pencil.setEnterTime(1);
         }
         Context context = view.getContext();
@@ -79,8 +87,6 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
                 File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
                 if (!file.exists()) {
-                    Log.e("들어옴", "" + file.getAbsolutePath());
-                    //이미지 저장.
                     Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/", section);
                 }
             }

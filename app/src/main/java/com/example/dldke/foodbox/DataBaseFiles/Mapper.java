@@ -30,6 +30,7 @@ import java.util.List;
 
 public final class Mapper {
     private static CurrentDate currentDate = new CurrentDate();
+    private static boolean isFavorite = false;
     private static DynamoDBMapper dynamoDBMapper;
     private static String userId;
     private static String bucketName;
@@ -393,7 +394,6 @@ public final class Mapper {
             List<InfoDO> itemList;
             @Override
             public void run() {
-
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(sectionName));
                 scanExpression.addFilterCondition("section", condition);
@@ -657,7 +657,7 @@ public final class Mapper {
         }
     }
 
-    public static void matchFavorite(String postId) {
+    public static boolean matchFavorite(String postId) {
         final String post_Id = postId;
 
         Thread thread = new Thread(new Runnable() {
@@ -670,8 +670,11 @@ public final class Mapper {
                 for(int i =0; i < communityItem.getFavorites().size(); i++)
                 {
                     if(communityItem.getFavorites().get(i).equals(post_Id)) {
-                        boolean isFavorite = true;
+                        isFavorite = true;
                         break;
+                    }
+                    else{
+                        isFavorite = false;
                     }
                 }
 
@@ -894,17 +897,52 @@ public final class Mapper {
 
         return postItem;
     }
+/*
+    public static List<InfoDO> scanSection(String section) {
+        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
+
+        final String sectionName = section;
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            List<InfoDO> itemList;
+            @Override
+            public void run() {
+                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(sectionName));
+                scanExpression.addFilterCondition("section", condition);
+                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
+            }
+            @Override
+            public Object getResult(){
+                return itemList;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
+        return itemList;
+    }
+    */
+
 
     public static List<com.example.dldke.foodbox.DataBaseFiles.PostDO> scanPost() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
 
             List<com.example.dldke.foodbox.DataBaseFiles.PostDO> post;
+
             @Override
             public void run() {
+
+
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(""));
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(" "));
                 scanExpression.addFilterCondition("title", condition);
-                post = Mapper.getDynamoDBMapper().scan(com.example.dldke.foodbox.DataBaseFiles.PostDO.class, scanExpression);
+                post = Mapper.getDynamoDBMapper().scan(PostDO.class, scanExpression);
             }
 
             @Override
