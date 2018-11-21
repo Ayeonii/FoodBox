@@ -24,9 +24,10 @@
             android:id="@+id/fullrecipe_detail_stepdescrip"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="7"
             android:layout_gravity="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:layout_weight="7"
+            android:paddingTop="40dp" />
 
     </LinearLayout>
 

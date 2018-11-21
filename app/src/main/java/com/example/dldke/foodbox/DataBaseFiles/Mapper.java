@@ -163,6 +163,7 @@ public final class Mapper {
         return recipeItem;
     }
 
+
     public static void createFullRecipe(String recipeId, String name, List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> spec)
     {
         final String ID = recipeId;
@@ -269,7 +270,6 @@ public final class Mapper {
 
     public static void attachRecipeImage(String recipeId, final String filePath){
         final String recipe_id = recipeId;
-        final String[] key = filePath.split("/");
         Thread thread = new Thread(new Runnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
