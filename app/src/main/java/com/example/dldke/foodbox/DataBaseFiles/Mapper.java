@@ -333,7 +333,7 @@ public final class Mapper {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a");
                 String dateS = sdf.format(date).toString();
 
-                postItem.setPostId(userId + dateS);
+                postItem.setPostId(dateS + userId);
                 postItem.setDate(dateS);
                 postItem.setWriter(userId);
                 postItem.setTitle(post_title);
@@ -1036,6 +1036,78 @@ public final class Mapper {
         List<RecipeDO.Ingredient> urgentList = (List<RecipeDO.Ingredient>)thread.getResult();
 
         return urgentList;
+    }
+
+    public static void appendToBuyMemo(final List<RecipeDO.Ingredient> inputList) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                        userId);
+
+                List<RecipeDO.Ingredient> toBuy = inputList;
+                memoItem.setTobuy(toBuy);
+                Mapper.getDynamoDBMapper().save(memoItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateToBuyMemo(){
+        List<RecipeDO.Ingredient> toBuyMemo = scanToBuyMemo();
+        List<RefrigeratorDO.Item> myRefri = scanRefri();
+
+        int toBuyNum = toBuyMemo.size();
+        int refriNum = myRefri.size();
+
+        for(int i = 0; i < toBuyNum; i++)
+        {
+            for(int j = 0; j < refriNum; j++)
+            {
+                if(myRefri.get(j).getName() == toBuyMemo.get(i).getIngredientName())
+                    toBuyMemo.get(i).setIngredientCount(toBuyMemo.get(i).getIngredientCount() - myRefri.get(j).getCount());
+            }
+        }
+
+        for(int k = 0; k < toBuyNum; k++)
+        {
+            if(toBuyMemo.get(k).getIngredientCount() <= 0)
+                toBuyMemo.remove(k);
+        }
+    }
+
+    public static List<RecipeDO.Ingredient> scanToBuyMemo() {
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
+            final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
+                    com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                    userId);
+
+            List<RecipeDO.Ingredient> toBuy;
+            @Override
+            public void run() {
+                toBuy = memoItem.getTobuy();
+            }
+
+            @Override
+            public Object getResult(){
+                return toBuy;
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<RecipeDO.Ingredient> toBuyList = (List<RecipeDO.Ingredient>)thread.getResult();
+
+        return toBuyList;
     }
 
     private class PoolConfig{
