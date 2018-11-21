@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.dldke.foodbox.R;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
 
     private TextView txtEmpty, txtBack, txtBackEmpty, txtComplete;
+    private EditText editRecipeName;
     private LinearLayout linearLayout1, linearLayout2;
     private RecyclerView recyclerView;
 
@@ -47,6 +49,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         txtBack = (TextView) findViewById(R.id.txt_back);
         txtBackEmpty = (TextView) findViewById(R.id.txt_back_empty);
         txtComplete = (TextView) findViewById(R.id.txt_complete);
+        editRecipeName = (EditText) findViewById(R.id.recipe_name_edit);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayout1 = (LinearLayout) findViewById(R.id.layout1);
         linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
@@ -118,10 +121,12 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                     }
                 }
 
+                String simpleName = editRecipeName.getText().toString();
+
                 // result = 1 : 유통기한이 여러개인게 없거나 있어도 보유개수 모두 사용했을때
                 // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
                 //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
-                dialogListener.onCompleteClicked(result, mItems, dueDateCheckArray);
+                dialogListener.onCompleteClicked(result, simpleName, mItems, dueDateCheckArray);
                 dismiss();
                 break;
         }

@@ -40,6 +40,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private HalfRecipeDueDateDialog dueDateDialog;
 
     private String user_id;
+    private String recipeSimpleName;
 
 
     @Override
@@ -292,7 +293,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             }
 
             @Override
-            public void onCompleteClicked(int result, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
+            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
 
             }
 
@@ -463,6 +464,8 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         for (int i = 0; i < mItems.size(); i++) {
             recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
         }
+//*한솔이수정
+//        String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeName);
         String recipe_id = Mapper.createRecipe(recipeIngredientList);
         Log.d("test", recipe_id);
 
@@ -483,8 +486,10 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             }
 
             @Override
-            public void onCompleteClicked(int result, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
+            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
                 Log.d("test", "result : " + result);
+                recipeSimpleName = recipeName;
+
                 if (result == 1) {
                     goHalfRecipeMaking(mItems, dueDateCheckArray);
                 } else if (result == 2) {
@@ -509,7 +514,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             }
 
             @Override
-            public void onCompleteClicked(int result, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
+            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
 
             }
 
