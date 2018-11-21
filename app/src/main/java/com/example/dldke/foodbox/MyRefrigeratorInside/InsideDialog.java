@@ -115,7 +115,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                 new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
-                        // 해당 name을 localArray에서 다 찾아서 유통기한/개수 배열 만들어서 보내기
                         ArrayList<DCItem> dcArray = new ArrayList<>();
                         for (int i=0; i<localArray.size(); i++) {
                             if (localArray.get(i).getName().equals(nameArray.get(position))) {

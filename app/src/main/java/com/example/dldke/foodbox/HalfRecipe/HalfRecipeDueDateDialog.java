@@ -2,7 +2,6 @@ package com.example.dldke.foodbox.HalfRecipe;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
@@ -27,11 +25,6 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
     private ArrayList<HalfRecipeDueDateItem> mItems = new ArrayList<>();
     private HalfRecipeDialogListener dialogListener;
     private ArrayList<String> dupliArray = new ArrayList<>();
-
-    public HalfRecipeDueDateDialog(@NonNull Context context) {
-        super(context);
-        this.context = context;
-    }
 
     public HalfRecipeDueDateDialog(@NonNull Context context, ArrayList<String> dupliArray) {
         super(context);
@@ -86,9 +79,6 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
                 cancel();
                 break;
             case R.id.txt_ok:
-                for (int i=0; i<mItems.size(); i++) {
-                    Log.d("test", "name : " + mItems.get(i).getName() + ", which : " + mItems.get(i).getWhich());
-                }
                 dialogListener.onDueDateOKClicked(mItems);
                 //dismiss();
                 break;

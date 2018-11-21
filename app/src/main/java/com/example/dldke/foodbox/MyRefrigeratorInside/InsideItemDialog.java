@@ -24,7 +24,6 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
 
     private RecyclerView.Adapter adapter;
     private ArrayList<DCItem> dcArray = new ArrayList<>();
-    //private ArrayList<DCItem> mItems = new ArrayList<>();
 
     public InsideItemDialog(@NonNull Context context, String name, ArrayList<DCItem> dcArray) {
         super(context);
@@ -55,19 +54,7 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
-
-        //setData();
     }
-
-//    private void setData() {
-//        mItems.clear();
-//
-//        for (int i = 0; i < dcArray.size(); i++) {
-//            mItems.add(new DCItem(dcArray.get(i).getStrDueDate(), dcArray.get(i).getCount()));
-//        }
-//
-//        adapter.notifyDataSetChanged();
-//    }
 
     @Override
     public void onClick(View view) {

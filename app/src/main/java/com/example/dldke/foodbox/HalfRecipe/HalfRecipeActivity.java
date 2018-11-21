@@ -66,12 +66,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         setDuplicateArray();
         setCheckArray();
 
-        Log.d("test", "dupliArray start========");
-        for (int i = 0; i < dupliArray.size(); i++) {
-            Log.d("test", dupliArray.get(i));
-        }
-        Log.d("test", "dupliArray end==========");
-
         try {
             user_id = Mapper.searchMyCommunity().getUserId();
         } catch (NullPointerException e) {
@@ -246,11 +240,9 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_sidedish:
-                Log.d("test", "======sideDish======");
                 showIngredientDialog(nameSideDish, checkSideDish, "sideDish");
                 break;
             case R.id.btn_dairy:
-                Log.d("test", "======dairy======");
                 showIngredientDialog(nameDairy, checkDairy, "dairy");
                 break;
             case R.id.btn_etc:
@@ -258,22 +250,13 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 showIngredientDialog(nameEtc, checkEtc, "etc");
                 break;
             case R.id.btn_meat:
-                Log.d("test", "======meat======");
                 showIngredientDialog(nameMeat, checkMeat, "meat");
                 break;
             case R.id.btn_fresh:
-                Log.d("test", "======fresh======");
                 showIngredientDialog(nameFresh, checkFresh, "fresh");
                 break;
             case R.id.floatingButtonRecipe:
                 setSelectedItem();
-
-                Log.d("test", "selectedItem start========");
-                for (int i = 0; i < selectedItem.size(); i++) {
-                    Log.d("test", "selected name : " + selectedItem.get(i).getName() + ", total count : " + selectedItem.get(i).getCount());
-                }
-                Log.d("test", "selectedItem end==========");
-
                 showRecipeDialog();
 
                 break;
@@ -441,7 +424,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
-                Log.d("test", "result : " + result);
                 recipeSimpleName = recipeName;
 
                 if (result == 1) {
@@ -482,10 +464,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     }
                 }
 
-                for (int i = 0; i < radioCheckItems.size(); i++) {
-                    Log.d("test", radioCheckItems.get(i).getName() + ", " + radioCheckItems.get(i).getWhich() + ", " + radioCheckItems.get(i).getEditCount());
-                }
-
                 boolean result = updateCountByDueDate(radioCheckItems);
                 if (result)
                     goHalfRecipeMaking(selectedItems, dueDateCheckArray);
@@ -497,9 +475,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     }
 
     private boolean updateCountByDueDate(ArrayList<HalfRecipeDueDateItem> radioCheckItems) {
-        // i name   which editCount
-        // 0 감자   0     4.0
-        // 1 토마토 1     1.0
+
         for (int i = 0; i < radioCheckItems.size(); i++) {
 
             // 1. 해당 이름의 유통기한과 보유개수 가져오기 배열로
@@ -515,20 +491,17 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
             // 2. 유통기한 기준 정렬 which = 0 이면 오름차순 1 이면 내림차순
             switch (radioCheckItems.get(i).getWhich()) {
-                case 0: //오름차순 AscendingSort()
+                case 0: //오름차순
                     Collections.sort(dcArray, new AscendingSort());
                     break;
-                case 1: //내림차순 DescendingSort()
+                case 1: //내림차순
                     Collections.sort(dcArray, new DescendingSort());
                     break;
             }
 
-            // 계산하고 아마도 바로 updatecount
+            // 계산하고 바로 updatecount
             Double editCount = radioCheckItems.get(i).getEditCount();
-            Log.d("test", "sort start =====================");
             for (int k = 0; k < dcArray.size(); k++) {
-                Log.d("test", dcArray.get(k).getDueDate() + ", " + dcArray.get(k).getCount());
-
                 if (editCount - dcArray.get(k).getCount() < 0) {
                     Mapper.updateCountwithDueDate(radioCheckItems.get(i).getName(), Integer.toString(dcArray.get(k).getDueDate()), editCount);
                     break;
@@ -537,25 +510,15 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     Mapper.updateCountwithDueDate(radioCheckItems.get(i).getName(), Integer.toString(dcArray.get(k).getDueDate()), dcArray.get(k).getCount());
                 }
             }
-            Log.d("test", "sort end =====================");
 
         }
-        // 그리고 나머지 재료에 대해서 goHalfRecipeMaking
-        // 하면 끝~!!!!!!!!
-
 
         return true;
     }
 
     private void goHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
-        Log.d("test", "mItems start==================");
-        for (int i = 0; i < mItems.size(); i++) {
-            Log.d("test", mItems.get(i).getName() + ", " + mItems.get(i).getCount() + ", " + mItems.get(i).getEditCount());
-        }
-        Log.d("test", "mItems end==================");
 
         if (dueDateCheckArray.size() == 0) {
-            //refrigerator 테이블 접근 (재료 소진)
             for (int i = 0; i < mItems.size(); i++) {
                 Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
             }
@@ -574,7 +537,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             }
         }
 
-
         //recipe 테이블 접근
         List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
         for (int i = 0; i < mItems.size(); i++) {
@@ -584,7 +546,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
         Log.d("test", recipe_id);
 
-        //myCommunity 테이블 접근
         Mapper.addRecipeInMyCommunity(recipe_id);
 
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);

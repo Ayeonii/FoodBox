@@ -20,7 +20,6 @@ import java.util.ArrayList;
 public class HalfRecipeDueDateAdapter extends RecyclerView.Adapter<HalfRecipeDueDateAdapter.ItemViewHolder> {
 
     private ArrayList<HalfRecipeDueDateItem> mItems;
-    private ArrayList<HalfRecipeDueDateItem> resultArray;
 
     public HalfRecipeDueDateAdapter(ArrayList<HalfRecipeDueDateItem> mItems) {
         this.mItems = mItems;
