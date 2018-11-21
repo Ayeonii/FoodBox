@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.MyRecipe;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,22 @@ import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<RecipeBoxFullRecipeDetailAdapter.ViewHolder> {
 
     String recipe_id;
-    List<RecipeDO.Spec> specList = Mapper.searchRecipe(recipe_id).getDetail().getSpecList();
-    List<RecipeBoxFullRecipeDetailItem> stepList;
+    List<RecipeDO.Spec> specList;
+    List<RecipeDO.Ingredient> specIngredientList;
+    List<RecipeBoxFullRecipeDetailItem> stepList = new ArrayList<>();
+
+    String TAG = "RecipeBoxFullRecipeDetail";
 
     public RecipeBoxFullRecipeDetailAdapter(String recipeId){
         this.recipe_id = recipeId;
+        specList = Mapper.searchRecipe(recipe_id).getDetail().getSpecList();
+        Log.e(TAG, ""+recipe_id);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -37,7 +44,7 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int position){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipebox_fullrecipe_detail_content_main, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_box_fullrecipe_detail_card_layout, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
 
         AddStep(specList);
@@ -58,8 +65,18 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     }
 
     public void AddStep(List<RecipeDO.Spec> specList){
+
         for(int i = 0; i<specList.size(); i++){
-            String descrip = "'"+specList.get(i).getSpecIngredient()+"'"+" 을/를 "+specList.get(i).getSpecMethod()+" "+specList.get(i).getSpecMinute()+" 동안 "+"불 세기는"+specList.get(i).getSpecFire();
+            String result = "";
+            specIngredientList = specList.get(i).getSpecIngredient();
+            for(int j = 0; j<specIngredientList.size(); j++){
+                String specingredientName = specIngredientList.get(j).getIngredientName();
+                Log.e(TAG, "재료"+i+"  "+specingredientName);
+                result = result.concat(specingredientName);
+            }
+            int number = i+1;
+            String descrip = number+". "+result+" 을/를 "+specList.get(i).getSpecMethod()+" "+specList.get(i).getSpecMinute()+"분 동안 "+"불 세기는 "+specList.get(i).getSpecFire();
+            Log.e(TAG, "레시피 설명  : "+descrip);
             stepList.add(new RecipeBoxFullRecipeDetailItem(R.drawable.strawberry, descrip));
         }
     }

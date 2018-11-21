@@ -40,17 +40,25 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
      }
 
      public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_detail_item, parent, false);
+         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_box_halfrecipe_detail_item, parent, false);
          AddIngredient(items);
          return new ViewHolder(v);
      }
 
      public void onBindViewHolder(ViewHolder holder, int position){
-            holder.ingredientImage.setImageURI(recipeItems.get(position).getImage());
-            holder.ingredientName.setText(recipeItems.get(position).getName());
-            Double count = recipeItems.get(position).getCount();
-            String strCount = Double.toString(count);
-            holder.ingredientCount.setText(strCount);
+        String foodName = recipeItems.get(position).getName();
+        String imgUri =  "file:///storage/emulated/0/Download/"+foodName+".jpg";
+            holder.ingredientImage.setImageURI(Uri.parse(imgUri));
+            holder.ingredientName.setText(foodName);
+            double count = recipeItems.get(position).getCount();
+
+            if((count % 1)>0 ){
+                holder.ingredientCount.setText(count+"개");
+            }
+            else{
+                holder.ingredientCount.setText((int)count+"개");
+            }
+
      }
 
      public int getItemCount(){

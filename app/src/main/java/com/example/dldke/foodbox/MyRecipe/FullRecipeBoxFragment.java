@@ -11,10 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxAdapter;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class FullRecipeBoxFragment extends Fragment {
 
 
     private RecyclerView recyclerview;
-    private RecyclerView.Adapter adapter;
+    private MyRecipeBoxFullRecipeAdapter adapter;
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
 
     private String TAG="FullRecipeBox";
@@ -32,12 +30,11 @@ public class FullRecipeBoxFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_full_recipe_box, container, false);
+        View view = inflater.inflate(R.layout.recipe_box_fragment_fullrecipe, container, false);
 
         recyclerview = (RecyclerView)view.findViewById(R.id.recycler_view);
         recyclerview.setHasFixedSize(true);
-        adapter = new RecipeBoxAdapter(data);
-
+        adapter = new MyRecipeBoxFullRecipeAdapter(data);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerview.setLayoutManager(layoutManager);
         recyclerview.setItemAnimator(new DefaultItemAnimator());
@@ -51,17 +48,20 @@ public class FullRecipeBoxFragment extends Fragment {
         prepareData();
     }
 
+    //Detail이 없으면 간이레시피, Detail이 있으면 풀레시피 fragment로 보여지기 위한 작업
     private void prepareData(){
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
         for(int i =0 ; i<myrecipe.size(); i++){
             try{
                 String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
-                data.add(new RecipeBoxData(foodname, R.drawable.strawberry, myrecipe.get(i)));
-                Log.e(TAG, "레시피 이름"+foodname);
+                String recipeId = myrecipe.get(i);
+                data.add(new RecipeBoxData(foodname, R.drawable.strawberry, recipeId));
+                String insertfoodname = data.get(i).getName();
+                Log.e(TAG, "레시피 이름: "+insertfoodname+"  레시피 아이디: "+recipeId);
 
             }catch(NullPointerException e){
-                Log.d(TAG,"음식이름이 없습니다.");
+
             }
         }
     }

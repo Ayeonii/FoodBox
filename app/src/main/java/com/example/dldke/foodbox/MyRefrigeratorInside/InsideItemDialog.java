@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
-import com.example.dldke.foodbox.MyRefrigeratorInside.InsideDialogListener;
 import com.example.dldke.foodbox.R;
 
 public class InsideItemDialog extends Dialog implements View.OnClickListener {
@@ -45,7 +44,7 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.inside_item_dialog);
+        setContentView(R.layout.refrigeratorinside_item_dialog);
 
         txtName = (TextView) findViewById(R.id.txt_name);
         txtCount = (TextView) findViewById(R.id.txt_count);

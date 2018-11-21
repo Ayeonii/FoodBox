@@ -30,7 +30,7 @@ public class EtcListFragment extends android.support.v4.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_etc_ingredients, container, false);
+        View view = inflater.inflate(R.layout.pencilrecipe_fragment_etc, container, false);
         foodName = allFoodListFragment.getEtcList();
         Context context = view.getContext();
         recyclerView = (RecyclerView)view.findViewById(R.id.etcRecycler);

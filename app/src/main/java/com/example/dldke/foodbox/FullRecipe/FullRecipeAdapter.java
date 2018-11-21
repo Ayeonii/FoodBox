@@ -69,7 +69,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                         View view = LayoutInflater.from(mContext)
-                                .inflate(R.layout.fullrecipe_popup, null, false);
+                                .inflate(R.layout.fullrecipe_step_popup, null, false);
                         builder.setView(view);
                         final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
                         final Spinner MethodSpinner = (Spinner) view.findViewById(R.id.method_spinner);
@@ -143,7 +143,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     public FullRecipeViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.fullrecipe_item_list, viewGroup, false);
+                .inflate(R.layout.fullrecipe_step_list_item, viewGroup, false);
 
         FullRecipeViewHolder viewHolder = new FullRecipeViewHolder(view);
 

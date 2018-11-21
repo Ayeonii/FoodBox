@@ -53,7 +53,7 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.halfrecipe_ingre_dialog);
+        setContentView(R.layout.halfrecipe_ingredient_dialog);
 
         Log.d("test", "dialog onCreate");
 

@@ -30,7 +30,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     // 새로운 뷰 홀더 생성
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pencilrecipe_cart_list,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pencilrecipe_list_cart,parent,false);
         context = parent.getContext();
         return new ItemViewHolder(view);
     }

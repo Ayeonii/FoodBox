@@ -41,7 +41,7 @@ public class CartPopupDialog {
         RecyclerView.Adapter adapter;
         final Dialog dlg = new Dialog(context);
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dlg.setContentView(R.layout.custom_dialog_cartpopup);
+        dlg.setContentView(R.layout.pencilrecipe_dialog_cart);
         dlg.show();
 
         final RecyclerView cart_list_view = (RecyclerView) dlg.findViewById(R.id.cart_recycler);
