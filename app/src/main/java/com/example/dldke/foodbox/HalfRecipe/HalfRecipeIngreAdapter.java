@@ -17,10 +17,12 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
 
     ArrayList<HalfRecipeIngreItem> mItems;
     Boolean[] checkIngre = new Boolean[50];
+    String ingreType;
 
-    public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems, int arraySize, Boolean[] check) {
+    public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems, int arraySize, Boolean[] check, String ingreType) {
         this.mItems = mItems;
         System.arraycopy(check, 0, this.checkIngre, 0, arraySize);
+        this.ingreType = ingreType;
     }
 
     @NonNull
@@ -33,7 +35,12 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         String foodName = mItems.get(position).getName();
-        String foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+        String foodImgUri;
+        if (ingreType.equals("sideDish")) {
+            foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
+        } else {
+            foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+        }
         holder.mNameTv.setText(foodName);
         holder.food_Img.setImageURI(Uri.parse(foodImgUri));
 
@@ -61,5 +68,4 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
         }
     }
 }
-
 
