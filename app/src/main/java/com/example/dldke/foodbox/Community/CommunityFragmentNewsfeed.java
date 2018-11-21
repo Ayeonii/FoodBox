@@ -41,10 +41,7 @@ public class CommunityFragmentNewsfeed extends Fragment {
         adapter = new CommunityRecyclerAdapter(list, context);
         recyclerView.setAdapter(adapter);
 
-
-        Log.e("전","ㅇㅇㅇ");
         postList = Mapper.searchPost("title"," ");
-        Log.e("후","ㅇㅇㅇ");
         setData();
         return view;
     }

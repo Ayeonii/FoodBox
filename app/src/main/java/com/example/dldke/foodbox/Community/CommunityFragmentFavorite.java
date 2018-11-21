@@ -35,6 +35,7 @@ public class CommunityFragmentFavorite extends Fragment {
 
         list.clear();
         Context context = view.getContext();
+
         recyclerView = (RecyclerView) view.findViewById(R.id.favorite_recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));

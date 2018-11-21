@@ -61,8 +61,6 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
                 }
                 else if(!mItems.get(position).getFavorite()){
                     holder.star_btn.setSelected(true);
-                    //중복처리
-                    //추후, postid 비교로 중복확인 해야함.
                     Mapper.addFavoriteInMyCommunity(mItems.get(position).getPostId());
                 }
             }
