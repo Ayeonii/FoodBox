@@ -8,99 +8,65 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/txt_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:paddingLeft="24dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="재료 상세보기"
+        android:text="재료이름"
         android:textColor="#000"
         android:textSize="20sp" />
 
     <LinearLayout
-        android:layout_width="320dp"
-        android:layout_height="320dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:weightSum="3">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/img_food"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                app:civ_border_color="@color/transparent"
-                app:civ_border_width="2dp" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center">
 
             <TextView
-                android:id="@+id/txt_name"
+                android:id="@+id/txt_dueDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="foodname"
-                android:textSize="16sp" />
+                android:text="유통기한"
+                android:textSize="15dp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txt_count"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingRight="24dp"
-                android:paddingBottom="6dp">
+                android:text="개수"
+                android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/txt_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="보유개수 n개"
-                    android:textSize="16sp" />
+        </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/iv_count_edit"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentRight="true"
-                    android:clickable="true"
-                    android:src="@drawable/ic_edit_dot_three" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingRight="24dp">
-
-                <TextView
-                    android:id="@+id/txt_dueDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="유통기한 yyyy-mm-dd"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/iv_dueDate_edit"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentRight="true"
-                    android:clickable="true"
-                    android:src="@drawable/ic_edit_dot_three" />
-            </RelativeLayout>
-        </LinearLayout>
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="320dp"
+        android:layout_height="160dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="16dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -109,15 +75,6 @@
         android:orientation="horizontal"
         android:paddingTop="4dp"
         android:paddingBottom="6dp">
-
-        <ImageView
-            android:id="@+id/iv_delete"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="24dp"
-            android:clickable="true"
-            android:src="@drawable/ic_delete_trashcan" />
 
         <TextView
             android:id="@+id/txt_ok"
