@@ -55,11 +55,11 @@ public class FullRecipeBoxFragment extends Fragment {
         for(int i = 0 ; i< myrecipe.size(); i++){
             try{
                 String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
-
+                Log.e(TAG, "레시피 이름 : "+foodname);
                 String recipeId = myrecipe.get(i);
                 data.add(new RecipeBoxData(foodname, R.drawable.strawberry, recipeId));
-                String insertfoodname = data.get(i).getFoodname();
-                Log.e(TAG, "레시피 이름: "+insertfoodname+"  레시피 아이디: "+recipeId);
+                //String insertfoodname = data.get(i).getFoodname();
+                //Log.e(TAG, "레시피 이름: "+insertfoodname+"  레시피 아이디: "+recipeId);
 
             }catch(NullPointerException e){
 

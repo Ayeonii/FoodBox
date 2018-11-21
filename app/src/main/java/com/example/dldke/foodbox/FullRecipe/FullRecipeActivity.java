@@ -75,6 +75,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_full_recipe);
 
         foodtitle = (EditText) findViewById(R.id.food_title);
+        String title = Mapper.searchRecipe(recipeId).getSimpleName();
+        foodtitle.setText(title);
 
         /*
             갤러리에서 이미지 가져오기
@@ -197,14 +199,14 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
                         String step_descriptoin="";
 
-                        for(int num = 0; num<SelectedItems.size(); num++){
+                        for(int num = 0; num<tempItems.size(); num++){
                             specIngredientList.add(Mapper.searchRecipe(recipeId).getIngredient().get(num));
-                            Log.e(TAG, ""+Mapper.searchRecipe(recipeId).getIngredient().get(num));
+                            Log.e(TAG, ""+Mapper.searchRecipe(recipeId).getIngredient().get(num).getIngredientName());
                         }
 
-                        for(int num = 0; num < SelectedItems.size(); num++){
+                        for(int num = 0; num < tempItems.size(); num++){
                             int index = (int)SelectedItems.get(num);
-                            Log.e(TAG, "SelectedItems이다다"+SelectedItems.get(num).toString());
+                            Log.e(TAG, "SelectedItems이다다"+tempItems.get(num).toString());
                             testStr = testStr.concat(tempItems.get(num));
                             Log.e(TAG, "하나씩 붙어라"+testStr);
                         }
@@ -247,7 +249,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-
         /*
         풀레시피 작성 완료 시, 데이터에 저장하기
          */
@@ -260,6 +261,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 //Mapper.attachRecipeImage(recipeId, imagePath);
                 //내 커뮤니티에 풀레시피 등록
                 Mapper.addRecipeInMyCommunity(recipeId);
+                Log.e(TAG, "등록된 레시피 이름 : "+FoodTitle+" 등록된 레시피 아이디 : "+recipeId);
                 Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
                 startActivity(RefrigeratorActivity);
             }
