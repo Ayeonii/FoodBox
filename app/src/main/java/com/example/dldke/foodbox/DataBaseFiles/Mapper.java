@@ -716,6 +716,45 @@ public final class Mapper {
         return isFavorite;
     }
 
+    public static List<PostDO> scanFavorite() {
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO myCommunity;
+
+            List<String> favorites;
+            List<PostDO> favoritePosts = new ArrayList<>();
+
+            @Override
+            public void run() {
+                myCommunity = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                        userId);
+                favorites = myCommunity.getFavorites();
+                for(int i = 0; i < favorites.size(); i++)
+                {
+                    Log.e("favorite:::",""+favorites.get(i));
+                    PostDO post = searchPost("postId",favorites.get(i)).get(0);
+
+                    favoritePosts.add(post);
+                }
+            }
+            @Override
+            public Object getResult(){
+                return favoritePosts;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<PostDO> favoriteList = (List<com.example.dldke.foodbox.DataBaseFiles.PostDO>)thread.getResult();
+
+        return favoriteList;
+    }
+
     public static void deleteFavorite(String postId) {
         final String post_Id = postId;
 
@@ -964,8 +1003,6 @@ public final class Mapper {
 
             @Override
             public void run() {
-
-
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(" "));
                 scanExpression.addFilterCondition("title", condition);
