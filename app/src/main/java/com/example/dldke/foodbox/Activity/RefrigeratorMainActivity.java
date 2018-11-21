@@ -177,6 +177,17 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent communityActivity = new Intent(getApplicationContext(), CommunityActivity.class);
                 startActivity(communityActivity);
             }
+            if (isPageOpen) {
+                //fabPlus.setElevation(10);
+                //fabMinus.setElevation(10);
+                menuTransBack.setVisibility(View.GONE);
+                menuPage.setVisibility(View.GONE);
+                listview.setVisibility(View.GONE);
+                isPageOpen = false;
+            }
+            //슬라이드 닫기->열기
+            else
+                isPageOpen = true;
         }
     }
 
