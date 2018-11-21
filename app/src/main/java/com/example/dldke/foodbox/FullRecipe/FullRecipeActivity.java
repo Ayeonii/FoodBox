@@ -261,9 +261,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View v) {
                 String FoodTitle = foodtitle.getText().toString();
                 Mapper.createFullRecipe(recipeId, FoodTitle, specList);
-                //Mapper.attachRecipeImage(recipeId, imagePath);
+                Mapper.attachRecipeImage(recipeId, imagePath);
                 //내 커뮤니티에 풀레시피 등록
-                Mapper.addRecipeInMyCommunity(recipeId);
+                //Mapper.addRecipeInMyCommunity(recipeId);
                 Log.e(TAG, "등록된 레시피 이름 : "+FoodTitle+" 등록된 레시피 아이디 : "+recipeId);
                 Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
                 startActivity(RefrigeratorActivity);
