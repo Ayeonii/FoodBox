@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
-import com.example.dldke.foodbox.MyRefrigeratorInside.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +38,13 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
 
     private ArrayList<LocalRefrigeratorItem> selectedItem = new ArrayList<>();
     private HalfRecipeDialogListener dialogListener;
+    private ArrayList<String> dupliArray = new ArrayList<>();
 
-    public HalfRecipeRecipeDialog(@NonNull Context context, ArrayList arrayList) {
+    public HalfRecipeRecipeDialog(@NonNull Context context, ArrayList arrayList, ArrayList dupliArray) {
         super(context);
         this.context = context;
         this.selectedItem = arrayList;
+        this.dupliArray = dupliArray;
     }
 
     @Override
@@ -93,7 +95,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
 
         for (int i = 0; i < selectedItem.size(); i++) {
             String foodImgUri = "file:///storage/emulated/0/Download/"+selectedItem.get(i).getName()+".jpg";
-            mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount(),  Uri.parse(foodImgUri)));
+            mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount(), Uri.parse(foodImgUri)));
         }
 
         adapter.notifyDataSetChanged();
@@ -119,10 +121,21 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                     //Log.d("test", mItems.get(i).getName() + ", " + mItems.get(i).getCount().toString() +  ", " + mItems.get(i).getEditCount().toString());
                 }
 
-                //refrigerator 테이블 접근 (재료 소진)
-                for(int i=0; i<mItems.size(); i++) {
-                    Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
-                }
+//                    //refrigerator 테이블 접근 (재료 소진)
+//                    for (int i = 0; i < mItems.size(); i++) {
+//                        Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
+//                    }
+//
+//                    //recipe 테이블 접근
+//                    List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+//                    for (int i = 0; i < mItems.size(); i++) {
+//                        recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
+//                    }
+//                    String recipe_id = Mapper.createRecipe(recipeIngredientList);
+//                    Log.d("test", recipe_id);
+//
+//                    //myCommunity 테이블 접근
+//                    Mapper.addRecipeInMyCommunity(recipe_id);
 
                 //recipe 테이블 접근
                 List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();

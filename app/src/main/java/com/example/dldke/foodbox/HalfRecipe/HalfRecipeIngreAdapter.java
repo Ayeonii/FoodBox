@@ -18,10 +18,6 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     ArrayList<HalfRecipeIngreItem> mItems;
     Boolean[] checkIngre = new Boolean[50];
 
-    public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems) {
-        this.mItems = mItems;
-    }
-
     public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems, int arraySize, Boolean[] check) {
         this.mItems = mItems;
         System.arraycopy(check, 0, this.checkIngre, 0, arraySize);
@@ -40,6 +36,7 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
         String foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
         holder.mNameTv.setText(foodName);
         holder.food_Img.setImageURI(Uri.parse(foodImgUri));
+
         if (checkIngre[position])
             holder.ivCheck.setVisibility(View.VISIBLE);
         else
