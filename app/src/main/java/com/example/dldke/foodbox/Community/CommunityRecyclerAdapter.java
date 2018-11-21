@@ -45,12 +45,6 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
         holder.communityFoodTitle.setText(mItems.get(position).getFoodTitle());
         holder.communityFoodName.setText(mItems.get(position).getFoodName());
 
-        if(mItems.get(position).getFavorite()){
-            holder.star_btn.setSelected(true);
-        }
-        else{
-            holder.star_btn.setSelected(false);
-        }
 
         holder.star_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +59,15 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
                 }
             }
         });
+
+        if(mItems.get(position).getFavorite()){
+            holder.star_btn.setSelected(true);
+        }
+        else if(!mItems.get(position).getFavorite()){
+            holder.star_btn.setSelected(false);
+        }
+
+
         /**********************/
         if(mItems.get(position).getCommunity_foodImg() == -1) {
             holder.communityFoodImg.setBackground(context.getResources().getDrawable(R.drawable.splash_background, null));
@@ -76,6 +79,7 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
             holder.communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
         else
             holder.communityProfile.setImageDrawable(context.getResources().getDrawable(mItems.get(position).getCommunity_profile(),null));
+
 
     }
 

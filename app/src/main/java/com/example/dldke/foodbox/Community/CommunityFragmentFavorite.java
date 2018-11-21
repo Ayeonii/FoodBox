@@ -57,7 +57,7 @@ public class CommunityFragmentFavorite extends Fragment {
                     ,Mapper.searchRecipe(favorite_list.get(i).getRecipeId()).getDetail().getFoodName()
                     ,R.drawable.temp_shared_food
                     ,R.drawable.temp_profile1
-                    ,Mapper.matchFavorite(favorite_list.get(i).getPostId())
+                    ,true
                     ,favorite_list.get(i).getPostId()
             ));
         }

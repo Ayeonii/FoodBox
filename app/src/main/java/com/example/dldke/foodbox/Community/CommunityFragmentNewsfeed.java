@@ -71,9 +71,6 @@ public class CommunityFragmentNewsfeed extends Fragment {
             }
         }
 
-
-
-
     private void setData(){
         for(int i =0 ; i<postList.size(); i++) {
             list.add(new CommunityItem(postList.get(i).getWriter()
