@@ -657,6 +657,35 @@ public final class Mapper {
         }
     }
 
+    public static void matchFavorite(String postId) {
+        final String post_Id = postId;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO communityItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                        userId);
+
+                for(int i =0; i < communityItem.getFavorites().size(); i++)
+                {
+                    if(communityItem.getFavorites().get(i).equals(post_Id)) {
+                        boolean isFavorite = true;
+                        break;
+                    }
+                }
+
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return isFavorite;
+    }
+
     public static void deleteFavorite(String postId) {
         final String post_Id = postId;
 
