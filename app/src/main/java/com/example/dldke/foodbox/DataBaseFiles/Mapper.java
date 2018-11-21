@@ -71,11 +71,11 @@ public final class Mapper {
     }
 
     //String name => InfoDO item
-    //ingredient.setIngredientName(name) => ingredient.setIngredientName(item.getName())
+    //ingredient.setIngredientName(name) => ingredient.setIngredientName(item.getFoodname())
     public static com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient createIngredient(String name, Double count)
     {
         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient ingredient = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient();
-        //ingredient.setIngredientName(item.getName());
+        //ingredient.setIngredientName(item.getFoodname());
         ingredient.setIngredientName(name);
         ingredient.setIngredientCount(count);
         return ingredient;
@@ -773,7 +773,7 @@ public final class Mapper {
             food.setDueDate(dueDate);
             food.setCount(count);
 
-        Log.e("getName",""+food.getName());
+        Log.e("getFoodname",""+food.getName());
         Log.e("getSection",""+food.getSection());
         Log.e("getDueDate",""+food.getDueDate());
         Log.e("getCount",""+food.getCount());
@@ -790,7 +790,7 @@ public final class Mapper {
         food.setDueDate(dueDate);
         food.setCount(count);
 
-        Log.e("getName",""+food.getName());
+        Log.e("getFoodname",""+food.getName());
         Log.e("getSection",""+food.getSection());
         Log.e("getDueDate",""+food.getDueDate());
         Log.e("getCount",""+food.getCount());

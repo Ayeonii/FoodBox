@@ -44,7 +44,7 @@
                 android:id="@+id/txt_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="name"
+                android:text="foodname"
                 android:textSize="16sp" />
 
         </LinearLayout>
