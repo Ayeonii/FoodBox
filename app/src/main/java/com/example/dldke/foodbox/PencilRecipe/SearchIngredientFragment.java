@@ -68,7 +68,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
             }
             if(list.size() == 0){
                   //검색된 것이 아무것도 없을때,
-                    foodImg = "file:///storage/emulated/0/Download/" + "감" + ".jpg"; //나중 default 이미지 넣기
+                    foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
                     list.add(new PencilItem(searchText, Uri.parse(foodImg), "sideDish"));
             }
         }
