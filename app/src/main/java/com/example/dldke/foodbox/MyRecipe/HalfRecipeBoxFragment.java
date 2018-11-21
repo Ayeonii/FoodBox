@@ -52,7 +52,7 @@ public class HalfRecipeBoxFragment extends Fragment {
     private void prepareData(){
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
-        for(int i =0 ; i<myrecipe.size(); i++){
+        for(int i =0 ; i< myrecipe.size(); i++){
            try{
 
                String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();

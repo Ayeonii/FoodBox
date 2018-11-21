@@ -1,11 +1,11 @@
 package com.example.dldke.foodbox.MyRecipe;
 
 public class RecipeBoxData {
-    String name, recipeId, simplename;
+    String foodname, recipeId, simplename;
     Integer image;
 
-    public RecipeBoxData(String name, Integer image, String recipeId){
-        this.name = name;
+    public RecipeBoxData(String foodname, Integer image, String recipeId){
+        this.foodname = foodname;
         this.image = image;
         this.recipeId = recipeId;
     }
@@ -15,12 +15,12 @@ public class RecipeBoxData {
         this.recipeId = recipeId;
     }
 
-    public String getName() {
-        return name;
+    public String getFoodname() {
+        return foodname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFoodname(String foodname) {
+        this.foodname = foodname;
     }
 
     public String getSimpleName(){

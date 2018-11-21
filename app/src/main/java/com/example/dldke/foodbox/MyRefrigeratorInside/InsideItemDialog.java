@@ -56,6 +56,16 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
+//    private void setData() {
+//        mItems.clear();
+//
+//        for (int i = 0; i < dcArray.size(); i++) {
+//            mItems.add(new DCItem(dcArray.get(i).getStrDueDate(), dcArray.get(i).getCount()));
+//        }
+//
+//        adapter.notifyDataSetChanged();
+//    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

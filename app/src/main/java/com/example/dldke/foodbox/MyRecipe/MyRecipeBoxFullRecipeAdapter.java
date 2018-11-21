@@ -7,10 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.dldke.foodbox.R;
 
@@ -70,8 +68,8 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     }
 
     public void onBindViewHolder(final MyRecipeBoxFullRecipeAdapter.ViewHolder holder, final int position){
-        Log.e(TAG,"이름 가져와!!!!!"+recipedata.get(position).getName());
-        String name = recipedata.get(position).getName();
+        Log.e(TAG,"이름 가져와!!!!!"+recipedata.get(position).getFoodname());
+        String name = recipedata.get(position).getFoodname();
         holder.name.setText(name);
         holder.image.setImageResource(recipedata.get(position).getImage());
     }

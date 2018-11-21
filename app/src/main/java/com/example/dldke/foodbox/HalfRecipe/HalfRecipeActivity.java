@@ -43,6 +43,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private String recipeSimpleName;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
