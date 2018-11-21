@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
 
-    private EditText editRecipeName;
     private TextView txtEmpty, txtBack, txtBackEmpty, txtComplete;
     private EditText editRecipeName;
     private LinearLayout linearLayout1, linearLayout2;
@@ -46,7 +45,6 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_recipe_dialog);
 
-        editRecipeName = (EditText) findViewById(R.id.recipe_name_edit);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
         txtBack = (TextView) findViewById(R.id.txt_back);
         txtBackEmpty = (TextView) findViewById(R.id.txt_back_empty);

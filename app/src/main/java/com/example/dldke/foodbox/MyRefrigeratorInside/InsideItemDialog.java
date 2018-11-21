@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.HalfRecipe.DCItem;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
 
     private RecyclerView.Adapter adapter;
     private ArrayList<DCItem> dcArray = new ArrayList<>();
-    //private ArrayList<DCItem> mItems = new ArrayList<>();
 
     public InsideItemDialog(@NonNull Context context, String name, ArrayList<DCItem> dcArray) {
         super(context);
@@ -56,8 +54,6 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
-
-        //setData();
     }
 
 //    private void setData() {
