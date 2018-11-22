@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="yyyy-mm-dd"
+            android:fontFamily="@font/font_family"
             android:textSize="15dp" />
 
     </RelativeLayout>
@@ -35,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0.0"
+            android:fontFamily="@font/font_family"
             android:textSize="15dp" />
 
     </RelativeLayout>

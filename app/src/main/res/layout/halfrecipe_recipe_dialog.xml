@@ -15,6 +15,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="간이레시피"
+        android:fontFamily="@font/font_family"
         android:textColor="#000"
         android:textSize="20sp" />
 
@@ -26,6 +27,7 @@
         android:layout_marginRight="24dp"
         android:layout_marginBottom="8dp"
         android:hint="레시피 이름을 입력하세요"
+        android:fontFamily="@font/font_family"
         android:layout_gravity="center"/>
 
     <RelativeLayout
@@ -77,6 +79,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="뒤로"
+                android:fontFamily="@font/font_family"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp" />
 
@@ -89,6 +92,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="작성완료"
+                android:fontFamily="@font/font_family"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp" />
         </LinearLayout>

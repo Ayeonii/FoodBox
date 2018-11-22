@@ -105,7 +105,7 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        adapter = new HalfRecipeIngreAdapter(mItems, nameArray.size(), checkIngre);
+        adapter = new HalfRecipeIngreAdapter(mItems, nameArray.size(), checkIngre, ingreType);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
         recyclerView.addOnItemTouchListener(

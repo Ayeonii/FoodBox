@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.Community;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
@@ -7,7 +8,7 @@ public class CommunityItem {
     private String userId;
     private String foodTitle;
     private String foodName;
-    private int community_foodImg;
+    private String community_foodImg;
     private int community_profile;
     private boolean isFavorite;
     private String postId;
@@ -15,7 +16,7 @@ public class CommunityItem {
     public CommunityItem (String userId
             ,String foodTitle
             ,String foodName
-            ,int community_foodImg
+            ,String community_foodImg
             ,int community_profile
             , boolean isFavorite
             , String postId){
@@ -36,7 +37,7 @@ public class CommunityItem {
 
     public String getFoodTitle() { return foodTitle; }
 
-    public int getCommunity_foodImg(){return community_foodImg;}
+    public String getCommunity_foodImg(){return community_foodImg;}
 
     public int getCommunity_profile(){return community_profile;}
 

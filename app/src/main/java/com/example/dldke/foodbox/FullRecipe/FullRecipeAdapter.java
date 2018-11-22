@@ -146,7 +146,12 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
                                 String minute = MinuteSpinner.getSelectedItem().toString();
                                 String fire = FireSpinner.getSelectedItem().toString();
 
-                                step_descriptoin = testStr+" 을/를 "+minute+" 분 동안"+method+" (불 세기: "+fire+" )";
+                                if(minute.equals("0") || fire.equals("없음")){
+                                    step_descriptoin = testStr+" 을/를 \r\n"+method;
+                                }else{
+                                    step_descriptoin = testStr+" 을/를 \r\n"+minute+" 분 동안 \r\n"+method+" (불 세기: "+fire+" )";
+                                }
+
                                 FullRecipeData dict = new FullRecipeData(step_descriptoin);
 
                                 //FullRecipeData dict = new FullRecipeData(method, minute, fire);
@@ -194,11 +199,9 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
 
     @Override
     public void onBindViewHolder(@NonNull FullRecipeViewHolder viewholder, int position) {
-
         viewholder.StepDetail.setText(mList.get(position).getStepDescription());
-        viewholder.StepDetail.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        viewholder.StepDetail.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         viewholder.StepDetail.setGravity(Gravity.CENTER);
-
     }
 
     @Override

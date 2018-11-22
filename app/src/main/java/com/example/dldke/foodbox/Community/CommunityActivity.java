@@ -96,16 +96,24 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         switch (view.getId()){
             case R.id.home_btn:
                 setFrag(0);
+                setBackeGroundAccent(homeBtn, favoriteBtn,recommendBtn);
                 break;
             case R.id.favorite_btn:
                 setFrag(1);
+                setBackeGroundAccent(favoriteBtn, homeBtn,recommendBtn);
                 break;
             case R.id.recommend_btn:
                 setFrag(2);
+                setBackeGroundAccent(recommendBtn, favoriteBtn,homeBtn);
                 break;
         }
     }
 
+    public void setBackeGroundAccent(ImageView firstBtn,ImageView secondBtn,ImageView thirdBtn){
+        firstBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.colorAccent, null));
+        secondBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.colorWhite, null));
+        thirdBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.colorWhite, null));
+    }
     public void setFrag(int n){    //프래그먼트를 교체하는 작업을 하는 메소드를 만들었습니다
         fm = getFragmentManager();
         tran = fm.beginTransaction();

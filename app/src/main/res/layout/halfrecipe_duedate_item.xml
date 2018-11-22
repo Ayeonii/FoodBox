@@ -26,7 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="name"
-            android:textSize="12dp" />
+            android:textSize="12dp"
+            android:fontFamily="@font/font_family"/>
 
     </LinearLayout>
 
@@ -46,6 +47,7 @@
             <RadioButton
                 android:id="@+id/radio1"
                 android:text="임박한것부터"
+                android:fontFamily="@font/font_family"
                 android:checked="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -53,6 +55,7 @@
             <RadioButton
                 android:id="@+id/radio2"
                 android:text="신선한것부터"
+                android:fontFamily="@font/font_family"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RadioGroup>

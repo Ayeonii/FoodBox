@@ -41,20 +41,16 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
             super(itemView);
             this.ingredientImage = (ImageView) itemView.findViewById(R.id.ingredient_icon);
             this.ingredientName = (TextView) itemView.findViewById(R.id.ingredient_name);
-
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         // 사용할 아이템의 뷰를 생성해준다.
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fullrecipe_ingredient_list_item, parent, false);
         AddIngredient(ingredients);
-
         ViewHolder holder = new ViewHolder(view);
-
         return holder;
     }
 
@@ -62,7 +58,6 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.ingredientName.setText(IngredientData.get(position).getIngredientName());
         holder.ingredientImage.setImageURI(IngredientData.get(position).getIngredientImage());
-
     }
 
     @Override

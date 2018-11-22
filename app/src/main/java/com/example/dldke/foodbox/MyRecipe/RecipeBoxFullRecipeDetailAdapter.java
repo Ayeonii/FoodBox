@@ -67,17 +67,20 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     public void AddStep(List<RecipeDO.Spec> specList){
 
         for(int i = 0; i<specList.size(); i++){
-            String result = "";
+            String result ="";
             specIngredientList = specList.get(i).getSpecIngredient();
             for(int j = 0; j<specIngredientList.size(); j++){
                 String specingredientName = specIngredientList.get(j).getIngredientName();
                 Log.e(TAG, "재료"+i+"  "+specingredientName);
+                Log.e("우우우우우우~", ""+result);
                 result = result.concat(specingredientName);
             }
             int number = i+1;
-            String descrip = number+". "+result+" 을/를 "+specList.get(i).getSpecMethod()+" "+specList.get(i).getSpecMinute()+"분 동안 "+"불 세기는 "+specList.get(i).getSpecFire();
+            String descrip = number+". "+result+" 을/를 "+specList.get(i).getSpecMinute()+"분 동안 "+specList.get(i).getSpecMethod()+".\r\n"+"불 세기는 "+specList.get(i).getSpecFire();
             Log.e(TAG, "레시피 설명  : "+descrip);
             stepList.add(new RecipeBoxFullRecipeDetailItem(R.drawable.strawberry, descrip));
+
+            specIngredientList.clear();
         }
     }
 }

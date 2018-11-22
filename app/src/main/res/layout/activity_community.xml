@@ -50,6 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/colorAccent"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             app:srcCompat="@drawable/ic_home" />
@@ -59,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/colorWhite"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             app:srcCompat="@drawable/ic_heart" />
@@ -68,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/colorWhite"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             app:srcCompat="@drawable/ic_recommend" />

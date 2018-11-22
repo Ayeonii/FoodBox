@@ -21,6 +21,7 @@
             android:background="#FFFBE6"
             android:gravity="center"
             android:text="반찬"
+            android:fontFamily="@font/font_family"
             android:textColor="#000000"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -40,6 +41,7 @@
                 android:background="#fd5523"
                 android:gravity="center"
                 android:text="계란,유제품"
+                android:fontFamily="@font/font_family"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -54,6 +56,7 @@
                 android:background="#fd5523"
                 android:gravity="center"
                 android:text="음료,소스"
+                android:fontFamily="@font/font_family"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -75,6 +78,7 @@
             android:background="#37966f"
             android:gravity="center"
             android:text="육류,생선"
+            android:fontFamily="@font/font_family"
             android:textColor="#ffffff"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -93,6 +97,7 @@
             android:background="#356859"
             android:gravity="center"
             android:text="과일,야채"
+            android:fontFamily="@font/font_family"
             android:textColor="#ffffff"
             android:textSize="24sp"
             android:textStyle="bold" />

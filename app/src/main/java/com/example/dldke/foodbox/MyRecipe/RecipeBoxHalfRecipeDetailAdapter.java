@@ -13,6 +13,7 @@ import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeRecipeItem;
 import com.example.dldke.foodbox.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +48,17 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
      public void onBindViewHolder(ViewHolder holder, int position){
         String foodName = recipeItems.get(position).getName();
-        String imgUri =  "file:///storage/emulated/0/Download/"+foodName+".jpg";
-            holder.ingredientImage.setImageURI(Uri.parse(imgUri));
+         String foodImgUri ;
+         File file = new File("/storage/emulated/0/Download/" + foodName+ ".jpg");
+
+         if(!file.exists()){
+             foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
+         }
+         else{
+             foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+         }
+
+            holder.ingredientImage.setImageURI(Uri.parse(foodImgUri));
             holder.ingredientName.setText(foodName);
             double count = recipeItems.get(position).getCount();
 
