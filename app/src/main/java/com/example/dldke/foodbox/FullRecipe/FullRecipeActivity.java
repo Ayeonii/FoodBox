@@ -220,6 +220,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
                         //FullRecipeData dict = new FullRecipeData(method, minute, fire);
                         String clickedIngre ;
+
                         if(tempItems.size() >1){
                             clickedIngre = tempItems.get(0);
                             for(int i =1 ; i< tempItems.size() ;i ++){
@@ -229,7 +230,11 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                             clickedIngre = tempItems.get(0);
                         }
 
-                        step_descriptoin = clickedIngre+" 을/를 \r\n"+minute+" 분 동안 \r\n"+method+" (불 세기: "+fire+" )";
+                        if(minute.equals("0") || fire.equals("없음")){
+                            step_descriptoin = clickedIngre+" 을/를 \r\n"+method;
+                        }else{
+                            step_descriptoin = clickedIngre+" 을/를 \r\n"+minute+" 분 동안 \r\n"+method+" (불 세기: "+fire+" )";
+                        }
                         FullRecipeData dict = new FullRecipeData(step_descriptoin);
 
                         //mArrayList.add(0, dict); //첫 줄에 삽입
@@ -277,6 +282,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 startActivity(RefrigeratorActivity);
             }
         });
+        specList.clear();
     }
 
 

@@ -3,6 +3,8 @@ package com.example.dldke.foodbox.Community;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,10 @@ import android.widget.TextView;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 
@@ -59,7 +65,6 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
                 }
             }
         });
-
         if(mItems.get(position).getFavorite()){
             holder.star_btn.setSelected(true);
         }
@@ -67,13 +72,11 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
             holder.star_btn.setSelected(false);
         }
 
-
-        /**********************/
-        if(mItems.get(position).getCommunity_foodImg() == -1) {
+        String foodImgUrl = mItems.get(position).getCommunity_foodImg();
+        if(foodImgUrl == null) {
             holder.communityFoodImg.setBackground(context.getResources().getDrawable(R.drawable.splash_background, null));
-        } else{
-            holder.communityFoodImg.setBackground(context.getResources().getDrawable(mItems.get(position).getCommunity_foodImg(), null));
-            //holder.communityFoodImg.setImageResource(mItems.get(position).getCommunity_foodImg());
+        } else {
+            new DownloadImageTask(holder.communityFoodImg).execute(foodImgUrl);
         }
         if(mItems.get(position).getCommunity_profile() ==-1)
             holder.communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
@@ -82,6 +85,29 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
 
 
     }
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
 
     // 데이터 셋의 크기를 리턴
     @Override

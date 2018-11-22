@@ -2,6 +2,8 @@ package com.example.dldke.foodbox.Community;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +19,9 @@ import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.R;
 
+import java.io.BufferedInputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,13 +78,14 @@ public class CommunityFragmentNewsfeed extends Fragment {
 
     private void setData(){
         for(int i =0 ; i<postList.size(); i++) {
+            String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
             list.add(new CommunityItem(postList.get(i).getWriter()
-                                        ,postList.get(i).getTitle()
-                                        ,Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                                        ,R.drawable.temp_shared_food
-                                        ,R.drawable.temp_profile1
-                                        ,Mapper.matchFavorite(postList.get(i).getPostId())
-                                        ,postList.get(i).getPostId()
+                    ,postList.get(i).getTitle()
+                    ,Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
+                    ,imgUrl
+                    ,R.drawable.temp_profile4
+                    ,Mapper.matchFavorite(postList.get(i).getPostId())
+                    ,postList.get(i).getPostId()
             ));
         }
 
