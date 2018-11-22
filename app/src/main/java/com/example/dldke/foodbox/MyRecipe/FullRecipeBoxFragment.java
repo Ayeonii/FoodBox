@@ -24,23 +24,31 @@ public class FullRecipeBoxFragment extends Fragment {
     private RecyclerView recyclerview;
     private MyRecipeBoxFullRecipeAdapter adapter;
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
+    private boolean isRecipe = false;
 
     private String TAG="FullRecipeBox";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.recipe_box_fragment_fullrecipe, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        recyclerview = (RecyclerView)view.findViewById(R.id.recycler_view);
-        recyclerview.setHasFixedSize(true);
-        adapter = new MyRecipeBoxFullRecipeAdapter(data);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerview.setLayoutManager(layoutManager);
-        recyclerview.setItemAnimator(new DefaultItemAnimator());
-        recyclerview.setAdapter(adapter);
+        if(isRecipe){
+            View view = inflater.inflate(R.layout.recipe_box_fragment_fullrecipe, container, false);
 
-        return view;
+            recyclerview = (RecyclerView)view.findViewById(R.id.recycler_view);
+            recyclerview.setHasFixedSize(true);
+            adapter = new MyRecipeBoxFullRecipeAdapter(data);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            recyclerview.setLayoutManager(layoutManager);
+            recyclerview.setItemAnimator(new DefaultItemAnimator());
+            recyclerview.setAdapter(adapter);
+
+            return view;
+        }
+        else{
+            View view = inflater.inflate(R.layout.recipe_box_fragment_none, container, false);
+            return view;
+        }
+
     }
 
     public void onCreate(@Nullable Bundle savedInstanceState){
@@ -50,7 +58,6 @@ public class FullRecipeBoxFragment extends Fragment {
 
     //Detail이 없으면 간이레시피, Detail이 있으면 풀레시피 fragment로 보여지기 위한 작업
     private void prepareData(){
-
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
         for(int i = 0 ; i< myrecipe.size(); i++){
             try{
@@ -58,12 +65,11 @@ public class FullRecipeBoxFragment extends Fragment {
                 Log.e(TAG, "레시피 이름 : "+foodname);
                 String recipeId = myrecipe.get(i);
                 data.add(new RecipeBoxData(foodname, R.drawable.strawberry, recipeId));
+                isRecipe = true;
                 //String insertfoodname = data.get(i).getFoodname();
                 //Log.e(TAG, "레시피 이름: "+insertfoodname+"  레시피 아이디: "+recipeId);
 
             }catch(NullPointerException e){
-
-
 
             }
         }
