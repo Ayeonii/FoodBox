@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.HalfRecipe.DCItem;
@@ -17,7 +18,8 @@ import java.util.ArrayList;
 
 public class InsideItemDialog extends Dialog implements View.OnClickListener {
 
-    private TextView txtName, txtOk;
+    private TextView txtName;
+    private Button btnOk;
     private RecyclerView recyclerView;
     private Context context;
     private String mName;
@@ -38,10 +40,10 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.refrigeratorinside_item_dialog);
 
         txtName = (TextView) findViewById(R.id.txt_name);
-        txtOk = (TextView) findViewById(R.id.txt_ok);
+        btnOk = (Button) findViewById(R.id.btn_ok);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        txtOk.setOnClickListener(this);
+        btnOk.setOnClickListener(this);
         txtName.setText(mName);
 
         setRecyclerView();
@@ -69,7 +71,7 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txt_ok:
+            case R.id.btn_ok:
                 dismiss();
                 break;
         }

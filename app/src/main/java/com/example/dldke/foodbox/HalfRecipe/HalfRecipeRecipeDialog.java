@@ -8,8 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +20,8 @@ import java.util.ArrayList;
 
 public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
 
-    private TextView txtEmpty, txtBack, txtBackEmpty, txtComplete;
+    private TextView txtEmpty;
+    private Button btnBack, btnBackEmpty, btnComplete;
     private EditText editRecipeName;
     private LinearLayout linearLayout1, linearLayout2;
     private RecyclerView recyclerView;
@@ -47,17 +48,17 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         setContentView(R.layout.halfrecipe_recipe_dialog);
 
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
-        txtBack = (TextView) findViewById(R.id.txt_back);
-        txtBackEmpty = (TextView) findViewById(R.id.txt_back_empty);
-        txtComplete = (TextView) findViewById(R.id.txt_complete);
+        btnBack = (Button) findViewById(R.id.btn_back);
+        btnBackEmpty = (Button) findViewById(R.id.btn_back_empty);
+        btnComplete = (Button) findViewById(R.id.btn_complete);
         editRecipeName = (EditText) findViewById(R.id.recipe_name_edit);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayout1 = (LinearLayout) findViewById(R.id.layout1);
         linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
 
-        txtBack.setOnClickListener(this);
-        txtBackEmpty.setOnClickListener(this);
-        txtComplete.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
+        btnBackEmpty.setOnClickListener(this);
+        btnComplete.setOnClickListener(this);
 
         if (selectedItem.size()==0) {
             recyclerView.setVisibility(View.GONE);
@@ -110,13 +111,13 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txt_back:
+            case R.id.btn_back:
                 cancel();
                 break;
-            case R.id.txt_back_empty:
+            case R.id.btn_back_empty:
                 cancel();
                 break;
-            case R.id.txt_complete:
+            case R.id.btn_complete:
                 int result = 1;
                 ArrayList<String> dueDateCheckArray = new ArrayList<>();
                 for (int i=0; i<mItems.size(); i++) {
