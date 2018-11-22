@@ -2,6 +2,8 @@ package com.example.dldke.foodbox.Community;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +19,9 @@ import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.R;
 
+import java.io.BufferedInputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +40,7 @@ public class CommunityFragmentFavorite extends Fragment {
 
         list.clear();
         Context context = view.getContext();
+
         recyclerView = (RecyclerView) view.findViewById(R.id.favorite_recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -51,15 +57,17 @@ public class CommunityFragmentFavorite extends Fragment {
 
     private void setData(){
         for(int i =0 ; i<favorite_list.size(); i++) {
+            String imgUrl = Mapper.getImageUrlRecipe(favorite_list.get(i).getRecipeId());
             list.add(new CommunityItem(favorite_list.get(i).getWriter()
                     ,favorite_list.get(i).getTitle()
                     ,Mapper.searchRecipe(favorite_list.get(i).getRecipeId()).getDetail().getFoodName()
-                    ,R.drawable.temp_shared_food
-                    ,R.drawable.temp_profile1
+                    ,imgUrl
+                    ,R.drawable.temp_profile4
                     ,Mapper.matchFavorite(favorite_list.get(i).getPostId())
                     ,favorite_list.get(i).getPostId()
             ));
         }
+
         adapter.notifyDataSetChanged();
     }
 

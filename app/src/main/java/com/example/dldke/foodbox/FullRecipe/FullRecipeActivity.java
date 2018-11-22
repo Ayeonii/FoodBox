@@ -9,7 +9,6 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,16 +23,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
-import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
+import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
+import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -68,6 +68,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private final String TAG = "FullRecipe DB Test";
 
+    private static List<String> specDescription = new ArrayList<>();
+
     private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
 
 
@@ -84,7 +86,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             갤러리에서 이미지 가져오기
          */
         food_img = (ImageView)findViewById(R.id.food_img);
-         food_img_real = (ImageView)findViewById(R.id.food_img_real);
+        food_img_real = (ImageView)findViewById(R.id.food_img_real);
         food_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,12 +103,10 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         spinnerAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, foodrecipe_list);
         spinner.setAdapter(spinnerAdapter);
 
-
-        Button ingredient_add = (Button)findViewById(R.id.ingredient_add);
+        final Button ingredient_add = (Button)findViewById(R.id.ingredient_add);
         ingredient_add.setOnClickListener(this);
         Button get_recipe = (Button)findViewById(R.id.get_recipe);
         get_recipe.setOnClickListener(this);
-
 
         /*
             풀레시피 단계 list 보여주기
@@ -158,14 +158,15 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
                         //선택된 재료 저장
-
                         if(isChecked) {
                             SelectedItems.add(i);
                             tempItems.add(specItems.get(i));//레시피 단계 작성후에 text로 보여지는 재료 이걸로 쓰자
 
                             Log.e(TAG, "재료 이름 가져와 "+tempItems);
                         }
-
+                        else{
+                            tempItems.remove(specItems.get(i));
+                        }
                     }
                 });
 
@@ -201,19 +202,16 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                     public void onClick(View v) {
 
                         String step_descriptoin="";
+                        List<RecipeDO.Ingredient> ingredientsSize = Mapper.searchRecipe(recipeId).getIngredient();
 
-                        for(int num = 0; num<tempItems.size(); num++){
-                            specIngredientList.add(Mapper.searchRecipe(recipeId).getIngredient().get(num));
-                            Log.e(TAG, ""+Mapper.searchRecipe(recipeId).getIngredient().get(num).getIngredientName());
+                        for(int i = 0; i< tempItems.size(); i++){
+                            for(int j =0 ; j<ingredientsSize.size(); j++){
+                                if(tempItems.get(i).equals(ingredientsSize.get(j).getIngredientName())){
+                                    specIngredientList.add(ingredientsSize.get(j));
+                                }
+                            }
+                            Log.e(TAG, ""+Mapper.searchRecipe(recipeId).getIngredient().get(i).getIngredientName());
                         }
-
-                        for(int num = 0; num < tempItems.size(); num++){
-                            int index = (int)SelectedItems.get(num);
-                            Log.e(TAG, "SelectedItems이다다"+tempItems.get(num).toString());
-                            testStr = testStr.concat(tempItems.get(num));
-                            Log.e(TAG, "하나씩 붙어라"+testStr);
-                        }
-
 
                         String method = method_sp.getSelectedItem().toString();
                         String minute = minute_sp.getSelectedItem().toString();
@@ -221,7 +219,22 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                         String fire = fire_sp.getSelectedItem().toString();
 
                         //FullRecipeData dict = new FullRecipeData(method, minute, fire);
-                        step_descriptoin = testStr+" 을/를 "+minute+" 분 동안"+method+" (불 세기: "+fire+" )";
+                        String clickedIngre ;
+
+                        if(tempItems.size() >1){
+                            clickedIngre = tempItems.get(0);
+                            for(int i =1 ; i< tempItems.size() ;i ++){
+                             clickedIngre = clickedIngre+", "+tempItems.get(i);
+                            }
+                        }else{
+                            clickedIngre = tempItems.get(0);
+                        }
+
+                        if(minute.equals("0") || fire.equals("없음")){
+                            step_descriptoin = clickedIngre+" 을/를 \r\n"+method;
+                        }else{
+                            step_descriptoin = clickedIngre+" 을/를 \r\n"+minute+" 분 동안 \r\n"+method+" (불 세기: "+fire+" )";
+                        }
                         FullRecipeData dict = new FullRecipeData(step_descriptoin);
 
                         //mArrayList.add(0, dict); //첫 줄에 삽입
@@ -269,6 +282,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 startActivity(RefrigeratorActivity);
             }
         });
+        specList.clear();
     }
 
 
@@ -312,7 +326,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private void sendPicture(Uri imgUri){
         imagePath = getRealPathFromURI(imgUri);
-        //Log.e(TAG, "여기 차장아ㅏ라라아아"+imagePath);
         ExifInterface exif = null;;
         try{
             exif = new ExifInterface(imagePath);

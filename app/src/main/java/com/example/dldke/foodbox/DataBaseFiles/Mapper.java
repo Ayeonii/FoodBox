@@ -13,6 +13,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.Region;
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.google.gson.Gson;
@@ -162,6 +163,7 @@ public final class Mapper {
         return recipeItem;
     }
 
+
     public static void createFullRecipe(String recipeId, String name, List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> spec)
     {
         final String ID = recipeId;
@@ -236,10 +238,38 @@ public final class Mapper {
             e.printStackTrace();
         }
     }
+    public static String getImageUrlRecipe(final String recipeId){
+        returnThread thread = new returnThread(new CustomRunnable() {
+
+            com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
+            URL url;
+            @Override
+            public void run() {
+
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipeId);
+                // Log.d("why",Mapper.bucketName);
+                url = recipeItem.getRecipeImage().getAmazonS3Client().getUrl(recipeItem.getRecipeImage().getBucketName(),"Recipes/"+recipeId+".jpg");
+                Log.d("getImageUrl",url.toString());
+            }
+            @Override
+            public Object getResult(){
+                return url.toString();
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String url = (String)thread.getResult();
+        return url;
+    }
 
     public static void attachRecipeImage(String recipeId, final String filePath){
         final String recipe_id = recipeId;
-        final String[] key = filePath.split("/");
         Thread thread = new Thread(new Runnable() {
 
             com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
@@ -249,8 +279,9 @@ public final class Mapper {
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
                         recipe_id);
                 Log.d("why",Mapper.bucketName);
-                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Recipes" + key[key.length-1]));
+                recipeItem.setRecipeImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Recipes/"+recipe_id+".jpg"));
                 recipeItem.getRecipeImage().uploadFrom(new File(filePath));
+                recipeItem.getRecipeImage().setAcl(CannedAccessControlList.PublicRead);
                 Mapper.getDynamoDBMapper().save(recipeItem);
 
             }
@@ -264,6 +295,8 @@ public final class Mapper {
         }
 
     }
+
+
     public static void uploadImage(final String infoName, final String filePath){
         final String name = infoName;
         final String[] key = filePath.split("/");

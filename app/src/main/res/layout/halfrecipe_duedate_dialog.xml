@@ -15,6 +15,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="재료소진순서"
+        android:fontFamily="@font/font_family"
         android:textColor="#000"
         android:textSize="20sp" />
 
@@ -23,6 +24,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:text="유통기한이 여러개인 재료를 일부 선택하셨습니다.\n어떤 순서로 소진할 지 골라주세요!"
+        android:fontFamily="@font/font_family"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -71,6 +73,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="확인"
+                android:fontFamily="@font/font_family"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp" />
         </LinearLayout>

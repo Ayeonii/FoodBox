@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.dldke.foodbox.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
@@ -87,7 +88,15 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         mItems.clear();
 
         for (int i = 0; i < selectedItem.size(); i++) {
-            String foodImgUri = "file:///storage/emulated/0/Download/"+selectedItem.get(i).getName()+".jpg";
+            String foodImgUri ;
+            File file = new File("/storage/emulated/0/Download/" + selectedItem.get(i).getName() + ".jpg");
+
+            if(!file.exists()){
+                foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
+            }
+            else{
+                foodImgUri = "file:///storage/emulated/0/Download/"+selectedItem.get(i).getName()+".jpg";
+            }
             mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount(), Uri.parse(foodImgUri)));
         }
 

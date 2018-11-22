@@ -1,10 +1,12 @@
 package com.example.dldke.foodbox.PencilRecipe;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -67,7 +69,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
 
         // View 의 내용을 해당 포지션의 데이터로 바꿈.
         @Override
-        public void onBindViewHolder( ItemViewHolder holder,   final int position) {
+        public void onBindViewHolder(final ItemViewHolder holder,   final int position) {
 
             holder.food_name.setText(mItems.get(position).getFoodName());
             holder.food_img.setImageURI(mItems.get(position).getFoodImg());
@@ -116,7 +118,9 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                         isAgain = false;
                     }
             });
+
         }
+
 
         // 데이터 셋의 크기를 리턴
         @Override
