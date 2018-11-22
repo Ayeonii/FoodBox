@@ -42,8 +42,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private String user_id;
     private String recipeSimpleName;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -439,6 +437,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
+        recipeDialog.setCancelable(false);
         recipeDialog.show();
     }
 

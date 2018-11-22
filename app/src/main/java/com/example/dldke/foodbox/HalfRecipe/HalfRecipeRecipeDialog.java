@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.dldke.foodbox.R;
 
 import java.io.File;
@@ -48,7 +50,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         setContentView(R.layout.halfrecipe_recipe_dialog);
 
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
-        btnBack = (Button) findViewById(R.id.btn_back);
+        btnBack = (Button) findViewById(R.id.btn_cancel);
         btnBackEmpty = (Button) findViewById(R.id.btn_back_empty);
         btnComplete = (Button) findViewById(R.id.btn_complete);
         editRecipeName = (EditText) findViewById(R.id.recipe_name_edit);
@@ -61,11 +63,13 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         btnComplete.setOnClickListener(this);
 
         if (selectedItem.size()==0) {
+            editRecipeName.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
             txtEmpty.setVisibility(View.VISIBLE);
             linearLayout1.setVisibility(View.GONE);
             linearLayout2.setVisibility(View.VISIBLE);
         } else {
+            editRecipeName.setVisibility(View.VISIBLE);
             txtEmpty.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             linearLayout1.setVisibility(View.VISIBLE);
@@ -91,13 +95,11 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         for (int i = 0; i < selectedItem.size(); i++) {
             String foodImgUri ;
             File file = new File("/storage/emulated/0/Download/" + selectedItem.get(i).getName() + ".jpg");
-
-            if(!file.exists()){
+            if(!file.exists())
                 foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
-            }
-            else{
+            else
                 foodImgUri = "file:///storage/emulated/0/Download/"+selectedItem.get(i).getName()+".jpg";
-            }
+
             mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount(), Uri.parse(foodImgUri)));
         }
 
@@ -111,7 +113,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_back:
+            case R.id.btn_cancel:
                 cancel();
                 break;
             case R.id.btn_back_empty:
@@ -132,12 +134,15 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 }
 
                 String simpleName = editRecipeName.getText().toString();
-
-                // result = 1 : 유통기한이 여러개인게 없거나 있어도 보유개수 모두 사용했을때
-                // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
-                //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
-                dialogListener.onCompleteClicked(result, simpleName, mItems, dueDateCheckArray);
-                dismiss();
+                if (simpleName.equals(""))
+                    Toast.makeText(context, "레시피 이름을 입력하세요!", Toast.LENGTH_LONG).show();
+                else {
+                    // result = 1 : 유통기한이 여러개인게 없거나 있어도 보유개수 모두 사용했을때
+                    // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
+                    //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
+                    dialogListener.onCompleteClicked(result, simpleName, mItems, dueDateCheckArray);
+                    dismiss();
+                }
                 break;
         }
     }
