@@ -23,6 +23,7 @@
         android:background="@color/colorActivated"
         android:gravity="center"
         android:text="내가 북마크한 레시피"
+        android:fontFamily="@font/font_family"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textSize="18sp"

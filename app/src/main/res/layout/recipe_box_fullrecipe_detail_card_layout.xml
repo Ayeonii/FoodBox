@@ -27,6 +27,7 @@
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:layout_weight="7"
+            android:fontFamily="@font/font_family"
             android:paddingTop="40dp" />
 
     </LinearLayout>

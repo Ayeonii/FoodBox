@@ -16,6 +16,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="카테고리명"
+        android:fontFamily="@font/font_family"
         android:textColor="#000"
         android:textSize="20sp" />
 
@@ -68,6 +69,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="취소"
+                android:fontFamily="@font/font_family"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp" />
 
@@ -80,6 +82,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="확인"
+                android:fontFamily="@font/font_family"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp" />
         </LinearLayout>

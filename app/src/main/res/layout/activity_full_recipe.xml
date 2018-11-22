@@ -82,6 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
+                    android:fontFamily="@font/font_family"
                     android:hint="음식 이름" />
 
                 <Spinner
@@ -106,6 +107,7 @@
                     android:layout_margin="8dp"
                     android:backgroundTint="@color/colorAccent"
                     android:text="간이레시피 가져오기"
+                    android:fontFamily="@font/font_family"
                     android:textColor="@color/colorWhite"
                     android:textStyle="bold" />
 
@@ -116,6 +118,7 @@
                     android:layout_margin="8dp"
                     android:backgroundTint="@color/colorAccent"
                     android:text="재료 선택하기"
+                    android:fontFamily="@font/font_family"
                     android:textColor="@color/colorWhite"
                     android:textStyle="bold" />
             </LinearLayout>

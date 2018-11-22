@@ -13,14 +13,19 @@
         android:background="@drawable/refrigerator">
 
         <Button
+            android:id="@+id/btn_login"
+            android:fontFamily="@font/font_family"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:id="@+id/btn_login"
-            android:text="login"
-            android:layout_marginTop="30dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"/>
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/make_little_radious"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:text="login"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

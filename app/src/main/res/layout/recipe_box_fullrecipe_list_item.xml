@@ -27,6 +27,7 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:text="풀레시피"
+            android:fontFamily="@font/font_family"
             android:textColor="@android:color/black"
             android:textSize="18dp"
             android:textStyle="bold" />

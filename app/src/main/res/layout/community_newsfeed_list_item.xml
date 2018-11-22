@@ -66,6 +66,7 @@
             android:layout_marginBottom="4dp"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="@font/font_family"
             cardview:layout_constraintBottom_toBottomOf="parent"
             cardview:layout_constraintStart_toEndOf="@+id/newsfeed_profile_image"
             cardview:layout_constraintTop_toBottomOf="@+id/view" />
@@ -82,6 +83,7 @@
             android:text=""
             android:textSize="14sp"
             android:textStyle="normal"
+            android:fontFamily="@font/font_family"
             cardview:layout_constraintBottom_toTopOf="@+id/view"
             cardview:layout_constraintEnd_toStartOf="@+id/community_food_image"
             cardview:layout_constraintHorizontal_bias="0.488"
@@ -100,6 +102,7 @@
             android:text=""
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="@font/font_family"
             cardview:layout_constraintEnd_toStartOf="@+id/community_food_image"
             cardview:layout_constraintHorizontal_bias="0.47"
             cardview:layout_constraintStart_toStartOf="parent"
