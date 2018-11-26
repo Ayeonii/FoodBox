@@ -6,6 +6,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHas
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.S3Link;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class UserDO {
     private String _registerNumber;
     private String _theme;
     private List<String> _themeList;
+    private S3Link profileImage;
 
     @DynamoDBHashKey(attributeName = "userId")
     @DynamoDBAttribute(attributeName = "userId")
@@ -77,6 +79,13 @@ public class UserDO {
     }
     public void setThemeList(final List<String> _themeList) {
         this._themeList = _themeList;
+    }
+
+    public S3Link getProfileImage() {
+        return profileImage;
+    }
+    public void setProfileImage(S3Link infoImage) {
+        this.profileImage = profileImage;
     }
 
 }
