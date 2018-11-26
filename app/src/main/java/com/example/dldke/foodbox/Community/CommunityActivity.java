@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.Community;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -28,6 +29,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     CommunityFragmentFavorite fragmentFavorite;
     CommunityFragmentRecommend fragmentRecommend;
     CommunityFragmentSearch fragmentSearch;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

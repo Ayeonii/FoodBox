@@ -35,6 +35,8 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     private String recipe_id;
     RecipeDO.Detail detail;
 
+
+
     RecyclerView detail_recyclerview;
     private RecipeBoxFullRecipeDetailAdapter recipeDetailAdapter;
 
@@ -47,8 +49,12 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         ImageView mainImg = (ImageView)findViewById(R.id.fullrecipe_detail_foodimg);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         recipe_id = myRecipeBoxFullRecipeAdapter.getRecipeId();
+
+        String imgUrl = Mapper.getImageUrlRecipe(recipe_id);
+        new DownloadImageTask(mainImg).execute(imgUrl);
+
+
         detail = Mapper.searchRecipe(recipe_id).getDetail();
 
 
@@ -56,11 +62,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         String foodName = detail.getFoodName();
         collapsingToolbarLayout.setTitle(foodName);
         collapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
-
-        String imgUrl = Mapper.getImageUrlRecipe(recipe_id);
-
-        new DownloadImageTask(mainImg).execute(imgUrl);
-
 
         detail_recyclerview = (RecyclerView)findViewById(R.id.fullrecipe_detail_view);
         detail_recyclerview.setLayoutManager(new LinearLayoutManager(this));

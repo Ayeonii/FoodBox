@@ -50,16 +50,12 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
 
             //포지션 확이(나중에 지울예정-test용)
             //if(position != RecyclerView.NO_POSITION) Toast.makeText(context,"포지션"+position, Toast.LENGTH_SHORT).show();
-
-
             recipe_id = recipedata.get(position).getRecipeId();
             Intent RecipeBoxFullRecipeDetailActivity = new Intent(context, RecipeBoxFullRecipeDetailActivity.class);
             context.startActivity(RecipeBoxFullRecipeDetailActivity);
 
         }
     }
-
-
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_box_fullrecipe_list_item, parent, false);

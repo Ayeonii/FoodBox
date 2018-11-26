@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import android.os.Handler;
 
 
 public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecyclerAdapter.ItemViewHolder> {
@@ -29,6 +32,7 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
     private Context context;
     private static ArrayList<CommunityItem> favoriteList = new ArrayList<>();
     private boolean isAgain = false;
+    private ImageView img;
 
 
     public CommunityRecyclerAdapter(){}
@@ -43,6 +47,8 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.community_newsfeed_list_item,parent,false);
         return new CommunityRecyclerAdapter.ItemViewHolder(view);
     }
+
+
 
     // View 의 내용을 해당 포지션의 데이터로 바꿈.
     @Override
@@ -72,40 +78,18 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
             holder.star_btn.setSelected(false);
         }
 
-        String foodImgUrl = mItems.get(position).getCommunity_foodImg();
+        final Bitmap foodImgUrl = mItems.get(position).getCommunity_foodImg();
         if(foodImgUrl == null) {
             holder.communityFoodImg.setBackground(context.getResources().getDrawable(R.drawable.splash_background, null));
         } else {
-            new DownloadImageTask(holder.communityFoodImg).execute(foodImgUrl);
+          holder.communityFoodImg.setImageBitmap(foodImgUrl);
+           // new DownloadImageTask(holder.communityFoodImg).execute(foodImgUrl);
         }
         if(mItems.get(position).getCommunity_profile() ==-1)
             holder.communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
         else
             holder.communityProfile.setImageDrawable(context.getResources().getDrawable(mItems.get(position).getCommunity_profile(),null));
 
-
-    }
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 
 
