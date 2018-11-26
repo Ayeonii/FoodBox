@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-package com.amazonaws.mobile.api.ido8hcvwsv0c.model;
+package com.amazonaws.mobile.api.id3idutfky0i.model;
 
 
 public class RequestSchema {

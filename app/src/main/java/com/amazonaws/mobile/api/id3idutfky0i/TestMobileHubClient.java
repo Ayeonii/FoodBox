@@ -13,29 +13,21 @@
  * permissions and limitations under the License.
  */
 
-package com.amazonaws.mobile.api.ido8hcvwsv0c.model;
+package com.amazonaws.mobile.api.id3idutfky0i;
+
+import java.util.*;
 
 
-public class ResponseSchema {
-    @com.google.gson.annotations.SerializedName("response")
-    private String response = null;
+
+@com.amazonaws.mobileconnectors.apigateway.annotation.Service(endpoint = "https://3idutfky0i.execute-api.ap-northeast-2.amazonaws.com/Development")
+public interface TestMobileHubClient {
+
 
     /**
-     * Gets response
-     *
-     * @return response
-     **/
-    public String getResponse() {
-        return response;
-    }
-
-    /**
-     * Sets the value of response.
-     *
-     * @param response the new value
+     * A generic invoker to invoke any API Gateway endpoint.
+     * @param request
+     * @return ApiResponse
      */
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
+    com.amazonaws.mobileconnectors.apigateway.ApiResponse execute(com.amazonaws.mobileconnectors.apigateway.ApiRequest request);
 }
+
