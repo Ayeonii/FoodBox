@@ -46,6 +46,7 @@ public class RefrigeratorDO {
         private String _section;
         private String _kindOf;
         private String _dueDate;
+        private boolean isFrozen;
 
         @DynamoDBAttribute(attributeName = "name")
         @DynamoDBIndexHashKey(attributeName = "name", globalSecondaryIndexName = "name-count")
@@ -72,6 +73,12 @@ public class RefrigeratorDO {
             return _kindOf;
         }
         public void setKindOf(final String _kindOf) { this._kindOf = _kindOf; }
+
+        @DynamoDBAttribute(attributeName = "isFrozen")
+        public boolean getIsFrozen() {
+            return isFrozen;
+        }
+        public void setIsFrozen(final boolean isFrozen) { this.isFrozen = isFrozen; }
 
         @DynamoDBAttribute(attributeName = "dueDate")
         public String getDueDate() {
