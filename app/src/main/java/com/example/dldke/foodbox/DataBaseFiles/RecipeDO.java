@@ -18,10 +18,12 @@ import java.util.Set;
 
 public class RecipeDO {
     private String _recipeId;
+    private String _simpleName;
     private String _date;
     private Detail _detail;
     private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
     private S3Link recipeImage;
+    private boolean Ing;
 
     public S3Link getRecipeImage() {
         return recipeImage;
@@ -40,6 +42,16 @@ public class RecipeDO {
     public void setRecipeId(final String _recipeId) {
         this._recipeId = _recipeId;
     }
+
+    @DynamoDBAttribute(attributeName = "simpleName")
+    public String getSimpleName() {
+        return _simpleName;
+    }
+
+    public void setSimpleName(final String _simpleName) {
+        this._simpleName = _simpleName;
+    }
+
     @DynamoDBAttribute(attributeName = "date")
     public String getDate() {
         return _date;
@@ -51,6 +63,14 @@ public class RecipeDO {
     @DynamoDBAttribute(attributeName = "detail")
     public Detail getDetail() {
         return _detail;
+    }
+
+    public void setIng(final boolean Ing) {
+        this.Ing = Ing;
+    }
+    @DynamoDBAttribute(attributeName = "Ing")
+    public boolean getIng() {
+        return Ing;
     }
 
     public void setDetail(final Detail _detail) {
@@ -70,8 +90,8 @@ public class RecipeDO {
 
     @DynamoDBDocument
     public static class Detail{
-        private String _foodName;
         private List<Spec> _specList = new ArrayList<Spec>();
+        private String _foodName;
 
         @DynamoDBAttribute(attributeName = "foodName")
         public String getFoodName() {
@@ -81,6 +101,7 @@ public class RecipeDO {
         public void setFoodName(final String _foodName) {
             this._foodName = _foodName;
         }
+
         @DynamoDBAttribute(attributeName = "specList")
         public List<Spec> getSpecList() {
             return _specList;

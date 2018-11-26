@@ -7,7 +7,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:weightSum="3"
-    tools:context=".HalfRecipeCompleteActivity">
+    tools:context=".HalfRecipe.HalfRecipeCompleteActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,6 +15,7 @@
         android:layout_weight="2"
         android:gravity="center_vertical"
         android:text="간이레시피 작성 완료!"
+        android:fontFamily="@font/font_family"
         android:textSize="36dp" />
 
     <LinearLayout
@@ -32,6 +33,7 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:text="레시피 보관함으로 가기"
+            android:fontFamily="@font/font_family"
             android:textColor="@color/colorAccent"
             android:textSize="20dp"
             android:textStyle="bold" />
@@ -43,6 +45,7 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:text="처음 화면으로 가기"
+            android:fontFamily="@font/font_family"
             android:textColor="@color/colorAccent"
             android:textSize="20dp"
             android:textStyle="bold" />

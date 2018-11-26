@@ -76,7 +76,7 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
         btnMeat.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Mapper.searchPost(" ");
+
                 Toast.makeText(getApplicationContext(), "육류,생선", Toast.LENGTH_LONG).show();
             }
         });
