@@ -61,13 +61,14 @@ public class FullRecipeBoxFragment extends Fragment {
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
         for(int i = 0 ; i< myrecipe.size(); i++){
             try{
-                String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
-                Log.e(TAG, "레시피 이름 : "+foodname);
                 String recipeId = myrecipe.get(i);
-                data.add(new RecipeBoxData(foodname, R.drawable.strawberry, recipeId));
+                String foodname = Mapper.searchRecipe(recipeId).getDetail().getFoodName();
+                boolean isshared = Mapper.searchRecipe(recipeId).getIsShare();
+
+                data.add(new RecipeBoxData(recipeId, R.drawable.strawberry, foodname, isshared));
                 isRecipe = true;
-                //String insertfoodname = data.get(i).getFoodname();
-                //Log.e(TAG, "레시피 이름: "+insertfoodname+"  레시피 아이디: "+recipeId);
+
+                Log.e(TAG, "레시피 이름 : "+foodname);
 
             }catch(NullPointerException e){
 

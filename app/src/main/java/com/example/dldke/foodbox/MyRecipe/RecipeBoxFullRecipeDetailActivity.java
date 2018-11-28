@@ -110,9 +110,9 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //Toast.makeText(getApplicationContext(), "예를 선택했습니다.", Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), edittext.getText().toString(), Toast.LENGTH_SHORT).show();
                 String title = edittext.getText().toString();
+                Mapper.searchRecipe(recipe_id).setIsShare(true);
                 Mapper.createPost(" "+title, recipe_id);
 
                 Intent MainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);

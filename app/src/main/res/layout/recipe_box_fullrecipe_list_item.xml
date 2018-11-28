@@ -32,6 +32,17 @@
             android:textSize="18dp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="공유중"
+            android:textSize="18dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="@font/font_family"
+            android:visibility="invisible"/>
+
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
