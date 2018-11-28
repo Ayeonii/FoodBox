@@ -424,7 +424,7 @@ public final class Mapper {
                         postID);
 
                 Date date = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm a");
                 String dateS = sdf.format(date).toString();
 
                 com.example.dldke.foodbox.DataBaseFiles.PostDO.Comment comment1 = new com.example.dldke.foodbox.DataBaseFiles.PostDO.Comment();
@@ -1019,7 +1019,7 @@ public final class Mapper {
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(postIdentifier));
                 scanExpression.addFilterCondition(postAttribute, condition);
-                post = Mapper.getDynamoDBMapper().scan(com.example.dldke.foodbox.DataBaseFiles.PostDO.class, scanExpression);
+                post = Mapper.getDynamoDBMapper().parallelScan(com.example.dldke.foodbox.DataBaseFiles.PostDO.class, scanExpression,4);
             }
 
             @Override

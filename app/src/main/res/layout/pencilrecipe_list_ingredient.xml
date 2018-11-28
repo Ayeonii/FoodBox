@@ -7,7 +7,7 @@ android:layout_height="wrap_content"
 android:gravity="center">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/foodImg"
+        android:id="@+id/userImg"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_marginStart="12dp"
@@ -23,7 +23,7 @@ android:gravity="center">
         android:id="@+id/foodText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/foodImg"
+        android:layout_below="@+id/userImg"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:textSize="13sp"

@@ -34,7 +34,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     private MyRecipeBoxFullRecipeAdapter myRecipeBoxFullRecipeAdapter = new MyRecipeBoxFullRecipeAdapter();
     private String recipe_id;
     RecipeDO.Detail detail;
-
     RecyclerView detail_recyclerview;
     private RecipeBoxFullRecipeDetailAdapter recipeDetailAdapter;
 
@@ -47,20 +46,18 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         ImageView mainImg = (ImageView)findViewById(R.id.fullrecipe_detail_foodimg);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         recipe_id = myRecipeBoxFullRecipeAdapter.getRecipeId();
-        detail = Mapper.searchRecipe(recipe_id).getDetail();
 
+        String imgUrl = Mapper.getImageUrlRecipe(recipe_id);
+        new DownloadImageTask(mainImg).execute(imgUrl);
+
+
+        detail = Mapper.searchRecipe(recipe_id).getDetail();
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.fullrecipe_detail_collasping_toolbar);
         String foodName = detail.getFoodName();
         collapsingToolbarLayout.setTitle(foodName);
         collapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
-
-        String imgUrl = Mapper.getImageUrlRecipe(recipe_id);
-
-        new DownloadImageTask(mainImg).execute(imgUrl);
-
 
         detail_recyclerview = (RecyclerView)findViewById(R.id.fullrecipe_detail_view);
         detail_recyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -76,8 +73,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         });
     }
 
-    //이미지 가져오기 비동기
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
         public DownloadImageTask(ImageView bmImage) {

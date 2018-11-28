@@ -8,18 +8,20 @@ public class CommunityItem {
     private String userId;
     private String foodTitle;
     private String foodName;
-    private String community_foodImg;
+    private Bitmap community_foodImg;
     private int community_profile;
     private boolean isFavorite;
     private String postId;
+    private String recipeId;
 
     public CommunityItem (String userId
             ,String foodTitle
             ,String foodName
-            ,String community_foodImg
+            ,Bitmap community_foodImg
             ,int community_profile
             , boolean isFavorite
-            , String postId){
+            , String postId
+            , String recipeId){
         this.userId = userId;
         this.foodTitle = foodTitle;
         this.foodName = foodName;
@@ -27,6 +29,7 @@ public class CommunityItem {
         this.community_profile = community_profile;
         this.isFavorite = isFavorite;
         this.postId = postId;
+        this.recipeId = recipeId;
     }
 
     public String getUserId() { return userId; }
@@ -37,7 +40,7 @@ public class CommunityItem {
 
     public String getFoodTitle() { return foodTitle; }
 
-    public String getCommunity_foodImg(){return community_foodImg;}
+    public Bitmap getCommunity_foodImg(){return community_foodImg;}
 
     public int getCommunity_profile(){return community_profile;}
 
@@ -47,4 +50,6 @@ public class CommunityItem {
     public boolean getFavorite() { return isFavorite; }
 
     public String getPostId(){return postId; }
+
+    public String getRecipeId(){return recipeId; }
 }

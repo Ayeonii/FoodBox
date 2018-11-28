@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.R;
 
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -55,22 +57,28 @@ public class CommunityFragmentFavorite extends Fragment {
     }
 
 
+
     private void setData(){
+        try{
         for(int i =0 ; i<favorite_list.size(); i++) {
             String imgUrl = Mapper.getImageUrlRecipe(favorite_list.get(i).getRecipeId());
+            Bitmap bm = new CommunityFragmentNewsfeed.DownloadImageTask().execute(imgUrl).get();
             list.add(new CommunityItem(favorite_list.get(i).getWriter()
                     ,favorite_list.get(i).getTitle()
                     ,Mapper.searchRecipe(favorite_list.get(i).getRecipeId()).getDetail().getFoodName()
-                    ,imgUrl
+                    ,bm
                     ,R.drawable.temp_profile4
                     ,Mapper.matchFavorite(favorite_list.get(i).getPostId())
                     ,favorite_list.get(i).getPostId()
+                    ,favorite_list.get(i).getRecipeId()
             ));
         }
+            adapter.notifyDataSetChanged();
+        }
+        catch (Exception e){
+            adapter.notifyDataSetChanged();
+        }
 
-        adapter.notifyDataSetChanged();
     }
-
-
 
 }

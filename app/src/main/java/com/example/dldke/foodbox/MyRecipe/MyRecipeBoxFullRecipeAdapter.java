@@ -55,8 +55,6 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         }
     }
 
-
-
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_box_fullrecipe_list_item, parent, false);
         Context context = parent.getContext();
