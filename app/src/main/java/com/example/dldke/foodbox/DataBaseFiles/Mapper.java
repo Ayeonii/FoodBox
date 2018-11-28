@@ -758,38 +758,6 @@ public final class Mapper {
         }
     }
 
-    public static boolean matchFavorite(String postId) {
-        final String post_Id = postId;
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO communityItem = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
-                        userId);
-
-                for(int i =0; i < communityItem.getFavorites().size(); i++)
-                {
-                    if(communityItem.getFavorites().get(i).equals(post_Id)) {
-                        isFavorite = true;
-                        break;
-                    }
-                    else{
-                        isFavorite = false;
-                    }
-                }
-
-            }
-        });
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return isFavorite;
-    }
-
     public static List<PostDO> scanFavorite() {
 
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
@@ -1125,7 +1093,6 @@ public final class Mapper {
         }
         return resultPost;
     }
-
 
     public static void addRecipeInMyCommunity(final String recipeId) {
 
