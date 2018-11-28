@@ -39,9 +39,9 @@ public class RefrigeratorInsideActivity extends AppCompatActivity {
 
         btnSidedish = (Button)findViewById(R.id.btn_sidedish);
         btnDairy = (Button)findViewById(R.id.btn_dairy);
-        btnSauce = (Button)findViewById(R.id.btn_sauce);
+        btnSauce = (Button)findViewById(R.id.btn_etc);
         btnMeat = (Button)findViewById(R.id.btn_meat);
-        btnFruit = (Button)findViewById(R.id.btn_fruit);
+        btnFruit = (Button)findViewById(R.id.btn_fresh);
 
         btnSidedish.setOnClickListener(new Button.OnClickListener() {
             @Override

@@ -58,4 +58,10 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-android:1.23.0' exclude module: 'httpclient'
     implementation 'com.google.http-client:google-http-client-gson:1.23.0' exclude module: 'httpclient'
     api 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+
+    implementation 'com.amazonaws:aws-android-sdk-pinpoint:2.7.+'
+    implementation ('com.amazonaws:aws-android-sdk-auth-core:2.7.+@aar')  {transitive = true;}
+
+
+
 }

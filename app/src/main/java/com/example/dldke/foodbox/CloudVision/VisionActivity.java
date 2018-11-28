@@ -43,6 +43,7 @@ import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
 import com.amazonaws.mobileconnectors.apigateway.ApiResponse;
 import com.amazonaws.util.IOUtils;
 import com.amazonaws.util.StringUtils;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -362,7 +363,7 @@ public class VisionActivity extends AppCompatActivity {
         } else {
             message.append("nothing");
         }*/
-
+        Mapper.matchingInfo(message.toString());
 
         return message.toString();
     }

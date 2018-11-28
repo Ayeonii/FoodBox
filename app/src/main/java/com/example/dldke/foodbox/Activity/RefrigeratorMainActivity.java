@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
@@ -274,8 +275,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fabCamera:
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, 4321);
+                    //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
+                    startActivity(visionIntent);
                     break;
                 case R.id.fabPencil:
                     //Toast.makeText(RefrigeratorMainActivity.this, "직접입력 누름", Toast.LENGTH_SHORT).show();
