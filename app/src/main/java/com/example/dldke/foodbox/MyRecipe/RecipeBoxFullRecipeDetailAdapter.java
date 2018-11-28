@@ -71,8 +71,6 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
             specIngredientList = specList.get(i).getSpecIngredient();
             for(int j = 0; j<specIngredientList.size(); j++){
                 String specingredientName = specIngredientList.get(j).getIngredientName();
-                Log.e(TAG, "재료"+i+"  "+specingredientName);
-                Log.e("우우우우우우~", ""+result);
                 result = result.concat(specingredientName);
             }
             int number = i+1;

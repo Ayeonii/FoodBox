@@ -35,12 +35,13 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView ingredientImage;
-        public TextView ingredientName;
+        public TextView ingredientName, ingredientCount;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.ingredientImage = (ImageView) itemView.findViewById(R.id.ingredient_icon);
             this.ingredientName = (TextView) itemView.findViewById(R.id.ingredient_name);
+            this.ingredientCount = (TextView) itemView.findViewById(R.id.ingredient_count);
         }
     }
 
@@ -57,6 +58,8 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.ingredientName.setText(IngredientData.get(position).getIngredientName());
+        double count = IngredientData.get(position).getIngredient_count();
+        holder.ingredientCount.setText(Double.toString(count)+"개");
         holder.ingredientImage.setImageURI(IngredientData.get(position).getIngredientImage());
     }
 
@@ -69,8 +72,9 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
 
         for(int i = 0; i<ingredientList.size(); i++){
             String name = ingredientList.get(i).getIngredientName();
+            double count = ingredientList.get(i).getIngredientCount();
             foodImg = "file:///storage/emulated/0/Download/"+ingredientList.get(i).getIngredientName()+".jpg";
-            IngredientData.add(new FullRecipeIngredientData(name,  Uri.parse(foodImg)));
+            IngredientData.add(new FullRecipeIngredientData(name,  Uri.parse(foodImg), count));
         }
     }
 }
