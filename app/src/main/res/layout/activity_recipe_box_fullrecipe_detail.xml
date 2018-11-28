@@ -8,11 +8,23 @@
     android:fitsSystemWindows="true"
     tools:context=".MyRecipe.RecipeBoxFullRecipeDetailActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fullrecipe_detail_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fullrecipe_detail_ingredient_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fullrecipe_detail_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

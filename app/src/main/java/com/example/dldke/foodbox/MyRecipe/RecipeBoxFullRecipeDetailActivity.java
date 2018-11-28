@@ -22,10 +22,12 @@ import android.widget.Toast;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.FullRecipe.FullRecipeIngredientAdapter;
 import com.example.dldke.foodbox.R;
 
 
 import java.io.InputStream;
+import java.util.List;
 
 
 public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
@@ -34,8 +36,10 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     private MyRecipeBoxFullRecipeAdapter myRecipeBoxFullRecipeAdapter = new MyRecipeBoxFullRecipeAdapter();
     private String recipe_id;
     RecipeDO.Detail detail;
-    RecyclerView detail_recyclerview;
+    RecyclerView detail_recyclerview, detail_ingredient_recyclerview;
     private RecipeBoxFullRecipeDetailAdapter recipeDetailAdapter;
+    FullRecipeIngredientAdapter recipeIngredientAdapter;
+    List<RecipeDO.Ingredient> data;
 
     String TAG = "FullRecipeDetail";
 
@@ -63,6 +67,15 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         detail_recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recipeDetailAdapter = new RecipeBoxFullRecipeDetailAdapter(recipe_id);
         detail_recyclerview.setAdapter(recipeDetailAdapter);
+
+        detail_ingredient_recyclerview = (RecyclerView)findViewById(R.id.fullrecipe_detail_ingredient_view);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        detail_ingredient_recyclerview.setLayoutManager(mLayoutManager);
+        data = Mapper.searchRecipe(recipe_id).getIngredient();   //간이레시피 전체 재료 data
+        recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
+        detail_ingredient_recyclerview.setAdapter(recipeIngredientAdapter);
+
 
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
