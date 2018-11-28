@@ -1,15 +1,17 @@
 package com.example.dldke.foodbox.Community;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,13 +23,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
+import android.widget.Toast;
 
 public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
     private ArrayList<CommunityItem> itemList;
     private Context context;
-
+    private static String clicked_Recipe_id;
+    private static String clicked_Post_id;
     private OnLoadMoreListener onLoadMoreListener;
     private LinearLayoutManager mLinearLayoutManager;
 
@@ -35,8 +39,27 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     private int visibleThreshold = 1;
     int firstVisibleItem, visibleItemCount, totalItemCount, lastVisibleItem;
 
+    private void setClickedRecipeId(String clicked_Recipe_id){
+        this.clicked_Recipe_id = clicked_Recipe_id;
+    }
+    public String getClickedRecipeId(){
+        return clicked_Recipe_id;
+    }
+
+    private void setClickedPostId(String clicked_Post_id){
+        this.clicked_Post_id = clicked_Post_id;
+    }
+    public String getClickedPostId(){
+        return clicked_Post_id;
+    }
+
+
     public interface OnLoadMoreListener{
         void onLoadMore();
+    }
+
+    public CommunityLoadingAdapter(){
+        this.context = context;
     }
 
     public CommunityLoadingAdapter(OnLoadMoreListener onLoadMoreListener, Context context) {
@@ -58,11 +81,6 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                 totalItemCount = mLinearLayoutManager.getItemCount();
                 firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
                 lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
-                Log.e("total", totalItemCount + "");
-                Log.e("visible", visibleItemCount + "");
-
-                Log.e("first", firstVisibleItem + "");
-                Log.e("last", lastVisibleItem + "");
 
                 if (!isMoreLoading && (totalItemCount - visibleItemCount)<= (firstVisibleItem + visibleThreshold)) {
                     if (onLoadMoreListener != null) {
@@ -88,13 +106,10 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
     }
-
     public void addAll(List<CommunityItem> lst){
-
             itemList.clear();
             itemList.addAll(lst);
             notifyDataSetChanged();
-
     }
 
     public void addItemMore(List<CommunityItem> lst){
@@ -104,6 +119,27 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+
+        Button.OnClickListener onClickListener = new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.community_food_image:
+                    case R.id.communityFoodTitle:
+                    case R.id.community_cardview :
+                    case R.id.communityFoodName:
+                        setClickedRecipeId(itemList.get(position).getRecipeId());
+                        setClickedPostId(itemList.get(position).getPostId());
+                        Intent refMain = new Intent(context, CommunityDetailActivity.class);
+                        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(refMain);
+                        break ;
+                    case R.id.user_id:
+                        Toast.makeText(context, "user_id click", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        } ;
         if (holder instanceof StudentViewHolder) {
             ((StudentViewHolder) holder).communityUserId.setText(itemList.get(position).getUserId()+" 님이 레시피를 공유했습니다.");
             ((StudentViewHolder) holder).communityFoodTitle.setText(itemList.get(position).getFoodTitle());
@@ -141,6 +177,9 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
             else
                 ((StudentViewHolder) holder).communityProfile.setImageDrawable(context.getResources().getDrawable(itemList.get(position).getCommunity_profile(),null));
 
+
+            ((StudentViewHolder) holder).cardView.setOnClickListener(onClickListener);
+            ((StudentViewHolder) holder).communityProfile.setOnClickListener(onClickListener);
         }
     }
 
@@ -170,6 +209,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     static class StudentViewHolder extends RecyclerView.ViewHolder {
+        private CardView cardView;
         private ImageView communityFoodImg;
         private ImageView communityProfile;
         private TextView communityUserId;
@@ -179,6 +219,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         public StudentViewHolder(View v) {
             super(v);
+            cardView = (CardView)itemView.findViewById(R.id.community_cardview);
             communityFoodImg = (ImageView) itemView.findViewById(R.id.community_food_image);
             communityProfile = (ImageView) itemView.findViewById(R.id.newsfeed_profile_image);
             communityUserId = (TextView) itemView.findViewById(R.id.user_id);

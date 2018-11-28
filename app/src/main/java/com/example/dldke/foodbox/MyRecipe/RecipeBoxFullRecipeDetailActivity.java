@@ -34,9 +34,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     private MyRecipeBoxFullRecipeAdapter myRecipeBoxFullRecipeAdapter = new MyRecipeBoxFullRecipeAdapter();
     private String recipe_id;
     RecipeDO.Detail detail;
-
-
-
     RecyclerView detail_recyclerview;
     private RecipeBoxFullRecipeDetailAdapter recipeDetailAdapter;
 
@@ -57,7 +54,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
 
         detail = Mapper.searchRecipe(recipe_id).getDetail();
 
-
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.fullrecipe_detail_collasping_toolbar);
         String foodName = detail.getFoodName();
         collapsingToolbarLayout.setTitle(foodName);
@@ -77,8 +73,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         });
     }
 
-    //이미지 가져오기 비동기
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
         public DownloadImageTask(ImageView bmImage) {

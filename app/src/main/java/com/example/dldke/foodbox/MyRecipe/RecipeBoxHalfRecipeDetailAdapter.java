@@ -47,7 +47,7 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
      }
 
      public void onBindViewHolder(ViewHolder holder, int position){
-        String foodName = recipeItems.get(position).getName();
+         String foodName = recipeItems.get(position).getName();
          String foodImgUri ;
          File file = new File("/storage/emulated/0/Download/" + foodName+ ".jpg");
 

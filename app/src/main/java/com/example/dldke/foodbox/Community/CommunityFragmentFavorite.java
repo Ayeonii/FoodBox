@@ -70,6 +70,7 @@ public class CommunityFragmentFavorite extends Fragment {
                     ,R.drawable.temp_profile4
                     ,Mapper.matchFavorite(favorite_list.get(i).getPostId())
                     ,favorite_list.get(i).getPostId()
+                    ,favorite_list.get(i).getRecipeId()
             ));
         }
             adapter.notifyDataSetChanged();

@@ -143,6 +143,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                                     , R.drawable.temp_profile4
                                     , Mapper.matchFavorite(postList.get(i).getPostId())
                                     , postList.get(i).getPostId()
+                                    , postList.get(i).getRecipeId()
                             ));
                             cnt=1;
                         }
@@ -181,6 +182,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                         , R.drawable.temp_profile4
                         , Mapper.matchFavorite(postList.get(i).getPostId())
                         , postList.get(i).getPostId()
+                        , postList.get(i).getRecipeId()
                 ));
 
                 Log.e("load", "" + postList.get(i).getTitle());

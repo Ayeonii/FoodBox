@@ -1,12 +1,14 @@
 package com.example.dldke.foodbox.Community;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.PencilRecipe.CartCalendarDialog;
 import com.example.dldke.foodbox.R;
 
 import java.io.BufferedInputStream;
@@ -25,22 +29,30 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import android.os.Handler;
+import android.widget.Toast;
 
 
 public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecyclerAdapter.ItemViewHolder> {
     private ArrayList<CommunityItem> mItems;
     private Context context;
     private static ArrayList<CommunityItem> favoriteList = new ArrayList<>();
-    private boolean isAgain = false;
-    private ImageView img;
+    private static String clicked_Recipe_id;
 
 
     public CommunityRecyclerAdapter(){}
+
     public CommunityRecyclerAdapter(ArrayList<CommunityItem> items , Context context){
         mItems = items;
         this.context = context;
     }
     public ArrayList<CommunityItem> getFavoriteList(){ return favoriteList; }
+
+    private void setClickedRecipeId(String clicked_Recipe_id){
+        this.clicked_Recipe_id = clicked_Recipe_id;
+    }
+    public String getClickedRecipeId(){
+        return clicked_Recipe_id;
+    }
 
     @Override
     public CommunityRecyclerAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,11 +65,27 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
     // View 의 내용을 해당 포지션의 데이터로 바꿈.
     @Override
     public void onBindViewHolder(final CommunityRecyclerAdapter.ItemViewHolder holder, final int position) {
+        Button.OnClickListener onClickListener = new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.community_cardview :
+                        Toast.makeText(context, "카드뷰 클릭", Toast.LENGTH_SHORT).show();
+                        setClickedRecipeId(mItems.get(position).getRecipeId());
+                        Intent refMain = new Intent(context, CommunityDetailActivity.class);
+                        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(refMain);
+                        break ;
+                    case R.id.user_id:
+                        Toast.makeText(context, "user_id click", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        } ;
+
         holder.communityUserId.setText(mItems.get(position).getUserId()+" 님이 레시피를 공유했습니다.");
         holder.communityFoodTitle.setText(mItems.get(position).getFoodTitle());
         holder.communityFoodName.setText(mItems.get(position).getFoodName());
-
-
         holder.star_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,6 +99,7 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
                 }
             }
         });
+
         if(mItems.get(position).getFavorite()){
             holder.star_btn.setSelected(true);
         }
@@ -90,6 +119,10 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
         else
             holder.communityProfile.setImageDrawable(context.getResources().getDrawable(mItems.get(position).getCommunity_profile(),null));
 
+        holder.cardView.setOnClickListener(onClickListener);
+        holder.communityProfile.setOnClickListener(onClickListener);
+
+
     }
 
 
@@ -102,6 +135,7 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
     // 커스텀 뷰홀더
     // item layout 에 존재하는 위젯들을 바인딩
     class ItemViewHolder extends RecyclerView.ViewHolder {
+        private CardView cardView;
         private ImageView communityFoodImg;
         private ImageView communityProfile;
         private TextView communityUserId;
@@ -111,6 +145,7 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            cardView = (CardView)itemView.findViewById(R.id.community_cardview);
             communityFoodImg = (ImageView) itemView.findViewById(R.id.community_food_image);
             communityProfile = (ImageView) itemView.findViewById(R.id.newsfeed_profile_image);
             communityUserId = (TextView) itemView.findViewById(R.id.user_id);
