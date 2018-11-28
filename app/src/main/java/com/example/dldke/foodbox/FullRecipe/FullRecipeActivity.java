@@ -142,6 +142,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         String FoodTitle;
         List<RecipeDO.Spec> specList;
 
+//        if(food_img_real == null){
+//            String foodImg = "file:///storage/emulated/0/Download/default.jpg";
+//            Uri uri = Uri.parse(foodImg);
+//            imagePath = getRealPathFromURI(uri);
+//        }
+
         FoodTitle= foodtitle.getText().toString();
         specList = stepDialog.getSpecList();
         Mapper.createFullRecipe(recipeId, FoodTitle, specList);
