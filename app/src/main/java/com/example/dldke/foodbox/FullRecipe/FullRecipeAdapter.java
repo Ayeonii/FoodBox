@@ -101,7 +101,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
                             }
                         });
 
-                        View view = LayoutInflater.from(mContext).inflate(R.layout.fullrecipe_step_popup, null, false);
+                        View view = LayoutInflater.from(mContext).inflate(R.layout.fullrecipe_step_dialog, null, false);
                         builder.setView(view);
                         final Button ButtonSubmit = (Button) view.findViewById(R.id.done_btn);
                         final Spinner MethodSpinner = (Spinner) view.findViewById(R.id.method_spinner);
