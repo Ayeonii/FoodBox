@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.DataBaseFiles;
 
 import android.content.Context;
+import android.icu.text.IDNA;
 import android.util.Log;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -1313,6 +1314,59 @@ public final class Mapper {
 
         return toBuyList;
     }
+
+    public static List<InfoDO> matchingInfo(String message)
+    {
+        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
+        final List<String> inputNames = new ArrayList<String>();
+        String[] arr = message.split("\n");
+        for(String temp : arr){
+            inputNames.add(temp.replaceAll("\\p{Z}", ""));
+        }
+        for(String temp : inputNames){
+            Log.d("matchingInfo",temp);
+        }
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            List<InfoDO> itemList;
+            @Override
+            public void run() {
+
+                for(String temp : inputNames){
+                    DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                    Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(temp));
+                    scanExpression.addFilterCondition("productName", condition);
+                    List<InfoDO> tmpItemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
+                    Log.d("tmpItemList", tmpItemList.get(0).getName());
+                    try{
+                        itemList.add(tmpItemList.get(0));
+                    }
+                    catch(Exception e){
+
+                    }
+
+                }
+
+            }
+            @Override
+            public Object getResult(){
+                return itemList;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
+        Log.d("matchingInfo","what?");
+        for(InfoDO temp : itemList){
+            Log.d("matchingInfo",temp.getName());
+        }
+        return itemList;
+    }
+
 
     private class PoolConfig{
         @SerializedName("Default")
