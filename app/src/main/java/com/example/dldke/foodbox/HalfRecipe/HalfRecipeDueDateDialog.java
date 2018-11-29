@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListener {
 
-    private TextView txtCancel, txtOk;
+    private Button btnCancel, btnOk;
     private RecyclerView recyclerView;
 
     private Context context;
@@ -37,12 +37,12 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_duedate_dialog);
 
-        txtCancel = (TextView) findViewById(R.id.txt_cancel);
-        txtOk = (TextView) findViewById(R.id.txt_ok);
+        btnCancel = (Button) findViewById(R.id.btn_cancel);
+        btnOk = (Button) findViewById(R.id.btn_ok);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        txtCancel.setOnClickListener(this);
-        txtOk.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+        btnOk.setOnClickListener(this);
 
         setRecyclerView();
     }
@@ -75,10 +75,10 @@ public class HalfRecipeDueDateDialog extends Dialog implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txt_cancel:
+            case R.id.btn_cancel:
                 cancel();
                 break;
-            case R.id.txt_ok:
+            case R.id.btn_ok:
                 dialogListener.onDueDateOKClicked(mItems);
                 //dismiss();
                 break;

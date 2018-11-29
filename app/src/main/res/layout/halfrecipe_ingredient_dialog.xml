@@ -60,26 +60,24 @@
             android:visibility="visible"
             android:weightSum="10">
 
-            <TextView
-                android:id="@+id/txt_cancel"
+            <Button
+                android:id="@+id/btn_cancel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"
                 android:gravity="center"
                 android:text="취소"
                 android:fontFamily="@font/font_family"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txt_ok"
+            <Button
+                android:id="@+id/btn_ok"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"
                 android:gravity="center"
                 android:text="확인"
                 android:fontFamily="@font/font_family"
@@ -98,13 +96,12 @@
             android:visibility="gone"
             android:weightSum="10">
 
-            <TextView
-                android:id="@+id/txt_back_empty"
+            <Button
+                android:id="@+id/btn_back_empty"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"
                 android:gravity="center"
                 android:text="뒤로"
                 android:textColor="@color/colorAccent"

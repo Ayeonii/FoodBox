@@ -2,13 +2,13 @@ package com.example.dldke.foodbox.MyRefrigeratorInside;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,7 +22,8 @@ import java.util.ArrayList;
 
 public class InsideDialog extends Dialog implements View.OnClickListener {
 
-    private TextView txtType, txtEmpty, txtBackEmpty, txtCancel, txtOk;
+    private TextView txtType, txtEmpty;
+    private Button btnBackEmpty, btnCancel, btnOk;
     private LinearLayout linearLayout1, linearLayout2;
     private RecyclerView recyclerView;
 
@@ -62,16 +63,16 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
 
         txtType = (TextView) findViewById(R.id.txt_type);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
-        txtCancel = (TextView) findViewById(R.id.txt_cancel);
-        txtBackEmpty = (TextView) findViewById(R.id.txt_back_empty);
-        txtOk = (TextView) findViewById(R.id.txt_ok);
+        btnBackEmpty = (Button) findViewById(R.id.btn_back_empty);
+        btnCancel = (Button) findViewById(R.id.btn_cancel);
+        btnOk = (Button) findViewById(R.id.btn_ok);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayout1 = (LinearLayout) findViewById(R.id.layout1);
         linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
 
-        txtCancel.setVisibility(View.INVISIBLE);
-        txtBackEmpty.setOnClickListener(this);
-        txtOk.setOnClickListener(this);
+        btnCancel.setVisibility(View.INVISIBLE);
+        btnBackEmpty.setOnClickListener(this);
+        btnOk.setOnClickListener(this);
 
         switch (ingreType) {
             case "sideDish":
@@ -143,10 +144,10 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txt_back_empty:
+            case R.id.btn_back_empty:
                 cancel();
                 break;
-            case R.id.txt_ok:
+            case R.id.btn_ok:
                 dismiss();
                 break;
         }
