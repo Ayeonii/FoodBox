@@ -245,7 +245,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 showIngredientDialog(nameDairy, checkDairy, "dairy");
                 break;
             case R.id.btn_etc:
-                Log.d("test", "======etc======");
                 showIngredientDialog(nameEtc, checkEtc, "etc");
                 break;
             case R.id.btn_meat:

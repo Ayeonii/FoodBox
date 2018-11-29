@@ -57,8 +57,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             return clickCnt;
         }
 
-        public void setClickCnt(int
-                                        num){this.clickCnt = num;}
+        public void setClickCnt(int num){this.clickCnt = num;}
 
         // 새로운 뷰 홀더 생성
         @Override

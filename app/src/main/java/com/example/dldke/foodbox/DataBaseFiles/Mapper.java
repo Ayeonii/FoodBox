@@ -682,8 +682,9 @@ public final class Mapper {
         }
     }
 
-    public static void deleteFood(String name) {
+    public static void deleteFood(String name, String dueDate) {
         final String itemName = name;
+        final String itemDueDate = dueDate;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -694,7 +695,7 @@ public final class Mapper {
                 int index = 0;
                 for(int i =0; i < foodItem.getItem().size(); i++)
                 {
-                    if(foodItem.getItem().get(i).getName().equals(itemName)) {
+                    if(foodItem.getItem().get(i).getName().equals(itemName) && foodItem.getItem().get(i).getDueDate().equals(itemDueDate)) {
                         foodItem.getItem().remove(i);
                         break;
                     }

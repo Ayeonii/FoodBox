@@ -38,6 +38,8 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
 
     private InsideItemDialog itemDialog;
 
+    ArrayList<DCItem> dcArray = new ArrayList<>();
+
     public InsideDialog(@NonNull Context context, String type, boolean isEmpty) {
         super(context);
         this.context = context;
@@ -58,8 +60,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_ingredient_dialog);
-
-        Log.d("test", "dialog onCreate");
 
         txtType = (TextView) findViewById(R.id.txt_type);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
@@ -92,7 +92,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                 break;
         }
 
-        //true : txtEmpty, false : recyclerView
         if (isEmpty) {
             recyclerView.setVisibility(View.GONE);
             txtEmpty.setVisibility(View.VISIBLE);
@@ -109,21 +108,22 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        adapter = new InsideAdapter(mItems);
+        adapter = new InsideAdapter(mItems, ingreType);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
         recyclerView.addOnItemTouchListener(
                 new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
-                        ArrayList<DCItem> dcArray = new ArrayList<>();
+                        dcArray.clear();
                         for (int i=0; i<localArray.size(); i++) {
                             if (localArray.get(i).getName().equals(nameArray.get(position))) {
+                                // 해당 포지션의 이름을 localArray에서 유통기한이랑 개수를 모두 긁어온다
                                 dcArray.add(new DCItem(localArray.get(i).getDueDate(), localArray.get(i).getCount()));
                             }
                         }
-                        itemDialog = new InsideItemDialog(context, nameArray.get(position), dcArray);
-                        itemDialog.show();
+
+                        showItemDialg(position);
                     }
                 }
                 ));
@@ -139,6 +139,11 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    public void showItemDialg(int i) {
+        itemDialog = new InsideItemDialog(context, nameArray.get(i), dcArray);
+        itemDialog.show();
     }
 
     @Override
