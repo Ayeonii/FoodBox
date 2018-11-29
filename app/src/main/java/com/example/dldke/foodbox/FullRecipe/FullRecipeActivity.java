@@ -64,7 +64,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         food_img = (ImageView)findViewById(R.id.food_img);
         food_img_real = (ImageView)findViewById(R.id.food_img_real);
         ingredient_add = (Button)findViewById(R.id.ingredient_add);
-        spec_add = (Button) findViewById(R.id.button_main_insert);
+        spec_add = (Button) findViewById(R.id.spec_insert_btn);
         ok_btn = (Button) findViewById(R.id.recipe_ok);
         spinner = (Spinner) findViewById(R.id.food_spinner);
         recipe_ingredient_view = (RecyclerView) findViewById(R.id.recipe_ingredient_recyclerview);
@@ -118,7 +118,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 selectGallery();
                 break;
 
-            case R.id.button_main_insert:
+            case R.id.spec_insert_btn:
                 stepDialog = new FullRecipeStepDialog(this, recipeId);
                 stepDialog.show();
                 break;

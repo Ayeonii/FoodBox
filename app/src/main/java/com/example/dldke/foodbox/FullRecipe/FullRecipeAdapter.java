@@ -135,6 +135,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
                                 }
 
                                 RecipeDO.Spec spec = Mapper.createSpec(specIngredient, method_st, fire_st, minute_int);
+
                                 specList.add(spec);
 
                                 Log.e(TAG, ""+step_description);

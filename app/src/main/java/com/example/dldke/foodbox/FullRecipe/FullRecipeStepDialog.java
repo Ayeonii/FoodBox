@@ -40,7 +40,7 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
 
     private List<RecipeDO.Ingredient> ingredients = new ArrayList<>();
     private List<RecipeDO.Ingredient> specIngredient = new ArrayList<>();
-    private List<RecipeDO.Spec> specList = new ArrayList<>();
+    private static final List<RecipeDO.Spec> specList = new ArrayList<>();
 
     public List<RecipeDO.Spec> getSpecList(){
         return specList;
@@ -115,9 +115,8 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         items = adapter.getTempItems();
 
         String ingredient="";
-        ingredient = items.get(0);
-        for(int i = 1; i<items.size(); i++){
-            ingredient = ingredient+","+items.get(i);
+        for(int i = 0; i<items.size(); i++){
+            ingredient = ingredient+items.get(i)+",";
             for(int j = 0; j<ingredients.size(); j++){
                 if(items.get(i).equals(ingredients.get(j).getIngredientName()))
                     specIngredient.add(ingredients.get(j));
@@ -133,7 +132,11 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         RecipeDO.Spec spec = Mapper.createSpec(specIngredient, method_st, fire_st, minute_int);
         specList.add(spec);
 
-        Log.e(TAG, ""+step_description);
+
+        for(int k = 0; k<specList.size(); k++){
+            Log.e(TAG, "방법"+specList.get(k).getSpecMethod()+"시간"+specList.get(k).getSpecMinute()+"불"+specList.get(k).getSpecFire());
+        }
+
 
         FullRecipeData data = new FullRecipeData(step_description);
         FullRecipeActivity.mArrayList.add(data);
