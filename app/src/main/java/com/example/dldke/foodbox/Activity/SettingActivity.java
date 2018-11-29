@@ -28,7 +28,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         alarm.setOnClickListener(this);
         cooking_class.setOnClickListener(this);
         logout.setOnClickListener(this);
-        
+
         user_id.setText(Mapper.getUserId());
     }
 
