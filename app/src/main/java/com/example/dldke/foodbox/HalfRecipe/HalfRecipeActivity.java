@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
@@ -18,6 +19,7 @@ import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -29,7 +31,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private List<RefrigeratorDO.Item> refrigeratorItem;
     private ArrayList<LocalRefrigeratorItem> localSideDish, localDairy, localEtc, localMeat, localFresh;
-    private ArrayList<String> nameSideDish, nameDairy, nameEtc, nameMeat, nameFresh;
+    private ArrayList<String> nameSideDish, nameDairy, nameEtc, nameMeat, nameFresh, nameAll;
     private ArrayList<String> dupliArray;
 
     private Boolean[] checkSideDish, checkDairy, checkEtc, checkMeat, checkFresh;
@@ -41,6 +43,10 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private String user_id;
     private String recipeSimpleName;
+
+    // 추가재료 부분================
+    private List<InfoDO> infoFreshItem, infoMeatItem, infoEtcItem;
+    //==============================
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +70,82 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         scanToLocalRefrigerator();
         setDuplicateArray();
         setCheckArray();
+        setInfoDOList();
 
         try {
             user_id = Mapper.searchMyCommunity().getUserId();
         } catch (NullPointerException e) {
             Mapper.createMyCommunity();
+        }
+    }
+
+    public void setInfoDOList() {
+
+        infoFreshItem = Mapper.scanSection("fresh");
+        infoMeatItem = Mapper.scanSection("meat");
+        infoEtcItem = Mapper.scanSection("etc");
+
+        nameAll = new ArrayList<>();
+        int[] check = new int[100];
+
+        // fresh======================
+        Arrays.fill(check, 0);
+
+        for (int i=0; i<nameFresh.size(); i++) {    //내가 가지고 있는 신선칸 재료들
+            for (int j = 0; j < infoFreshItem.size(); j++) {    //기본 infoDO에 있는 신선칸 재료들
+                if (infoFreshItem.get(j).getName().equals(nameFresh.get(i))) {
+                    check[j] = 1;
+                    break;  // j for문을 나온다
+                }
+            }
+        }
+
+        for (int i=0; i<infoFreshItem.size(); i++) {
+            if (check[i]==0)
+                nameAll.add(infoFreshItem.get(i).getName());
+        }
+
+        // meat======================
+        Arrays.fill(check, 0);
+
+        for (int i=0; i<nameMeat.size(); i++) {
+            for (int j=0; j<infoMeatItem.size(); j++) {
+                if (infoMeatItem.get(j).getName().equals(nameMeat.get(i))) {
+                    check[j] = 1;
+                    break;
+                }
+            }
+        }
+
+        for (int i=0; i<infoMeatItem.size(); i++) {
+            if (check[i]==0)
+                nameAll.add(infoMeatItem.get(i).getName());
+        }
+
+        // etc======================
+        Arrays.fill(check, 0);
+
+        for (int i=0; i<nameEtc.size(); i++) {
+            for (int j=0; j<infoEtcItem.size(); j++) {
+                if (infoEtcItem.get(j).getName().equals(nameEtc.get(i))) {
+                    check[j] = 1;
+                    break;
+                }
+            }
+        }
+
+        for (int i=0; i<nameDairy.size(); i++) {
+            for (int j=0; j<infoEtcItem.size(); j++) {
+                if (infoEtcItem.get(j).getName().equals(nameDairy.get(i))) {
+                    check[j] = 1;
+                    break;
+                }
+            }
+        }
+
+        for (int i=0; i<infoEtcItem.size(); i++) {
+            if (check[i]==0)
+                nameAll.add(infoEtcItem.get(i).getName());
         }
     }
 
@@ -413,7 +490,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void showRecipeDialog() {
-        recipeDialog = new HalfRecipeRecipeDialog(this, selectedItem, dupliArray);
+        recipeDialog = new HalfRecipeRecipeDialog(this, selectedItem, dupliArray, nameAll);
         recipeDialog.setDialogListener(new HalfRecipeDialogListener() {
             @Override
             public void onPositiveClicked(String type, Boolean[] check) {
@@ -428,6 +505,8 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     goHalfRecipeMaking(mItems, dueDateCheckArray);
                 } else if (result == 2) {
                     showDueDateDialog(mItems, dueDateCheckArray);
+                } else if (result == 3) {
+                    goIngHalfRecipeMaking(mItems);
                 }
             }
 
@@ -552,6 +631,12 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         startActivity(halfRecipeCompleteActivity);
     }
 
+    private void goIngHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
+        Log.d("test", "===HalfRecipeActivity로 넘어온 mItems===");
+        for (int i=0; i<mItems.size(); i++) {
+            Log.d("test", "name : " + mItems.get(i).getName() + ", count : " + mItems.get(i).getCount() + ", editCount : " + mItems.get(i).getEditCount());
+        }
+    }
 }
 
 class AscendingSort implements Comparator<DCItem> {
