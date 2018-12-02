@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapperConfig;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipe.FullRecipeIngredientAdapter;
@@ -133,8 +134,23 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 //Toast.makeText(getApplicationContext(), edittext.getText().toString(), Toast.LENGTH_SHORT).show();
                 String title = edittext.getText().toString();
-                Mapper.searchRecipe(recipe_id).setIsShare(true);
-                Log.e(TAG, "공유되었다아앙 "+ Mapper.searchRecipe(recipe_id).getIsShare());
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RecipeDO recipe = Mapper.searchRecipe(recipe_id);
+                        recipe.setIsShare(true);
+                        Mapper.getDynamoDBMapper().save(recipe);
+                    }
+
+                });
+                thread.start();
+                try{
+                    thread.join();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 Mapper.createPost(" "+title, recipe_id);
 
                 Intent MainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);

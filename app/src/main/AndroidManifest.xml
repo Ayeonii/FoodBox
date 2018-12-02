@@ -55,15 +55,7 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".Community.CommunityDetailActivity"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".Activity.SettingActivity"/>
-        <activity android:name=".CloudVision.VisionActivity" />
-        <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".CloudVision.VisionActivity" />
-        <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".Setting.SettingActivity" android:windowSoftInputMode="adjustNothing"/>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"

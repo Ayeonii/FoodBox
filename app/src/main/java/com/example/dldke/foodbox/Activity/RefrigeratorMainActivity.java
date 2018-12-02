@@ -27,6 +27,7 @@ import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
+import com.example.dldke.foodbox.Setting.SettingActivity;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
@@ -49,7 +50,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     //메뉴 배경 레이아웃
     LinearLayout menuTransBack;
     //메뉴창에 들어갈 리스트
-    static final String[] LIST_MENU = {"내 레시피 보기", "Community", "Store", "설정"};
+    static final String[] LIST_MENU = {"내 레시피 보기", "Community", "Store", "설정", "로그아웃"};
     //메뉴 슬라이딩 열기/닫기 플래그
     boolean isPageOpen = false;
     //메뉴 슬라이드 열기/닫기 애니메이션
@@ -160,13 +161,13 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             //클릭한 리스트의 text가져오기
             String strText = (String) parent.getItemAtPosition(position);
 
-            /*if (strText.equals("로그아웃")) {
+            if (strText.equals("로그아웃")) {
                 IdentityManager.getDefaultIdentityManager().signOut();
                 Intent MainActivity = new Intent(getApplicationContext(), MainActivity.class);
                 //로그아웃 후, 뒤로가기 누르면 다시 로그인 된 상태로 가는 것을 방지
                 MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(MainActivity);
-            }*/
+            }
 
             if (strText.equals("내 레시피 보기")) {
                 Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity.class);
@@ -182,6 +183,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent settingActivity = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(settingActivity);
             }
+
             if (isPageOpen) {
                 //fabPlus.setElevation(10);
                 //fabMinus.setElevation(10);

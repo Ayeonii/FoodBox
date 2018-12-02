@@ -5,6 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/setting_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="53dp"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <TextView
+            android:id="@+id/setting_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="설정"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
+
+    </android.support.v7.widget.Toolbar>
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_profile"
         android:layout_width="100dp"
@@ -12,25 +34,24 @@
         android:background="@drawable/foodbox_icon2"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="5dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/user_name"/>
 
-    <TextView
-        android:id="@+id/user_name"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:text="유저 아이디"
-        android:textSize="25dp"
-        android:fontFamily="@font/font_family"
-        android:gravity="center"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/nickname_linear"/>
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="User ID"
+            android:textSize="20dp"
+            android:fontFamily="@font/font_family"
+            android:gravity="center"
+            android:layout_marginTop="3dp"
+            app:layout_constraintTop_toBottomOf="@+id/user_profile"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
 
     <!-- LinearLayout Divider-->
     <LinearLayout
@@ -38,30 +59,32 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimary"
         app:layout_constraintTop_toBottomOf="@+id/user_name"
-        app:layout_constraintBottom_toTopOf="@+id/nickname_linear"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <LinearLayout
         android:id="@+id/nickname_linear"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/user_name"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/alarm_linear">
+        app:layout_constraintRight_toRightOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="닉네임 설정"
+            android:layout_margin="5dp"
+            android:text="닉네임 : "
             android:textSize="20dp"
             android:fontFamily="@font/font_family"
-            android:gravity="center"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="20dp"/>
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/nickname"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"/>
 
     </LinearLayout>
 
@@ -71,14 +94,13 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimary"
         app:layout_constraintTop_toBottomOf="@+id/nickname_linear"
-        app:layout_constraintBottom_toTopOf="@+id/alarm_linear"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <LinearLayout
-        android:id="@+id/alarm_linear"
+        android:id="@+id/cooking_class"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/nickname_linear"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -87,17 +109,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="알림 설정"
+            android:layout_margin="5dp"
+            android:text="쿠킹 클래스"
             android:textSize="20dp"
             android:fontFamily="@font/font_family"
-            android:gravity="center"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="20dp"/>
+            android:gravity="center"/>
 
         <Switch
-            android:layout_width="50dp"
-            android:layout_height="match_parent" />
+            android:id="@+id/cooking_class_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"/>
 
     </LinearLayout>
 
@@ -106,72 +128,20 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@+id/alarm_linear"
-        app:layout_constraintBottom_toTopOf="@+id/cookingclass_linear"
+        app:layout_constraintTop_toBottomOf="@+id/cooking_class"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/cookingclass_linear"
+    <Button
+        android:id="@+id/setting_ok_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/alarm_linear"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="쿠킹 클래스 등록하기"
-            android:textSize="20dp"
-            android:fontFamily="@font/font_family"
-            android:gravity="center"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="20dp"/>
-
-    </LinearLayout>
-
-    <!-- LinearLayout Divider-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:text="확인"
         android:background="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@+id/cookingclass_linear"
-        app:layout_constraintBottom_toTopOf="@+id/logout_linear"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/logout_linear"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/cookingclass_linear"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="로그아웃"
-            android:textSize="20dp"
-            android:fontFamily="@font/font_family"
-            android:gravity="center"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="20dp"/>
-
-    </LinearLayout>
-
-    <!-- LinearLayout Divider-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@+id/logout_linear"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
