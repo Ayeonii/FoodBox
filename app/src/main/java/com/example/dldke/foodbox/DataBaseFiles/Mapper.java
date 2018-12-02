@@ -416,7 +416,7 @@ public final class Mapper {
         return itemList;
     }
 
-    public static void checkFirst() {
+    public static void checkAndCreateFisrt() {
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -435,6 +435,14 @@ public final class Mapper {
                             userId);
                 }catch (NullPointerException e){
                     createRefrigerator();
+                }
+
+                try {
+                    MemoDO memo = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                            userId);
+                }catch (NullPointerException e){
+                    createMemo();
                 }
 
                 try {
@@ -1171,16 +1179,21 @@ public final class Mapper {
         }
     }
 
-    public static void updateUserInfo(String nickName, boolean isCook, String registN){
-        final com.example.dldke.foodbox.DataBaseFiles.UserDO userInfo= new com.example.dldke.foodbox.DataBaseFiles.UserDO();
-
-        userInfo.setNickname(nickName);
-        userInfo.setIsCookingClass(isCook);
-        userInfo.setRegisterNumber(registN);
-
+    public static void updateUserInfo(final String nickName, boolean isCook, String registNum){
+        final String nickN = nickName;
+        final boolean isCooking = isCook;
+        final String registN = registNum;
         Thread thread = new Thread(new Runnable() {
+
             @Override
             public void run() {
+                UserDO userInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+
+                userInfo.setNickname(nickN);
+                userInfo.setIsCookingClass(isCooking);
+                userInfo.setRegisterNumber(registN);
                 Mapper.getDynamoDBMapper().save(userInfo);
             }
         });
@@ -1220,6 +1233,69 @@ public final class Mapper {
         return userInfo;
     }
 
+    public static void givePoint(Integer point){
+        final Integer plus = point;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.UserDO userInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+
+                Integer temp = userInfo.getPoint();
+                userInfo.setPoint(temp + plus);
+                Mapper.getDynamoDBMapper().save(userInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean expendPoint(Integer point){
+        final Integer minus = point;
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
+
+            boolean result;
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.UserDO userInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+
+                Integer temp = userInfo.getPoint();
+                if(temp >= minus) {
+                    userInfo.setPoint(temp - minus);
+                    result = true;
+                }
+                else{
+                    result = false;
+                }
+
+                Mapper.getDynamoDBMapper().save(userInfo);
+            }
+
+            @Override
+            public Object getResult(){
+                return result;
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        boolean result = (boolean)thread.getResult();
+
+        return result;
+    }
 
 
     private class PoolConfig{
