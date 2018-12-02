@@ -648,6 +648,35 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             Log.d("test", "name : " + needItem.get(i).getName() + ", needCount : " + needItem.get(i).getNeedCount());
         }
 
+        //recipe 테이블 접근
+        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+        for (int i = 0; i < mItems.size(); i++) {
+            recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
+        }
+        final String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
+
+        Log.d("test", recipe_id);
+
+
+        Thread thread = new Thread(new Runnable() {
+            final String recipeId = recipe_id;
+            @Override
+            public void run() {
+
+                RecipeDO recipe = Mapper.searchRecipe(recipeId);
+                recipe.setIng(true);
+                Mapper.getDynamoDBMapper().save(recipe);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Mapper.addRecipeInMyCommunity(recipe_id);
+
 
 //        Intent intent = new Intent(this, HalfRecipeIngActivity.class);
 //        intent.putExtra("need", needItem);
