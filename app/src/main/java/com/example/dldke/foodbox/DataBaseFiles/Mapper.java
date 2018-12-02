@@ -36,8 +36,7 @@ public final class Mapper {
     private static DynamoDBMapper dynamoDBMapper;
     private static String userId;
     private static String bucketName;
-    private Mapper(){
-    }
+    private Mapper(){}
 
     public static DynamoDBMapper getDynamoDBMapper(){
         return dynamoDBMapper;
@@ -483,9 +482,9 @@ public final class Mapper {
             @Override
             public void run() {
 
-                    Refri = Mapper.getDynamoDBMapper().load(
-                            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
-                            userId);
+                Refri = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                        userId);
 
             }
             @Override
@@ -1100,8 +1099,7 @@ public final class Mapper {
         return postItem;
     }
 
-    public static List<PostDO> recommendRecipe()
-    {
+    public static List<PostDO> recommendRecipe()    {
         List<PostDO> entirePost = scanPost();
         List<RecipeDO.Ingredient> urgentIngredient = scanUrgentMemo();
         List<PostDO> resultPost = new ArrayList<>();
