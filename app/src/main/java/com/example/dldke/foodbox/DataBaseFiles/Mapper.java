@@ -80,6 +80,41 @@ public final class Mapper {
         return ingredient;
     }
 
+    public static boolean checkFirst() {
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
+            @Override
+            public void run() {
+
+                Refri = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                        userId);
+
+            }
+            @Override
+            public Object getResult(){
+                return Refri.getUserId();
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            Object refri_item = thread.getResult();
+        }
+        catch (NullPointerException e){
+            return true;
+        }
+
+        return false;
+    }
+
     public static com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec createSpec(List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient> ingredient, String method, String fire, Integer minute)
     {
         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec spec1 = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec();
