@@ -474,9 +474,10 @@ public final class Mapper {
         return itemList;
     }
 
-    public static void checkFirst() {
+    public static boolean checkFirst() {
 
-        Thread thread = new Thread(new Runnable() {
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
             @Override
             public void run() {
 
@@ -490,6 +491,7 @@ public final class Mapper {
                 return Refri.getUserId();
             }
         });
+
         thread.start();
         try{
             thread.join();
@@ -497,6 +499,14 @@ public final class Mapper {
             e.printStackTrace();
         }
 
+        try{
+            Object refri_item = thread.getResult();
+        }
+        catch (NullPointerException e){
+            return true;
+        }
+
+        return false;
     }
 
     public static List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> scanRefri() {
@@ -1322,15 +1332,17 @@ public final class Mapper {
     }
 
     public static void updateUserInfo(String nickName, boolean isCook, String registN){
-        final com.example.dldke.foodbox.DataBaseFiles.UserDO userInfo= new com.example.dldke.foodbox.DataBaseFiles.UserDO();
-
-        userInfo.setNickname(nickName);
-        userInfo.setIsCookingClass(isCook);
-        userInfo.setRegisterNumber(registN);
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                 UserDO userInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+
+                userInfo.setNickname(nickName);
+                userInfo.setIsCookingClass(isCook);
+                userInfo.setRegisterNumber(registN);
                 Mapper.getDynamoDBMapper().save(userInfo);
             }
         });

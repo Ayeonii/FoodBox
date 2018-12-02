@@ -98,7 +98,7 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <LinearLayout
-        android:id="@+id/cooking_class"
+        android:id="@+id/cooking_class_linear"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
@@ -128,9 +128,75 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@+id/cooking_class"
+        app:layout_constraintTop_toBottomOf="@+id/cooking_class_linear"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/business_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/cooking_class_linear"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="사업자 번호"
+            android:textSize="20dp"
+            android:fontFamily="@font/font_family"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/business_number1"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:maxLength="3"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textSize="20dp"
+                android:fontFamily="@font/font_family"/>
+
+            <EditText
+                android:id="@+id/business_number2"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:maxLength="2"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textSize="20dp"
+                android:fontFamily="@font/font_family"/>
+
+            <EditText
+                android:id="@+id/business_number3"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:maxLength="4"/>
+
+        </LinearLayout>
+
+        <!-- LinearLayout Divider-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/setting_ok_btn"
