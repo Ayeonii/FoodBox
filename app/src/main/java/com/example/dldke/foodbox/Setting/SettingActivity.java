@@ -55,6 +55,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         //Mapper.createUserInfo();
 
         user_id.setText(Mapper.getUserId());
+        isCook = Mapper.searchUserInfo().getIsCookingClass();
 
         try{
             String nicknameStr = Mapper.searchUserInfo().getNickname();
@@ -67,6 +68,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         if(isCook){
             cooking_class.setChecked(true);
+            business_license_number.setVisibility(View.VISIBLE);
+            String temp = Mapper.searchUserInfo().getRegisterNumber();
+            business_N1.setText(temp.substring(0,3));
+            business_N2.setText(temp.substring(3, 5));
+            business_N3.setText(temp.substring(5, 9));
         }
         else{
             cooking_class.setChecked(false);

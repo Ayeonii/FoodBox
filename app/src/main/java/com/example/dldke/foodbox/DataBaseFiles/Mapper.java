@@ -1331,7 +1331,11 @@ public final class Mapper {
         }
     }
 
-    public static void updateUserInfo(String nickName, boolean isCook, String registN){
+    public static void updateUserInfo(String nickName, boolean isCook, String registNum){
+
+        final String nickN = nickName;
+        final boolean isCooking = isCook;
+        final String registN = registNum;
 
         Thread thread = new Thread(new Runnable() {
             @Override
