@@ -15,6 +15,8 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.s3.model.Region;
 import com.example.dldke.foodbox.CurrentDate;
+import com.example.dldke.foodbox.PencilCartItem;
+import com.example.dldke.foodbox.PencilItem;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -451,7 +453,7 @@ public final class Mapper {
         return itemList;
     }
 
-    public static void checkAndCreateFisrt() {
+    public static void checkAndCreateFirst() {
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -1161,32 +1163,37 @@ public final class Mapper {
         }
     }
 
-    public static void updateToBuyMemo(){
+    public static void updateToBuyMemo(List<RefrigeratorDO.Item> compare){
         final List<RecipeDO.Ingredient> toBuyMemo = scanToBuyMemo();
-        final List<RefrigeratorDO.Item> myRefri = scanRefri();
+        //final List<RefrigeratorDO.Item> myRefri = scanRefri();
+        final List<RefrigeratorDO.Item> toPut = compare;
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                        userId);
                 int toBuyNum = toBuyMemo.size();
-                int refriNum = myRefri.size();
+                //int refriNum = myRefri.size();
 
-                for(int i = 0; i < toBuyNum; i++)
+                for(int i = 0; i < toBuyMemo.size(); i++)
                 {
-                    for(int j = 0; j < refriNum; j++)
+                    for(int j = 0; j < toPut.size(); j++)
                     {
-                        if(myRefri.get(j).getName().equals(toBuyMemo.get(i).getIngredientName()))
-                            toBuyMemo.get(i).setIngredientCount(toBuyMemo.get(i).getIngredientCount() - myRefri.get(j).getCount());
+                        if(toPut.get(j).getName().equals(toBuyMemo.get(i).getIngredientName()))
+                            toBuyMemo.get(i).setIngredientCount(toBuyMemo.get(i).getIngredientCount() - toPut.get(j).getCount());
                     }
                 }
 
-                for(int k = 0; k < toBuyNum; k++)
+                for(int k = 0; k < toBuyMemo.size(); k++)
                 {
                     if(toBuyMemo.get(k).getIngredientCount() <= 0)
                         toBuyMemo.remove(k);
                 }
 
-                getDynamoDBMapper().save(toBuyMemo);
+                memoItem.setTobuy(toBuyMemo);
+                getDynamoDBMapper().save(memoItem);
             }
         });
         thread.start();
