@@ -34,8 +34,7 @@ public final class Mapper {
     private static DynamoDBMapper dynamoDBMapper;
     private static String userId;
     private static String bucketName;
-    private Mapper(){
-    }
+    private Mapper(){}
 
     public static DynamoDBMapper getDynamoDBMapper(){
         return dynamoDBMapper;
@@ -97,7 +96,6 @@ public final class Mapper {
 
         return spec1;
     }
-
 
     public static String createRecipe(List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Ingredient> ingredient) {
         final com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO();
@@ -939,8 +937,7 @@ public final class Mapper {
         return postItem;
     }
 
-    public static List<PostDO> recommendRecipe()
-    {
+    public static List<PostDO> recommendRecipe()    {
         List<PostDO> entirePost = scanPost();
         List<RecipeDO.Ingredient> urgentIngredient = scanUrgentMemo();
         List<PostDO> resultPost = new ArrayList<>();
@@ -1153,6 +1150,59 @@ public final class Mapper {
 
         return toBuyList;
     }
+
+    public static void createUserInfo(String nickName, boolean isCook, String registN){
+        final com.example.dldke.foodbox.DataBaseFiles.UserDO userInfo= new com.example.dldke.foodbox.DataBaseFiles.UserDO();
+
+        userInfo.setUserId(userId);
+        userInfo.setNickname(nickName);
+        userInfo.setIsCookingClass(isCook);
+        userInfo.setRegisterNumber(registN);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Mapper.getDynamoDBMapper().save(userInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static UserDO searchUserInfo(String userId){
+        final String user_id = userId;
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
+
+            UserDO userInfo;
+            @Override
+            public void run() {
+                userInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        user_id);
+            }
+
+            @Override
+            public Object getResult(){
+                return userInfo;
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        UserDO userInfo  = (UserDO)thread.getResult();
+
+        return userInfo;
+    }
+
+
 
     private class PoolConfig{
         @SerializedName("Default")
