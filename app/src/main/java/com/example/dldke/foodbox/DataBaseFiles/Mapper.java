@@ -1173,8 +1173,7 @@ public final class Mapper {
         }
     }
 
-    public static UserDO searchUserInfo(String userId){
-        final String user_id = userId;
+    public static UserDO searchUserInfo(){
 
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
 
@@ -1183,7 +1182,7 @@ public final class Mapper {
             public void run() {
                 userInfo = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-                        user_id);
+                        userId);
             }
 
             @Override
