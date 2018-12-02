@@ -633,9 +633,25 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private void goIngHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
         Log.d("test", "===HalfRecipeActivity로 넘어온 mItems===");
+        ArrayList<HalfRecipeRecipeItem> needItem = new ArrayList<>();
         for (int i=0; i<mItems.size(); i++) {
             Log.d("test", "name : " + mItems.get(i).getName() + ", count : " + mItems.get(i).getCount() + ", editCount : " + mItems.get(i).getEditCount());
+
+            if ( mItems.get(i).getEditCount() - mItems.get(i).getCount() > 0 ) {
+                needItem.add(new HalfRecipeRecipeItem(mItems.get(i).getName(), mItems.get(i).getEditCount() - mItems.get(i).getCount()));
+            }
         }
+
+        // 필요한 재료를 담은 array : needItem
+        Log.d("test", "=====needItems=====");
+        for(int i=0; i<needItem.size(); i++) {
+            Log.d("test", "name : " + needItem.get(i).getName() + ", needCount : " + needItem.get(i).getNeedCount());
+        }
+
+
+//        Intent intent = new Intent(this, HalfRecipeIngActivity.class);
+//        intent.putExtra("need", needItem);
+//        startActivity(intent);
     }
 }
 

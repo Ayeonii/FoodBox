@@ -13,6 +13,12 @@ public class HalfRecipeRecipeItem {
         this.image = image;
     }
 
+    public HalfRecipeRecipeItem(int n, String name, Double needCount, Uri image) {
+        this.name = name;
+        this.needCount = needCount;
+        this.image = image;
+    }
+
     public HalfRecipeRecipeItem(String name, Double needCount) {
         this.name = name;
         this.needCount = needCount;
