@@ -1127,7 +1127,6 @@ public final class Mapper {
         return resultPost;
     }
 
-
     public static void addRecipeInMyCommunity(final String recipeId) {
 
         Thread thread = new Thread(new Runnable() {
