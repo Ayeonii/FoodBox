@@ -1,4 +1,4 @@
-package com.example.dldke.foodbox.Setting;
+package com.example.dldke.foodbox.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
-import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 

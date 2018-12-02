@@ -37,6 +37,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private final int GALLERY_CODE = 2;
 
     private String imagePath;
+    private boolean isCookingClass;
     private EditText foodtitle;
     private Spinner spinner;
     private Button ingredient_add, spec_add, ok_btn;
@@ -51,7 +52,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
     private FullRecipeStepDialog stepDialog;
     private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
-    private String recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
+    private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
+    private String recipeId;
     private final String TAG = "FullRecipe DB Test";
 
 
@@ -69,16 +71,41 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         spinner = (Spinner) findViewById(R.id.food_spinner);
         recipe_ingredient_view = (RecyclerView) findViewById(R.id.recipe_ingredient_recyclerview);
         fullrecipeRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_main_list);
-
+        isCookingClass = refrigeratorMainActivity.getisCookingClass();
 
         food_img.setOnClickListener(this);
         ingredient_add.setOnClickListener(this);
         spec_add.setOnClickListener(this);
         ok_btn.setOnClickListener(this);
 
+        Log.e(TAG, "쿠킹 클래스 입니까? "+isCookingClass);
 
-        String title = Mapper.searchRecipe(recipeId).getSimpleName();
-        foodtitle.setText(title);
+        if(isCookingClass){
+            //쿠킹 클래스 풀레시피 작성
+            Log.e(TAG, "쿠킹클래스에요");
+            
+        }
+        else{
+            //일반 사용자 풀레시피 작성
+            recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
+            String title = Mapper.searchRecipe(recipeId).getSimpleName();
+            foodtitle.setText(title);
+
+            data = Mapper.searchRecipe(recipeId).getIngredient(); //간이레시피 전체 재료 data
+            recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
+            recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
+
+        }
+
+
+        /*
+          선택된 전체 재료 보여주기
+        */
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recipe_ingredient_view.setLayoutManager(mLayoutManager);
+        recipeIngredientAdapter = new FullRecipeIngredientAdapter();
+        recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
 
 
         /*
@@ -88,16 +115,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         ArrayAdapter<String> spinnerAdapter;
         spinnerAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, foodrecipe_list);
         spinner.setAdapter(spinnerAdapter);
-
-        /*
-        선택된 전체 재료 보여주기
-         */
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recipe_ingredient_view.setLayoutManager(mLayoutManager);
-        data = Mapper.searchRecipe(recipeId).getIngredient();   //간이레시피 전체 재료 data
-        recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
-        recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
 
 
         /*

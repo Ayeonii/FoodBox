@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,18 +22,19 @@ import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
-import com.example.dldke.foodbox.Setting.SettingActivity;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    String TAG = "RefrigeratorMainActivity";
 
     /*********************FloatingButtons***********************/
     //플로팅 버튼 애니메이션
@@ -67,13 +69,20 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     /***************************etc********************************/
     ImageView postit;
+    public static boolean isCookingClass;
 
+    public RefrigeratorMainActivity(){  }
+
+    public boolean getisCookingClass(){
+        return isCookingClass;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
         Mapper.setUserId(getApplicationContext());
+        isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
 
         //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
         //pencilAdapter.getClickFoodString().clear();
@@ -294,10 +303,18 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     break;
                 case R.id.fabFull:
                     //Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();
-                    Intent myRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
-                    startActivity(myRecipeBoxActivity);
-                    //다음 화면이 아래에서 올라오는 애니메이션
-                    overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    if(isCookingClass){
+                        Intent FullRecipeActivity = new Intent(getApplicationContext(), FullRecipeActivity.class);
+                        startActivity(FullRecipeActivity);
+                        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    }
+                    else{
+                        Intent myRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+                        startActivity(myRecipeBoxActivity);
+                        //다음 화면이 아래에서 올라오는 애니메이션
+                        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    }
+
                     break;
                 case R.id.fabMini:
                     Intent halfRecipeActivity = new Intent(getApplicationContext(), HalfRecipeActivity.class);

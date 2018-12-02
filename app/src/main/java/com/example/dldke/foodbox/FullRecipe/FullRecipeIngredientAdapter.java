@@ -30,6 +30,8 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
         this.ingredients = data;
     }
 
+    public FullRecipeIngredientAdapter(){}
+
 
     //ItemView의 내용을 담고 있음
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -65,7 +67,7 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
 
     @Override
     public int getItemCount() {
-        return ingredients.size();
+        return (null != ingredients ? ingredients.size():0);
     }
 
     public void AddIngredient(List<RecipeDO.Ingredient> ingredientList){
