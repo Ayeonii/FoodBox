@@ -475,6 +475,52 @@ public final class Mapper {
         return itemList;
     }
 
+    public static void checkAndCreateFirst() {
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    UserDO user = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                            userId);
+                }catch (NullPointerException e){
+                    createUserInfo();
+                }
+
+                try {
+                    RefrigeratorDO Refri = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                            userId);
+                }catch (NullPointerException e){
+                    createRefrigerator();
+                }
+
+                try {
+                    MemoDO memo = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                            userId);
+                }catch (NullPointerException e){
+                    createMemo();
+                }
+
+                try {
+                    MyCommunityDO mycommu = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                            userId);
+                }catch (NullPointerException e){
+                    createMyCommunity();
+                }
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
     public static boolean checkFirst() {
 
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
@@ -1159,7 +1205,11 @@ public final class Mapper {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Mapper.getDynamoDBMapper().save(memoItem);
+                try{
+                    Mapper.getDynamoDBMapper().save(memoItem);
+                }catch (NullPointerException e){
+
+                }
             }
         });
         thread.start();

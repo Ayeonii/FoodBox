@@ -21,6 +21,7 @@ import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
+import com.example.dldke.foodbox.Memo.MemoActivity;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
@@ -318,7 +319,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.startAnimation(rightAnim);
                     break;
                 case R.id.postit:
-                    Toast.makeText(RefrigeratorMainActivity.this, "포스트잇 눌림", Toast.LENGTH_SHORT).show();
+                    Intent memoActivity = new Intent(getApplicationContext(), MemoActivity.class);
+                    startActivity(memoActivity);
                     break;
             }
         }
