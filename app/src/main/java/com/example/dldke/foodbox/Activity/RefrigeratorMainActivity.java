@@ -76,6 +76,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     public boolean getisCookingClass(){
         return isCookingClass;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -304,6 +305,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 case R.id.fabFull:
                     //Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();
                     if(isCookingClass){
+                        FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
+                        fullRecipeActivity.setIsHalfRecipe(false);
                         Intent FullRecipeActivity = new Intent(getApplicationContext(), FullRecipeActivity.class);
                         startActivity(FullRecipeActivity);
                         overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);

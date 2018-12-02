@@ -130,12 +130,13 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                 transaction.commit();
                 break;
             case R.id.floating:
-                if(!isFull)
+                /*if(!isFull)
                     customDialog.callFunction(getApplicationContext());
                 else {
                     Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
                     startActivity(intent);
-                }
+                }*/
+                customDialog.callFunction(getApplicationContext());
                 break;
         }
     }

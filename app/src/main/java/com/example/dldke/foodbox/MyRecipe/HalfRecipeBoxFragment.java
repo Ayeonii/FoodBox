@@ -72,7 +72,6 @@ public class HalfRecipeBoxFragment extends Fragment {
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
                 boolean isIng = Mapper.searchRecipe(recipeId).getIng();
 
-                Log.e(TAG, "레시피 이름 : "+simpleName+" 레시피 아이디 : "+recipeId+"작성중? : "+isIng);
                 data.add(new RecipeBoxData(simpleName, recipeId, isIng));
                 isRecipe = true;
             }

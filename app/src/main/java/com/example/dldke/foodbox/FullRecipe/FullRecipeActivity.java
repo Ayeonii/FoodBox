@@ -12,7 +12,9 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,8 +38,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private final int CAMERA_CODE = 1;
     private final int GALLERY_CODE = 2;
 
-    private String imagePath;
-    private boolean isCookingClass;
+    private String imagePath, recipeId;
+    private static boolean isCookingClass, ishalfrecipe;
+    private Toolbar toolbar;
     private EditText foodtitle;
     private Spinner spinner;
     private Button ingredient_add, spec_add, ok_btn;
@@ -50,18 +53,25 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
 
     private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
-    private FullRecipeStepDialog stepDialog;
     private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
     private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
-    private String recipeId;
+    private FullRecipeStepDialog stepDialog;
+
+
     private final String TAG = "FullRecipe DB Test";
 
+    public FullRecipeActivity(){}
+    public void setIsHalfRecipe(boolean isHalfRecipe){
+        this.ishalfrecipe = isHalfRecipe;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_recipe);
+        isCookingClass = refrigeratorMainActivity.getisCookingClass();
 
+        toolbar = (Toolbar) findViewById(R.id.fullrecipe_toolbar);
         foodtitle = (EditText) findViewById(R.id.food_title);
         food_img = (ImageView)findViewById(R.id.food_img);
         food_img_real = (ImageView)findViewById(R.id.food_img_real);
@@ -71,41 +81,41 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         spinner = (Spinner) findViewById(R.id.food_spinner);
         recipe_ingredient_view = (RecyclerView) findViewById(R.id.recipe_ingredient_recyclerview);
         fullrecipeRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_main_list);
-        isCookingClass = refrigeratorMainActivity.getisCookingClass();
 
-        food_img.setOnClickListener(this);
-        ingredient_add.setOnClickListener(this);
-        spec_add.setOnClickListener(this);
-        ok_btn.setOnClickListener(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);  //기존 toolbar없애기
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
 
-        Log.e(TAG, "쿠킹 클래스 입니까? "+isCookingClass);
 
-        if(isCookingClass){
+        if(isCookingClass && !ishalfrecipe){
             //쿠킹 클래스 풀레시피 작성
             Log.e(TAG, "쿠킹클래스에요");
-            
+
+            ingredient_add.setVisibility(View.VISIBLE);
+
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+            mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            recipe_ingredient_view.setLayoutManager(mLayoutManager);
+            recipeIngredientAdapter = new FullRecipeIngredientAdapter();
+            recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
         }
         else{
+            Log.e(TAG, "간이레시피에서 들어왔어요");
             //일반 사용자 풀레시피 작성
             recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
             String title = Mapper.searchRecipe(recipeId).getSimpleName();
             foodtitle.setText(title);
 
+            ingredient_add.setVisibility(View.INVISIBLE);
+
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+            mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            recipe_ingredient_view.setLayoutManager(mLayoutManager);
             data = Mapper.searchRecipe(recipeId).getIngredient(); //간이레시피 전체 재료 data
             recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
             recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
 
         }
-
-
-        /*
-          선택된 전체 재료 보여주기
-        */
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recipe_ingredient_view.setLayoutManager(mLayoutManager);
-        recipeIngredientAdapter = new FullRecipeIngredientAdapter();
-        recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
 
 
         /*
@@ -124,6 +134,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         mArrayList = new ArrayList<>();
         mAdapter = new FullRecipeAdapter(this, mArrayList);
         fullrecipeRecyclerView.setAdapter(mAdapter);
+
+
+        food_img.setOnClickListener(this);
+        ingredient_add.setOnClickListener(this);
+        spec_add.setOnClickListener(this);
+        ok_btn.setOnClickListener(this);
 
     }
 
@@ -244,6 +260,16 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         }
         return cursor.getString(column_index);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
+            RefrigeratorMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(RefrigeratorMainActivity);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

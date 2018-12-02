@@ -68,8 +68,6 @@ public class FullRecipeBoxFragment extends Fragment {
                 data.add(new RecipeBoxData(recipeId, R.drawable.strawberry, foodname, isshared));
                 isRecipe = true;
 
-                Log.e(TAG, "레시피 이름 : "+foodname);
-
             }catch(NullPointerException e){
 
             }
