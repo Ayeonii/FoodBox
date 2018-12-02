@@ -70,8 +70,10 @@ public class HalfRecipeBoxFragment extends Fragment {
             }catch(NullPointerException e){
                 String recipeId = myrecipe.get(i);
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
-                Log.e(TAG, "레시피 이름 : "+simpleName+" 레시피 아이디 : "+recipeId);
-                data.add(new RecipeBoxData(simpleName, recipeId));
+                boolean isIng = Mapper.searchRecipe(recipeId).getIng();
+
+                Log.e(TAG, "레시피 이름 : "+simpleName+" 레시피 아이디 : "+recipeId+"작성중? : "+isIng);
+                data.add(new RecipeBoxData(simpleName, recipeId, isIng));
                 isRecipe = true;
             }
         }
