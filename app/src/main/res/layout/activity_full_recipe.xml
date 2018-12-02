@@ -25,7 +25,8 @@
             android:layout_gravity="center"
             android:text="FullRecipe"
             android:textColor="@android:color/white"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:fontFamily="@font/font_family"/>
 
     </android.support.v7.widget.Toolbar>
 
