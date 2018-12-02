@@ -22,7 +22,8 @@ public class HalfRecipeAddmoreDialog extends Dialog implements View.OnClickListe
     private RecyclerView recyclerView;
     private Button btnCancel, btnOk;
 
-    private RecyclerView.Adapter adapter;
+//    private RecyclerView.Adapter adapter;
+    private HalfRecipeAddmoreAdapter adapter;
     private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
     private ArrayList<String> nameAll = new ArrayList<>();
 
@@ -53,7 +54,8 @@ public class HalfRecipeAddmoreDialog extends Dialog implements View.OnClickListe
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        adapter = new HalfRecipeAddmoreAdapter(mItems, nameAll.size(), checkAddFood);
+        //adapter = new HalfRecipeAddmoreAdapter(mItems, nameAll.size(), checkAddFood);
+        adapter = new HalfRecipeAddmoreAdapter(mItems);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
         recyclerView.addOnItemTouchListener(
@@ -65,7 +67,7 @@ public class HalfRecipeAddmoreDialog extends Dialog implements View.OnClickListe
                         else
                             checkAddFood[position] = true;
 
-                        setRecyclerView();
+//                        setRecyclerView();
                     }
                 }
                 ));
@@ -94,7 +96,7 @@ public class HalfRecipeAddmoreDialog extends Dialog implements View.OnClickListe
                 cancel();
                 break;
             case R.id.btn_ok:
-                dialogListener.onPositiveClicked("all", checkAddFood);
+                dialogListener.onPositiveClicked("all", adapter.getIsCheck());
                 dismiss();
                 break;
         }

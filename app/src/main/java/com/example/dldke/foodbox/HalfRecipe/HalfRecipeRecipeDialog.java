@@ -166,6 +166,14 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                                     checkAddFood[i] = false;
                             }
                         }
+                        /*for (int i = 0; i < nameAll.size(); i++) {
+                            if (check[i] != checkAddFood[i]) {
+                                if (check[i])
+                                    checkAddFood[i] = true;
+                                else
+                                    checkAddFood[i] = false;
+                            }
+                        }*/
 
                         for (int i=0; i<nameAll.size(); i++) {
                             if (checkAddFood[i]) {

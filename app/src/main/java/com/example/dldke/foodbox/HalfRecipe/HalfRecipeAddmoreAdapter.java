@@ -3,24 +3,40 @@ package com.example.dldke.foodbox.HalfRecipe;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HalfRecipeAddmoreAdapter extends RecyclerView.Adapter<HalfRecipeAddmoreAdapter.ItemViewHolder> {
 
     ArrayList<HalfRecipeIngreItem> mItems;
-    Boolean[] checkIngre = new Boolean[230];
+    private static Boolean isCheck[] = new Boolean[230];
 
-    public HalfRecipeAddmoreAdapter(ArrayList<HalfRecipeIngreItem> mItems, int arraySize, Boolean[] check) {
+    public  Boolean[] getIsCheck() {
+        return isCheck;
+    }
+
+    public void setIsCheck(Boolean[] isCheck) {
+        HalfRecipeAddmoreAdapter.isCheck = isCheck;
+    }
+
+    //    public HalfRecipeAddmoreAdapter(ArrayList<HalfRecipeIngreItem> mItems, int arraySize, Boolean[] check) {
+//        this.mItems = mItems;
+//        System.arraycopy(check, 0, this.isCheck, 0, arraySize);
+//    }
+
+    public HalfRecipeAddmoreAdapter(ArrayList<HalfRecipeIngreItem> mItems){
         this.mItems = mItems;
-        System.arraycopy(check, 0, this.checkIngre, 0, arraySize);
+        Arrays.fill(isCheck, false);
     }
 
     @NonNull
@@ -31,17 +47,37 @@ public class HalfRecipeAddmoreAdapter extends RecyclerView.Adapter<HalfRecipeAdd
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
+
         String foodName = mItems.get(position).getName();
         String foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
 
         holder.mNameTv.setText(foodName);
         holder.food_Img.setImageURI(Uri.parse(foodImgUri));
 
-        if (checkIngre[position])
-            holder.ivCheck.setVisibility(View.VISIBLE);
-        else
-            holder.ivCheck.setVisibility(View.GONE);
+        holder.food_Img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("test", "food clicked!");
+                if(!isCheck[position]) {
+                    holder.ivCheck.setVisibility(View.VISIBLE);
+                    isCheck[position] = true;
+                }
+            }
+        });
+
+        holder.ivCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("test", "check clicked!");
+                if(isCheck[position]){
+                    holder.ivCheck.setVisibility(View.GONE);
+                    isCheck[position] = false;
+                }
+            }
+        });
+
+
     }
 
     @Override

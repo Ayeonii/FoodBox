@@ -1251,8 +1251,25 @@ public final class Mapper {
                         com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
                         userId);
 
-                List<RecipeDO.Ingredient> toBuy = inputList;
-                memoItem.setTobuy(toBuy);
+                List<RecipeDO.Ingredient> exist = memoItem.getTobuy();
+
+                for(int i = 0; i < inputList.size(); i++)
+                {
+                    boolean temp = false;
+                    for(int j = 0; j < exist.size(); j++)
+                    {
+                        if(exist.get(j).getIngredientName().equals(inputList.get(i).getIngredientName()))
+                        {
+                            exist.get(j).setIngredientCount(exist.get(j).getIngredientCount() + inputList.get(i).getIngredientCount());
+                            temp = true;
+                        }
+                    }
+                    if(temp == false)
+                        exist.add(inputList.get(i));
+                }
+
+                memoItem.setTobuy(exist);
+
                 Mapper.getDynamoDBMapper().save(memoItem);
             }
         });
@@ -1265,25 +1282,38 @@ public final class Mapper {
     }
 
     public static void updateToBuyMemo(){
-        List<RecipeDO.Ingredient> toBuyMemo = scanToBuyMemo();
-        List<RefrigeratorDO.Item> myRefri = scanRefri();
+        final List<RecipeDO.Ingredient> toBuyMemo = scanToBuyMemo();
+        final List<RefrigeratorDO.Item> myRefri = scanRefri();
 
-        int toBuyNum = toBuyMemo.size();
-        int refriNum = myRefri.size();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int toBuyNum = toBuyMemo.size();
+                int refriNum = myRefri.size();
 
-        for(int i = 0; i < toBuyNum; i++)
-        {
-            for(int j = 0; j < refriNum; j++)
-            {
-                if(myRefri.get(j).getName() == toBuyMemo.get(i).getIngredientName())
-                    toBuyMemo.get(i).setIngredientCount(toBuyMemo.get(i).getIngredientCount() - myRefri.get(j).getCount());
+                for(int i = 0; i < toBuyNum; i++)
+                {
+                    for(int j = 0; j < refriNum; j++)
+                    {
+                        if(myRefri.get(j).getName() == toBuyMemo.get(i).getIngredientName())
+                            toBuyMemo.get(i).setIngredientCount(toBuyMemo.get(i).getIngredientCount() - myRefri.get(j).getCount());
+                    }
+                }
+
+                for(int k = 0; k < toBuyNum; k++)
+                {
+                    if(toBuyMemo.get(k).getIngredientCount() <= 0)
+                        toBuyMemo.remove(k);
+                }
+
+                getDynamoDBMapper().save(toBuyMemo);
             }
-        }
-
-        for(int k = 0; k < toBuyNum; k++)
-        {
-            if(toBuyMemo.get(k).getIngredientCount() <= 0)
-                toBuyMemo.remove(k);
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

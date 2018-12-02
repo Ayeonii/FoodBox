@@ -15,6 +15,7 @@ import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createMemo;
 
 import com.example.dldke.foodbox.R;
 
@@ -41,7 +42,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private HalfRecipeRecipeDialog recipeDialog;
     private HalfRecipeDueDateDialog dueDateDialog;
 
-    private String user_id;
+    private String user_id, user_id_memo;
     private String recipeSimpleName;
 
     // 추가재료 부분================
@@ -77,6 +78,9 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         } catch (NullPointerException e) {
             Mapper.createMyCommunity();
         }
+
+        //create하는거 (처음에 한번만 하는거) 나중에 하나로 합칠거임!!
+        //Mapper.createMemo();
     }
 
     public void setInfoDOList() {
@@ -633,19 +637,27 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private void goIngHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
         Log.d("test", "===HalfRecipeActivity로 넘어온 mItems===");
-        ArrayList<HalfRecipeRecipeItem> needItem = new ArrayList<>();
+        List<RecipeDO.Ingredient> needItem = new ArrayList<>();
+
         for (int i=0; i<mItems.size(); i++) {
             Log.d("test", "name : " + mItems.get(i).getName() + ", count : " + mItems.get(i).getCount() + ", editCount : " + mItems.get(i).getEditCount());
 
             if ( mItems.get(i).getEditCount() - mItems.get(i).getCount() > 0 ) {
-                needItem.add(new HalfRecipeRecipeItem(mItems.get(i).getName(), mItems.get(i).getEditCount() - mItems.get(i).getCount()));
+                RecipeDO.Ingredient setlist = new RecipeDO.Ingredient();
+
+                setlist.setIngredientName(mItems.get(i).getName());
+                setlist.setIngredientCount(mItems.get(i).getEditCount() - mItems.get(i).getCount());
+
+                Log.d("test", "name : " + setlist.getIngredientName() + ", needCount : " + setlist.getIngredientCount());
+                needItem.add(setlist);
             }
         }
 
         // 필요한 재료를 담은 array : needItem
         Log.d("test", "=====needItems=====");
+        Log.d("test", "size : " + needItem.size());
         for(int i=0; i<needItem.size(); i++) {
-            Log.d("test", "name : " + needItem.get(i).getName() + ", needCount : " + needItem.get(i).getNeedCount());
+            Log.d("test", "name : " + needItem.get(i).getIngredientName() + ", needCount : " + needItem.get(i).getIngredientCount());
         }
 
         //recipe 테이블 접근
@@ -677,6 +689,8 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         Mapper.addRecipeInMyCommunity(recipe_id);
 
+        // memo table
+        Mapper.appendToBuyMemo(needItem);
 
 //        Intent intent = new Intent(this, HalfRecipeIngActivity.class);
 //        intent.putExtra("need", needItem);
