@@ -261,6 +261,7 @@ public final class Mapper {
         }
 
     }
+
     public static void uploadImage(final String infoName, final String filePath){
         final String name = infoName;
         final String[] key = filePath.split("/");
@@ -316,6 +317,7 @@ public final class Mapper {
 
 
     }
+
     public static void createPost(String title, String recipeId) {
         final String post_title = title;
         final String ID = recipeId;
@@ -414,29 +416,36 @@ public final class Mapper {
         return itemList;
     }
 
-    public static boolean checkFirst() {
+    public static void checkFirst() {
 
-        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
-            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO Refri;
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Refri = Mapper.getDynamoDBMapper().load(
+                    UserDO user = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                            userId);
+                }catch (NullPointerException e){
+                    createUserInfo();
+                }
+
+                try {
+                    RefrigeratorDO Refri = Mapper.getDynamoDBMapper().load(
                             com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
                             userId);
                 }catch (NullPointerException e){
-                    Refri = Mapper.getDynamoDBMapper().load(
-                            com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                    createRefrigerator();
+                }
+
+                try {
+                    MyCommunityDO mycommu = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
                             userId);
+                }catch (NullPointerException e){
+                    createMyCommunity();
                 }
             }
-            @Override
-            public Object getResult(){
-                Log.e("Refir.getUserId", ""+Refri.getUserId());
-                return Refri.getUserId();
-            }
         });
-
         thread.start();
         try{
             thread.join();
@@ -444,14 +453,6 @@ public final class Mapper {
             e.printStackTrace();
         }
 
-        try{
-            Object refri_item = thread.getResult();
-        }
-        catch (NullPointerException e){
-            return true;
-        }
-
-        return false;
     }
 
     public static List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> scanRefri() {
@@ -1151,10 +1152,28 @@ public final class Mapper {
         return toBuyList;
     }
 
-    public static void createUserInfo(String nickName, boolean isCook, String registN){
+    public static void createUserInfo(){
         final com.example.dldke.foodbox.DataBaseFiles.UserDO userInfo= new com.example.dldke.foodbox.DataBaseFiles.UserDO();
 
         userInfo.setUserId(userId);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Mapper.getDynamoDBMapper().save(userInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateUserInfo(String nickName, boolean isCook, String registN){
+        final com.example.dldke.foodbox.DataBaseFiles.UserDO userInfo= new com.example.dldke.foodbox.DataBaseFiles.UserDO();
+
         userInfo.setNickname(nickName);
         userInfo.setIsCookingClass(isCook);
         userInfo.setRegisterNumber(registN);
