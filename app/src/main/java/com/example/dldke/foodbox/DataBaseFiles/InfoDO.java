@@ -8,6 +8,8 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.S3Link;
 
+import java.util.List;
+
 @DynamoDBTable(tableName = "foodboxv-mobilehub-1561206289-Info")
 
 public class InfoDO {
@@ -15,6 +17,7 @@ public class InfoDO {
     private String _section;
     private Integer _dueDate;
     private String _kindOf;
+    private List<String> productName;
     private S3Link infoImage;
 
     public S3Link getInfoImage() {
@@ -58,6 +61,15 @@ public class InfoDO {
 
     public void setKindOf(final String _kindOf) {
         this._kindOf = _kindOf;
+    }
+
+    @DynamoDBAttribute(attributeName = "productName")
+    public List<String> getProductName() {
+        return productName;
+    }
+
+    public void setProductName(final List<String> productName) {
+        this.productName = productName;
     }
 
 }
