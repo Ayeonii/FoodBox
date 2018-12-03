@@ -70,6 +70,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     /***************************etc********************************/
     ImageView postit;
     public static boolean isCookingClass;
+    private String user_id;
 
     public RefrigeratorMainActivity(){  }
 
@@ -82,8 +83,18 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        //User DB Create
         Mapper.setUserId(getApplicationContext());
+        try {
+            user_id = Mapper.searchUserInfo().getUserId();
+        } catch (NullPointerException e) {
+            Mapper.createUserInfo();
+            Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
+        }
+
+        //Separate User vs CookingClass
         isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
+
 
         //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
         //pencilAdapter.getClickFoodString().clear();

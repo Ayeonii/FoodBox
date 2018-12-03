@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.io.File;
@@ -36,6 +38,8 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
     private ArrayList<LocalRefrigeratorItem> selectedItem = new ArrayList<>();
     private HalfRecipeDialogListener dialogListener;
     private ArrayList<String> dupliArray = new ArrayList<>();
+
+    String TAG = "HalfRecipeRecipeDialog";
 
     public HalfRecipeRecipeDialog(@NonNull Context context, ArrayList arrayList, ArrayList dupliArray) {
         super(context);
@@ -141,6 +145,10 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                     // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
                     //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
                     dialogListener.onCompleteClicked(result, simpleName, mItems, dueDateCheckArray);
+                    Mapper.updatePointInfo(5);
+                    String userid = Mapper.getUserId();
+                    int point = Mapper.searchUserInfo().getPoint();
+                    Log.e(TAG, ""+userid+"의 포인트는 : "+point);
                     dismiss();
                 }
                 break;

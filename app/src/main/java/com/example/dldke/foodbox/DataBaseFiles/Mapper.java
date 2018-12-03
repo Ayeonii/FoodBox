@@ -1326,6 +1326,8 @@ public final class Mapper {
         final com.example.dldke.foodbox.DataBaseFiles.UserDO userInfo= new com.example.dldke.foodbox.DataBaseFiles.UserDO();
 
         userInfo.setUserId(userId);
+        userInfo.setIsCookingClass(false);
+        userInfo.setPoint(0);
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -1357,6 +1359,29 @@ public final class Mapper {
                 userInfo.setNickname(nickName);
                 userInfo.setIsCookingClass(isCook);
                 userInfo.setRegisterNumber(registN);
+                Mapper.getDynamoDBMapper().save(userInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updatePointInfo(Integer Point){
+
+        final Integer point = Point;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                UserDO userInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+
+                userInfo.setPoint(point);
                 Mapper.getDynamoDBMapper().save(userInfo);
             }
         });

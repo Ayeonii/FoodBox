@@ -49,8 +49,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         getSupportActionBar().setDisplayShowTitleEnabled(false);  //기존 toolbar없애기
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
 
-        //추후에 다른곳으로 이동
-        Mapper.createUserInfo();
 
         user_id.setText(Mapper.getUserId());
         isCook = Mapper.searchUserInfo().getIsCookingClass();
