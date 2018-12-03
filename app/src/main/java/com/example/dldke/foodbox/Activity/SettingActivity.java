@@ -23,7 +23,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     String user_nickname, business_number;
     boolean isCook = false;
 
-    LinearLayout business_license_number;
+    LinearLayout business_license_number, point_layout;
     EditText nickname, business_N1, business_N2, business_N3;
     String TAG = "SettingActivity";
 
@@ -36,13 +36,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
         CircleImageView profile = (CircleImageView) findViewById(R.id.user_profile);
         TextView user_id = (TextView) findViewById(R.id.user_name);
-        nickname = (EditText) findViewById(R.id.nickname);
+        TextView point = (TextView) findViewById(R.id.point);
         Switch cooking_class = (Switch) findViewById(R.id.cooking_class_btn);
         Button setting_ok = (Button) findViewById(R.id.setting_ok_btn);
+        point_layout = (LinearLayout) findViewById(R.id.point_linear);
         business_license_number = (LinearLayout) findViewById(R.id.business_linear);
         business_N1 = (EditText) findViewById(R.id.business_number1);
         business_N2 = (EditText) findViewById(R.id.business_number2);
         business_N3 = (EditText) findViewById(R.id.business_number3);
+        nickname = (EditText) findViewById(R.id.nickname);
 
 
         setSupportActionBar(toolbar);
@@ -51,6 +53,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
 
         user_id.setText(Mapper.getUserId());
+        point.setText(String.valueOf(Mapper.searchUserInfo().getPoint()));
         isCook = Mapper.searchUserInfo().getIsCookingClass();
 
         try{

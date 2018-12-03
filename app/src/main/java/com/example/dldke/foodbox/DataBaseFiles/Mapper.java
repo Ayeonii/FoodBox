@@ -1372,7 +1372,7 @@ public final class Mapper {
 
     public static void updatePointInfo(Integer Point){
 
-        final Integer point = Point;
+        final Integer point = Mapper.searchUserInfo().getPoint()+Point;
 
         Thread thread = new Thread(new Runnable() {
             @Override

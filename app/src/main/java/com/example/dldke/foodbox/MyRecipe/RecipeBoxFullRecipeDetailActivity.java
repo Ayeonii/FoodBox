@@ -152,6 +152,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
                 }
 
                 Mapper.createPost(" "+title, recipe_id);
+                Mapper.updatePointInfo(10);
 
                 Intent MainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
                 MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -209,6 +209,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             Mapper.createFullRecipe(recipeId, FoodTitle, specList);
         }
         Mapper.attachRecipeImage(recipeId, imagePath);
+        Mapper.updatePointInfo(10);
 
         Log.e(TAG, "등록된 레시피 이름 : "+FoodTitle+" 등록된 레시피 아이디 : "+recipeId);
         Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);

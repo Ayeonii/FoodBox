@@ -87,6 +87,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         Mapper.setUserId(getApplicationContext());
         try {
             user_id = Mapper.searchUserInfo().getUserId();
+            Log.e(TAG, "유저 아이디 : "+user_id);
         } catch (NullPointerException e) {
             Mapper.createUserInfo();
             Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
