@@ -305,6 +305,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 case R.id.fabFull:
                     //Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();
                     if(isCookingClass){
+                        //메인에러 바로 풀레시피 작성으로 넘어감 표시
                         FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
                         fullRecipeActivity.setIsHalfRecipe(false);
                         Intent FullRecipeActivity = new Intent(getApplicationContext(), FullRecipeActivity.class);

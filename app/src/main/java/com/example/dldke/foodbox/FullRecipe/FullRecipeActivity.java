@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
@@ -39,9 +40,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private final int CAMERA_CODE = 1;
     private final int GALLERY_CODE = 2;
+    private static boolean isCookingClass, isHalfRecipe;
 
     private String imagePath, recipeId;
-    private static boolean isCookingClass, ishalfrecipe;
     private Toolbar toolbar;
     private EditText foodtitle;
     private Spinner spinner;
@@ -54,7 +55,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     static FullRecipeAdapter mAdapter;
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
     private PencilCartAdapter pencilCartAdapter = new PencilCartAdapter();
-    //private ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
+    private ArrayList<PencilCartItem> clickItems;
 
     private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
     private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
@@ -65,8 +66,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private final String TAG = "FullRecipe DB Test";
 
     public FullRecipeActivity(){}
+
     public void setIsHalfRecipe(boolean isHalfRecipe){
-        this.ishalfrecipe = isHalfRecipe;
+        this.isHalfRecipe = isHalfRecipe;
+    }
+    public boolean getIsHalfRecipe(){
+        return isHalfRecipe;
     }
 
     @Override
@@ -91,18 +96,14 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
 
 
-        if(isCookingClass && !ishalfrecipe){
+        if(isCookingClass && !isHalfRecipe){
             //쿠킹 클래스 풀레시피 작성
-
             ingredient_add.setVisibility(View.VISIBLE);
 
-            ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
-            try {
-                Log.e(TAG, "재료 가져왔어요 " + clickItems.get(0).getFoodName());
-            }catch(NullPointerException e){
-
+            clickItems = pencilCartAdapter.getCartItems();
+            for(int i=0; i<clickItems.size(); i++){
+                data.add(createIngredient(clickItems.get(i).getFoodName(), clickItems.get(i).getFoodCount()));
             }
-            Log.e(TAG, "쿠킹 클래스에요"+ isCookingClass);
 
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
             mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -112,7 +113,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
         }
         else{
-            //일반 사용자 풀레시피 작성
+            //간이 레시피에서 풀레시피로 작성
             recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
             String title = Mapper.searchRecipe(recipeId).getSimpleName();
             foodtitle.setText(title);
@@ -121,7 +122,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
             mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recipe_ingredient_view.setLayoutManager(mLayoutManager);
-            data = Mapper.searchRecipe(recipeId).getIngredient(); //간이레시피 전체 재료 data
+            data = Mapper.searchRecipe(recipeId).getIngredient();
             recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
             recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
         }
@@ -161,8 +162,14 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.spec_insert_btn:
-                stepDialog = new FullRecipeStepDialog(this, recipeId);
-                stepDialog.show();
+                if(isCookingClass && !isHalfRecipe){
+                    stepDialog = new FullRecipeStepDialog(this, clickItems);
+                    stepDialog.show();
+                }
+                else{
+                    stepDialog = new FullRecipeStepDialog(this, recipeId);
+                    stepDialog.show();
+                }
                 break;
 
             case R.id.recipe_ok:
@@ -192,8 +199,14 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
         FoodTitle= foodtitle.getText().toString();
         specList = stepDialog.getSpecList();
-        Mapper.createFullRecipe(recipeId, FoodTitle, specList);
+        if(isCookingClass && !isHalfRecipe){
+            recipeId = Mapper.createChefRecipe(FoodTitle, specList);
+        }
+        else{
+            Mapper.createFullRecipe(recipeId, FoodTitle, specList);
+        }
         Mapper.attachRecipeImage(recipeId, imagePath);
+
         Log.e(TAG, "등록된 레시피 이름 : "+FoodTitle+" 등록된 레시피 아이디 : "+recipeId);
         Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
         startActivity(RefrigeratorActivity);

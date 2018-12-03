@@ -199,7 +199,7 @@ public final class Mapper {
         }
     }
 
-    public static void createChefRecipe(String name, List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> spec)
+    public static String createChefRecipe(String name, List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> spec)
     {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a");
@@ -209,8 +209,8 @@ public final class Mapper {
 
         final String recipe_name = name;
         final List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> rspecList = spec;
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
 
-        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 final com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem = new com.example.dldke.foodbox.DataBaseFiles.RecipeDO();
@@ -230,6 +230,11 @@ public final class Mapper {
 
                 Mapper.getDynamoDBMapper().save(recipeItem);
             }
+
+            @Override
+            public Object getResult(){
+                return ID;
+            }
         });
         thread.start();
         try{
@@ -237,7 +242,12 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
+        String recipeId = (String) thread.getResult();
+
+        return recipeId;
+
     }
+
     public static String getImageUrlRecipe(final String recipeId){
         returnThread thread = new returnThread(new CustomRunnable() {
 

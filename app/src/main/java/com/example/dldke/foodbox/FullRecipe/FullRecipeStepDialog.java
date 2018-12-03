@@ -19,6 +19,8 @@ import android.widget.Spinner;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -41,6 +43,9 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
     private List<RecipeDO.Ingredient> ingredients = new ArrayList<>();
     private List<RecipeDO.Ingredient> specIngredient = new ArrayList<>();
     private static final List<RecipeDO.Spec> specList = new ArrayList<>();
+    private ArrayList<PencilCartItem> clickItems;
+    private FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
+    private boolean isHalfRecipe = fullRecipeActivity.getIsHalfRecipe();
 
     public List<RecipeDO.Spec> getSpecList(){
         return specList;
@@ -50,6 +55,12 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         super(context);
         this.context = context;
         this.recipeId = recipeId;
+    }
+
+    public FullRecipeStepDialog(@NonNull Context context, ArrayList<PencilCartItem> items){
+        super(context);
+        this.context = context;
+        this.clickItems = items;
     }
 
     protected void onCreate(Bundle savedInstanceState){
@@ -65,13 +76,21 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
 
         button_submit.setText("삽입");
 
-        ingredients = Mapper.searchRecipe(recipeId).getIngredient();
-        ingredient_view.setHasFixedSize(true);
-        ingredient_view.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new FullRecipeStepAdapter(ingredients);
-        ingredient_view.setAdapter(adapter);
-        //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
-        //ingredient_view.addItemDecoration(dividerItemDecoration);
+        if(!isHalfRecipe){
+            ingredient_view.setHasFixedSize(true);
+            ingredient_view.setLayoutManager(new LinearLayoutManager(context));
+            adapter = new FullRecipeStepAdapter(clickItems);
+            ingredient_view.setAdapter(adapter);
+
+        }
+        else{
+            ingredients = Mapper.searchRecipe(recipeId).getIngredient();
+            ingredient_view.setHasFixedSize(true);
+            ingredient_view.setLayoutManager(new LinearLayoutManager(context));
+            adapter = new FullRecipeStepAdapter(ingredients);
+            ingredient_view.setAdapter(adapter);
+        }
+
 
 
         //방법, 시간, 불세기 spinner
@@ -117,10 +136,20 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         String ingredient="";
         for(int i = 0; i<items.size(); i++){
             ingredient = ingredient+items.get(i)+",";
-            for(int j = 0; j<ingredients.size(); j++){
-                if(items.get(i).equals(ingredients.get(j).getIngredientName()))
-                    specIngredient.add(ingredients.get(j));
+            Log.e(TAG, "재료"+ingredient);
+            if(isHalfRecipe){
+                for(int j = 0; j<ingredients.size(); j++){
+                    if(items.get(i).equals(ingredients.get(j).getIngredientName()))
+                        specIngredient.add(ingredients.get(j));
+                }
             }
+            else{
+                for(int j = 0; j<clickItems.size(); j++){
+                    if(items.get(i).equals(clickItems.get(j).getFoodName()))
+                        specIngredient.add(createIngredient(clickItems.get(j).getFoodName(), clickItems.get(j).getFoodCount()));
+                }
+            }
+
         }
         if(minute_int.equals(0) || fire_st.equals("없음")){
             step_description = ingredient+"을/를 \r\n"+method_st;
