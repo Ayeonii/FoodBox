@@ -9,7 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.PencilRecipe.AllFoodListFragment;
 import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
@@ -20,31 +24,47 @@ import java.util.List;
 
 public class MemoFragmentUrgent extends android.support.v4.app.Fragment {
 
+    private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<MemoUrgentItem> list = new ArrayList<>();
+    private List<RecipeDO.Ingredient> urgentList= new ArrayList<>();
     private String foodImg;
-    List<String[]> foodName = new ArrayList<String[]>();
+    private TextView noneText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.memo_fragment_urgent, container, false);
 
         Context context = view.getContext();
-        recyclerView = (RecyclerView) view.findViewById(R.id.freshRecycler);
+        noneText = (TextView) view.findViewById(R.id.noneText);
+        recyclerView = (RecyclerView) view.findViewById(R.id.urgent_list);
         recyclerView.setHasFixedSize(true);
         adapter = new MemoRecyclerAdapter(list,view.getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
-        Log.e("Frag", "fresh");
+
+        urgentList = refrigeratorMainActivity.getUrgentList();
+
         setData();
 
         return view;
     }
     private void setData(){
-        for(int i =0 ; i<foodName.size(); i++ ){
-            foodImg = "file:///storage/emulated/0/Download/"+foodName.get(i)[0]+".jpg";
-            list.add(new MemoUrgentItem(foodName.get(i)[0], Uri.parse(foodImg),foodName.get(i)[1] ));
+
+        try{
+                for (int i = 0; i < urgentList.size(); i++) {
+                    foodImg = "file:///storage/emulated/0/Download/" + urgentList.get(i).getIngredientName() + ".jpg";
+                    list.add(new MemoUrgentItem(Uri.parse(foodImg)
+                            , urgentList.get(i).getIngredientName()
+                            , urgentList.get(i).getIngredientDuedate()));
+                }
+                adapter.notifyDataSetChanged();
+
+        }catch(NullPointerException e){
+                noneText.setVisibility(View.VISIBLE);
         }
-        adapter.notifyDataSetChanged();
+
+
     }
 }

@@ -21,8 +21,6 @@ public class MemoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo);
 
-        Mapper.createMemo();
-
         tabLayout = (TabLayout)findViewById(R.id.tabLayout); //탭 레이아웃
 
         /**view pager**/

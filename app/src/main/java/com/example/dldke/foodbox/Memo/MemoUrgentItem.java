@@ -17,7 +17,7 @@ public class MemoUrgentItem {
         return urgentImg;
     }
 
-    public String getUrgentText() {
+    public String getUrgentName() {
         return urgentName;
     }
 

@@ -1,16 +1,20 @@
 package com.example.dldke.foodbox.Activity;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,18 +24,40 @@ import android.widget.Toast;
 import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.MemoDO;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
 import com.example.dldke.foodbox.Memo.MemoActivity;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
+import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
+    private  PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    private static List<RecipeDO.Ingredient> urgentList = new ArrayList<>();
+    public RefrigeratorMainActivity(){ }
+
+    public List<RecipeDO.Ingredient> getUrgentList(){
+        return urgentList;
+    }
+
+    public void setUrgentList(List<RecipeDO.Ingredient> urgentList){
+        this.urgentList = urgentList;
+    }
 
     /*********************FloatingButtons***********************/
     //플로팅 버튼 애니메이션
@@ -74,8 +100,18 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
         Mapper.setUserId(getApplicationContext());
 
-        //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
-        //pencilAdapter.getClickFoodString().clear();
+        Mapper.checkAndCreateFirst();
+
+
+        //Mapper.createMemo();
+        if(pencilRecyclerAdapter.getClickCnt() != 0 ){
+            pencilRecyclerAdapter.setClickCnt(0);
+        }
+
+        Mapper.updateUrgentMemo();
+
+        urgentList = Mapper.scanUrgentMemo();
+
         pencilAdapter.getClickFood().clear();
         /*메뉴*/
         menuTransBack = (LinearLayout) findViewById(R.id.transparentBack);
@@ -351,6 +387,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
 
     }
+
+
 
 
 }
