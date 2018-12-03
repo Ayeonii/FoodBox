@@ -26,6 +26,8 @@ import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.R;
 
@@ -47,10 +49,12 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private ImageView food_img, food_img_real;
     private RecyclerView fullrecipeRecyclerView, recipe_ingredient_view;
 
-    private List<RecipeDO.Ingredient> data;
+    private List<RecipeDO.Ingredient> data = new ArrayList<>();
     static ArrayList<FullRecipeData> mArrayList;
     static FullRecipeAdapter mAdapter;
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
+    private PencilCartAdapter pencilCartAdapter = new PencilCartAdapter();
+    //private ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
 
     private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
     private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
@@ -89,23 +93,29 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
         if(isCookingClass && !ishalfrecipe){
             //쿠킹 클래스 풀레시피 작성
-            Log.e(TAG, "쿠킹클래스에요");
 
             ingredient_add.setVisibility(View.VISIBLE);
+
+            ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
+            try {
+                Log.e(TAG, "재료 가져왔어요 " + clickItems.get(0).getFoodName());
+            }catch(NullPointerException e){
+
+            }
+            Log.e(TAG, "쿠킹 클래스에요"+ isCookingClass);
 
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
             mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recipe_ingredient_view.setLayoutManager(mLayoutManager);
-            recipeIngredientAdapter = new FullRecipeIngredientAdapter();
+            recipeIngredientAdapter = new FullRecipeIngredientAdapter(isCookingClass, clickItems);
             recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
+
         }
         else{
-            Log.e(TAG, "간이레시피에서 들어왔어요");
             //일반 사용자 풀레시피 작성
             recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
             String title = Mapper.searchRecipe(recipeId).getSimpleName();
             foodtitle.setText(title);
-
             ingredient_add.setVisibility(View.INVISIBLE);
 
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -114,7 +124,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             data = Mapper.searchRecipe(recipeId).getIngredient(); //간이레시피 전체 재료 data
             recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
             recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
-
         }
 
 

@@ -3,6 +3,7 @@ package com.example.dldke.foodbox.FullRecipe;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -21,8 +23,9 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
     private Context context;
     String foodImg;
     private List<RecipeDO.Ingredient> ingredients;
-    //재료 이름과 이미지 받아오기 위한 저장소
     private List<FullRecipeIngredientData> IngredientData = new ArrayList<>();
+    ArrayList<PencilCartItem> clickItems;
+    private static boolean isCookingClass = false;
 
 
     public FullRecipeIngredientAdapter(Context context,List<RecipeDO.Ingredient> data){
@@ -30,7 +33,10 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
         this.ingredients = data;
     }
 
-    public FullRecipeIngredientAdapter(){}
+    public FullRecipeIngredientAdapter(boolean isCookingClass, ArrayList<PencilCartItem> items){
+        this.clickItems = items;
+        this.isCookingClass = isCookingClass;
+    }
 
 
     //ItemView의 내용을 담고 있음
@@ -52,7 +58,13 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
         // 사용할 아이템의 뷰를 생성해준다.
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fullrecipe_ingredient_list_item, parent, false);
-        AddIngredient(ingredients);
+
+        if(isCookingClass) {
+           CreateIngredient(clickItems);
+        }
+        else {
+            AddIngredient(ingredients);
+        }
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -67,7 +79,12 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
 
     @Override
     public int getItemCount() {
-        return (null != ingredients ? ingredients.size():0);
+        if(isCookingClass){
+            return (null != clickItems ? clickItems.size():0);
+        }
+        else {
+            return (null != ingredients ? ingredients.size() : 0);
+        }
     }
 
     public void AddIngredient(List<RecipeDO.Ingredient> ingredientList){
@@ -79,4 +96,15 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
             IngredientData.add(new FullRecipeIngredientData(name,  Uri.parse(foodImg), count));
         }
     }
+
+    public void CreateIngredient(ArrayList<PencilCartItem> items){
+
+        for(int i = 0; i<items.size(); i++){
+            String name = items.get(i).getFoodName();
+            double count = items.get(i).getFoodCount();
+            Uri image = items.get(i).getFoodImg();
+            IngredientData.add(new FullRecipeIngredientData(name, image, count));
+        }
+    }
+
 }
