@@ -204,6 +204,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         specList = stepDialog.getSpecList();
         if(isCookingClass && !isHalfRecipe){
             recipeId = Mapper.createChefRecipe(FoodTitle, specList);
+            Mapper.addRecipeInMyCommunity(recipeId);
         }
         else{
             Mapper.createFullRecipe(recipeId, FoodTitle, specList);

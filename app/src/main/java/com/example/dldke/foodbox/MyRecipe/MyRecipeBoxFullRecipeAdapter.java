@@ -2,6 +2,9 @@ package com.example.dldke.foodbox.MyRecipe;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.dldke.foodbox.R;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeBoxFullRecipeAdapter.ViewHolder> {
@@ -67,7 +71,9 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         boolean shared = recipedata.get(position).isShared();
 
         holder.name.setText(name);
-        holder.image.setImageResource(recipedata.get(position).getImage());
+        new DownloadImageTask(holder.image).execute(recipedata.get(position).food_image);
+
+        //holder.image.setImageResource(recipedata.get(position).getImage());
         if(shared){
             holder.share.setVisibility(View.VISIBLE);
         }
@@ -78,5 +84,28 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
 
     public int getItemCount(){
         return recipedata.size();
+    }
+
+    public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urlImg =urls[0];
+            Bitmap foodImg = null;
+            try {
+                InputStream in = new java.net.URL(urlImg).openStream();
+                foodImg = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return foodImg;
+        }
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 }

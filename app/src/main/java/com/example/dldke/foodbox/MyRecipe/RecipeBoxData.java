@@ -1,13 +1,17 @@
 package com.example.dldke.foodbox.MyRecipe;
 
+import android.net.Uri;
+
 public class RecipeBoxData {
     String foodname, recipeId, simplename;
     Integer image;
+    String food_image;
     boolean isShared, isIng;
 
-    public RecipeBoxData(String recipeId, Integer image, String foodname, boolean isShared){
+    public RecipeBoxData(String recipeId, String imgUrl, String foodname, boolean isShared){
         this.foodname = foodname;
-        this.image = image;
+        //this.image = image;
+        this.food_image = imgUrl;
         this.recipeId = recipeId;
         this.isShared = isShared;
     }

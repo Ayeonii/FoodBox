@@ -64,8 +64,9 @@ public class FullRecipeBoxFragment extends Fragment {
                 String recipeId = myrecipe.get(i);
                 String foodname = Mapper.searchRecipe(recipeId).getDetail().getFoodName();
                 boolean isshared = Mapper.searchRecipe(recipeId).getIsShare();
+                String imgUrl = Mapper.getImageUrlRecipe(recipeId);
 
-                data.add(new RecipeBoxData(recipeId, R.drawable.strawberry, foodname, isshared));
+                data.add(new RecipeBoxData(recipeId, imgUrl, foodname, isshared));
                 isRecipe = true;
 
             }catch(NullPointerException e){
