@@ -39,11 +39,9 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
 
     private FullRecipeStepAdapter adapter;
     private List<String> items = new ArrayList<>();
-
     private List<RecipeDO.Ingredient> ingredients = new ArrayList<>();
     private List<RecipeDO.Ingredient> specIngredient = new ArrayList<>();
     private static final List<RecipeDO.Spec> specList = new ArrayList<>();
-    private ArrayList<PencilCartItem> clickItems;
     private FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
     private boolean isHalfRecipe = fullRecipeActivity.getIsHalfRecipe();
 
@@ -57,10 +55,10 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         this.recipeId = recipeId;
     }
 
-    public FullRecipeStepDialog(@NonNull Context context, ArrayList<PencilCartItem> items){
+    public FullRecipeStepDialog(@NonNull Context context, List<RecipeDO.Ingredient> items){
         super(context);
         this.context = context;
-        this.clickItems = items;
+        this.ingredients = items;
     }
 
     protected void onCreate(Bundle savedInstanceState){
@@ -76,21 +74,14 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
 
         button_submit.setText("삽입");
 
-        if(!isHalfRecipe){
-            ingredient_view.setHasFixedSize(true);
-            ingredient_view.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new FullRecipeStepAdapter(clickItems);
-            ingredient_view.setAdapter(adapter);
 
-        }
-        else{
+        if(isHalfRecipe){
             ingredients = Mapper.searchRecipe(recipeId).getIngredient();
-            ingredient_view.setHasFixedSize(true);
-            ingredient_view.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new FullRecipeStepAdapter(ingredients);
-            ingredient_view.setAdapter(adapter);
         }
-
+        ingredient_view.setHasFixedSize(true);
+        ingredient_view.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new FullRecipeStepAdapter(ingredients);
+        ingredient_view.setAdapter(adapter);
 
 
         //방법, 시간, 불세기 spinner
@@ -137,20 +128,12 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         for(int i = 0; i<items.size(); i++){
             ingredient = ingredient+items.get(i)+",";
             Log.e(TAG, "재료"+ingredient);
-            if(isHalfRecipe){
-                for(int j = 0; j<ingredients.size(); j++){
-                    if(items.get(i).equals(ingredients.get(j).getIngredientName()))
-                        specIngredient.add(ingredients.get(j));
-                }
+            for(int j = 0; j<ingredients.size(); j++){
+                if(items.get(i).equals(ingredients.get(j).getIngredientName()))
+                    specIngredient.add(ingredients.get(j));
             }
-            else{
-                for(int j = 0; j<clickItems.size(); j++){
-                    if(items.get(i).equals(clickItems.get(j).getFoodName()))
-                        specIngredient.add(createIngredient(clickItems.get(j).getFoodName(), clickItems.get(j).getFoodCount()));
-                }
-            }
-
         }
+
         if(minute_int.equals(0) || fire_st.equals("없음")){
             step_description = ingredient+"을/를 \r\n"+method_st;
         }

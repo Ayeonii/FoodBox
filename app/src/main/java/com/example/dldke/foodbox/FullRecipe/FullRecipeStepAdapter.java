@@ -22,21 +22,15 @@ import java.util.List;
 
 public class FullRecipeStepAdapter extends RecyclerView.Adapter<FullRecipeStepAdapter.ViewHolder> {
     private static List<RecipeDO .Ingredient> ingredients = new ArrayList<>();
-    private List<FullRecipeIngredientData> ingredientData = new ArrayList<>();
-    private ArrayList<PencilCartItem> clickItems;
-    final List<String> SelectedItems  = new ArrayList();
     final List<String> tempItems = new ArrayList<>();
 
-    private FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
     private boolean isChecked;
-    private boolean isHalfRecipe = fullRecipeActivity.getIsHalfRecipe();
-
-    public boolean getChecked(){
-        return isChecked;
-    }
 
     public void setChecked(boolean checked){
         this.isChecked = checked;
+    }
+    public boolean getChecked(){
+        return isChecked;
     }
 
     String TAG = "FullRecipeStepAdapter";
@@ -44,10 +38,6 @@ public class FullRecipeStepAdapter extends RecyclerView.Adapter<FullRecipeStepAd
 
     public FullRecipeStepAdapter(List<RecipeDO.Ingredient> ingredientList){
         this.ingredients = ingredientList;
-    }
-
-    public FullRecipeStepAdapter(ArrayList<PencilCartItem> items){
-        this.clickItems = items;
     }
 
     public List<String> getTempItems(){
@@ -66,29 +56,15 @@ public class FullRecipeStepAdapter extends RecyclerView.Adapter<FullRecipeStepAd
             checkBox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if(isHalfRecipe){
-                        if(b){
-                            checkBox1.setChecked(b);
-                            tempItems.add(ingredients.get(getAdapterPosition()).getIngredientName());
-                        }
-                        else {
-                            checkBox1.setChecked(b);
-                            tempItems.remove(ingredients.get(getAdapterPosition()).getIngredientName());
-                        }
-                        Log.e(TAG, "체크된 재료들!!! "+tempItems);
+                    if(b){
+                        checkBox1.setChecked(b);
+                        tempItems.add(ingredients.get(getAdapterPosition()).getIngredientName());
                     }
-                    else{
-                        if(b){
-                            checkBox1.setChecked(b);
-                            tempItems.add(clickItems.get(getAdapterPosition()).getFoodName());
-                        }
-                        else{
-                            checkBox1.setChecked(b);
-                            tempItems.remove(clickItems.get(getAdapterPosition()).getFoodName());
-                        }
-                        Log.e(TAG, "체크된 재료들 "+tempItems);
+                    else {
+                        checkBox1.setChecked(b);
+                        tempItems.remove(ingredients.get(getAdapterPosition()).getIngredientName());
                     }
-
+                    Log.e(TAG, "체크된 재료들!!! "+tempItems);
                 }
             });
         }
@@ -100,26 +76,12 @@ public class FullRecipeStepAdapter extends RecyclerView.Adapter<FullRecipeStepAd
     }
 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        String name;
-        if(isHalfRecipe) {
-            name = ingredients.get(position).getIngredientName();
-        }
-        else{
-            name = clickItems.get(position).getFoodName();
-        }
+        String name = ingredients.get(position).getIngredientName();
         holder.textView1.setText(name);
         holder.checkBox1.setChecked(false);
-
-
     }
 
     public int getItemCount(){
-        if(isHalfRecipe){
-            return ingredients.size();
-        }
-        else{
-            return clickItems.size();
-        }
-
+        return ingredients.size();
     }
 }

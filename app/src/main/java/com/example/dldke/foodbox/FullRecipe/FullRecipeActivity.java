@@ -101,14 +101,16 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             ingredient_add.setVisibility(View.VISIBLE);
 
             clickItems = pencilCartAdapter.getCartItems();
-            for(int i=0; i<clickItems.size(); i++){
-                data.add(createIngredient(clickItems.get(i).getFoodName(), clickItems.get(i).getFoodCount()));
-            }
+            try{
+                for(int i=0; i<clickItems.size(); i++){
+                    data.add(createIngredient(clickItems.get(i).getFoodName(), clickItems.get(i).getFoodCount()));
+                }
+            }catch(NullPointerException e){}
 
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
             mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recipe_ingredient_view.setLayoutManager(mLayoutManager);
-            recipeIngredientAdapter = new FullRecipeIngredientAdapter(isCookingClass, clickItems);
+            recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
             recipe_ingredient_view.setAdapter(recipeIngredientAdapter);
 
         }
@@ -163,7 +165,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.spec_insert_btn:
                 if(isCookingClass && !isHalfRecipe){
-                    stepDialog = new FullRecipeStepDialog(this, clickItems);
+                    //stepDialog = new FullRecipeStepDialog(this, clickItems);
+                    stepDialog = new FullRecipeStepDialog(this, data);
                     stepDialog.show();
                 }
                 else{
