@@ -1127,7 +1127,6 @@ public final class Mapper {
         return resultPost;
     }
 
-
     public static void addRecipeInMyCommunity(final String recipeId) {
 
         Thread thread = new Thread(new Runnable() {
@@ -1316,8 +1315,42 @@ public final class Mapper {
         return toBuyList;
     }
 
-    public static List<InfoDO> matchingInfo(String message)
-    {
+    public static InfoDO updateMatching(final String productName, final String foodName){
+        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            List<InfoDO> itemList;
+            InfoDO updateItem;
+            @Override
+            public void run() {
+                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(foodName));
+                scanExpression.addFilterCondition("name", condition);
+                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
+                updateItem = itemList.get(0);
+                List<String> tmpList = updateItem.getProductName();
+                tmpList.add(productName);
+                updateItem.setProductName(tmpList);
+                Mapper.getDynamoDBMapper().save(updateItem);
+
+            }
+            @Override
+            public Object getResult(){
+                return updateItem;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        InfoDO item = (InfoDO)thread.getResult();
+        return item;
+    }
+
+    public static RecipeMatching matchingInfo(String message) {
         final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
         final List<String> inputNames = new ArrayList<String>();
         String[] arr = message.split("\n");
@@ -1328,7 +1361,7 @@ public final class Mapper {
             Log.d("matchingInfo",temp);
         }
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
-            List<InfoDO> itemList;
+            RecipeMatching recipeMatching = new RecipeMatching();
             @Override
             public void run() {
 
@@ -1337,12 +1370,15 @@ public final class Mapper {
                     Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(temp));
                     scanExpression.addFilterCondition("productName", condition);
                     List<InfoDO> tmpItemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
-                    Log.d("tmpItemList", tmpItemList.get(0).getName());
                     try{
-                        itemList.add(tmpItemList.get(0));
+                        List<InfoDO> tmpMatchingList = recipeMatching.getMatchingList();
+                        tmpMatchingList.add(tmpItemList.get(0));
+                        recipeMatching.setMatchingList(tmpMatchingList);
                     }
-                    catch(Exception e){
-
+                    catch (Exception e){
+                        List<String> tmpNonMatchingList = recipeMatching.getNonMatchingList();
+                        tmpNonMatchingList.add(temp);
+                        recipeMatching.setNonMatchingList(tmpNonMatchingList);
                     }
 
                 }
@@ -1350,7 +1386,7 @@ public final class Mapper {
             }
             @Override
             public Object getResult(){
-                return itemList;
+                return recipeMatching;
             }
         });
 
@@ -1360,14 +1396,37 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
-        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
-        Log.d("matchingInfo","what?");
-        for(InfoDO temp : itemList){
+        RecipeMatching itemList = (RecipeMatching) thread.getResult();
+
+        for(InfoDO temp : itemList.getMatchingList()){
             Log.d("matchingInfo",temp.getName());
+        }
+        for(String temp : itemList.getNonMatchingList()){
+            Log.d("matchingInfo",temp);
         }
         return itemList;
     }
 
+    public static class RecipeMatching{
+        private List<InfoDO> matchingList = new ArrayList<>();
+        private List<String> nonMatchingList = new ArrayList<>();
+
+        public List<InfoDO> getMatchingList() {
+            return matchingList;
+        }
+
+        public void setMatchingList(List<InfoDO> matchingList) {
+            this.matchingList = matchingList;
+        }
+
+        public List<String> getNonMatchingList() {
+            return nonMatchingList;
+        }
+
+        public void setNonMatchingList(List<String> nonMatchingList) {
+            this.nonMatchingList = nonMatchingList;
+        }
+    }
 
     private class PoolConfig{
         @SerializedName("Default")

@@ -276,8 +276,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
                 case R.id.fabCamera:
                     //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
-                    startActivity(visionIntent);
+                    //Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
+                    //startActivity(visionIntent);
+                    Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
+                    startActivity(deepLink);
                     break;
                 case R.id.fabPencil:
                     //Toast.makeText(RefrigeratorMainActivity.this, "직접입력 누름", Toast.LENGTH_SHORT).show();
