@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -194,14 +195,10 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         String FoodTitle;
         List<RecipeDO.Spec> specList;
 
-//        if(food_img_real == null){
-//            String foodImg = "file:///storage/emulated/0/Download/default.jpg";
-//            Uri uri = Uri.parse(foodImg);
-//            imagePath = getRealPathFromURI(uri);
-//        }
-
         FoodTitle= foodtitle.getText().toString();
         specList = stepDialog.getSpecList();
+
+
         if(isCookingClass && !isHalfRecipe){
             recipeId = Mapper.createChefRecipe(FoodTitle, specList);
             Mapper.addRecipeInMyCommunity(recipeId);
@@ -209,10 +206,10 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         else{
             Mapper.createFullRecipe(recipeId, FoodTitle, specList);
         }
+
         Mapper.attachRecipeImage(recipeId, imagePath);
         Mapper.updatePointInfo(10);
 
-        Log.e(TAG, "등록된 레시피 이름 : "+FoodTitle+" 등록된 레시피 아이디 : "+recipeId);
         Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
         startActivity(RefrigeratorActivity);
         specList.clear();
@@ -240,6 +237,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void sendPicture(Uri imgUri){
+
         imagePath = getRealPathFromURI(imgUri);
         ExifInterface exif = null;
         try{
