@@ -41,6 +41,8 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
     private ArrayList<String> dupliArray = new ArrayList<>();
     private ArrayList<String> nameAll = new ArrayList<>();
 
+    private HalfRecipeAddmoreDialog addmoreDialog;
+
     private Boolean[] checkAddFood;
     private int count = 0;
 
@@ -148,8 +150,13 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 cancel();
                 break;
             case R.id.btn_addmore:
+                Log.d("test", "추가재료 버튼 클릭 직후!!");
+                for (int i=0;i<nameAll.size();i++) {
+                    if (checkAddFood[i])
+                        Log.d("test", "checkAddFood["+i+"] is true");
+                }
                 // 추가재료 부분
-                HalfRecipeAddmoreDialog addmoreDialog = new HalfRecipeAddmoreDialog(context, nameAll, checkAddFood);
+                addmoreDialog = new HalfRecipeAddmoreDialog(context, nameAll, checkAddFood);
                 addmoreDialog.setDialogListener(new HalfRecipeDialogListener() {
                     @Override
                     public void onPositiveClicked(String type, Boolean[] check) {
@@ -161,14 +168,12 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                                     checkAddFood[i] = false;
                             }
                         }
-                        /*for (int i = 0; i < nameAll.size(); i++) {
-                            if (check[i] != checkAddFood[i]) {
-                                if (check[i])
-                                    checkAddFood[i] = true;
-                                else
-                                    checkAddFood[i] = false;
-                            }
-                        }*/
+
+                        Log.d("test", "체크배열 받아오고 다이얼로그 객체 생성 후!!");
+                        for (int i=0;i<nameAll.size();i++) {
+                            if (checkAddFood[i])
+                                Log.d("test", "checkAddFood["+i+"] is true");
+                        }
 
                         for (int i=0; i<nameAll.size(); i++) {
                             if (checkAddFood[i]) {

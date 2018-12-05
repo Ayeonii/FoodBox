@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.example.dldke.foodbox.R;
 
@@ -28,12 +27,13 @@ public class HalfRecipeAddmoreDialog extends Dialog implements View.OnClickListe
     private ArrayList<String> nameAll = new ArrayList<>();
 
     private HalfRecipeDialogListener dialogListener;
-    private Boolean[] checkAddFood = new Boolean[230];
+    private Boolean[] checkAddFood;
 
     public HalfRecipeAddmoreDialog(@NonNull Context context, ArrayList<String> nameAll, Boolean[] check) {
         super(context);
         this.context = context;
         this.nameAll = nameAll;
+        checkAddFood = new Boolean[nameAll.size()];
         System.arraycopy(check, 0, this.checkAddFood, 0, nameAll.size());
     }
 
@@ -54,23 +54,22 @@ public class HalfRecipeAddmoreDialog extends Dialog implements View.OnClickListe
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        //adapter = new HalfRecipeAddmoreAdapter(mItems, nameAll.size(), checkAddFood);
-        adapter = new HalfRecipeAddmoreAdapter(mItems);
+        adapter = new HalfRecipeAddmoreAdapter(mItems, nameAll.size(), checkAddFood);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
-        recyclerView.addOnItemTouchListener(
-                new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        if (checkAddFood[position])
-                            checkAddFood[position] = false;
-                        else
-                            checkAddFood[position] = true;
-
-//                        setRecyclerView();
-                    }
-                }
-                ));
+//        recyclerView.addOnItemTouchListener(
+//                new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        if (checkAddFood[position])
+//                            checkAddFood[position] = false;
+//                        else
+//                            checkAddFood[position] = true;
+//
+//                        //setRecyclerView();
+//                    }
+//                }
+//                ));
 
         setData();
     }
@@ -96,7 +95,18 @@ public class HalfRecipeAddmoreDialog extends Dialog implements View.OnClickListe
                 cancel();
                 break;
             case R.id.btn_ok:
-                dialogListener.onPositiveClicked("all", adapter.getIsCheck());
+                Log.d("test", "원래 추가재료 다이얼로그에 있는 체크배열!!");
+                for (int i=0;i<nameAll.size();i++) {
+                    if (checkAddFood[i])
+                        Log.d("test", "checkAddFood["+i+"] is true");
+                }
+                Log.d("test", "adapter에서 넘어온 체크배열!!");
+                checkAddFood = adapter.getCheckAddFood();
+                for (int i=0;i<nameAll.size();i++) {
+                    if (checkAddFood[i])
+                        Log.d("test", "checkAddFood["+i+"] is true");
+                }
+                dialogListener.onPositiveClicked("all", adapter.getCheckAddFood());
                 dismiss();
                 break;
         }
