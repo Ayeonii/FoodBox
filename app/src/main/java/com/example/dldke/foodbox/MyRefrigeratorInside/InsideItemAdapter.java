@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.HalfRecipe.DCItem;
 import com.example.dldke.foodbox.R;
 
@@ -20,13 +19,17 @@ import java.util.ArrayList;
 
 public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.ItemViewHolder> {
 
-    ArrayList<DCItem> mItems;
-    String mName;
-    Context context;
+    private ArrayList<DCItem> dcArray = new ArrayList<>();
+    private String mName;
+    private Context context;
 
     public InsideItemAdapter(ArrayList<DCItem> mItems, String mName) {
-        this.mItems = mItems;
+        this.dcArray = mItems;
         this.mName = mName;
+    }
+
+    public ArrayList<DCItem> getDcArray() {
+        return dcArray;
     }
 
     @NonNull
@@ -39,11 +42,13 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, final int position) {
-        final String dueDate = mItems.get(position).getStrDueDate();
-        String count = Double.toString(mItems.get(position).getCount());
+        //유통기한이랑 개수받아오는 부분
+        final String dueDate = dcArray.get(position).getStrDueDate();
+        String count = Double.toString(dcArray.get(position).getCount());
         holder.txtDueDate.setText(dueDate);
         holder.txtCount.setText(count);
 
+        //수정...이미지 클릭하는 부분 -> 유통기한이랑 개수 수정가능한 다이얼로그 뜸
         holder.imgEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +58,7 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
             }
         });
 
+        //휴지통 이미지 클릭하는 부분 -> 해당 이름과 유통기한에 해당하는 재료가 삭제됨
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,10 +68,10 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                mItems.remove(position);
+                                //어댑터 리스트에서 삭제하는 부분
+                                dcArray.remove(position);
                                 notifyItemRemoved(position);
-                                notifyItemRangeChanged(position, mItems.size());
-                                //Mapper.deleteFood(mName, dueDate);
+                                notifyItemRangeChanged(position, dcArray.size());
                             }
                         })
                         .setNegativeButton("취소", null)
@@ -76,7 +82,7 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return dcArray.size();
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

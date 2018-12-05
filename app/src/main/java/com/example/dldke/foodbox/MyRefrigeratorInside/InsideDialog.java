@@ -35,10 +35,10 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     private ArrayList<LocalRefrigeratorItem> localArray = new ArrayList<>();
     private ArrayList<String> nameArray = new ArrayList<>();
     private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
+    private ArrayList<DCItem> dcArray = new ArrayList<>();
 
     private InsideItemDialog itemDialog;
 
-    ArrayList<DCItem> dcArray = new ArrayList<>();
 
     public InsideDialog(@NonNull Context context, String type, boolean isEmpty) {
         super(context);
@@ -115,15 +115,7 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                 new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
-                        dcArray.clear();
-                        for (int i=0; i<localArray.size(); i++) {
-                            if (localArray.get(i).getName().equals(nameArray.get(position))) {
-                                // 해당 포지션의 이름을 localArray에서 유통기한이랑 개수를 모두 긁어온다
-                                dcArray.add(new DCItem(localArray.get(i).getDueDate(), localArray.get(i).getCount()));
-                            }
-                        }
-
-                        showItemDialg(position);
+                        showItemDialog(position);
                     }
                 }
                 ));
@@ -141,8 +133,50 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         adapter.notifyDataSetChanged();
     }
 
-    public void showItemDialg(int i) {
-        itemDialog = new InsideItemDialog(context, nameArray.get(i), dcArray);
+    public void showItemDialog(int position) {
+        //각자의 유통기한과 개수가 들어있는 배열 초기화 왜냐면 각자 배열에 들어있는게 달라야하니까!! 추가되면 안되니까!!
+        dcArray.clear();
+
+        //해당포지션의 name을 받아와서 localArray에 그 name을 가진 유통기한과 개수를 다 받아온다.
+        final String name = nameArray.get(position);
+        for (int i=0; i<localArray.size(); i++) {
+            if (localArray.get(i).getName().equals(name)) {
+                dcArray.add(new DCItem(localArray.get(i).getDueDate(), localArray.get(i).getCount()));
+            }
+        }
+
+        //해당 name의 유통기한과 개수를 보여주는 다이얼로그
+        itemDialog = new InsideItemDialog(context, name, dcArray);
+        itemDialog.setDialogListener(new InsideDialogListener() {
+            @Override
+            public void onPositiveClicked(int delCheck, Double count, String dueDate) {
+
+            }
+
+            @Override
+            public void onOkClicked(ArrayList<DCItem> dcItems) {
+                //수정 또는 삭제로 인해 변경된 dcItems
+                //이걸로 localArray를 업데이트해야됨 -> 삭제 후 다시 insert
+//                for (int i=0; i<localArray.size(); i++) {
+//                    if (localArray.get(i).getName().equals(name)) {
+//                        localArray.remove(i);
+//                    }
+//                }
+                localArray.remove(name);
+
+                Log.d("test","잘 삭제되었는지 확인");
+                for (int i=0; i<localArray.size(); i++) {
+                    Log.d("test", localArray.get(i).getName());
+                }
+
+                Log.d("test", "dcItems.size() : " +dcItems.size());
+                for (int i=0;i<dcItems.size(); i++) {
+                    localArray.add(new LocalRefrigeratorItem(name, dcItems.get(i).getCount(), dcItems.get(i).getStrDueDate()));
+                }
+
+                setRecyclerView();
+            }
+        });
         itemDialog.show();
     }
 

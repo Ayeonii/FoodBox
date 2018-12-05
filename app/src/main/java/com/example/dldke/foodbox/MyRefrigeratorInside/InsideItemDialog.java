@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.HalfRecipe.DCItem;
-import com.example.dldke.foodbox.HalfRecipe.HalfRecipeIngreItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -23,17 +22,20 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
     private TextView txtName;
     private Button btnOk;
     private RecyclerView recyclerView;
-    private Context context;
-    private String mName;
 
-    private RecyclerView.Adapter adapter;
+    private Context context;
+    private String foodName;
+
+    //private RecyclerView.Adapter adapter;
+    private InsideItemAdapter adapter;
+    private InsideDialogListener dialogListener;
     private ArrayList<DCItem> dcArray = new ArrayList<>();
     private ArrayList<DCItem> mItems = new ArrayList<>();
 
     public InsideItemDialog(@NonNull Context context, String name, ArrayList<DCItem> dcArray) {
         super(context);
         this.context = context;
-        this.mName = name;
+        this.foodName = name;
         this.dcArray = dcArray;
     }
 
@@ -42,19 +44,21 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.refrigeratorinside_item_dialog);
 
+        Log.d("test", "InsideItemDialog  onCreate()");
+
         txtName = (TextView) findViewById(R.id.txt_name);
         btnOk = (Button) findViewById(R.id.btn_ok);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         btnOk.setOnClickListener(this);
-        txtName.setText(mName);
+        txtName.setText(foodName);
 
         setRecyclerView();
     }
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        adapter = new InsideItemAdapter(mItems, mName);
+        adapter = new InsideItemAdapter(mItems, foodName);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
@@ -73,11 +77,27 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         adapter.notifyDataSetChanged();
     }
 
+    public void setDialogListener(InsideDialogListener dialogListener) {
+        this.dialogListener = dialogListener;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ok:
-                // 현재(변경 또는 삭제 후) dcArray 받아오기...어떻게...?
+                // 현재(변경 또는 삭제 후) dcArray 받아오기
+                Log.d("test", foodName);
+                Log.d("test", "받아오기전 dcArray");
+                for (int i=0; i<dcArray.size(); i++) {
+                    Log.d("test", dcArray.get(i).getStrDueDate()+", "+dcArray.get(i).getCount());
+                }
+                dcArray = adapter.getDcArray();
+                Log.d("test", "받아오고난후 dcArray");
+                for (int i=0; i<dcArray.size(); i++) {
+                    Log.d("test", dcArray.get(i).getStrDueDate()+", "+dcArray.get(i).getCount());
+                }
+                //이걸 보내면 되겠따 !!!!!!!!dcArray
+                dialogListener.onOkClicked(dcArray);
                 dismiss();
                 break;
         }
