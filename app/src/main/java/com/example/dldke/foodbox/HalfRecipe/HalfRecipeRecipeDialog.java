@@ -2,7 +2,6 @@ package com.example.dldke.foodbox.HalfRecipe;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,14 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
-import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.R;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListener {
 
@@ -191,6 +186,11 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
 
                     @Override
                     public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
+
+                    }
+
+                    @Override
+                    public void onIngOkClicked(int ok) {
 
                     }
                 });

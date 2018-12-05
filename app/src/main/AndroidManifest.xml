@@ -42,7 +42,7 @@
             android:name=".PencilRecipe.PencilRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".HalfRecipe.HalfRecipeCompleteActivity"/>
-        <activity android:name=".HalfRecipe.HalfRecipeIngActivity"/>
+        <activity android:name=".HalfRecipe.HalfRecipeIngDialog"/>
         <activity android:name=".MyRecipe.RecipeBoxHalfRecipeDetailActivity"/>
         <activity android:name=".MyRecipe.RecipeBoxFullRecipeDetailActivity"/>
         <activity

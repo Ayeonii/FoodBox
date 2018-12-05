@@ -1,10 +1,9 @@
 package com.example.dldke.foodbox.HalfRecipe;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,10 +12,7 @@ import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-
-import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
-import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createMemo;
-
+import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -24,6 +20,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
 public class HalfRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -41,8 +39,9 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private HalfRecipeIngreDialog ingreDialog;
     private HalfRecipeRecipeDialog recipeDialog;
     private HalfRecipeDueDateDialog dueDateDialog;
+    private HalfRecipeIngDialog ingDialog;
 
-    private String user_id, user_id_memo;
+    private String user_id;
     private String recipeSimpleName;
 
     // 추가재료 부분================
@@ -489,6 +488,11 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
 
             }
+
+            @Override
+            public void onIngOkClicked(int ok) {
+
+            }
         });
         ingreDialog.show();
     }
@@ -516,6 +520,11 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
+
+            }
+
+            @Override
+            public void onIngOkClicked(int ok) {
 
             }
         });
@@ -551,9 +560,45 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     goHalfRecipeMaking(selectedItems, dueDateCheckArray);
 
             }
+
+            @Override
+            public void onIngOkClicked(int ok) {
+
+            }
         });
         dueDateDialog.setCancelable(false);
         dueDateDialog.show();
+    }
+
+    public void showRecipeIngDialog(List<RecipeDO.Ingredient> needItem) {
+        ingDialog = new HalfRecipeIngDialog(this, needItem);
+        ingDialog.setDialogListener(new HalfRecipeDialogListener() {
+            @Override
+            public void onPositiveClicked(String type, Boolean[] check) {
+
+            }
+
+            @Override
+            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
+
+            }
+
+            @Override
+            public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
+
+            }
+
+            @Override
+            public void onIngOkClicked(int ok) {
+                if (ok == 1) {
+                    Intent myRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+                    myRecipeActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(myRecipeActivity);
+                }
+            }
+        });
+        ingDialog.setCancelable(false);
+        ingDialog.show();
     }
 
     private boolean updateCountByDueDate(ArrayList<HalfRecipeDueDateItem> radioCheckItems) {
@@ -692,9 +737,8 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         // memo table
         Mapper.appendToBuyMemo(needItem);
 
-//        Intent intent = new Intent(this, HalfRecipeIngActivity.class);
-//        intent.putExtra("need", needItem);
-//        startActivity(intent);
+        //사용자에게 필요한재료 확인다이얼로그
+        showRecipeIngDialog(needItem);
     }
 }
 
