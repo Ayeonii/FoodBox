@@ -767,6 +767,38 @@ public final class Mapper {
         }
     }
 
+    public static boolean matchFavorite(String postId) {
+        final String post_Id = postId;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO communityItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                        userId);
+
+                for(int i =0; i < communityItem.getFavorites().size(); i++)
+                {
+                    if(communityItem.getFavorites().get(i).equals(post_Id)) {
+                        isFavorite = true;
+                        break;
+                    }
+                    else{
+                        isFavorite = false;
+                    }
+                }
+
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return isFavorite;
+    }
+
     public static List<PostDO> scanFavorite() {
 
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
@@ -1475,6 +1507,119 @@ public final class Mapper {
         return itemList;
     }
 
+
+    public static InfoDO updateMatching(final String productName, final String foodName){
+        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            List<InfoDO> itemList;
+            InfoDO updateItem;
+            @Override
+            public void run() {
+                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(foodName));
+                scanExpression.addFilterCondition("name", condition);
+                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
+                updateItem = itemList.get(0);
+                List<String> tmpList = updateItem.getProductName();
+                tmpList.add(productName);
+                updateItem.setProductName(tmpList);
+                Mapper.getDynamoDBMapper().save(updateItem);
+
+            }
+            @Override
+            public Object getResult(){
+                return updateItem;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        InfoDO item = (InfoDO)thread.getResult();
+        return item;
+    }
+
+    public static RecipeMatching matchingInfo(String message) {
+        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
+        final List<String> inputNames = new ArrayList<String>();
+        String[] arr = message.split("\n");
+        for(String temp : arr){
+            inputNames.add(temp.replaceAll("\\p{Z}", ""));
+        }
+        for(String temp : inputNames){
+            Log.d("matchingInfo",temp);
+        }
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            RecipeMatching recipeMatching = new RecipeMatching();
+            @Override
+            public void run() {
+
+                for(String temp : inputNames){
+                    DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                    Condition condition = new Condition().withComparisonOperator(ComparisonOperator.CONTAINS).withAttributeValueList(new AttributeValue().withS(temp));
+                    scanExpression.addFilterCondition("productName", condition);
+                    List<InfoDO> tmpItemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
+                    try{
+                        List<InfoDO> tmpMatchingList = recipeMatching.getMatchingList();
+                        tmpMatchingList.add(tmpItemList.get(0));
+                        recipeMatching.setMatchingList(tmpMatchingList);
+                    }
+                    catch (Exception e){
+                        List<String> tmpNonMatchingList = recipeMatching.getNonMatchingList();
+                        tmpNonMatchingList.add(temp);
+                        recipeMatching.setNonMatchingList(tmpNonMatchingList);
+                    }
+
+                }
+
+            }
+            @Override
+            public Object getResult(){
+                return recipeMatching;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        RecipeMatching itemList = (RecipeMatching) thread.getResult();
+
+        for(InfoDO temp : itemList.getMatchingList()){
+            Log.d("matchingInfo",temp.getName());
+        }
+        for(String temp : itemList.getNonMatchingList()){
+            Log.d("matchingInfo",temp);
+        }
+        return itemList;
+    }
+
+    public static class RecipeMatching{
+        private List<InfoDO> matchingList = new ArrayList<>();
+        private List<String> nonMatchingList = new ArrayList<>();
+
+        public List<InfoDO> getMatchingList() {
+            return matchingList;
+        }
+
+        public void setMatchingList(List<InfoDO> matchingList) {
+            this.matchingList = matchingList;
+        }
+
+        public List<String> getNonMatchingList() {
+            return nonMatchingList;
+        }
+
+        public void setNonMatchingList(List<String> nonMatchingList) {
+            this.nonMatchingList = nonMatchingList;
+        }
+    }
 
     private class PoolConfig{
         @SerializedName("Default")

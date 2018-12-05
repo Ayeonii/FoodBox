@@ -6,7 +6,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="com.example.dldke.foodbox.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.example.dldke.foodbox.permission.C2D_MESSAGE" />
 
 
     <application
@@ -32,8 +37,9 @@
             android:name=".Activity.LoginActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Activity.RefrigeratorMainActivity" />
-        <activity android:name=".FullRecipe.FullRecipeActivity"
-            android:windowSoftInputMode="adjustNothing"/>
+        <activity
+            android:name=".FullRecipe.FullRecipeActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".MyRefrigeratorInside.RefrigeratorInsideActivity" />
         <activity android:name=".HalfRecipe.HalfRecipeActivity" />
         <activity
@@ -42,10 +48,9 @@
         <activity
             android:name=".PencilRecipe.PencilRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".HalfRecipe.HalfRecipeCompleteActivity"/>
-        <activity android:name=".MyRecipe.RecipeBoxHalfRecipeDetailActivity"/>
-        <activity android:name=".MyRecipe.RecipeBoxFullRecipeDetailActivity"/>
-
+        <activity android:name=".HalfRecipe.HalfRecipeCompleteActivity" />
+        <activity android:name=".MyRecipe.RecipeBoxHalfRecipeDetailActivity" />
+        <activity android:name=".MyRecipe.RecipeBoxFullRecipeDetailActivity" />
         <activity
             android:name=".Community.CommunityActivity"
             android:windowSoftInputMode="adjustNothing" />
@@ -71,9 +76,30 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".CloudVision.VisionReturnActivity"></activity>
 
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.dldke.foodbox" />
+            </intent-filter>
+        </receiver>
 
+        <service
+            android:name=".PushListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".CloudVision.VisionReturnActivity" />
+        <activity
+            android:name=".Activity.DeepLinkActivity"
+            android:label="A deeplink!">
+        </activity>
     </application>
 
 </manifest>

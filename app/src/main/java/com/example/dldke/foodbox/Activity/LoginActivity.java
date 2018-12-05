@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.Activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,8 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.auth.core.IdentityProvider;
+import com.amazonaws.mobile.auth.core.SignInResultHandler;
 import com.amazonaws.mobile.auth.core.SignInStateChangeListener;
 
+import com.amazonaws.mobile.auth.core.signin.SignInProvider;
 import com.amazonaws.mobile.auth.google.GoogleButton;
 import com.amazonaws.mobile.auth.ui.AuthUIConfiguration;
 import com.amazonaws.mobile.auth.ui.SignInUI;
@@ -30,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         AWSMobileClient.getInstance().initialize(this).execute();
-
 
         // Sign-in listener
         IdentityManager.getDefaultIdentityManager().addSignInStateChangeListener(new SignInStateChangeListener() {
@@ -73,8 +76,9 @@ public class LoginActivity extends AppCompatActivity {
                                                      .getClient(LoginActivity.this, SignInUI.class);
 
 
-
         signinUI.login(LoginActivity.this, RefrigeratorMainActivity.class).authUIConfiguration(config).execute();
+
+
         Mapper.setDynamoDBMapper();
         Mapper.setUserId(LoginActivity.this);
         Mapper.setBucketName(LoginActivity.this);
