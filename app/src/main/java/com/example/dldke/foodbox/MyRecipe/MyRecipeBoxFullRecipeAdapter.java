@@ -6,24 +6,30 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeBoxFullRecipeAdapter.ViewHolder> {
+public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeBoxFullRecipeAdapter.ViewHolder>{
 
     private String TAG = "MyRecipeBoxFullRecipeAdapter";
-    //등록된 간이레시피 ID 가져오기 위한 설정
     private ArrayList<RecipeBoxData> recipedata = new ArrayList<>();
     private static String recipe_id;
+    private static boolean shared;
 
     public MyRecipeBoxFullRecipeAdapter(){}
 
@@ -49,6 +55,7 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
             view.setOnClickListener(this);
         }
 
+
         //'자세히 보기' 눌렀을 때, 해당 레시피 ID의 식재료 보여주기
         public void onClick(View view){
             int position = getAdapterPosition();
@@ -66,9 +73,8 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     }
 
     public void onBindViewHolder(final MyRecipeBoxFullRecipeAdapter.ViewHolder holder, final int position){
-        //Log.e(TAG,"이름 가져와!!!!!"+recipedata.get(position).getFoodname());
         String name = recipedata.get(position).getFoodname();
-        boolean shared = recipedata.get(position).isShared();
+        shared = recipedata.get(position).isShared();
 
         holder.name.setText(name);
         new DownloadImageTask(holder.image).execute(recipedata.get(position).food_image);
@@ -85,6 +91,7 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     public int getItemCount(){
         return recipedata.size();
     }
+
 
     public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -108,4 +115,18 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
             bmImage.setImageBitmap(result);
         }
     }
+
+    public void removeItem(int position) {
+        String recipe_id = recipedata.get(position).getRecipeId();
+
+        Log.e(TAG, "recipe_id"+recipe_id);
+        recipedata.remove(position);
+        notifyItemRemoved(position);
+        Mapper.deleteRecipe(recipe_id);
+        if(shared){
+            Mapper.deletePost(recipe_id);
+        }
+
+    }
+
 }

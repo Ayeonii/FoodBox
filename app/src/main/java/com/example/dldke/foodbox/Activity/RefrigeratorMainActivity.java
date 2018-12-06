@@ -1,9 +1,17 @@
 package com.example.dldke.foodbox.Activity;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,9 +24,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.example.dldke.foodbox.CloudVision.PackageManagerUtils;
+import com.example.dldke.foodbox.CloudVision.PermissionUtils;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -29,6 +40,28 @@ import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.vision.v1.Vision;
+import com.google.api.services.vision.v1.VisionRequest;
+import com.google.api.services.vision.v1.VisionRequestInitializer;
+import com.google.api.services.vision.v1.model.AnnotateImageRequest;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.EntityAnnotation;
+import com.google.api.services.vision.v1.model.Feature;
+import com.google.api.services.vision.v1.model.Image;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
@@ -71,6 +104,16 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     ImageView postit;
     public static boolean isCookingClass;
     private String user_id;
+
+
+    private static final int GALLERY_PERMISSIONS_REQUEST = 0;
+    private static final int GALLERY_IMAGE_REQUEST = 1;
+    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
+    public static final int CAMERA_IMAGE_REQUEST = 3;
+
+    public static final String FILE_NAME = "temp.jpg";
+
+
 
     public RefrigeratorMainActivity(){  }
 
@@ -304,22 +347,19 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
                 case R.id.fabCamera:
                     //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    //Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
-                    //startActivity(visionIntent);
-                    Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
-                    startActivity(deepLink);
+                    Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
+                    startActivity(visionIntent);
+                    //Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
+                    //startActivity(deepLink);
                     break;
                 case R.id.fabPencil:
-                    //Toast.makeText(RefrigeratorMainActivity.this, "직접입력 누름", Toast.LENGTH_SHORT).show();
                     Intent PencilActivity = new Intent(getApplicationContext(),PencilRecipeActivity.class);
                     startActivity(PencilActivity);
                     //다음 화면이 아래에서 올라오는 애니메이션
                     overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
                     break;
                 case R.id.fabFull:
-                    //Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();
                     if(isCookingClass){
-                        //메인에러 바로 풀레시피 작성으로 넘어감 표시
                         FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
                         fullRecipeActivity.setIsHalfRecipe(false);
                         Intent FullRecipeActivity = new Intent(getApplicationContext(), FullRecipeActivity.class);

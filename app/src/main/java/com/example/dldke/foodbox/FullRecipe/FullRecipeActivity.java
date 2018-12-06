@@ -1,5 +1,7 @@
 package com.example.dldke.foodbox.FullRecipe;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -8,7 +10,11 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,23 +30,34 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
+import com.example.dldke.foodbox.CloudVision.PermissionUtils;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+
+import static com.example.dldke.foodbox.CloudVision.VisionActivity.CAMERA_IMAGE_REQUEST;
+import static com.example.dldke.foodbox.CloudVision.VisionActivity.CAMERA_PERMISSIONS_REQUEST;
+import static com.example.dldke.foodbox.CloudVision.VisionActivity.FILE_NAME;
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.R;
+import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final int CAMERA_CODE = 1;
     private final int GALLERY_CODE = 2;
+    private static final int MAX_DIMENSION = 1200;
+
     private static boolean isCookingClass, isHalfRecipe;
 
     private String imagePath, recipeId;
@@ -161,7 +178,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.food_img:
-                selectGallery();
+                imageDialog();
                 break;
 
             case R.id.spec_insert_btn:
@@ -189,6 +206,25 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
 
+    }
+
+    public void imageDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("이미지 업로드");
+        builder.setMessage("업로드 방법을 선택하세요");
+        builder.setPositiveButton("album", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                selectGallery();
+            }
+        });
+        builder.setNegativeButton("camera", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                selectPhoto();
+            }
+        });
+        builder.show();
     }
 
     public void registerSpec(){
@@ -222,69 +258,97 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         startActivityForResult(intent, GALLERY_CODE);
     }
 
+    public void selectPhoto(){
+        if (PermissionUtils.requestPermission(this, CAMERA_CODE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivityForResult(intent, CAMERA_CODE);
+        }
+    }
+
+    public File getCameraFile() {
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return new File(dir, FILE_NAME);
+    }
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
-            switch(requestCode){
-                case GALLERY_CODE:
-                    sendPicture(data.getData());
-                    break;
-                default:
-                    break;
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                uploadImage(resultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
         }
-    }
 
-    private void sendPicture(Uri imgUri){
+        if (requestCode == GALLERY_CODE && resultCode == RESULT_OK && data != null) {
+            CropImage.activity(data.getData()).start(this);
 
-        imagePath = getRealPathFromURI(imgUri);
-        ExifInterface exif = null;
-        try{
-            exif = new ExifInterface(imagePath);
-        }catch(IOException e){
-            e.printStackTrace();
+        } else if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
+            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+            CropImage.activity(photoUri).start(this);
         }
-        //int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-        //int exifDegree = exifOrientationToDegrees(exifOrientation);
-
-        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        //food_img.setImageBitmap(rotate(bitmap, exifDegree));
-        food_img.setVisibility(View.INVISIBLE);
-        food_img_real.setVisibility(View.VISIBLE);
-        food_img_real.setImageBitmap(bitmap);
-
     }
 
-    private int exifOrientationToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            return 90;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            return 180;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            return 270;
+    public void uploadImage(Uri uri) {
+        if (uri != null) {
+            try {
+                // scale the image to save on bandwidth
+                String real_path = uri.getPath();
+                imagePath = real_path;
+                Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
+                food_img_real.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
         }
-        return 0;
     }
 
+    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
 
-    private Bitmap rotate(Bitmap src, float degree) {
-        // Matrix 객체 생성
-        Matrix matrix = new Matrix();
-        // 회전 각도 셋팅
-        matrix.postRotate(degree);
-        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
-        return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
-    }
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+        int resizedWidth = maxDimension;
+        int resizedHeight = maxDimension;
 
-    private String getRealPathFromURI(Uri contentUri) {
-        int column_index=0;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if(cursor.moveToFirst()){
-            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (originalHeight > originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
+        } else if (originalWidth > originalHeight) {
+            resizedWidth = maxDimension;
+            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
+        } else if (originalHeight == originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = maxDimension;
         }
-        return cursor.getString(column_index);
+        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case CAMERA_CODE:
+                if (PermissionUtils.permissionGranted(requestCode, CAMERA_CODE, grantResults)) {
+                    selectPhoto();
+                }
+                break;
+            case GALLERY_CODE:
+                if (PermissionUtils.permissionGranted(requestCode, GALLERY_CODE, grantResults)) {
+                    selectGallery();
+                }
+                break;
+        }
     }
 
     @Override

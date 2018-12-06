@@ -40,7 +40,6 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
     private String recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
 
-
     private List<RecipeDO.Ingredient> ingredients = new ArrayList<>();
     private FullRecipeStepAdapter adapter;
     private List<String> items = new ArrayList<>();
@@ -49,6 +48,11 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     private Dialog dialog;
 
     private final String TAG = "FullRecipeAdapter";
+
+    public FullRecipeAdapter(Context context, ArrayList<FullRecipeData> list) {
+        mList = list;
+        mContext = context;
+    }
 
     public class FullRecipeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
@@ -161,17 +165,10 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
         };
     }
 
-    public FullRecipeAdapter(Context context, ArrayList<FullRecipeData> list) {
-        mList = list;
-        mContext = context;
-    }
 
     @Override
     public FullRecipeViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.fullrecipe_step_list_item, viewGroup, false);
-
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fullrecipe_step_list_item, viewGroup, false);
         FullRecipeViewHolder viewHolder = new FullRecipeViewHolder(view);
 
         return viewHolder;

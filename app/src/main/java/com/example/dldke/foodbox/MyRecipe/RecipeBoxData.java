@@ -22,6 +22,7 @@ public class RecipeBoxData {
         this.isIng = isIng;
     }
 
+
     public String getFoodname() {
         return foodname;
     }
@@ -57,4 +58,5 @@ public class RecipeBoxData {
     public boolean isIng() {
         return isIng;
     }
+
 }

@@ -83,7 +83,6 @@ public class VisionActivity extends AppCompatActivity {
     private static final int MAX_LABEL_RESULTS = 10;
     private static final int MAX_DIMENSION = 1200;
 
-    private static final String TAG = VisionActivity.class.getSimpleName();
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
@@ -92,11 +91,15 @@ public class VisionActivity extends AppCompatActivity {
     private TextView mImageDetails;
     private ImageView mMainImage;
 
+    private static final String TAG = "VisionActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "VisionActivity로 들어왔어");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vision);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -111,23 +114,23 @@ public class VisionActivity extends AppCompatActivity {
         });
 
 
-
         mImageDetails = findViewById(R.id.image_details);
         mMainImage = findViewById(R.id.main_image);
 
     }
 
     public void startGalleryChooser() {
+        Log.e(TAG, "startGalleryChooser 들어왔다");
         if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select a photo"),
-                    GALLERY_IMAGE_REQUEST);
+            startActivityForResult(Intent.createChooser(intent, "Select a photo"), GALLERY_IMAGE_REQUEST);
         }
     }
 
     public void startCamera() {
+        Log.e(TAG, "startCamera 들어왔다");
         if (PermissionUtils.requestPermission(
                 this,
                 CAMERA_PERMISSIONS_REQUEST,
@@ -142,6 +145,7 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     public File getCameraFile() {
+        Log.e(TAG, "getCameraFile 들어왔다");
         File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return new File(dir, FILE_NAME);
     }
@@ -149,6 +153,8 @@ public class VisionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "onActivityResult 들어왔다");
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
@@ -158,45 +164,29 @@ public class VisionActivity extends AppCompatActivity {
                 Exception error = result.getError();
             }
         }
+
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            CropImage.activity(data.getData())
-                    .start(this);
+            Log.e(TAG, "갤러리로 request줬어");
+            CropImage.activity(data.getData()).start(this);
+            Log.e(TAG, "crop이 끝났어요");
+
         } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            Log.e(TAG, "Camera request 들어왔다");
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
-            CropImage.activity(photoUri)
-                    .start(this);
+            CropImage.activity(photoUri).start(this);
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case CAMERA_PERMISSIONS_REQUEST:
-                if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
-                    startCamera();
-                }
-                break;
-            case GALLERY_PERMISSIONS_REQUEST:
-                if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults)) {
-                    startGalleryChooser();
-                }
-                break;
-        }
-    }
+
 
     public void uploadImage(Uri uri) {
+        Log.e(TAG, "uploadImage 들어왔다");
         if (uri != null) {
             try {
                 // scale the image to save on bandwidth
-                Bitmap bitmap =
-                        scaleBitmapDown(
-                                MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
-                                MAX_DIMENSION);
-
+                Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
                 callCloudVision(bitmap);
-                mMainImage.setImageBitmap(bitmap);
+                //mMainImage.setImageBitmap(bitmap);
 
             } catch (IOException e) {
                 Log.d(TAG, "Image picking failed because " + e.getMessage());
@@ -208,38 +198,65 @@ public class VisionActivity extends AppCompatActivity {
         }
     }
 
+    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
+
+        Log.e(TAG, "scaleBitmapDown 들어왔다");
+
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+        int resizedWidth = maxDimension;
+        int resizedHeight = maxDimension;
+
+        if (originalHeight > originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
+        } else if (originalWidth > originalHeight) {
+            resizedWidth = maxDimension;
+            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
+        } else if (originalHeight == originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = maxDimension;
+        }
+        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+    }
+
+    private void callCloudVision(final Bitmap bitmap) {
+        Log.e(TAG, "callCloudVision 들어왔다");
+        // Switch text to loading
+        mImageDetails.setText(R.string.loading_message);
+
+        // Do the real work in an async task, because we need to use the network anyway
+        try {
+            AsyncTask<Object, Void, String> labelDetectionTask = new LableDetectionTask(this, prepareAnnotationRequest(bitmap));
+            labelDetectionTask.execute();
+        } catch (IOException e) {
+            Log.d(TAG, "failed to make API request because of other IOException " + e.getMessage());
+        }
+    }
+
     private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
+        Log.e(TAG, "prepareAnnotationRequest 들어왔다");
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-        VisionRequestInitializer requestInitializer =
-                new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
-                    /**
-                     * We override this so we can inject important identifying fields into the HTTP
-                     * headers. This enables use of a restricted cloud platform API key.
-                     */
-                    @Override
-                    protected void initializeVisionRequest(VisionRequest<?> visionRequest)
-                            throws IOException {
-                        super.initializeVisionRequest(visionRequest);
-
-                        String packageName = getPackageName();
-                        visionRequest.getRequestHeaders().set(ANDROID_PACKAGE_HEADER, packageName);
-
-                        String sig = PackageManagerUtils.getSignature(getPackageManager(), packageName);
-
-                        visionRequest.getRequestHeaders().set(ANDROID_CERT_HEADER, sig);
-                    }
-                };
+        VisionRequestInitializer requestInitializer = new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
+            @Override
+            protected void initializeVisionRequest(VisionRequest<?> visionRequest) throws IOException {
+                super.initializeVisionRequest(visionRequest);
+                String packageName = getPackageName();
+                visionRequest.getRequestHeaders().set(ANDROID_PACKAGE_HEADER, packageName);
+                String sig = PackageManagerUtils.getSignature(getPackageManager(), packageName);
+                visionRequest.getRequestHeaders().set(ANDROID_CERT_HEADER, sig);
+            }
+        };
 
         Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
         builder.setVisionRequestInitializer(requestInitializer);
-
         Vision vision = builder.build();
 
-        BatchAnnotateImagesRequest batchAnnotateImagesRequest =
-                new BatchAnnotateImagesRequest();
+        BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
         batchAnnotateImagesRequest.setRequests(new ArrayList<AnnotateImageRequest>() {{
+
             AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
 
             // Add the image
@@ -266,12 +283,10 @@ public class VisionActivity extends AppCompatActivity {
             add(annotateImageRequest);
         }});
 
-        Vision.Images.Annotate annotateRequest =
-                vision.images().annotate(batchAnnotateImagesRequest);
+        Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
         // Due to a bug: requests to Vision API containing large images fail when GZipped.
         annotateRequest.setDisableGZipContent(true);
         Log.d(TAG, "created Cloud Vision request object, sending request");
-
         return annotateRequest;
     }
 
@@ -300,51 +315,25 @@ public class VisionActivity extends AppCompatActivity {
             return "Cloud Vision API request failed. Check logs for details.";
         }
 
+        //인식된 글자 ImageView에 뿌려주기
         protected void onPostExecute(String result) {
+            String[] array = result.split("\n");
+            for(int i = 0; i<array.length ; i++){
+                Log.e(TAG, ""+i+array[i]);
+            }
             VisionActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
                 TextView imageDetail = activity.findViewById(R.id.image_details);
-
                 imageDetail.setText(result);
             }
         }
     }
 
-    private void callCloudVision(final Bitmap bitmap) {
-        // Switch text to loading
-        mImageDetails.setText(R.string.loading_message);
-
-        // Do the real work in an async task, because we need to use the network anyway
-        try {
-            AsyncTask<Object, Void, String> labelDetectionTask = new LableDetectionTask(this, prepareAnnotationRequest(bitmap));
-            labelDetectionTask.execute();
-        } catch (IOException e) {
-            Log.d(TAG, "failed to make API request because of other IOException " +
-                    e.getMessage());
-        }
-    }
-
-    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
-
-        int originalWidth = bitmap.getWidth();
-        int originalHeight = bitmap.getHeight();
-        int resizedWidth = maxDimension;
-        int resizedHeight = maxDimension;
-
-        if (originalHeight > originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
-        } else if (originalWidth > originalHeight) {
-            resizedWidth = maxDimension;
-            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
-        } else if (originalHeight == originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = maxDimension;
-        }
-        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
-    }
 
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
+
+        Log.e(TAG, "convertResponseToString 들어왔다");
+
         StringBuilder message = new StringBuilder("");
 
         List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
@@ -364,8 +353,26 @@ public class VisionActivity extends AppCompatActivity {
             message.append("nothing");
         }*/
         Mapper.matchingInfo(message.toString());
-
         return message.toString();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.e(TAG, "onRequestPermissionResult 들어왔다");
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case CAMERA_PERMISSIONS_REQUEST:
+                if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
+                    startCamera();
+                }
+                break;
+            case GALLERY_PERMISSIONS_REQUEST:
+                if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults)) {
+                    startGalleryChooser();
+                }
+                break;
+        }
     }
 
 }
