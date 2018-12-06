@@ -1036,6 +1036,7 @@ public final class Mapper {
                 return post;
             }
         });
+
         thread.start();
         try{
             thread.join();
@@ -1351,6 +1352,28 @@ public final class Mapper {
 
                 userInfo.setPoint(point);
                 Mapper.getDynamoDBMapper().save(userInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateIngredient(List<RecipeDO.Ingredient> input, String recipeId){
+        final String recipe_id = recipeId;
+        final List<RecipeDO.Ingredient> ingredient_list = input;
+        Thread thread = new Thread(new Runnable() {
+            com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
+            @Override
+            public void run() {
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipe_id);
+                recipeItem.setIngredient(ingredient_list);
+                Mapper.getDynamoDBMapper().save(recipeItem);
             }
         });
         thread.start();

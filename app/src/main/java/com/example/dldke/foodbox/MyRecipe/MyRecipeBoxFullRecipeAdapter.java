@@ -19,10 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.R;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeBoxFullRecipeAdapter.ViewHolder>{
 
@@ -119,12 +121,18 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     public void removeItem(int position) {
         String recipe_id = recipedata.get(position).getRecipeId();
 
-        Log.e(TAG, "recipe_id"+recipe_id);
         recipedata.remove(position);
         notifyItemRemoved(position);
         Mapper.deleteRecipe(recipe_id);
+
         if(shared){
-            Mapper.deletePost(recipe_id);
+            String userId=Mapper.getUserId();
+            List<PostDO> post =Mapper.searchPost("writer", userId);
+            String posting_recipe_id=post.get(position).getRecipeId();
+            String post_id = post.get(position).getPostId();
+
+            if(recipe_id.equals(posting_recipe_id))
+                Mapper.deletePost(post_id);
         }
 
     }

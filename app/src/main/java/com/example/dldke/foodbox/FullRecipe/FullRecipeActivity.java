@@ -61,6 +61,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private static boolean isCookingClass, isHalfRecipe;
 
     private String imagePath, recipeId;
+    private static String FoodTitle;
     private Toolbar toolbar;
     private EditText foodtitle;
     private Spinner spinner;
@@ -117,7 +118,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         if(isCookingClass && !isHalfRecipe){
             //쿠킹 클래스 풀레시피 작성
             ingredient_add.setVisibility(View.VISIBLE);
-
             clickItems = pencilCartAdapter.getCartItems();
             try{
                 for(int i=0; i<clickItems.size(); i++){
@@ -135,8 +135,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         else{
             //간이 레시피에서 풀레시피로 작성
             recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
-            String title = Mapper.searchRecipe(recipeId).getSimpleName();
-            foodtitle.setText(title);
+            FoodTitle = Mapper.searchRecipe(recipeId).getSimpleName();
+            foodtitle.setText(FoodTitle);
             ingredient_add.setVisibility(View.INVISIBLE);
 
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -228,7 +228,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void registerSpec(){
-        String FoodTitle;
         List<RecipeDO.Spec> specList;
 
         FoodTitle= foodtitle.getText().toString();
@@ -238,11 +237,19 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         if(isCookingClass && !isHalfRecipe){
             recipeId = Mapper.createChefRecipe(FoodTitle, specList);
             Mapper.addRecipeInMyCommunity(recipeId);
+            Mapper.updateIngredient(stepDialog.getIngredients(), recipeId);
         }
         else{
             Mapper.createFullRecipe(recipeId, FoodTitle, specList);
         }
 
+//        if(food_img_real == null){
+//            String imagePath = "/storage/emulated/0/Download/default.jpg"; //나중 default 이미지 넣기
+//            Mapper.attachRecipeImage(recipeId, imagePath);
+//        }
+//        else{
+//            Mapper.attachRecipeImage(recipeId, imagePath);
+//        }
         Mapper.attachRecipeImage(recipeId, imagePath);
         Mapper.updatePointInfo(10);
 

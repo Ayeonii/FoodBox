@@ -48,6 +48,9 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
     public List<RecipeDO.Spec> getSpecList(){
         return specList;
     }
+    public List<RecipeDO.Ingredient> getIngredients(){
+        return ingredients;
+    }
 
     public FullRecipeStepDialog(@NonNull Context context, String recipeId){
         super(context);
