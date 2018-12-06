@@ -161,7 +161,7 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         itemDialog = new InsideItemDialog(context, nameArray.get(position), dcArray);
         itemDialog.setDialogListener(new InsideDialogListener() {
             @Override
-            public void onPositiveClicked(int delCheck, Double count, String dueDate) { }
+            public void onPositiveClicked(Double count, String dueDate) { }
 
             @Override
             public void onOkClicked(ArrayList<DCItem> dcItems) {

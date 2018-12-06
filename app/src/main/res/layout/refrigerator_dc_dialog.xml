@@ -20,7 +20,7 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/calendarView"
         android:layout_width="300dp"
-        android:layout_height="300dp" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="match_parent"
@@ -35,6 +35,7 @@
         android:textSize="20sp" />
 
     <LinearLayout
+        android:padding="3dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_width="320dp"

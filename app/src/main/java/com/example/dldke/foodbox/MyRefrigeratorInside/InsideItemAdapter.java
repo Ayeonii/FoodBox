@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.ItemViewHolder> {
 
     private static ArrayList<DCItem> dcArray = new ArrayList<>();
-    private String foodName, dueDate, count;
+    private String foodName, foodDueDate, foodCount;
     private Context context;
 
     public InsideItemAdapter(Context context, ArrayList<DCItem> dcArray, String foodName) {
@@ -43,23 +43,39 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, final int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         //유통기한이랑 개수받아오는 부분
-        dueDate = dcArray.get(position).getStrDueDate();
-        count = Double.toString(dcArray.get(position).getCount());
-        holder.txtDueDate.setText(dueDate);
-        holder.txtCount.setText(count);
+        foodDueDate = dcArray.get(position).getStrDueDate();
+        foodCount = Double.toString(dcArray.get(position).getCount());
+        holder.txtDueDate.setText(foodDueDate);
+        holder.txtCount.setText(foodCount);
 
         //수정...이미지 클릭하는 부분 -> 유통기한이랑 개수 수정가능한 다이얼로그 뜸
-//        holder.imgEdit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d("test", position + "번째를 수정하기");
-//                DCEditDialog dcEditDialog = new DCEditDialog(context);
-//                dcEditDialog.show();
-//            }
-//        });
-//
+        holder.imgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("test", position + "번째를 수정할거임 클릭됨");
+                DCEditDialog dcEditDialog = new DCEditDialog(context, foodDueDate, dcArray.get(position).getCount());
+                dcEditDialog.setDialogListener(new InsideDialogListener() {
+                    @Override
+                    public void onPositiveClicked(Double count, String dueDate) {
+                        //Mapper.updateCountwithDueDate(foodName, foodDueDate, count);    //변경 전 유통기한으로 개수 바꾸기
+                        //Mapper.updateDueDate(foodName, foodDueDate, dueDate);           //변경 전 유통기한으로 유통기한 바꾸기
+                        foodDueDate = dueDate;
+                        foodCount = Double.toString(count);
+                        holder.txtDueDate.setText(foodDueDate);
+                        holder.txtCount.setText(foodCount);
+                        dcArray.get(position).setStrDueDate(dueDate);
+                        dcArray.get(position).setCount(count);
+                    }
+
+                    @Override
+                    public void onOkClicked(ArrayList<DCItem> dcItems) { }
+                });
+                dcEditDialog.show();
+            }
+        });
+
         //휴지통 이미지 클릭하는 부분 -> 해당 이름과 유통기한에 해당하는 재료가 삭제됨
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +90,7 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
                                 dcArray.remove(position);
                                 notifyItemRemoved(position);
                                 notifyItemRangeChanged(position, dcArray.size());
-                                Mapper.deleteFood(foodName, dueDate);
+                                Mapper.deleteFood(foodName, foodDueDate);
                             }
                         })
                         .setNegativeButton("취소", null)
