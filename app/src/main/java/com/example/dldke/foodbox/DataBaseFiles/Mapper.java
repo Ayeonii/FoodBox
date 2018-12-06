@@ -280,6 +280,28 @@ public final class Mapper {
 
     }
 
+    public static void updateIngredient(List<RecipeDO.Ingredient> input, String recipeId){
+        final String recipe_id = recipeId;
+        final List<RecipeDO.Ingredient> ingredient_list = input;
+        Thread thread = new Thread(new Runnable() {
+            com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
+            @Override
+            public void run() {
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipe_id);
+                recipeItem.setIngredient(ingredient_list);
+                Mapper.getDynamoDBMapper().save(recipeItem);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void attachRecipeImage(String recipeId, final String filePath){
         final String recipe_id = recipeId;
         final String[] key = filePath.split("/");
@@ -809,7 +831,7 @@ public final class Mapper {
         }
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate) {
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate, boolean isF) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
             food.setName(item.getName());
@@ -817,16 +839,18 @@ public final class Mapper {
             food.setKindOf(item.getKindOf());
             food.setDueDate(dueDate);
             food.setCount(count);
+            food.setIsFrozen(isF);
 
         Log.e("getName",""+food.getName());
         Log.e("getSection",""+food.getSection());
         Log.e("getDueDate",""+food.getDueDate());
         Log.e("getCount",""+food.getCount());
+        Log.e("getIsFrozen",""+food.getIsFrozen());
 
         return food;
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createNonFood(String name,String section,Double count, String dueDate) {
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createNonFood(String name,String section,Double count, String dueDate, boolean isF) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
         food.setName(name);
@@ -834,11 +858,13 @@ public final class Mapper {
 ;
         food.setDueDate(dueDate);
         food.setCount(count);
+        food.setIsFrozen(isF);
 
         Log.e("getName",""+food.getName());
         Log.e("getSection",""+food.getSection());
         Log.e("getDueDate",""+food.getDueDate());
         Log.e("getCount",""+food.getCount());
+        Log.e("getIsFrozen",""+food.getIsFrozen());
 
         return food;
     }
