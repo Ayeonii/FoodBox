@@ -1,9 +1,9 @@
 package com.example.dldke.foodbox.MyRefrigeratorInside;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.HalfRecipe.DCItem;
 import com.example.dldke.foodbox.R;
 
@@ -19,13 +20,14 @@ import java.util.ArrayList;
 
 public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.ItemViewHolder> {
 
-    private ArrayList<DCItem> dcArray = new ArrayList<>();
-    private String mName;
+    private static ArrayList<DCItem> dcArray = new ArrayList<>();
+    private String foodName, dueDate, count;
     private Context context;
 
-    public InsideItemAdapter(ArrayList<DCItem> mItems, String mName) {
-        this.dcArray = mItems;
-        this.mName = mName;
+    public InsideItemAdapter(Context context, ArrayList<DCItem> dcArray, String foodName) {
+        this.context = context;
+        this.dcArray = dcArray;
+        this.foodName = foodName;
     }
 
     public ArrayList<DCItem> getDcArray() {
@@ -36,42 +38,43 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.refrigeratorinside_item_recyclerview_item, parent, false);
-        this.context = parent.getContext();
+//        this.context = parent.getContext();
         return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, final int position) {
         //유통기한이랑 개수받아오는 부분
-        final String dueDate = dcArray.get(position).getStrDueDate();
-        String count = Double.toString(dcArray.get(position).getCount());
+        dueDate = dcArray.get(position).getStrDueDate();
+        count = Double.toString(dcArray.get(position).getCount());
         holder.txtDueDate.setText(dueDate);
         holder.txtCount.setText(count);
 
         //수정...이미지 클릭하는 부분 -> 유통기한이랑 개수 수정가능한 다이얼로그 뜸
-        holder.imgEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("test", position + "번째를 수정하기");
-                DCEditDialog dcEditDialog = new DCEditDialog(context);
-                dcEditDialog.show();
-            }
-        });
-
+//        holder.imgEdit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d("test", position + "번째를 수정하기");
+//                DCEditDialog dcEditDialog = new DCEditDialog(context);
+//                dcEditDialog.show();
+//            }
+//        });
+//
         //휴지통 이미지 클릭하는 부분 -> 해당 이름과 유통기한에 해당하는 재료가 삭제됨
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("test", position + "번째를 삭제할거임 클릭됨");
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle("삭제")
                         .setMessage("정말로 삭제하시겠습니까?")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //어댑터 리스트에서 삭제하는 부분
                                 dcArray.remove(position);
                                 notifyItemRemoved(position);
                                 notifyItemRangeChanged(position, dcArray.size());
+                                Mapper.deleteFood(foodName, dueDate);
                             }
                         })
                         .setNegativeButton("취소", null)

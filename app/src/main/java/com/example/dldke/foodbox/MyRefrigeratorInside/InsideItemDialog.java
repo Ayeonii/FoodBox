@@ -44,7 +44,10 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.refrigeratorinside_item_dialog);
 
-        Log.d("test", "InsideItemDialog  onCreate()");
+        Log.e("test", "상세보기다이얼로그 create하자마자 보여지는 dcArray size: "+dcArray.size());
+        for (int i=0; i<dcArray.size(); i++) {
+            Log.d("test", i+","+dcArray.get(i).getStrDueDate()+", "+dcArray.get(i).getCount());
+        }
 
         txtName = (TextView) findViewById(R.id.txt_name);
         btnOk = (Button) findViewById(R.id.btn_ok);
@@ -58,7 +61,7 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
 
     private void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        adapter = new InsideItemAdapter(mItems, foodName);
+        adapter = new InsideItemAdapter(context, mItems, foodName);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
@@ -85,18 +88,12 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ok:
-                // 현재(변경 또는 삭제 후) dcArray 받아오기
-                Log.d("test", foodName);
-                Log.d("test", "받아오기전 dcArray");
-                for (int i=0; i<dcArray.size(); i++) {
-                    Log.d("test", dcArray.get(i).getStrDueDate()+", "+dcArray.get(i).getCount());
-                }
+                Log.e("test", "아이템다이얼로그에서 오케이버튼 클릭했을때");
                 dcArray = adapter.getDcArray();
-                Log.d("test", "받아오고난후 dcArray");
+                Log.e("test", "어댑터에서 받아오는 (수정/삭제 후) 유통기한리스트");
                 for (int i=0; i<dcArray.size(); i++) {
-                    Log.d("test", dcArray.get(i).getStrDueDate()+", "+dcArray.get(i).getCount());
+                    Log.d("test", i+","+dcArray.get(i).getStrDueDate() + ", " + dcArray.get(i).getCount());
                 }
-                //이걸 보내면 되겠따 !!!!!!!!dcArray
                 dialogListener.onOkClicked(dcArray);
                 dismiss();
                 break;

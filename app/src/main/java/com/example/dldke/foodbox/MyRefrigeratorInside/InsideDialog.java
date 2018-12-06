@@ -32,9 +32,10 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     private boolean isEmpty;
 
     private RecyclerView.Adapter adapter;
-    private ArrayList<LocalRefrigeratorItem> localArray = new ArrayList<>();
     private ArrayList<String> nameArray = new ArrayList<>();
     private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
+
+    private ArrayList<LocalRefrigeratorItem> localArray = new ArrayList<>();
     private ArrayList<DCItem> dcArray = new ArrayList<>();
 
     private InsideItemDialog itemDialog;
@@ -60,6 +61,11 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_ingredient_dialog);
+
+        Log.e("test", "create하자마자 localArray size: "+localArray.size());
+        for (int i=0; i<localArray.size(); i++) {
+            Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
+        }
 
         txtType = (TextView) findViewById(R.id.txt_type);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
@@ -115,6 +121,13 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                 new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
+                        Log.d("test", "setRecyclerView에서 클릭했을때");
+
+                        Log.e("test", "setRecyclerView에서 클릭했을때 localArray size: "+localArray.size());
+                        for (int i=0; i<localArray.size(); i++) {
+                            Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
+                        }
+
                         showItemDialog(position);
                     }
                 }
@@ -133,48 +146,59 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         adapter.notifyDataSetChanged();
     }
 
-    public void showItemDialog(int position) {
-        //각자의 유통기한과 개수가 들어있는 배열 초기화 왜냐면 각자 배열에 들어있는게 달라야하니까!! 추가되면 안되니까!!
+    public void showItemDialog(final int position) {
         dcArray.clear();
-
-        //해당포지션의 name을 받아와서 localArray에 그 name을 가진 유통기한과 개수를 다 받아온다.
-        final String name = nameArray.get(position);
         for (int i=0; i<localArray.size(); i++) {
-            if (localArray.get(i).getName().equals(name)) {
+            if (localArray.get(i).getName().equals(nameArray.get(position)))
                 dcArray.add(new DCItem(localArray.get(i).getDueDate(), localArray.get(i).getCount()));
-            }
         }
 
-        //해당 name의 유통기한과 개수를 보여주는 다이얼로그
-        itemDialog = new InsideItemDialog(context, name, dcArray);
+        Log.e("test", "재료 클릭했을때 상세보기다이얼로그 보여질때 dcArray size: "+dcArray.size());
+        for (int i=0; i<dcArray.size(); i++) {
+            Log.d("test", i+","+dcArray.get(i).getStrDueDate()+", "+dcArray.get(i).getCount());
+        }
+
+        itemDialog = new InsideItemDialog(context, nameArray.get(position), dcArray);
         itemDialog.setDialogListener(new InsideDialogListener() {
             @Override
-            public void onPositiveClicked(int delCheck, Double count, String dueDate) {
-
-            }
+            public void onPositiveClicked(int delCheck, Double count, String dueDate) { }
 
             @Override
             public void onOkClicked(ArrayList<DCItem> dcItems) {
-                //수정 또는 삭제로 인해 변경된 dcItems
-                //이걸로 localArray를 업데이트해야됨 -> 삭제 후 다시 insert
-//                for (int i=0; i<localArray.size(); i++) {
-//                    if (localArray.get(i).getName().equals(name)) {
-//                        localArray.remove(i);
-//                    }
-//                }
-                localArray.remove(name);
+                Log.e("test", "오케이버튼 클릭하고 어댑터에서 받아오는 (수정/삭제 후) 유통기한리스트");
+                for (int i=0; i<dcItems.size(); i++) {
+                    Log.d("test", i+","+dcItems.get(i).getStrDueDate() + ", " + dcItems.get(i).getCount());
+                }
 
-                Log.d("test","잘 삭제되었는지 확인");
+                Log.e("test", "재료이름 찾아서 삭제 하기 전 localArray size: "+localArray.size());
                 for (int i=0; i<localArray.size(); i++) {
-                    Log.d("test", localArray.get(i).getName());
+                    Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
                 }
 
-                Log.d("test", "dcItems.size() : " +dcItems.size());
-                for (int i=0;i<dcItems.size(); i++) {
-                    localArray.add(new LocalRefrigeratorItem(name, dcItems.get(i).getCount(), dcItems.get(i).getStrDueDate()));
+                int cnt = 0;
+                Log.e("test", "nameArray.get(position): "+nameArray.get(position));
+                for (int i=0; i<localArray.size(); i++) {
+                    if (localArray.get(i).getName().equals(nameArray.get(position))){
+                        cnt++;
+                    }
                 }
 
-                setRecyclerView();
+                for (int i=0; i<cnt; i++)
+                    localArray.remove(new LocalRefrigeratorItem(nameArray.get(position)));
+
+                Log.e("test", "재료이름 찾아서 삭제 하고 localArray size: "+localArray.size());
+                for (int i=0; i<localArray.size(); i++) {
+                    Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
+                }
+
+                for (int i=0; i<dcItems.size(); i++) {
+                    localArray.add(new LocalRefrigeratorItem(nameArray.get(position), dcItems.get(i).getCount(), dcItems.get(i).getStrDueDate()));
+                }
+
+                Log.e("test", "삭제후 변경안된 유통기한리스트는 살리기 localArray size: "+localArray.size());
+                for (int i=0; i<localArray.size(); i++) {
+                    Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
+                }
             }
         });
         itemDialog.show();

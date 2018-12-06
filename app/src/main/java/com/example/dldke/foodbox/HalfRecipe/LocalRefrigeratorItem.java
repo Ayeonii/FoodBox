@@ -5,6 +5,10 @@ public class LocalRefrigeratorItem {
     private Double count;
     private String dueDate;
 
+    public LocalRefrigeratorItem(String name) {
+        this.name = name;
+    }
+
     public LocalRefrigeratorItem(String name, Double count) {
         this.name = name;
         this.count = count;
@@ -38,5 +42,10 @@ public class LocalRefrigeratorItem {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.name.equals(((LocalRefrigeratorItem) obj).name);
     }
 }
