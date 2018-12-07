@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +71,9 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
 
         if(isIng){
             holder.isIng.setText("작성중");
+            holder.isIng.setTextColor(Color.RED);
         }
-        else{
+        else {
             holder.isIng.setText("작성 완료");
             holder.isIng.setTextColor(Color.BLUE);
         }
