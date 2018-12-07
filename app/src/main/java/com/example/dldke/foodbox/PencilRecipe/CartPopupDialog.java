@@ -23,21 +23,16 @@ import java.util.List;
 public class CartPopupDialog {
     private Context context;
     private boolean isEnd = false;
-    private boolean isFull = false;
     private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
 
     private PencilCartAdapter pencilCartAdapter = new PencilCartAdapter(clickFood);
     private ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
-    private FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
+
 
     public CartPopupDialog(Context context) {
         this.context = context;
-    }
-
-    public void setisFull(boolean isfull){
-        this.isFull = isfull;
     }
 
     public boolean getisEnd(){
@@ -66,49 +61,32 @@ public class CartPopupDialog {
                 dlg.dismiss();
             }
         });
-
-        if(isFull){
-            getInside.setText("풀레시피 작성");
-            getInside.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent fullrecipe = new Intent(activityContext, FullRecipeActivity.class);
-                    context.startActivity(fullrecipe);
-                    dlg.dismiss();
-                }
-            });
-
-        }
-        else{
-            getInside.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
-                    for(int i =0 ; i<clickItems.size(); i++) {
-                        PencilCartItem food = clickItems.get(i);
-                        try {
-                            //clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate()));
-                        }
-                        catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
-                            //clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate()));
-                        }
+        getInside.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
+                for(int i =0 ; i<clickItems.size(); i++) {
+                    PencilCartItem food = clickItems.get(i);
+                    try {
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
-                    Log.e("clickedList",""+clickedList);
-                    Mapper.putFood(clickedList);
-                    //memo table 접근
-                    Mapper.updateToBuyMemo(clickedList);
-                    //===============
-                    Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                    pencilAdapter.getClickFood().clear();
-                    pencilAdapter.setClickCnt(0);
-                    Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);
-                    refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    context.startActivity(refMain);
-                    dlg.dismiss();
-
+                    catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
+                    }
                 }
-            });
-        }
+                //Log.e("clickedList",""+clickedList);
+                Mapper.putFood(clickedList);
+                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                pencilAdapter.getClickFood().clear();
+                pencilAdapter.setClickCnt(0);
+                Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);
+                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(refMain);
+                dlg.dismiss();
 
+            }
+        });
     }
 }

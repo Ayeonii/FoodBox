@@ -40,6 +40,7 @@
             android:name=".FullRecipe.FullRecipeActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".MyRefrigeratorInside.RefrigeratorInsideActivity" />
+        <activity android:name=".MyRefrigeratorInside.RefrigeratorFrozenInsideActivity" />
         <activity android:name=".HalfRecipe.HalfRecipeActivity" />
         <activity
             android:name=".MyRecipe.MyRecipeBoxActivity"
@@ -63,6 +64,7 @@
         <activity android:name=".Activity.SettingActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Activity.TestActivity"/>
 
+        <activity android:name=".Memo.MemoActivity"/>
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />

@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
@@ -100,7 +99,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_ITEM) {
-            return new StudentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.community_newsfeed_list_item, parent, false));
+            return new StudentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.community_card_list_item, parent, false));
         } else {
             return new ProgressViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.community_item_progress, parent, false));
         }

@@ -32,11 +32,14 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     TabLayout tabLayout;
     String searchText;
     FloatingActionButton floating;
+
     private static int enterCnt = 0;
     private static boolean isFull = false;
     private static CartPopupDialog customDialog;
 
     public PencilRecipeActivity(){}
+
+
 
     public void setIsFull(boolean isFull){
         this.isFull = isFull;
@@ -92,7 +95,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                     frag.setVisibility(View.GONE);
                 else
                     frag.setVisibility(View.VISIBLE);
-                SearchIngredientFragment.search(text);
+                SearchIngredientFragment.search(text, true,false,false,false);
             }
         });
 
@@ -135,7 +138,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                 else {
                     //Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
                     //startActivity(intent);
-                    customDialog.setisFull(isFull);
+                    //customDialog.setisFull(isFull);
                     customDialog.callFunction(getApplicationContext());
                 }
                 //customDialog.callFunction(getApplicationContext());

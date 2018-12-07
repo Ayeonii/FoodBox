@@ -292,10 +292,10 @@ public class TestActivity extends AppCompatActivity {
 
             TestActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-                TextView imageDetail2 = activity.findViewById(R.id.image_details2);
+                //TextView imageDetail2 = activity.findViewById(R.id.image_details2);
                 RecyclerView imageDetailView = activity.findViewById(R.id.image_detail_view);
                 PencilCartAdapter adapter;
-                imageDetail2.setText(notmatchingItems.toString());
+                //imageDetail2.setText(notmatchingItems.toString());
 
                 for(int i=0; i<matchingItems.size(); i++){
                     String str = matchingItems.get(i).getName();
@@ -313,7 +313,7 @@ public class TestActivity extends AppCompatActivity {
                     inputDBDateString = formatter.format(inputDBDate);
                     String foodImg = "file:///storage/emulated/0/Download/"+matchingItems.get(i).getName()+".jpg";
                     Uri uri = Uri.parse(foodImg);
-                    matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), dueDate));
+                    //matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), true));
 
                 }
 

@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dldke.foodbox.Community.CommunityFragmentNewsfeed;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorFrozenInsideActivity;
+import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -17,13 +21,20 @@ import java.util.List;
 
 public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
-    private AllFoodListFragment allList = new AllFoodListFragment();
+    private static AllFoodListFragment allList = new AllFoodListFragment();
+    private static RefrigeratorFrozenInsideActivity frozenActivity = new RefrigeratorFrozenInsideActivity();
+    private static RefrigeratorInsideActivity refriInsideActivity = new RefrigeratorInsideActivity();
+    private static CommunityFragmentNewsfeed communityActivity = new CommunityFragmentNewsfeed();
+
     private static final char HANGUL_BEGIN_UNICODE = 44032; // 가
     private static final char HANGUL_LAST_UNICODE = 55203; // 힣
     private static final char HANGUL_BASE_UNIT = 588;//각 자음 마다 가지는 글자수
     private static final char[] INITIAL_SOUND = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
 
     private static List<String[]> allfoodList = new ArrayList<String[]>();
+    private static List<RefrigeratorDO.Item> frozenList = new ArrayList<>();
+    private static List<String> refriList = new ArrayList<>();
+
     static ArrayList<PencilItem> list = new ArrayList<>();
     static RecyclerView.Adapter adapter;
     static String searchText;
@@ -34,6 +45,10 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pencilrecipe_fragment_search, container, false);
         allfoodList = allList.getAllFoodList();
+        frozenList = frozenActivity.getRefriList();
+        refriList =refriInsideActivity.getRefrigeratorItem();
+
+
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.searchRecycler);
         recyclerView.setHasFixedSize(true);
@@ -47,7 +62,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     }
 
     /********************Searching method *****************************/
-    static public void search(String charText) {
+    static public void search(String charText, boolean isFromPencil,boolean isFromFrozen, boolean isFromRefri, boolean isFromCommunity) {
         // 문자 입력시마다 리스트를 지우고 새로 뿌려주기 위함.
         list.clear();
         searchText = charText;
@@ -57,23 +72,58 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         }
         // 문자 입력을 할때.
         else {
-            // 리스트의 모든 데이터를 검색함.
-            for (int i = 0; i < allfoodList.size(); i++) {
-                    if (matchString(allfoodList.get(i)[0],charText)) {
+            if(isFromPencil){
+                // 리스트의 모든 데이터를 검색함.
+                for (int i = 0; i < allfoodList.size(); i++) {
+                    if (matchString(allfoodList.get(i)[0], charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
-                        list.add(new PencilItem(allfoodList.get(i)[0],Uri.parse(foodImg),allfoodList.get(i)[1]));
+                        foodImg = "file:///storage/emulated/0/Download/" + allfoodList.get(i)[0] + ".jpg";
+                        list.add(new PencilItem(allfoodList.get(i)[0], Uri.parse(foodImg), allfoodList.get(i)[1]));
                     }
+                }
+                if (list.size() == 0) {
+                    //검색된 것이 아무것도 없을때,
+                    foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
+                    list.add(new PencilItem(searchText, Uri.parse(foodImg)));
+                }
+                adapter.notifyDataSetChanged();
             }
-            if(list.size() == 0){
-                  //검색된 것이 아무것도 없을때,
+            else if(isFromFrozen){
+                for (int i = 0; i < frozenList.size(); i++) {
+                    Log.e("Frozen",""+frozenList.get(i).getName());
+                    if (matchString(frozenList.get(i).getName(), charText)) {
+                        //검색된 데이터 리스트에 추가
+                        //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
+                        foodImg = "file:///storage/emulated/0/Download/" + frozenList.get(i).getName() + ".jpg";
+                        list.add(new PencilItem(frozenList.get(i).getName(), Uri.parse(foodImg), frozenList.get(i).getSection()));
+                    }
+                }
+                if (list.size() == 0) {
+                    //검색된 것이 아무것도 없을때,
+                    foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
+                    list.add(new PencilItem(searchText, Uri.parse(foodImg)));
+                }
+               // adapter.notifyDataSetChanged();
+            }
+            else if(isFromRefri){
+                for (int i = 0; i < refriList.size(); i++) {
+                    if (matchString(refriList.get(i), charText)) {
+                        //검색된 데이터 리스트에 추가
+                        //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
+                        foodImg = "file:///storage/emulated/0/Download/" + refriList.get(i) + ".jpg";
+                        list.add(new PencilItem(refriList.get(i), Uri.parse(foodImg)));
+                    }
+                }
+                if (list.size() == 0) {
+                    //검색된 것이 아무것도 없을때,
                     foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
                     list.add(new PencilItem(searchText, Uri.parse(foodImg), "sideDish"));
+                }
+                adapter.notifyDataSetChanged();
             }
         }
-        // 리스트 데이터가 변경되었으므로 어댑터 갱신.
-        adapter.notifyDataSetChanged();
+
     }
 
     /**초성인지 검사**/

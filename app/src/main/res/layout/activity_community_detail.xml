@@ -15,28 +15,14 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <Button
-            android:id="@+id/TakeBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/make_little_radious"
-            android:backgroundTint="@color/colorAccent"
-            android:fontFamily="@font/font_family"
-            android:text="가져가기"
-            android:textColor="@color/colorWhite"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/community_ingre_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/font_family"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:fontFamily="@font/font_family">
+            app:layout_constraintTop_toTopOf="parent">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -44,36 +30,18 @@
             android:id="@+id/community_detail_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:fontFamily="@font/font_family"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/community_ingre_recycler"
-            app:layout_constraintVertical_bias="0.0"
-            android:fontFamily="@font/font_family">
-
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/font_family"
-            android:text="   댓글" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/community_comment_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:nestedScrollingEnabled="false"
-            app:layout_constraintTop_toBottomOf="@+id/community_detail_view"
-            android:fontFamily="@font/font_family">
+            app:layout_constraintVertical_bias="0.0">
 
         </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
-
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -105,7 +73,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/community_detail_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="38dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -113,7 +81,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/community_detail_content" />
+    <include
+        layout="@layout/community_detail_content" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/commentLayout"
@@ -130,7 +99,7 @@
             android:layout_height="37dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/make_little_radious"
             android:backgroundTint="#ededed"
             android:fontFamily="@font/font_family"
@@ -139,19 +108,23 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.466"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.533"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
 
         <ImageButton
             android:id="@+id/community_ok_btn"
             android:layout_width="28dp"
             android:layout_height="27dp"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/ic_send"
             android:backgroundTint="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/community_commentBar"
             app:layout_constraintEnd_toEndOf="@+id/community_commentBar"
             app:layout_constraintTop_toTopOf="@+id/community_commentBar"
-            app:layout_constraintVertical_bias="0.2" />
+            app:layout_constraintVertical_bias="0.6" />
     </android.support.constraint.ConstraintLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

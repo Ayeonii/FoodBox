@@ -7,13 +7,23 @@ public class CommunityCommentItem {
     private String userId;
     private String comment;
     private String date;
+    String description;
+    int stepImage;
+    private ItemType type;
 
+    public enum ItemType {
+        ONE_ITEM, TWO_ITEM;
+    }
 
-    public CommunityCommentItem (String userId, int userImg, String comment, String date){
+    public CommunityCommentItem (String userId, int userImg, String comment, String date
+                                , int stepImage, String description, ItemType itemType){
         this.userId = userId;
         this.userImg = userImg;
         this.comment = comment;
         this.date = date;
+        this.stepImage = stepImage;
+        this.description = description;
+        this.type = itemType;
     }
 
     public String getUserId() {
@@ -27,4 +37,20 @@ public class CommunityCommentItem {
     }
 
     public String getDate(){return date;}
+
+    public String getDescription(){
+        return description;
+    }
+
+    public int getStepImage(){
+        return stepImage;
+    }
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public void setType(ItemType type) {
+        this.type = type;
+    }
 }

@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,7 @@ import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.MyRecipe.RecipeBoxFullRecipeDetailAdapter;
+import com.example.dldke.foodbox.MyRecipe.RecipeBoxFullRecipeDetailItem;
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.example.dldke.foodbox.PencilRecipe.SearchIngredientFragment;
 import com.example.dldke.foodbox.R;
@@ -46,10 +48,15 @@ public class CommunityDetailActivity extends AppCompatActivity {
 
     private List<RecipeDO.Ingredient> ingreList = new ArrayList<>();
     private ArrayList<String> list = new ArrayList<>();
+
+    List<RecipeDO.Spec> specList;
+    List<RecipeDO.Ingredient> specIngredientList;
+
+
     private String searchText;
     private EditText commentBar;
     private ImageView okBtn;
-    private ArrayList<CommunityCommentItem> commentList = new ArrayList<>();
+    private ArrayList<CommunityCommentItem> detailList = new ArrayList<>();
     private List<PostDO.Comment> commentDBList = new ArrayList<>();
     private static boolean isComment = false;
     private static String comment;
@@ -69,6 +76,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
         recipe_id = communityLoadingAdapter.getClickedRecipeId();
         detail = Mapper.searchRecipe(recipe_id).getDetail();
         post_id = communityLoadingAdapter.getClickedPostId();
+        specList = detail.getSpecList();
 
         String imgUrl = Mapper.getImageUrlRecipe(recipe_id);
         new GetImage(mainImg).execute(imgUrl);
@@ -80,7 +88,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
 
         detail_recyclerview = (RecyclerView)findViewById(R.id.community_detail_view);
         detail_recyclerview.setLayoutManager(new LinearLayoutManager(this));
-        detail_adapter = new RecipeBoxFullRecipeDetailAdapter(recipe_id);
+        detail_adapter = new CommunityCommentAdapter(detailList, getApplicationContext());
         detail_recyclerview.setAdapter(detail_adapter);
 
         ingreList = Mapper.searchRecipe(recipe_id).getIngredient();
@@ -95,21 +103,15 @@ public class CommunityDetailActivity extends AppCompatActivity {
         ingre_adapter = new CommunityIngreAdapter(list,getApplicationContext());
         ingre_recyclerview.setAdapter(ingre_adapter);
 
-        comment_recyclerview = (RecyclerView)findViewById(R.id.community_comment_recycler);
-        comment_recyclerview.setLayoutManager(new LinearLayoutManager(this));
-        comment_adapter = new CommunityCommentAdapter(commentList, getApplicationContext());
-        comment_recyclerview.setAdapter(comment_adapter);
-
-
         try{
         commentDBList = Mapper.searchPost("postId", post_id).get(0).getCommentList();
-
         }catch (NullPointerException e){
-
         }
-        setCommentData();
+
+       AddStep(specList);
 
         /****************search bar input *****************************/
+
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,19 +125,41 @@ public class CommunityDetailActivity extends AppCompatActivity {
                     Mapper.createComment(post_id, comment);
                     commentBar.setText("");
                     commentBar.setHint(" 댓글을 입력하세요");
-                    commentList.add(new CommunityCommentItem(Mapper.getUserId()
+                    detailList.add(new CommunityCommentItem(Mapper.getUserId()
                                 ,R.drawable.ic_person
                                 ,comment
-                                ,date));
+                                ,date
+                                ,0
+                                ,null
+                                ,CommunityCommentItem.ItemType.ONE_ITEM));
                 }
-                comment_adapter.notifyDataSetChanged();
-
-
-
+                detail_adapter.notifyDataSetChanged();
 
             }
         });
 
+    }
+    public void AddStep(List<RecipeDO.Spec> specList){
+        for(int i = 0; i<specList.size(); i++){
+            String result ="";
+            specIngredientList = specList.get(i).getSpecIngredient();
+            for(int j = 0; j<specIngredientList.size(); j++){
+                String specingredientName = specIngredientList.get(j).getIngredientName();
+                result = result.concat(specingredientName);
+            }
+            int number = i+1;
+            String descrip = number+". "+result+" 을/를 "+specList.get(i).getSpecMinute()+"분 동안 "+specList.get(i).getSpecMethod()+".\r\n"+"불 세기는 "+specList.get(i).getSpecFire();
+            detailList.add(new CommunityCommentItem(null
+                                                    ,0
+                                                    ,null
+                                                    ,null
+                                                    ,R.drawable.strawberry
+                                                    ,descrip
+                                                    ,CommunityCommentItem.ItemType.TWO_ITEM));
+
+            specIngredientList.clear();
+        }
+        setCommentData();
     }
 
     //이미지 가져오기 비동기
@@ -163,13 +187,17 @@ public class CommunityDetailActivity extends AppCompatActivity {
     }
 
     private void setCommentData(){
+
         for(int i =0; i <commentDBList.size(); i ++){
-            commentList.add(new CommunityCommentItem(commentDBList.get(i).getUserId()
+            detailList.add(new CommunityCommentItem(commentDBList.get(i).getUserId()
                                                     ,R.drawable.ic_person
                                                     ,commentDBList.get(i).getContent()
-                                                    ,commentDBList.get(i).getDate()));
+                                                    ,commentDBList.get(i).getDate()
+                                                    ,R.drawable.strawberry
+                                                    ,null
+                                                    ,CommunityCommentItem.ItemType.ONE_ITEM));
         }
 
-        comment_adapter.notifyDataSetChanged();
+        detail_adapter.notifyDataSetChanged();
     }
 }

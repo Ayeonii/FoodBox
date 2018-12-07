@@ -67,13 +67,13 @@ public class CommunityFragmentSearch extends android.support.v4.app.Fragment {
                     //검색된 데이터 리스트에 추가
                     //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
                     foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
-                    list.add(new PencilItem(allfoodList.get(i)[0],Uri.parse(foodImg),allfoodList.get(i)[1]));
+                    list.add(new PencilItem(allfoodList.get(i)[0],Uri.parse(foodImg),allfoodList.get(i)[1], false));
                 }
             }
             if(list.size() == 0){
                 //검색된 것이 아무것도 없을때,
                 foodImg = "file:///storage/emulated/0/Download/" + "감" + ".jpg"; //나중 default 이미지 넣기
-                list.add(new PencilItem(searchText, Uri.parse(foodImg), "sideDish"));
+                list.add(new PencilItem(searchText, Uri.parse(foodImg), "sideDish", false));
             }
         }
         // 리스트 데이터가 변경되었으므로 어댑터 갱신.
