@@ -6,7 +6,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="com.example.dldke.foodbox.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.example.dldke.foodbox.permission.C2D_MESSAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -31,8 +36,9 @@
             android:name=".Activity.LoginActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Activity.RefrigeratorMainActivity" />
-        <activity android:name=".FullRecipe.FullRecipeActivity"
-            android:windowSoftInputMode="adjustNothing"/>
+        <activity
+            android:name=".FullRecipe.FullRecipeActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".MyRefrigeratorInside.RefrigeratorInsideActivity" />
         <activity android:name=".HalfRecipe.HalfRecipeActivity" />
         <activity
@@ -48,11 +54,52 @@
         <activity
             android:name=".Community.CommunityActivity"
             android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".CloudVision.VisionActivity" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".Community.CommunityDetailActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".Activity.SettingActivity" android:windowSoftInputMode="adjustNothing"/>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.dldke.foodbox" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".PushListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".CloudVision.VisionReturnActivity" />
+        <activity
+            android:name=".Activity.DeepLinkActivity"
+            android:label="A deeplink!">
+        </activity>
     </application>
 
 </manifest>

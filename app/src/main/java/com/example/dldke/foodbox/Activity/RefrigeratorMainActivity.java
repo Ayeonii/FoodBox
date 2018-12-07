@@ -1,10 +1,19 @@
 package com.example.dldke.foodbox.Activity;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,22 +24,50 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.example.dldke.foodbox.CloudVision.PackageManagerUtils;
+import com.example.dldke.foodbox.CloudVision.PermissionUtils;
+import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.vision.v1.Vision;
+import com.google.api.services.vision.v1.VisionRequest;
+import com.google.api.services.vision.v1.VisionRequestInitializer;
+import com.google.api.services.vision.v1.model.AnnotateImageRequest;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.EntityAnnotation;
+import com.google.api.services.vision.v1.model.Feature;
+import com.google.api.services.vision.v1.model.Image;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    String TAG = "RefrigeratorMainActivity";
 
     /*********************FloatingButtons***********************/
     //플로팅 버튼 애니메이션
@@ -48,7 +85,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     //메뉴 배경 레이아웃
     LinearLayout menuTransBack;
     //메뉴창에 들어갈 리스트
-    static final String[] LIST_MENU = {"내 레시피 보기", "Community", "Store", "로그아웃"};
+    static final String[] LIST_MENU = {"내 레시피 보기", "Community", "Store", "설정", "로그아웃"};
     //메뉴 슬라이딩 열기/닫기 플래그
     boolean isPageOpen = false;
     //메뉴 슬라이드 열기/닫기 애니메이션
@@ -65,13 +102,43 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     /***************************etc********************************/
     ImageView postit;
+    public static boolean isCookingClass;
+    private String user_id;
+
+
+    private static final int GALLERY_PERMISSIONS_REQUEST = 0;
+    private static final int GALLERY_IMAGE_REQUEST = 1;
+    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
+    public static final int CAMERA_IMAGE_REQUEST = 3;
+
+    public static final String FILE_NAME = "temp.jpg";
+
+
+
+    public RefrigeratorMainActivity(){  }
+
+    public boolean getisCookingClass(){
+        return isCookingClass;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        //User DB Create
         Mapper.setUserId(getApplicationContext());
+        try {
+            user_id = Mapper.searchUserInfo().getUserId();
+            Log.e(TAG, "유저 아이디 : "+user_id);
+        } catch (NullPointerException e) {
+            Mapper.createUserInfo();
+            Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
+        }
+
+        //Separate User vs CookingClass
+        isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
+
 
         //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
         //pencilAdapter.getClickFoodString().clear();
@@ -177,6 +244,11 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent communityActivity = new Intent(getApplicationContext(), CommunityActivity.class);
                 startActivity(communityActivity);
             }
+            if (strText.equals("설정")){
+                Intent settingActivity = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(settingActivity);
+            }
+
             if (isPageOpen) {
                 //fabPlus.setElevation(10);
                 //fabMinus.setElevation(10);
@@ -274,22 +346,33 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fabCamera:
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, 4321);
+                    //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
+                    startActivity(visionIntent);
+                    //Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
+                    //startActivity(deepLink);
                     break;
                 case R.id.fabPencil:
-                    //Toast.makeText(RefrigeratorMainActivity.this, "직접입력 누름", Toast.LENGTH_SHORT).show();
                     Intent PencilActivity = new Intent(getApplicationContext(),PencilRecipeActivity.class);
                     startActivity(PencilActivity);
                     //다음 화면이 아래에서 올라오는 애니메이션
                     overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
                     break;
                 case R.id.fabFull:
-                    //Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();
-                    Intent myRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
-                    startActivity(myRecipeBoxActivity);
-                    //다음 화면이 아래에서 올라오는 애니메이션
-                    overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    if(isCookingClass){
+                        FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
+                        fullRecipeActivity.setIsHalfRecipe(false);
+                        Intent FullRecipeActivity = new Intent(getApplicationContext(), FullRecipeActivity.class);
+                        startActivity(FullRecipeActivity);
+                        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    }
+                    else{
+                        Intent myRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+                        startActivity(myRecipeBoxActivity);
+                        //다음 화면이 아래에서 올라오는 애니메이션
+                        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    }
+
                     break;
                 case R.id.fabMini:
                     Intent halfRecipeActivity = new Intent(getApplicationContext(), HalfRecipeActivity.class);

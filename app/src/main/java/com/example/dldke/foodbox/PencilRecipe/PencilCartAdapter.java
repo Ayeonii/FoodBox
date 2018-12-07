@@ -25,6 +25,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){
         this.mItems = cartItems;
     }
+    public PencilCartAdapter(){}
 
     public ArrayList<PencilCartItem> getCartItems(){return mItems; }
     // 새로운 뷰 홀더 생성
@@ -96,7 +97,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         public ItemViewHolder(View itemView) {
             super(itemView);
             food_name = (TextView) itemView.findViewById(R.id.foodText);
-            food_img = (ImageView) itemView.findViewById(R.id.foodImg);
+            food_img = (ImageView) itemView.findViewById(R.id.userImg);
             food_count = (TextView) itemView.findViewById(R.id.foodCount);
             food_date = (TextView) itemView.findViewById(R.id.dueDate);
             plus_btn = (ImageView) itemView.findViewById(R.id.plus_btn);

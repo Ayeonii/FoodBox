@@ -66,11 +66,14 @@ public class RecipeDO {
     public Detail getDetail() {
         return _detail;
     }
+    public void setDetail(final Detail _detail) {
+        this._detail = _detail;
+    }
 
+    @DynamoDBAttribute(attributeName = "Ing")
     public void setIng(final boolean Ing) {
         this.Ing = Ing;
     }
-    @DynamoDBAttribute(attributeName = "Ing")
     public boolean getIng() {
         return Ing;
     }
@@ -83,18 +86,13 @@ public class RecipeDO {
     public void setPassword(final String password){this.password = password;}
     public String getPassword(){return password;}
 
-    public void setDetail(final Detail _detail) {
-        this._detail = _detail;
-    }
+
 
     @DynamoDBAttribute(attributeName = "ingredient")
     public List<Ingredient> getIngredient() {
         return _ingredient;
     }
-
-    public void setIngredient(final List<Ingredient> _ingredient) {
-        this._ingredient = _ingredient;
-    }
+    public void setIngredient(final List<Ingredient> _ingredient) {this._ingredient = _ingredient;}
 
 
 

@@ -133,9 +133,12 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                 if(!isFull)
                     customDialog.callFunction(getApplicationContext());
                 else {
-                    Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
+                    //startActivity(intent);
+                    customDialog.setisFull(isFull);
+                    customDialog.callFunction(getApplicationContext());
                 }
+                //customDialog.callFunction(getApplicationContext());
                 break;
         }
     }

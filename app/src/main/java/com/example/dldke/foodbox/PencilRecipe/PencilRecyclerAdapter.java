@@ -1,12 +1,10 @@
 package com.example.dldke.foodbox.PencilRecipe;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,15 +25,13 @@ import java.util.GregorianCalendar;
  * 직접입력 RecyclerAdapter
  */
 public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAdapter.ItemViewHolder> {
+
         boolean isAgain = false;
-        private static CurrentDate currentDate = new CurrentDate();
-        private static ArrayList<String> clickFoodString = new ArrayList<>();
         private static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
         private static Date inputDBDate ;
         private static String inputDBDateString;
         private Context context;
         private static int clickCnt = 0;
-        //public static ArrayList<String> clickFoodOnly = new ArrayList<>();
 
         private ArrayList<PencilItem> mItems;
 
@@ -136,7 +132,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             public ItemViewHolder(View itemView) {
                 super(itemView);
                 food_name = (TextView) itemView.findViewById(R.id.foodText);
-                food_img = (ImageView) itemView.findViewById(R.id.foodImg);
+                food_img = (ImageView) itemView.findViewById(R.id.userImg);
             }
         }
 
