@@ -25,7 +25,7 @@ import java.util.List;
 public class RefrigeratorInsideActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-
+    private PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
     private FrameLayout frag;
     private Button btnSidedish, btnDairy, btnEtc, btnMeat, btnFresh;
     private static List<RefrigeratorDO.Item> refrigeratorItem;
@@ -68,6 +68,8 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         btnMeat.setOnClickListener(this);
         btnFresh.setOnClickListener(this);
 
+        pencilRecyclerAdapter.setIsRefri(true);
+
 
         /****************search bar input *****************************/
         searchBar.addTextChangedListener(new TextWatcher() {
@@ -82,13 +84,9 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
                 String text;
                 text = searchBar.getText().toString();
                 if (text.length() == 0) {
-
-                    Log.e("visible", "gone 들어옴 " );
                     frag.setVisibility(View.GONE);
                 }
                 else {
-                    Log.e("visible", "visible 들어옴 " );
-
                     frag.setVisibility(View.VISIBLE);
                 }
                 SearchIngredientFragment.search(text, false,false,true, false);

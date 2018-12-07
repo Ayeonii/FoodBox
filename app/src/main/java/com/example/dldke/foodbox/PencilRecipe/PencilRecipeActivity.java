@@ -32,6 +32,7 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     TabLayout tabLayout;
     FloatingActionButton floating;
 
+    private PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
     private static int enterCnt = 0;
     private static boolean isFull = false;
     private static CartPopupDialog customDialog;
@@ -54,6 +55,8 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pencil_recipe);
         //searchText = "";
+
+        pencilRecyclerAdapter.setIsRefri(false);
         tabLayout = (TabLayout)findViewById(R.id.sliding_tabs); //탭 레이아웃
         searchBar = (EditText)findViewById(R.id.searchBar); //서치 창
         deleteButton = (ImageButton)findViewById(R.id.delete_button); //x버튼

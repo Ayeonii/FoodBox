@@ -30,7 +30,7 @@ import java.util.GregorianCalendar;
  */
 public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAdapter.ItemViewHolder> {
 
-        private SearchIngredientFragment searchIngredientFragment = new SearchIngredientFragment();
+
         boolean isAgain = false;
         private static ArrayList<PencilCartItem> clickFood = new ArrayList<>();
         private static Date inputDBDate ;
@@ -55,7 +55,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
         public PencilRecyclerAdapter(Context context, ArrayList<LocalRefrigeratorItem> items){
             reItems = items;
             this.context = context;
-            this.isRefri = true;
         }
 
         public PencilRecyclerAdapter(ArrayList<PencilItem> items , Context context){
@@ -63,6 +62,13 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             this.context = context;
         }
 
+        public void setIsRefri(boolean isRefri){
+            this.isRefri = isRefri;
+        }
+
+        public boolean getIsRefri(){
+            return isRefri;
+        }
 
         public ArrayList<PencilCartItem> getClickFood(){
             return clickFood;

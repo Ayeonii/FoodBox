@@ -81,7 +81,6 @@ import java.util.List;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
-    private  PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
 
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
@@ -159,9 +158,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
 
         //Mapper.createMemo();
-        if(pencilRecyclerAdapter.getClickCnt() != 0 ){
-            pencilRecyclerAdapter.setClickCnt(0);
+        if(pencilAdapter.getClickCnt() != 0 ){
+            pencilAdapter.setClickCnt(0);
         }
+
 
         Mapper.updateUrgentMemo();
 

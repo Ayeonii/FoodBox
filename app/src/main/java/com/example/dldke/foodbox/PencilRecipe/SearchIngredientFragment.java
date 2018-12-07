@@ -27,6 +27,8 @@ import java.util.List;
 
 public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
+
+    private PencilRecyclerAdapter pencilRecycler = new PencilRecyclerAdapter();
     private static AllFoodListFragment allList = new AllFoodListFragment();
     private static RefrigeratorFrozenInsideActivity frozenActivity = new RefrigeratorFrozenInsideActivity();
     private static RefrigeratorInsideActivity refriInsideActivity = new RefrigeratorInsideActivity();
@@ -57,10 +59,6 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         this.isFromRefri = isFromRefri;
     }
 
-    public boolean getIsFromRefri() {
-        return isFromRefri;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pencilrecipe_fragment_search, container, false);
@@ -77,7 +75,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         refriAdapter = new PencilRecyclerAdapter(view.getContext(),allRefriList);
 
         recyclerView.setLayoutManager(new GridLayoutManager(context,4));
-        if(allfoodList.size() !=0) {
+        if(!pencilRecycler.getIsRefri()) {
             recyclerView.setAdapter(adapter);
         }else {
             recyclerView.setAdapter(refriAdapter);

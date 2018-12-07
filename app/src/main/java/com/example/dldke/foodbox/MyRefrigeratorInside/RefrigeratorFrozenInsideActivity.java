@@ -32,6 +32,7 @@ public class RefrigeratorFrozenInsideActivity extends AppCompatActivity implemen
     EditText frozenSearchBar;
     ImageButton deleteButton;
 
+    private PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private static ArrayList<LocalRefrigeratorItem> frozenList = new ArrayList<>();
@@ -49,6 +50,7 @@ public class RefrigeratorFrozenInsideActivity extends AppCompatActivity implemen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frozen);
 
+        pencilRecyclerAdapter.setIsRefri(true);
         frozenSearchBar = (EditText)findViewById(R.id.frozen_searchBar);
         deleteButton = (ImageButton) findViewById(R.id.delete_button2);
         frag = (FrameLayout)findViewById(R.id.frozen_fragment_container); //검색시 나오는 화면
