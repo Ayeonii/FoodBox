@@ -439,6 +439,30 @@ public final class Mapper {
         return foodItem;
     }
 
+    public static void updateIngInfo(Integer ing, String recipe_id){
+
+        final Integer Ing = ing;
+        final String recipeId = recipe_id;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipeDO = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipeId);
+
+                recipeDO.setIng(Ing);
+                Mapper.getDynamoDBMapper().save(recipeDO);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void updateDueDate(String name, String dueDate_old, String dueDate_new) {
         final String itemName = name;
         final String oldDueDate = dueDate_old;
@@ -469,7 +493,37 @@ public final class Mapper {
         }
     }
 
-    public static void updateCountwithDueDate(String name, String dueDate, Double count)
+    public static void updateCount(String name, String dueDate_old, Double count_new) {
+        final String itemName = name;
+        final String oldDueDate = dueDate_old;
+        final Double newCount = count_new;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO foodItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                        userId);
+                for(int i = 0; i < foodItem.getItem().size(); i++)
+                {
+                    if(foodItem.getItem().get(i).getName().equals(itemName) && foodItem.getItem().get(i).getDueDate().equals(oldDueDate)) {
+                        foodItem.getItem().get(i).setCount(newCount);
+                        break;
+                    }
+                }
+
+                Mapper.getDynamoDBMapper().save(foodItem, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES));
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void minusCountwithDueDate(String name, String dueDate, Double count)
     {
         final String itemName = name;
         final Double minus = count;

@@ -23,7 +23,7 @@ public class RecipeDO {
     private Detail _detail;
     private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
     private S3Link recipeImage;
-    private boolean Ing;
+    private int Ing;
     private boolean isShare;
     private String password;
 
@@ -71,10 +71,10 @@ public class RecipeDO {
     }
 
     @DynamoDBAttribute(attributeName = "Ing")
-    public void setIng(final boolean Ing) {
+    public void setIng(final int Ing) {
         this.Ing = Ing;
     }
-    public boolean getIng() {
+    public int getIng() {
         return Ing;
     }
 

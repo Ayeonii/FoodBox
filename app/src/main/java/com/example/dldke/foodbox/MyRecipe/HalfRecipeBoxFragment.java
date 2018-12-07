@@ -70,7 +70,7 @@ public class HalfRecipeBoxFragment extends Fragment {
             }catch(NullPointerException e){
                 String recipeId = myrecipe.get(i);
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
-                boolean isIng = Mapper.searchRecipe(recipeId).getIng();
+                int isIng = Mapper.searchRecipe(recipeId).getIng();
 
                 data.add(new RecipeBoxData(simpleName, recipeId, isIng));
                 isRecipe = true;

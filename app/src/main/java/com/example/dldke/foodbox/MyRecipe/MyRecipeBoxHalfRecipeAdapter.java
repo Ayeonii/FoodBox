@@ -66,14 +66,14 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     }
 
     public void onBindViewHolder(final MyRecipeBoxHalfRecipeAdapter.ViewHolder holder, final int position){
-        boolean isIng = recipedata.get(position).isIng();
+        int isIng = recipedata.get(position).isIng();
         holder.name.setText(recipedata.get(position).getSimpleName());
 
-        if(isIng){
+        if(isIng==1){
             holder.isIng.setText("작성중");
             holder.isIng.setTextColor(Color.RED);
         }
-        else {
+        else if(isIng==0){
             holder.isIng.setText("작성 완료");
             holder.isIng.setTextColor(Color.BLUE);
         }

@@ -630,11 +630,11 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             Double editCount = radioCheckItems.get(i).getEditCount();
             for (int k = 0; k < dcArray.size(); k++) {
                 if (editCount - dcArray.get(k).getCount() < 0) {
-                    Mapper.updateCountwithDueDate(radioCheckItems.get(i).getName(), Integer.toString(dcArray.get(k).getDueDate()), editCount);
+                    Mapper.minusCountwithDueDate(radioCheckItems.get(i).getName(), Integer.toString(dcArray.get(k).getDueDate()), editCount);
                     break;
                 } else {
                     editCount -= dcArray.get(k).getCount();
-                    Mapper.updateCountwithDueDate(radioCheckItems.get(i).getName(), Integer.toString(dcArray.get(k).getDueDate()), dcArray.get(k).getCount());
+                    Mapper.minusCountwithDueDate(radioCheckItems.get(i).getName(), Integer.toString(dcArray.get(k).getDueDate()), dcArray.get(k).getCount());
                 }
             }
 
@@ -715,21 +715,23 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         Log.d("test", recipe_id);
 
 
-        Thread thread = new Thread(new Runnable() {
-            final String recipeId = recipe_id;
-            @Override
-            public void run() {
-                RecipeDO recipe = Mapper.searchRecipe(recipeId);
-                recipe.setIng(true);
-                Mapper.getDynamoDBMapper().save(recipe);
-            }
-        });
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        Thread thread = new Thread(new Runnable() {
+//            final String recipeId = recipe_id;
+//            @Override
+//            public void run() {
+//                RecipeDO recipe = Mapper.searchRecipe(recipeId);
+//                recipe.setIng(1);
+//                Mapper.getDynamoDBMapper().save(recipe);
+//            }
+//        });
+//        thread.start();
+//        try{
+//            thread.join();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+
+        Mapper.updateIngInfo(1, recipe_id);
 
         Mapper.addRecipeInMyCommunity(recipe_id);
 
