@@ -90,7 +90,7 @@ public class CartPopupDialog {
                             clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate()));
                         }
                         catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
-                            clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate()));
+                            //clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate()), true);
                         }
                     }
                     Log.e("clickedList",""+clickedList);

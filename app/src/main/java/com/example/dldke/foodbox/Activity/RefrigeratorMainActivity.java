@@ -133,7 +133,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     private String user_id;
 
 
-    public RefrigeratorMainActivity(){  }
+    //public RefrigeratorMainActivity(){  }
 
     public boolean getisCookingClass(){
         return isCookingClass;
