@@ -87,7 +87,7 @@ public class CartPopupDialog {
                     for(int i =0 ; i<clickItems.size(); i++) {
                         PencilCartItem food = clickItems.get(i);
                         try {
-                            clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate()));
+                            //clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate()));
                         }
                         catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
                             //clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate()), true);
@@ -95,6 +95,9 @@ public class CartPopupDialog {
                     }
                     Log.e("clickedList",""+clickedList);
                     Mapper.putFood(clickedList);
+                    //memo table 접근
+                    Mapper.updateToBuyMemo(clickedList);
+                    //===============
                     Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                     pencilAdapter.getClickFood().clear();
                     pencilAdapter.setClickCnt(0);

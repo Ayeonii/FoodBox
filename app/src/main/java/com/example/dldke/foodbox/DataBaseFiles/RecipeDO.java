@@ -167,6 +167,11 @@ public class RecipeDO {
         private Double _ingredientCount;
         private String _ingredientDuedate;
 
+//        public Ingredient(String _ingredientName, Double _ingredientCount) {
+//            this._ingredientName = _ingredientName;
+//            this._ingredientCount = _ingredientCount;
+//        }
+
         @DynamoDBAttribute(attributeName = "ingredientName")
         public String getIngredientName() {
             return _ingredientName;

@@ -431,9 +431,10 @@ public final class Mapper {
         return foodItem;
     }
 
-    public static void updateDueDate(String name, String dueDate) {
+    public static void updateDueDate(String name, String dueDate_old, String dueDate_new) {
         final String itemName = name;
-        final String newDueDate = dueDate;
+        final String oldDueDate = dueDate_old;
+        final String newDueDate = dueDate_new;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -443,7 +444,7 @@ public final class Mapper {
                         userId);
                 for(int i = 0; i < foodItem.getItem().size(); i++)
                 {
-                    if(foodItem.getItem().get(i).getName().equals(itemName)) {
+                    if(foodItem.getItem().get(i).getName().equals(itemName) && foodItem.getItem().get(i).getDueDate().equals(oldDueDate)) {
                         foodItem.getItem().get(i).setDueDate(newDueDate);
                         break;
                     }
@@ -542,8 +543,9 @@ public final class Mapper {
     }
 
 
-    public static void deleteFood(String name) {
+    public static void deleteFood(String name, String dueDate) {
         final String itemName = name;
+        final String itemDueDate = dueDate;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -554,7 +556,7 @@ public final class Mapper {
                 int index = 0;
                 for(int i =0; i < foodItem.getItem().size(); i++)
                 {
-                    if(foodItem.getItem().get(i).getName().equals(itemName)) {
+                    if(foodItem.getItem().get(i).getName().equals(itemName) && foodItem.getItem().get(i).getDueDate().equals(itemDueDate)) {
                         foodItem.getItem().remove(i);
                         break;
                     }
