@@ -34,6 +34,7 @@
         <activity android:name=".FullRecipe.FullRecipeActivity"
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".MyRefrigeratorInside.RefrigeratorInsideActivity" />
+        <activity android:name=".MyRefrigeratorInside.RefrigeratorFrozenInsideActivity" />
         <activity android:name=".HalfRecipe.HalfRecipeActivity" />
         <activity
             android:name=".MyRecipe.MyRecipeBoxActivity"

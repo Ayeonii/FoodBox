@@ -41,7 +41,7 @@ public class MeatListFragment extends  android.support.v4.app.Fragment  {
     private void setData(){
         for(int i =0 ; i<foodName.size(); i++ ){
             foodImg = "file:///storage/emulated/0/Download/"+foodName.get(i)[0]+".jpg";
-            list.add(new PencilItem(foodName.get(i)[0], Uri.parse(foodImg),foodName.get(i)[1] ));
+            list.add(new PencilItem(foodName.get(i)[0], Uri.parse(foodImg),foodName.get(i)[1],false ));
         }
         adapter.notifyDataSetChanged();
     }

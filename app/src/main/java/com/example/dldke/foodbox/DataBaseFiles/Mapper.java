@@ -928,7 +928,7 @@ public final class Mapper {
         }
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate) {
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate, Boolean isFrozen) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
             food.setName(item.getName());
@@ -936,6 +936,7 @@ public final class Mapper {
             food.setKindOf(item.getKindOf());
             food.setDueDate(dueDate);
             food.setCount(count);
+            food.setIsFrozen(isFrozen);
 
         Log.e("getFoodname",""+food.getName());
         Log.e("getSection",""+food.getSection());
@@ -945,12 +946,12 @@ public final class Mapper {
         return food;
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createNonFood(String name,String section,Double count, String dueDate) {
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createNonFood(String name,String section,Double count, String dueDate, Boolean isFrozen) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
         food.setName(name);
         food.setSection(section);
-;
+        food.setIsFrozen(isFrozen);
         food.setDueDate(dueDate);
         food.setCount(count);
 
@@ -1088,38 +1089,6 @@ public final class Mapper {
 
         return postItem;
     }
-/*
-    public static List<InfoDO> scanSection(String section) {
-        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
-
-        final String sectionName = section;
-
-        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
-            List<InfoDO> itemList;
-            @Override
-            public void run() {
-                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(sectionName));
-                scanExpression.addFilterCondition("section", condition);
-                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
-            }
-            @Override
-            public Object getResult(){
-                return itemList;
-            }
-        });
-
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
-        return itemList;
-    }
-    */
-
 
     public static List<com.example.dldke.foodbox.DataBaseFiles.PostDO> scanPost() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
