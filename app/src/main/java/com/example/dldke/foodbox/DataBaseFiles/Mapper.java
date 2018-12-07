@@ -144,8 +144,8 @@ public final class Mapper {
                         com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
                         userId);
 
-                userInfo.setNickname(nickName);
-                userInfo.setIsCookingClass(isCook);
+                userInfo.setNickname(nickN);
+                userInfo.setIsCookingClass(isCooking);
                 userInfo.setRegisterNumber(registN);
                 Mapper.getDynamoDBMapper().save(userInfo);
             }
@@ -320,7 +320,16 @@ public final class Mapper {
 
                 List<RefrigeratorDO.Item> r_item = refrigeratorItem.getItem();
                 for(int i = 0; i < foods_list.size(); i++) {
-                    r_item.add(foods_list.get(i));
+                    boolean temp = false;
+                    for(int j = 0; j < r_item.size(); j++){
+                        if((r_item.get(j).getName().equals(foods_list.get(i).getName())) && (r_item.get(j).getDueDate().equals(foods_list.get(i).getDueDate()))){
+                            r_item.get(j).setCount(r_item.get(j).getCount() + foods_list.get(i).getCount());
+                            temp = true;
+                        }
+                    }
+                    if(temp == false)
+                        r_item.add(foods_list.get(i));
+
                     Log.e("putFoodIn"+i+"번째",""+r_item.get(i));
                 }
                 refrigeratorItem.setItem(r_item);

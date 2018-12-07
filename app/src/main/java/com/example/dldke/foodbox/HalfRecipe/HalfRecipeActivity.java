@@ -719,7 +719,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             final String recipeId = recipe_id;
             @Override
             public void run() {
-
                 RecipeDO recipe = Mapper.searchRecipe(recipeId);
                 recipe.setIng(true);
                 Mapper.getDynamoDBMapper().save(recipe);
@@ -739,7 +738,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         //사용자에게 필요한재료 확인다이얼로그
         showRecipeIngDialog(needItem);
-        //
     }
 }
 
