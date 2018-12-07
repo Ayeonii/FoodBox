@@ -82,7 +82,7 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
             Double count = ingredientList.get(i).getIngredientCount();
             String foodImg = "file:///storage/emulated/0/Download/"+ingredientList.get(i).getIngredientName()+".jpg";
             recipeItems.add(new HalfRecipeRecipeItem(name, count, Uri.parse(foodImg)));
-            Log.e("들어간다들어간다", ""+recipeItems.get(i).getName()+""+recipeItems.get(i).getCount());
+            //Log.e("들어간다들어간다", ""+recipeItems.get(i).getName()+""+recipeItems.get(i).getCount());
         }
 
     }

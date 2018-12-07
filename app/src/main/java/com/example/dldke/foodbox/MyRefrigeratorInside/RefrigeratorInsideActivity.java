@@ -255,6 +255,9 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
 
     @Override
     public void onClick(View view) {
+        scanToLocalRefrigerator();
+        setDuplicateArray();
+
         switch (view.getId()) {
             case R.id.btn_sidedish:
                 showIngredientDialog("sideDish", localSideDish, nameSideDish);

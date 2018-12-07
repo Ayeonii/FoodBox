@@ -6,6 +6,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
@@ -73,10 +75,16 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
     //뒤로 가기 버튼 눌렀을 시 메인화면으로 넘어가기
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
-            RefrigeratorMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(RefrigeratorMainActivity);
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                RefrigeratorMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(RefrigeratorMainActivity);
+                break;
+
+                default:
+                    break;
         }
         return super.onOptionsItemSelected(item);
     }

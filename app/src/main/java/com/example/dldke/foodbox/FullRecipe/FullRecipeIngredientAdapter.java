@@ -3,6 +3,7 @@ package com.example.dldke.foodbox.FullRecipe;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -21,7 +23,6 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
     private Context context;
     String foodImg;
     private List<RecipeDO.Ingredient> ingredients;
-    //재료 이름과 이미지 받아오기 위한 저장소
     private List<FullRecipeIngredientData> IngredientData = new ArrayList<>();
 
 
@@ -30,17 +31,17 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
         this.ingredients = data;
     }
 
-
     //ItemView의 내용을 담고 있음
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView ingredientImage;
-        public TextView ingredientName;
+        public TextView ingredientName, ingredientCount;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.ingredientImage = (ImageView) itemView.findViewById(R.id.ingredient_icon);
             this.ingredientName = (TextView) itemView.findViewById(R.id.ingredient_name);
+            this.ingredientCount = (TextView) itemView.findViewById(R.id.ingredient_count);
         }
     }
 
@@ -57,20 +58,23 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.ingredientName.setText(IngredientData.get(position).getIngredientName());
+        double count = IngredientData.get(position).getIngredient_count();
+        holder.ingredientCount.setText(Double.toString(count)+"개");
         holder.ingredientImage.setImageURI(IngredientData.get(position).getIngredientImage());
     }
 
     @Override
     public int getItemCount() {
-        return ingredients.size();
+        return (null != ingredients ? ingredients.size() : 0);
     }
 
     public void AddIngredient(List<RecipeDO.Ingredient> ingredientList){
 
         for(int i = 0; i<ingredientList.size(); i++){
             String name = ingredientList.get(i).getIngredientName();
+            double count = ingredientList.get(i).getIngredientCount();
             foodImg = "file:///storage/emulated/0/Download/"+ingredientList.get(i).getIngredientName()+".jpg";
-            IngredientData.add(new FullRecipeIngredientData(name,  Uri.parse(foodImg)));
+            IngredientData.add(new FullRecipeIngredientData(name,  Uri.parse(foodImg), count));
         }
     }
 }

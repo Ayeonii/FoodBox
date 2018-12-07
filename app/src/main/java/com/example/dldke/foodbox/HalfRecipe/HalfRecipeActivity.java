@@ -1,26 +1,27 @@
 package com.example.dldke.foodbox.HalfRecipe;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-
-import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
-
+import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
 public class HalfRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,7 +30,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private List<RefrigeratorDO.Item> refrigeratorItem;
     private ArrayList<LocalRefrigeratorItem> localSideDish, localDairy, localEtc, localMeat, localFresh;
-    private ArrayList<String> nameSideDish, nameDairy, nameEtc, nameMeat, nameFresh;
+    private ArrayList<String> nameSideDish, nameDairy, nameEtc, nameMeat, nameFresh, nameAll;
     private ArrayList<String> dupliArray;
 
     private Boolean[] checkSideDish, checkDairy, checkEtc, checkMeat, checkFresh;
@@ -38,11 +39,14 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     private HalfRecipeIngreDialog ingreDialog;
     private HalfRecipeRecipeDialog recipeDialog;
     private HalfRecipeDueDateDialog dueDateDialog;
+    private HalfRecipeIngDialog ingDialog;
 
     private String user_id;
     private String recipeSimpleName;
 
-
+    // 추가재료 부분================
+    private List<InfoDO> infoFreshItem, infoMeatItem, infoEtcItem;
+    //==============================
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +70,85 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         scanToLocalRefrigerator();
         setDuplicateArray();
         setCheckArray();
+        setInfoDOList();
 
         try {
             user_id = Mapper.searchMyCommunity().getUserId();
         } catch (NullPointerException e) {
             Mapper.createMyCommunity();
+        }
+
+        //create하는거 (처음에 한번만 하는거) 나중에 하나로 합칠거임!!
+        //Mapper.createMemo();
+    }
+
+    public void setInfoDOList() {
+
+        infoFreshItem = Mapper.scanSection("fresh");
+        infoMeatItem = Mapper.scanSection("meat");
+        infoEtcItem = Mapper.scanSection("etc");
+
+        nameAll = new ArrayList<>();
+        int[] check = new int[100];
+
+        // fresh======================
+        Arrays.fill(check, 0);
+
+        for (int i=0; i<nameFresh.size(); i++) {    //내가 가지고 있는 신선칸 재료들
+            for (int j = 0; j < infoFreshItem.size(); j++) {    //기본 infoDO에 있는 신선칸 재료들
+                if (infoFreshItem.get(j).getName().equals(nameFresh.get(i))) {
+                    check[j] = 1;
+                    break;  // j for문을 나온다
+                }
+            }
+        }
+
+        for (int i=0; i<infoFreshItem.size(); i++) {
+            if (check[i]==0)
+                nameAll.add(infoFreshItem.get(i).getName());
+        }
+
+        // meat======================
+        Arrays.fill(check, 0);
+
+        for (int i=0; i<nameMeat.size(); i++) {
+            for (int j=0; j<infoMeatItem.size(); j++) {
+                if (infoMeatItem.get(j).getName().equals(nameMeat.get(i))) {
+                    check[j] = 1;
+                    break;
+                }
+            }
+        }
+
+        for (int i=0; i<infoMeatItem.size(); i++) {
+            if (check[i]==0)
+                nameAll.add(infoMeatItem.get(i).getName());
+        }
+
+        // etc======================
+        Arrays.fill(check, 0);
+
+        for (int i=0; i<nameEtc.size(); i++) {
+            for (int j=0; j<infoEtcItem.size(); j++) {
+                if (infoEtcItem.get(j).getName().equals(nameEtc.get(i))) {
+                    check[j] = 1;
+                    break;
+                }
+            }
+        }
+
+        for (int i=0; i<nameDairy.size(); i++) {
+            for (int j=0; j<infoEtcItem.size(); j++) {
+                if (infoEtcItem.get(j).getName().equals(nameDairy.get(i))) {
+                    check[j] = 1;
+                    break;
+                }
+            }
+        }
+
+        for (int i=0; i<infoEtcItem.size(); i++) {
+            if (check[i]==0)
+                nameAll.add(infoEtcItem.get(i).getName());
         }
     }
 
@@ -247,7 +325,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 showIngredientDialog(nameDairy, checkDairy, "dairy");
                 break;
             case R.id.btn_etc:
-                Log.d("test", "======etc======");
                 showIngredientDialog(nameEtc, checkEtc, "etc");
                 break;
             case R.id.btn_meat:
@@ -411,12 +488,17 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
 
             }
+
+            @Override
+            public void onIngOkClicked(int ok) {
+
+            }
         });
         ingreDialog.show();
     }
 
     public void showRecipeDialog() {
-        recipeDialog = new HalfRecipeRecipeDialog(this, selectedItem, dupliArray);
+        recipeDialog = new HalfRecipeRecipeDialog(this, selectedItem, dupliArray, nameAll);
         recipeDialog.setDialogListener(new HalfRecipeDialogListener() {
             @Override
             public void onPositiveClicked(String type, Boolean[] check) {
@@ -431,6 +513,8 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     goHalfRecipeMaking(mItems, dueDateCheckArray);
                 } else if (result == 2) {
                     showDueDateDialog(mItems, dueDateCheckArray);
+                } else if (result == 3) {
+                    goIngHalfRecipeMaking(mItems);
                 }
             }
 
@@ -438,7 +522,13 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
 
             }
+
+            @Override
+            public void onIngOkClicked(int ok) {
+
+            }
         });
+        recipeDialog.setCancelable(false);
         recipeDialog.show();
     }
 
@@ -470,9 +560,45 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                     goHalfRecipeMaking(selectedItems, dueDateCheckArray);
 
             }
+
+            @Override
+            public void onIngOkClicked(int ok) {
+
+            }
         });
         dueDateDialog.setCancelable(false);
         dueDateDialog.show();
+    }
+
+    public void showRecipeIngDialog(List<RecipeDO.Ingredient> needItem) {
+        ingDialog = new HalfRecipeIngDialog(this, needItem);
+        ingDialog.setDialogListener(new HalfRecipeDialogListener() {
+            @Override
+            public void onPositiveClicked(String type, Boolean[] check) {
+
+            }
+
+            @Override
+            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
+
+            }
+
+            @Override
+            public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
+
+            }
+
+            @Override
+            public void onIngOkClicked(int ok) {
+                if (ok == 1) {
+                    Intent myRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+                    myRecipeActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(myRecipeActivity);
+                }
+            }
+        });
+        ingDialog.setCancelable(false);
+        ingDialog.show();
     }
 
     private boolean updateCountByDueDate(ArrayList<HalfRecipeDueDateItem> radioCheckItems) {
@@ -554,6 +680,66 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         startActivity(halfRecipeCompleteActivity);
     }
 
+    private void goIngHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
+        Log.d("test", "===HalfRecipeActivity로 넘어온 mItems===");
+        List<RecipeDO.Ingredient> needItem = new ArrayList<>();
+
+        for (int i=0; i<mItems.size(); i++) {
+            Log.d("test", "name : " + mItems.get(i).getName() + ", count : " + mItems.get(i).getCount() + ", editCount : " + mItems.get(i).getEditCount());
+
+            if ( mItems.get(i).getEditCount() - mItems.get(i).getCount() > 0 ) {
+                RecipeDO.Ingredient setlist = new RecipeDO.Ingredient();
+
+                setlist.setIngredientName(mItems.get(i).getName());
+                setlist.setIngredientCount(mItems.get(i).getEditCount() - mItems.get(i).getCount());
+
+                Log.d("test", "name : " + setlist.getIngredientName() + ", needCount : " + setlist.getIngredientCount());
+                needItem.add(setlist);
+            }
+        }
+
+        // 필요한 재료를 담은 array : needItem
+        Log.d("test", "=====needItems=====");
+        Log.d("test", "size : " + needItem.size());
+        for(int i=0; i<needItem.size(); i++) {
+            Log.d("test", "name : " + needItem.get(i).getIngredientName() + ", needCount : " + needItem.get(i).getIngredientCount());
+        }
+
+        //recipe 테이블 접근
+        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+        for (int i = 0; i < mItems.size(); i++) {
+            recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
+        }
+        final String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
+
+        Log.d("test", recipe_id);
+
+
+        Thread thread = new Thread(new Runnable() {
+            final String recipeId = recipe_id;
+            @Override
+            public void run() {
+
+                RecipeDO recipe = Mapper.searchRecipe(recipeId);
+                recipe.setIng(true);
+                Mapper.getDynamoDBMapper().save(recipe);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Mapper.addRecipeInMyCommunity(recipe_id);
+
+        // memo table
+        Mapper.appendToBuyMemo(needItem);
+
+        //사용자에게 필요한재료 확인다이얼로그
+        showRecipeIngDialog(needItem);
+    }
 }
 
 class AscendingSort implements Comparator<DCItem> {

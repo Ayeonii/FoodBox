@@ -8,7 +8,7 @@
     tools:context=".FullRecipe.FullRecipeActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/fullrecipe_toolbar"
         android:layout_width="0dp"
         android:layout_height="53dp"
         android:background="?attr/colorPrimary"
@@ -38,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/fullrecipe_toolbar"
         app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
@@ -80,9 +80,9 @@
 
                 <EditText
                     android:id="@+id/food_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_margin="5dp"
                     android:fontFamily="@font/font_family"
                     android:hint="음식 이름" />
 
@@ -91,7 +91,8 @@
                     android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="15dp"
+                    android:layout_margin="5dp"
+                    android:layout_marginLeft="10dp"
                     tools:ignore="InvalidId" />
             </LinearLayout>
 
@@ -101,33 +102,32 @@
                 android:layout_gravity="center"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/get_recipe"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:backgroundTint="@color/colorAccent"
-                    android:text="간이레시피 가져오기"
+                    android:text="전체 재료"
+                    android:textSize="20dp"
+                    android:padding="5dp"
+                    android:layout_margin="5dp"
                     android:fontFamily="@font/font_family"
-                    android:textColor="@color/colorWhite"
-                    android:textStyle="bold" />
+                    android:layout_gravity="center"/>
 
                 <Button
                     android:id="@+id/ingredient_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_margin="5dp"
                     android:backgroundTint="@color/colorAccent"
-                    android:text="재료 선택하기"
+                    android:text="재료 추가하기"
+                    android:textSize="15dp"
                     android:fontFamily="@font/font_family"
-                    android:textColor="@color/colorWhite"
-                    android:textStyle="bold" />
+                    android:textColor="@color/colorWhite" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recipe_ingredient_recyclerview"
                 android:layout_width="350dp"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:scrollbarFadeDuration="0"
                 android:scrollbarSize="5dp"
@@ -143,16 +143,19 @@
                     android:id="@+id/fullrecipe_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_margin="5dp"
+                    android:padding="5dp"
                     android:text="레시피 작성"
-                    android:textSize="20dp" />
+                    android:textSize="20dp"
+                    android:fontFamily="@font/font_family"/>
 
                 <Button
-                    android:id="@+id/button_main_insert"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="8dp"
-                    android:background="@android:drawable/ic_menu_add" />
+                    android:id="@+id/spec_insert_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:background="@android:drawable/ic_menu_add"
+                    android:backgroundTint="@color/colorPrimary" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -173,6 +176,7 @@
         android:background="?attr/colorPrimary"
         android:text="작성 완료"
         android:textColor="@android:color/white"
+        android:fontFamily="@font/font_family"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

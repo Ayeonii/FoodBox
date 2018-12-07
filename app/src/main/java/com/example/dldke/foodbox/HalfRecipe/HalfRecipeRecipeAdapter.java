@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.HalfRecipe;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeRecipeAdapter.ItemViewHolder> {
 
     private ArrayList<HalfRecipeRecipeItem> mItems;
+//    private ArrayList<HalfRecipeRecipeItem> needItems = new ArrayList<>();
     private Double editCount;
     private String strEditCount;
 
@@ -49,10 +51,15 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mItems.get(position).getEditCount() < mItems.get(position).getCount()) {
+//                if (mItems.get(position).getEditCount() < mItems.get(position).getCount()) {
                     double plus = mItems.get(position).getEditCount() + 0.5;
                     strEditCount = Double.toString(plus);
                     holder.txtCountEdit.setText(strEditCount);
+                    mItems.get(position).setEditCount(plus);
+//                }
+
+                if (mItems.get(position).getEditCount()-mItems.get(position).getCount() > 0) {
+                    holder.txtCountEdit.setTextColor(Color.parseColor("#990000"));
                     mItems.get(position).setEditCount(plus);
                 }
             }
@@ -61,14 +68,24 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
         holder.btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                double minus = 0.0;
                 if (mItems.get(position).getEditCount() > 0.5) {
-                    double minus = mItems.get(position).getEditCount() - 0.5;
+                    minus = mItems.get(position).getEditCount() - 0.5;
                     strEditCount = Double.toString(minus);
                     holder.txtCountEdit.setText(strEditCount);
                     mItems.get(position).setEditCount(minus);
                 }
+
+                if (mItems.get(position).getEditCount()-mItems.get(position).getCount() == 0
+                        || mItems.get(position).getEditCount() - mItems.get(position).getCount() < 0) {
+                    holder.txtCountEdit.setTextColor(Color.parseColor("#000099"));
+                    mItems.get(position).setEditCount(minus);
+                }
             }
         });
+
+        if (mItems.get(position).getEditCount()-mItems.get(position).getCount() > 0)
+            holder.txtCountEdit.setTextColor(Color.parseColor("#990000"));
     }
 
     @Override

@@ -2,10 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.example.dldke.foodbox"
-        minSdkVersion 24
+        minSdkVersion 23
         targetSdkVersion 27
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -31,7 +36,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/simple-side-drawer2.jar')
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.zjywill:roundedcornerimageview:1.1.0'
@@ -50,5 +54,19 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-apigateway-core:2.7.+'
     implementation 'com.amazonaws:aws-android-sdk-s3:2.7.+'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.7.+'
+    implementation 'com.google.apis:google-api-services-vision:v1-rev369-1.23.0'
+    implementation 'com.google.api-client:google-api-client-android:1.23.0' exclude module: 'httpclient'
+    implementation 'com.google.http-client:google-http-client-gson:1.23.0' exclude module: 'httpclient'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
 
+    implementation 'com.amazonaws:aws-android-sdk-pinpoint:2.7.+'
+    //implementation('com.amazonaws:aws-android-sdk-auth-core:2.7.+@aar') { transitive = true; }
+    //implementation 'com.google.firebase:firebase-core:16.0.3'
+    //implementation "com.google.firebase:firebase-messaging:17.3.1"
+    implementation 'com.google.android.gms:play-services-iid:+'
+    implementation 'com.google.android.gms:play-services-gcm:+'
+    implementation 'com.google.android.gms:play-services-auth:+'
 }
+apply plugin: 'com.google.gms.google-services'
+
+

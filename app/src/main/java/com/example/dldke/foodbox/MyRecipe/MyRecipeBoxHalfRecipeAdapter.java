@@ -2,8 +2,10 @@ package com.example.dldke.foodbox.MyRecipe;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +32,13 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView name;
         private Context context;
+        private TextView isIng;
 
         public ViewHolder(Context context, View view){
             super(view);
             this.name = (TextView)view.findViewById(R.id.half_recipe_title);
             this.context = context;
+            this.isIng = (TextView) view.findViewById(R.id.ing);
             view.setOnClickListener(this);
         }
 
@@ -62,7 +66,17 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     }
 
     public void onBindViewHolder(final MyRecipeBoxHalfRecipeAdapter.ViewHolder holder, final int position){
+        boolean isIng = recipedata.get(position).isIng();
         holder.name.setText(recipedata.get(position).getSimpleName());
+
+        if(isIng){
+            holder.isIng.setText("작성중");
+            holder.isIng.setTextColor(Color.RED);
+        }
+        else {
+            holder.isIng.setText("작성 완료");
+            holder.isIng.setTextColor(Color.BLUE);
+        }
     }
 
     public int getItemCount(){

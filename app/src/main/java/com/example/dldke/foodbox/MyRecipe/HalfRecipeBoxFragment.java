@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
@@ -24,23 +25,34 @@ public class HalfRecipeBoxFragment extends Fragment {
     private RecyclerView recyclerview;
     private MyRecipeBoxHalfRecipeAdapter adapter;
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
+    private boolean isRecipe = false;
 
     private String TAG = "HalfRecipeBox";
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.recipe_box_fragment_halfrecipe, container, false);
 
-        recyclerview = (RecyclerView)view.findViewById(R.id.recycler_view2);
-        recyclerview.setHasFixedSize(true);
-        adapter = new MyRecipeBoxHalfRecipeAdapter(data);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerview.setLayoutManager(layoutManager);
-        recyclerview.setItemAnimator(new DefaultItemAnimator());
-        recyclerview.setAdapter(adapter);
+        Log.e(TAG, "isRecipe 잘 받아오니? "+isRecipe);
+        if(isRecipe)
+        {
+            View view = inflater.inflate(R.layout.recipe_box_fragment_halfrecipe, container, false);
+            recyclerview = (RecyclerView)view.findViewById(R.id.recycler_view2);
+            recyclerview.setHasFixedSize(true);
+            adapter = new MyRecipeBoxHalfRecipeAdapter(data);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            recyclerview.setLayoutManager(layoutManager);
+            recyclerview.setItemAnimator(new DefaultItemAnimator());
+            recyclerview.setAdapter(adapter);
 
-        return view;
+            return view;
+        }
+        //적용은 되는거 같은데 text가 안보여짐
+        else {
+
+            View view = inflater.inflate(R.layout.recipe_box_fragment_none, container, false);
+            return view;
+        }
     }
 
     public void onCreate(@Nullable Bundle savedInstanceState){
@@ -53,19 +65,17 @@ public class HalfRecipeBoxFragment extends Fragment {
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
         for(int i =0 ; i< myrecipe.size(); i++){
-           try{
-
-               String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
-
+            try{
+                String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
             }catch(NullPointerException e){
+                String recipeId = myrecipe.get(i);
+                String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
+                boolean isIng = Mapper.searchRecipe(recipeId).getIng();
 
-               String recipeId = myrecipe.get(i);
-               String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
-               Log.e(TAG, "레시피 이름 : "+simpleName+" 레시피 아이디 : "+recipeId);
-               data.add(new RecipeBoxData(simpleName, recipeId));
+                data.add(new RecipeBoxData(simpleName, recipeId, isIng));
+                isRecipe = true;
             }
         }
     }
-
 
 }

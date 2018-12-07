@@ -28,6 +28,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){
         this.mItems = cartItems;
     }
+    public PencilCartAdapter(){}
 
     public ArrayList<PencilCartItem> getCartItems(){return mItems; }
 
