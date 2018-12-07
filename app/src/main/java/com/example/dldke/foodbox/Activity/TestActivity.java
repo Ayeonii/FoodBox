@@ -1,49 +1,34 @@
-/*
- * Copyright 2016 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.example.dldke.foodbox.CloudVision;
+package com.example.dldke.foodbox.Activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.icu.text.IDNA;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.http.HttpMethodName;
-import com.amazonaws.mobile.api.id3idutfky0i.TestMobileHubClient;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
-import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
-import com.amazonaws.mobileconnectors.apigateway.ApiResponse;
-import com.amazonaws.util.IOUtils;
-import com.amazonaws.util.StringUtils;
+import com.example.dldke.foodbox.CloudVision.PackageManagerUtils;
+import com.example.dldke.foodbox.CloudVision.PermissionUtils;
+import com.example.dldke.foodbox.CloudVision.VisionActivity;
+import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.R;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -59,75 +44,62 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
-import com.theartofdev.edmodo.cropper.CropImageView;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
 
 
-public class VisionActivity extends AppCompatActivity {
-
-
-    private static final String CLOUD_VISION_API_KEY = "AIzaSyAeWacP0qlIcDN_dWHv6PFBZdnUtg0CVvA";
-    public static final String FILE_NAME = "temp.jpg";
-    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
-    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-    private static final int MAX_LABEL_RESULTS = 10;
-    private static final int MAX_DIMENSION = 1200;
+public class TestActivity extends AppCompatActivity {
 
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
-    private TextView mImageDetails;
-    private ImageView mMainImage;
-    private String str;
-
-    private static final String TAG = "VisionActivity";
-
-    public void setString(String str){
-        this.str = str;
-    }
+    public static final String FILE_NAME = "temp.jpg";
+    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
+    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
+    private static final String CLOUD_VISION_API_KEY = "AIzaSyAeWacP0qlIcDN_dWHv6PFBZdnUtg0CVvA";
+    private static final int MAX_LABEL_RESULTS = 10;
+    private static final int MAX_DIMENSION = 1200;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.e(TAG, "VisionActivity로 들어왔어");
+    private static Mapper.RecipeMatching IngredientInfo;
+    private Context context;
+    private ImageView imageView;
+
+    private static ArrayList<PencilCartItem> matchFood = new ArrayList<>();
+    private static GregorianCalendar cal = new GregorianCalendar();
+    private static Date inputDBDate ;
+    private static String inputDBDateString;
+    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+
+    private static String TAG = "TestActivity";
+
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vision);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(VisionActivity.this);
-            builder
-                    .setMessage(R.string.dialog_select_prompt)
-                    .setPositiveButton(R.string.dialog_select_gallery, (dialog, which) -> startGalleryChooser())
-                    .setNegativeButton(R.string.dialog_select_camera, (dialog, which) -> startCamera());
+        imageView = (ImageView) findViewById(R.id.main_image);
+        imageView.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Choose a picture")
+                    .setPositiveButton("Gallery", (dialog, i) -> startGalleryChooser())
+                    .setNegativeButton("Camera", (dialogInterface, i) -> startCamera());
             builder.create().show();
         });
-
-
-        //mImageDetails = findViewById(R.id.image_details);
-        mMainImage = findViewById(R.id.main_image);
-
-        //mImageDetails.setText(str);
 
     }
 
     public void startGalleryChooser() {
-        Log.e(TAG, "startGalleryChooser 들어왔다");
         if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -137,7 +109,6 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     public void startCamera() {
-        Log.e(TAG, "startCamera 들어왔다");
         if (PermissionUtils.requestPermission(
                 this,
                 CAMERA_PERMISSIONS_REQUEST,
@@ -152,7 +123,6 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     public File getCameraFile() {
-        Log.e(TAG, "getCameraFile 들어왔다");
         File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return new File(dir, FILE_NAME);
     }
@@ -160,7 +130,6 @@ public class VisionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e(TAG, "onActivityResult 들어왔다");
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -173,27 +142,22 @@ public class VisionActivity extends AppCompatActivity {
         }
 
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            Log.e(TAG, "갤러리로 request줬어");
             CropImage.activity(data.getData()).start(this);
-            Log.e(TAG, "crop이 끝났어요");
 
         } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            Log.e(TAG, "Camera request 들어왔다");
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
             CropImage.activity(photoUri).start(this);
         }
     }
 
-
-
     public void uploadImage(Uri uri) {
-        Log.e(TAG, "uploadImage 들어왔다");
+
         if (uri != null) {
             try {
                 // scale the image to save on bandwidth
                 Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
                 callCloudVision(bitmap);
-                //mMainImage.setImageBitmap(bitmap);
+                imageView.setImageBitmap(bitmap);
 
             } catch (IOException e) {
                 Log.d(TAG, "Image picking failed because " + e.getMessage());
@@ -206,8 +170,6 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
-
-        Log.e(TAG, "scaleBitmapDown 들어왔다");
 
         int originalWidth = bitmap.getWidth();
         int originalHeight = bitmap.getHeight();
@@ -228,21 +190,19 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     private void callCloudVision(final Bitmap bitmap) {
-        Log.e(TAG, "callCloudVision 들어왔다");
         // Switch text to loading
-        //mImageDetails.setText(R.string.loading_message);
 
         // Do the real work in an async task, because we need to use the network anyway
         try {
-            AsyncTask<Object, Void, String> labelDetectionTask = new LableDetectionTask(this, prepareAnnotationRequest(bitmap));
+            AsyncTask<Object, Void, String> labelDetectionTask = new TestActivity.LableDetectionTask(this, prepareAnnotationRequest(bitmap));
             labelDetectionTask.execute();
         } catch (IOException e) {
             Log.d(TAG, "failed to make API request because of other IOException " + e.getMessage());
         }
     }
 
+
     private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
-        Log.e(TAG, "prepareAnnotationRequest 들어왔다");
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
@@ -298,10 +258,10 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     private static class LableDetectionTask extends AsyncTask<Object, Void, String> {
-        private final WeakReference<VisionActivity> mActivityWeakReference;
+        private final WeakReference<TestActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
 
-        LableDetectionTask(VisionActivity activity, Vision.Images.Annotate annotate) {
+        LableDetectionTask(TestActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
             mRequest = annotate;
         }
@@ -309,37 +269,68 @@ public class VisionActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Object... params) {
             try {
-                Log.d(TAG, "created Cloud Vision request object, sending request");
+                //Log.d(TAG, "created Cloud Vision request object, sending request");
                 BatchAnnotateImagesResponse response = mRequest.execute();
                 return convertResponseToString(response);
 
             } catch (GoogleJsonResponseException e) {
-                Log.d(TAG, "failed to make API request because " + e.getContent());
+                //Log.d(TAG, "failed to make API request because " + e.getContent());
             } catch (IOException e) {
-                Log.d(TAG, "failed to make API request because of other IOException " +
-                        e.getMessage());
+                //Log.d(TAG, "failed to make API request because of other IOException " +e.getMessage());
             }
             return "Cloud Vision API request failed. Check logs for details.";
         }
 
         //인식된 글자 ImageView에 뿌려주기
         protected void onPostExecute(String result) {
+            List<InfoDO> matchingItems = IngredientInfo.getMatchingList();
+            List<String> notmatchingItems = IngredientInfo.getNonMatchingList();
             String[] array = result.split("\n");
             for(int i = 0; i<array.length ; i++){
                 Log.e(TAG, ""+i+array[i]);
             }
-            VisionActivity activity = mActivityWeakReference.get();
+
+            TestActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-                //TextView imageDetail = activity.findViewById(R.id.image_details);
-                //imageDetail.setText(result);
+                TextView imageDetail2 = activity.findViewById(R.id.image_details2);
+                RecyclerView imageDetailView = activity.findViewById(R.id.image_detail_view);
+                PencilCartAdapter adapter;
+                imageDetail2.setText(notmatchingItems.toString());
+
+                for(int i=0; i<matchingItems.size(); i++){
+                    String str = matchingItems.get(i).getName();
+                    Log.e(TAG, "str"+ str);
+                    int dueDate;
+                    try{
+                        dueDate = Mapper.searchFood(matchingItems.get(i).getName(), matchingItems.get(i).getSection()).getDueDate();
+                    }
+                    catch (NullPointerException e){
+                        dueDate = 0;
+                    }
+                    Log.e(TAG, "유통기한 "+dueDate);
+                    cal.add(cal.DATE, dueDate);
+                    inputDBDate = cal.getTime();
+                    inputDBDateString = formatter.format(inputDBDate);
+                    String foodImg = "file:///storage/emulated/0/Download/"+matchingItems.get(i).getName()+".jpg";
+                    Uri uri = Uri.parse(foodImg);
+                    matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), dueDate));
+
+                }
+
+                imageDetailView.setHasFixedSize(true);
+                adapter = new PencilCartAdapter(matchFood);
+                imageDetailView.setLayoutManager(new LinearLayoutManager(activity));
+                imageDetailView.setAdapter(adapter);
+
+                for(int i = 0; i<matchFood.size(); i++){
+                    Log.d(TAG, "재료 이름 : "+matchFood.get(i).getFoodName()+" Section : "+matchFood.get(i).getFoodSection()+" 유통기한 : "+matchFood.get(i).getFoodDate());
+                }
             }
         }
     }
 
 
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-
-        Log.e(TAG, "convertResponseToString 들어왔다");
 
         StringBuilder message = new StringBuilder("");
 
@@ -359,14 +350,16 @@ public class VisionActivity extends AppCompatActivity {
         } else {
             message.append("nothing");
         }*/
-        Mapper.matchingInfo(message.toString());
+
+        //영수증 재료와 DB data 비교
+        IngredientInfo = Mapper.matchingInfo(message.toString());
+
         return message.toString();
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.e(TAG, "onRequestPermissionResult 들어왔다");
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case CAMERA_PERMISSIONS_REQUEST:
@@ -381,5 +374,5 @@ public class VisionActivity extends AppCompatActivity {
                 break;
         }
     }
-
 }
+

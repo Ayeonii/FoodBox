@@ -60,6 +60,7 @@
         <activity android:name=".Community.CommunityDetailActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Activity.SettingActivity" android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".Activity.TestActivity"/>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"

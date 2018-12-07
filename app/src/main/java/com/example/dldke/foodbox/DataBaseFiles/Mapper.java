@@ -1498,17 +1498,17 @@ public final class Mapper {
         RecipeMatching itemList = (RecipeMatching) thread.getResult();
 
         for(InfoDO temp : itemList.getMatchingList()){
-            Log.d("matchingInfo",temp.getName());
+            Log.e("matchingInfo, 매칭된 재료",temp.getName());
         }
         for(String temp : itemList.getNonMatchingList()){
-            Log.d("matchingInfo",temp);
+            Log.d("matchingInfo, 매칭 안된 재료",temp);
         }
         return itemList;
     }
 
     public static class RecipeMatching{
-        private List<InfoDO> matchingList = new ArrayList<>();
-        private List<String> nonMatchingList = new ArrayList<>();
+        private List<InfoDO> matchingList = new ArrayList<>(); //매칭된 재료 list
+        private List<String> nonMatchingList = new ArrayList<>(); //매칭되지 않은 재료 list
 
         public List<InfoDO> getMatchingList() {
             return matchingList;
