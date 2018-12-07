@@ -540,7 +540,7 @@ public final class Mapper {
         }
     }
 
-    public static void updateCount(String name, Double count)
+    public static void minusCount(String name, Double count)
     {
         final String itemName = name;
         final Double minus = count;

@@ -27,12 +27,28 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     List<HalfRecipeRecipeItem> recipeItems = new ArrayList<>();
 
     private List<RefrigeratorDO.Item> refrigeratorItem;
-    private Double foodCount[];
+    private Double refriCount[];
+    private String recipeId;
+    private int cnt;
+    private int ing;
 
+    public RecipeBoxHalfRecipeDetailAdapter() {}
     public RecipeBoxHalfRecipeDetailAdapter(List<RecipeDO.Ingredient> ingredientdata) {
         this.items = ingredientdata;
+        RecipeBoxHalfRecipeDetailActivity activity = new RecipeBoxHalfRecipeDetailActivity();
+        recipeId = activity.getRecipeId();
         AddIngredient(items);
-        scanRefrigeratorAndRecipe();
+        ing = Mapper.searchRecipe(recipeId).getIng();
+
+        Log.e("test", "어댑터에서 레시피 아이디 : " + recipeId);
+        Log.e("test", "어댑터에서 ing : " + ing);
+        if (ing == 0 || ing == 1) {
+            scanRefrigeratorAndRecipe();
+        }
+    }
+
+    public int getCnt() {
+        return cnt;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -77,11 +93,15 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
             holder.ingredientCount.setText((int) count + "개");
         }
 
-        Log.d("test", "foodCount[position] = " + foodCount[position] + ", count=" + count);
-        if (foodCount[position] < count)
-            holder.ingredientCount.setTextColor(Color.RED);
-        else
-            holder.ingredientCount.setTextColor(Color.BLACK);
+        if (ing == 0 || ing == 1) {
+            Log.d("test", "refriCount[position] = " + refriCount[position] + ", count=" + count);
+            if (refriCount[position] < count)
+                holder.ingredientCount.setTextColor(Color.RED);
+            else
+                holder.ingredientCount.setTextColor(Color.BLACK);
+        } else if (ing == 2) {
+            holder.ingredientCount.setTextColor(Color.GRAY);
+        }
 
 
     }
@@ -108,31 +128,29 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
         Log.d("test", "scanRefrigeratorAndRecipe 들어옴");
         refrigeratorItem = Mapper.scanRefri();
 
-        foodCount = new Double[recipeItems.size()];
+        refriCount = new Double[recipeItems.size()];
 
-        Log.d("test", "foodCount.length = " + foodCount.length);
+        Log.d("test", "refriCount.length = " + refriCount.length);
         Log.d("test", "recipeItems.size() = " + recipeItems.size());
         Log.d("test", "refrigeratorItem.size() = " + refrigeratorItem.size());
 
         for (int i = 0; i < recipeItems.size(); i++) {
-            foodCount[i] = 0.0;
+            refriCount[i] = 0.0;
             for (int j = 0; j < refrigeratorItem.size(); j++) {
                 if (refrigeratorItem.get(j).getName().equals(recipeItems.get(i).getName())) {
                     // 냉장고에 재료가 있으면 -> 가진 개수를 넣는다.(없으면 0.0으로 미리 되어있음)
-                    foodCount[i] = recipeItems.get(i).getCount();
+                    refriCount[i] = refrigeratorItem.get(j).getCount();
                 }
             }
         }
 
-        int cnt = 0;
-        for (int i = 0; i < foodCount.length; i++) {
-            Log.d("test", "foodCount[i] ==" + foodCount[i]);
-            if (foodCount[i] == 0.0)
+        cnt = 0;
+        for (int i = 0; i < refriCount.length; i++) {
+            Log.d("test", "refriCount[i] ==" + refriCount[i] + ", recipeItems.get(i).getCount() = " + recipeItems.get(i).getCount());
+            if (refriCount[i] == 0.0 || refriCount[i] < recipeItems.get(i).getCount())
                 cnt++;
         }
 
-        RecipeBoxHalfRecipeDetailActivity activity = new RecipeBoxHalfRecipeDetailActivity();
-        String recipeId = activity.getRecipeId();
         Log.d("test", recipeId);
         Log.d("test", "cnt = " + cnt);
 
