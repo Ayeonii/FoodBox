@@ -272,7 +272,7 @@ public final class Mapper {
         }
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate) {
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createFood(InfoDO item, Double count, String dueDate, Boolean isFrozen) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
         food.setName(item.getName());
@@ -280,34 +280,33 @@ public final class Mapper {
         food.setKindOf(item.getKindOf());
         food.setDueDate(dueDate);
         food.setCount(count);
+        food.setIsFrozen(isFrozen);
 
         Log.e("getFoodname",""+food.getName());
         Log.e("getSection",""+food.getSection());
         Log.e("getDueDate",""+food.getDueDate());
         Log.e("getCount",""+food.getCount());
-        Log.e("getIsFrozen",""+food.getIsFrozen());
 
         return food;
     }
 
-    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createNonFood(String name,String section,Double count, String dueDate, boolean isF) {
+    public static com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item createNonFood(String name,String section,Double count, String dueDate, Boolean isFrozen) {
 
         com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item food = new com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item();
         food.setName(name);
         food.setSection(section);
-        ;
+        food.setIsFrozen(isFrozen);
         food.setDueDate(dueDate);
         food.setCount(count);
-        food.setIsFrozen(isF);
 
         Log.e("getFoodname",""+food.getName());
         Log.e("getSection",""+food.getSection());
         Log.e("getDueDate",""+food.getDueDate());
         Log.e("getCount",""+food.getCount());
-        Log.e("getIsFrozen",""+food.getIsFrozen());
 
         return food;
     }
+
 
     public static void putFood(final List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> foods) {
         final List<com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.Item> foods_list = foods;
