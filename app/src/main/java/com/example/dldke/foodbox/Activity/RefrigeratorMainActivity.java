@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -65,6 +66,7 @@ import java.util.List;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
+
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     String TAG = "RefrigeratorMainActivity";
@@ -104,15 +106,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     ImageView postit;
     public static boolean isCookingClass;
     private String user_id;
-
-
-    private static final int GALLERY_PERMISSIONS_REQUEST = 0;
-    private static final int GALLERY_IMAGE_REQUEST = 1;
-    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
-    public static final int CAMERA_IMAGE_REQUEST = 3;
-
-    public static final String FILE_NAME = "temp.jpg";
-
 
 
     public RefrigeratorMainActivity(){  }
@@ -347,10 +340,14 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
                 case R.id.fabCamera:
                     //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
-                    startActivity(visionIntent);
+                    //Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
+                    //startActivity(visionIntent);
                     //Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
                     //startActivity(deepLink);
+
+                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                    startActivity(intent);
+
                     break;
                 case R.id.fabPencil:
                     Intent PencilActivity = new Intent(getApplicationContext(),PencilRecipeActivity.class);
@@ -406,7 +403,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     @Override
     public void onBackPressed() {

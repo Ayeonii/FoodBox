@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
                 @Override
                 public void onComplete(AWSStartupResult awsStartupResult) {
