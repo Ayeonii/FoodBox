@@ -20,7 +20,7 @@ import java.util.List;
 
 public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private PencilRecipeActivity pencil = new PencilRecipeActivity();
-    private static List<String[]> allfoodList = new ArrayList<String[]>();
+    private static List<String[]> allfoodList = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
@@ -102,7 +102,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private void setData(){
         for(int i =0 ; i<allfoodList.size(); i++ ){
             foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
-            list.add(new PencilItem(allfoodList.get(i)[0], Uri.parse(foodImg),allfoodList.get(i)[1] ));
+            list.add(new PencilItem(allfoodList.get(i)[0], Uri.parse(foodImg),allfoodList.get(i)[1], false));
         }
         adapter.notifyDataSetChanged();
     }

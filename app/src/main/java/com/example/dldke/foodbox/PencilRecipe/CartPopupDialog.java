@@ -32,6 +32,7 @@ public class CartPopupDialog {
     private ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
     private FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
 
+
     public CartPopupDialog(Context context) {
         this.context = context;
     }
@@ -66,6 +67,7 @@ public class CartPopupDialog {
                 dlg.dismiss();
             }
         });
+<<<<<<< HEAD
 
         if(isFull){
             getInside.setText("풀레시피 작성");
@@ -92,6 +94,21 @@ public class CartPopupDialog {
                         catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
                             //clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate()), true);
                         }
+=======
+        getInside.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
+                for(int i =0 ; i<clickItems.size(); i++) {
+                    PencilCartItem food = clickItems.get(i);
+                    try {
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
+                    }
+                    catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
+>>>>>>> Ayeon
                     }
                     Log.e("clickedList",""+clickedList);
                     Mapper.putFood(clickedList);
@@ -107,8 +124,20 @@ public class CartPopupDialog {
                     dlg.dismiss();
 
                 }
+<<<<<<< HEAD
             });
         }
+=======
+                //Log.e("clickedList",""+clickedList);
+                Mapper.putFood(clickedList);
+                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                pencilAdapter.getClickFood().clear();
+                pencilAdapter.setClickCnt(0);
+                Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);
+                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(refMain);
+                dlg.dismiss();
+>>>>>>> Ayeon
 
     }
 }

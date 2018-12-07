@@ -108,6 +108,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                                     ,inputDBDateString
                                     ,1
                                     ,mItems.get(position).getFoodSection()
+                                    ,mItems.get(position).getIsFrozen()
                                     ,dueDate));
                         }
                         isAgain = false;

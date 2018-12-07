@@ -18,7 +18,9 @@ public class InfoDO {
     private Integer _dueDate;
     private String _kindOf;
     private List<String> productName;
+    private Boolean _isFrozen;
     private S3Link infoImage;
+
 
     public S3Link getInfoImage() {
         return infoImage;
@@ -66,6 +68,14 @@ public class InfoDO {
     @DynamoDBAttribute(attributeName = "productName")
     public List<String> getProductName() {
         return productName;
+    }
+
+    public void setIsFrozen(final Boolean _isFrozen) {
+        this._isFrozen = _isFrozen;
+    }
+    @DynamoDBIndexRangeKey(attributeName = "isFrozen", globalSecondaryIndexName = "name-kindOf")
+    public Boolean getisFrozenf() {
+        return _isFrozen;
     }
 
     public void setProductName(final List<String> productName) {

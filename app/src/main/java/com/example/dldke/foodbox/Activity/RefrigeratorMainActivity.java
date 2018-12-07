@@ -44,6 +44,7 @@ import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
 import com.example.dldke.foodbox.Memo.MemoActivity;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
+import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorFrozenInsideActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
@@ -420,7 +421,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     startActivity(rightSideActivity);
                     break;
                 case R.id.leftButton:
-                    Toast.makeText(RefrigeratorMainActivity.this, "왼쪽 도어 누름", Toast.LENGTH_SHORT).show();
+                    Intent leftSideActivity = new Intent(getApplicationContext(), RefrigeratorFrozenInsideActivity.class);
+                    startActivity(leftSideActivity);
                     break;
                 case R.id.menu:
                     menuPage.startAnimation(leftAnim);
