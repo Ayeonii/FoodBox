@@ -58,6 +58,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
 
 
 
+
         ingredient_use.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

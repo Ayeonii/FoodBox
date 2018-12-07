@@ -82,6 +82,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         //Mapper.createMemo();
     }
 
+
     public void setInfoDOList() {
 
         infoFreshItem = Mapper.scanSection("fresh");
@@ -509,13 +510,25 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
                 recipeSimpleName = recipeName;
 
-                if (result == 1) {
-                    goHalfRecipeMaking(mItems, dueDateCheckArray);
-                } else if (result == 2) {
-                    showDueDateDialog(mItems, dueDateCheckArray);
-                } else if (result == 3) {
+                // result = 1 : 유통기한이 여러개인게 없거나 있어도 보유개수 모두 사용했을때
+                // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
+                //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
+                // result = 3 : 냉장고에 없는 추가재료가 하나라도 껴있으면 완료Activity로 가지 않을 거임
+
+                if (result == 1 || result ==2) {
+                    registerHalfRecipe(mItems);
+                }
+                else if (result == 3) {
                     goIngHalfRecipeMaking(mItems);
                 }
+
+//                if (result == 1) {
+//                    goHalfRecipeMaking(mItems, dueDateCheckArray);
+//                } else if (result == 2) {
+//                    showDueDateDialog(mItems, dueDateCheckArray);
+//                } else if (result == 3) {
+//                    goIngHalfRecipeMaking(mItems);
+//                }
             }
 
             @Override
@@ -532,6 +545,101 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         recipeDialog.show();
     }
 
+    public void showRecipeIngDialog(List<RecipeDO.Ingredient> needItem) {
+        ingDialog = new HalfRecipeIngDialog(this, needItem);
+        ingDialog.setDialogListener(new HalfRecipeDialogListener() {
+            @Override
+            public void onPositiveClicked(String type, Boolean[] check) {
+
+            }
+
+            @Override
+            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
+
+            }
+
+            @Override
+            public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
+
+            }
+
+            @Override
+            public void onIngOkClicked(int ok) {
+                if (ok == 1) {
+                    Intent myRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+                    myRecipeActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(myRecipeActivity);
+                }
+            }
+        });
+        ingDialog.setCancelable(false);
+        ingDialog.show();
+    }
+
+    public void registerHalfRecipe(ArrayList<HalfRecipeRecipeItem> mItems) {
+        //recipe 테이블 접근
+        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+        for (int i = 0; i < mItems.size(); i++) {
+            recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
+        }
+
+        String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
+        Log.d("test", recipe_id);
+
+        Mapper.addRecipeInMyCommunity(recipe_id);
+
+        Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
+        halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(halfRecipeCompleteActivity);
+    }
+
+    private void goIngHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
+        Log.d("test", "===HalfRecipeActivity로 넘어온 mItems===");
+        List<RecipeDO.Ingredient> needItem = new ArrayList<>();
+
+        for (int i=0; i<mItems.size(); i++) {
+            Log.d("test", "name : " + mItems.get(i).getName() + ", count : " + mItems.get(i).getCount() + ", editCount : " + mItems.get(i).getEditCount());
+
+            if ( mItems.get(i).getEditCount() - mItems.get(i).getCount() > 0 ) {
+                RecipeDO.Ingredient setlist = new RecipeDO.Ingredient();
+
+                setlist.setIngredientName(mItems.get(i).getName());
+                setlist.setIngredientCount(mItems.get(i).getEditCount() - mItems.get(i).getCount());
+
+                Log.d("test", "name : " + setlist.getIngredientName() + ", needCount : " + setlist.getIngredientCount());
+                needItem.add(setlist);
+            }
+        }
+
+        // 필요한 재료를 담은 array : needItem
+        Log.d("test", "=====needItems=====");
+        Log.d("test", "size : " + needItem.size());
+        for(int i=0; i<needItem.size(); i++) {
+            Log.d("test", "name : " + needItem.get(i).getIngredientName() + ", needCount : " + needItem.get(i).getIngredientCount());
+        }
+
+        //recipe 테이블 접근
+        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
+        for (int i = 0; i < mItems.size(); i++) {
+            recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
+        }
+        final String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
+
+        Log.d("test", recipe_id);
+
+        Mapper.updateIngInfo(1, recipe_id);
+
+        Mapper.addRecipeInMyCommunity(recipe_id);
+
+        // memo table
+        Mapper.appendToBuyMemo(needItem);
+
+        //사용자에게 필요한재료 확인다이얼로그
+        showRecipeIngDialog(needItem);
+    }
+
+
+    //===================================================================================================================================
     public void showDueDateDialog(final ArrayList<HalfRecipeRecipeItem> selectedItems, final ArrayList<String> dueDateCheckArray) {
         dueDateDialog = new HalfRecipeDueDateDialog(this, dueDateCheckArray);
         dueDateDialog.setDialogListener(new HalfRecipeDialogListener() {
@@ -568,37 +676,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         });
         dueDateDialog.setCancelable(false);
         dueDateDialog.show();
-    }
-
-    public void showRecipeIngDialog(List<RecipeDO.Ingredient> needItem) {
-        ingDialog = new HalfRecipeIngDialog(this, needItem);
-        ingDialog.setDialogListener(new HalfRecipeDialogListener() {
-            @Override
-            public void onPositiveClicked(String type, Boolean[] check) {
-
-            }
-
-            @Override
-            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
-
-            }
-
-            @Override
-            public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> mItems) {
-
-            }
-
-            @Override
-            public void onIngOkClicked(int ok) {
-                if (ok == 1) {
-                    Intent myRecipeActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
-                    myRecipeActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(myRecipeActivity);
-                }
-            }
-        });
-        ingDialog.setCancelable(false);
-        ingDialog.show();
     }
 
     private boolean updateCountByDueDate(ArrayList<HalfRecipeDueDateItem> radioCheckItems) {
@@ -678,68 +755,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
         halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(halfRecipeCompleteActivity);
-    }
-
-    private void goIngHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
-        Log.d("test", "===HalfRecipeActivity로 넘어온 mItems===");
-        List<RecipeDO.Ingredient> needItem = new ArrayList<>();
-
-        for (int i=0; i<mItems.size(); i++) {
-            Log.d("test", "name : " + mItems.get(i).getName() + ", count : " + mItems.get(i).getCount() + ", editCount : " + mItems.get(i).getEditCount());
-
-            if ( mItems.get(i).getEditCount() - mItems.get(i).getCount() > 0 ) {
-                RecipeDO.Ingredient setlist = new RecipeDO.Ingredient();
-
-                setlist.setIngredientName(mItems.get(i).getName());
-                setlist.setIngredientCount(mItems.get(i).getEditCount() - mItems.get(i).getCount());
-
-                Log.d("test", "name : " + setlist.getIngredientName() + ", needCount : " + setlist.getIngredientCount());
-                needItem.add(setlist);
-            }
-        }
-
-        // 필요한 재료를 담은 array : needItem
-        Log.d("test", "=====needItems=====");
-        Log.d("test", "size : " + needItem.size());
-        for(int i=0; i<needItem.size(); i++) {
-            Log.d("test", "name : " + needItem.get(i).getIngredientName() + ", needCount : " + needItem.get(i).getIngredientCount());
-        }
-
-        //recipe 테이블 접근
-        List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
-        for (int i = 0; i < mItems.size(); i++) {
-            recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
-        }
-        final String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
-
-        Log.d("test", recipe_id);
-
-
-//        Thread thread = new Thread(new Runnable() {
-//            final String recipeId = recipe_id;
-//            @Override
-//            public void run() {
-//                RecipeDO recipe = Mapper.searchRecipe(recipeId);
-//                recipe.setIng(1);
-//                Mapper.getDynamoDBMapper().save(recipe);
-//            }
-//        });
-//        thread.start();
-//        try{
-//            thread.join();
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-
-        Mapper.updateIngInfo(1, recipe_id);
-
-        Mapper.addRecipeInMyCommunity(recipe_id);
-
-        // memo table
-        Mapper.appendToBuyMemo(needItem);
-
-        //사용자에게 필요한재료 확인다이얼로그
-        showRecipeIngDialog(needItem);
     }
 }
 

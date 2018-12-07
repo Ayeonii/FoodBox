@@ -439,30 +439,6 @@ public final class Mapper {
         return foodItem;
     }
 
-    public static void updateIngInfo(Integer ing, String recipe_id){
-
-        final Integer Ing = ing;
-        final String recipeId = recipe_id;
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RecipeDO recipeDO = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
-                        recipeId);
-
-                recipeDO.setIng(Ing);
-                Mapper.getDynamoDBMapper().save(recipeDO);
-            }
-        });
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public static void updateDueDate(String name, String dueDate_old, String dueDate_new) {
         final String itemName = name;
         final String oldDueDate = dueDate_old;
