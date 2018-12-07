@@ -903,6 +903,30 @@ public final class Mapper {
         }
     }
 
+    public static void updateIngInfo(Integer ing, String recipe_id){
+
+        final Integer Ing = ing;
+        final String recipeId = recipe_id;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipeDO = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipeId);
+
+                recipeDO.setIng(Ing);
+                Mapper.getDynamoDBMapper().save(recipeDO);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 
     /***************** Up/Download Image Method  *************************/

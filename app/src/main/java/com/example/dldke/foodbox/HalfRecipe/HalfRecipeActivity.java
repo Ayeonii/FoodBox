@@ -715,23 +715,24 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         Log.d("test", recipe_id);
 
 
-        Thread thread = new Thread(new Runnable() {
-            final String recipeId = recipe_id;
-            @Override
-            public void run() {
+//        Thread thread = new Thread(new Runnable() {
+//            final String recipeId = recipe_id;
+//            @Override
+//            public void run() {
+//
+//                RecipeDO recipe = Mapper.searchRecipe(recipeId);
+//                recipe.setIng();
+//                Mapper.getDynamoDBMapper().save(recipe);
+//            }
+//        });
+//        thread.start();
+//        try{
+//            thread.join();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
-                RecipeDO recipe = Mapper.searchRecipe(recipeId);
-                recipe.setIng(true);
-                Mapper.getDynamoDBMapper().save(recipe);
-            }
-        });
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+        Mapper.updateIngInfo(1, recipe_id);
         Mapper.addRecipeInMyCommunity(recipe_id);
 
         // memo table

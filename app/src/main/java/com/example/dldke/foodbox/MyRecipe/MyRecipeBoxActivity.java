@@ -54,8 +54,8 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
         tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
                 position = tab.getPosition();
+                viewPager.setCurrentItem(position);
                 //MyRecipeBoxHalfRecipeAdapter recipeBoxAdapter = new MyRecipeBoxHalfRecipeAdapter();
                 //recipeBoxAdapter.setTabPosition(position);
             }

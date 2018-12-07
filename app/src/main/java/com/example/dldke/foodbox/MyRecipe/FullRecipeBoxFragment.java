@@ -80,17 +80,19 @@ public class FullRecipeBoxFragment extends Fragment {
 
     //Detail이 없으면 간이레시피, Detail이 있으면 풀레시피 fragment로 보여지기 위한 작업
     private void prepareData(){
-        List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
-        for(int i = 0 ; i< myrecipe.size(); i++){
+        List<String> my_recipe = Mapper.searchMyCommunity().getMyRecipes();
+        for(int i = 0 ; i< my_recipe.size(); i++){
             try{
-                String recipeId = myrecipe.get(i);
-                String foodname = Mapper.searchRecipe(recipeId).getDetail().getFoodName();
+                String recipeId = my_recipe.get(i);
+                String foodName = Mapper.searchRecipe(recipeId).getDetail().getFoodName();
                 boolean isshared = Mapper.searchRecipe(recipeId).getIsShare();
                 String imgUrl = Mapper.getImageUrlRecipe(recipeId);
+                boolean isPost = Mapper.searchRecipe(recipeId).getIsPost();
 
-                data.add(new RecipeBoxData(recipeId, imgUrl, foodname, isshared));
-                isRecipe = true;
-
+                if(!isPost){
+                    data.add(new RecipeBoxData(recipeId, imgUrl, foodName, isshared));
+                    isRecipe = true;
+                }
             }catch(NullPointerException e){
 
             }
