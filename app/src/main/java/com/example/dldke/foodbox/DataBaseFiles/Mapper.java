@@ -491,7 +491,7 @@ public final class Mapper {
     }
 
 
-    public static void deleteFood(String name) {
+    public static void deleteFood(String name, String dueDate) {
         final String itemName = name;
         final String itemDueDate = dueDate;
 
