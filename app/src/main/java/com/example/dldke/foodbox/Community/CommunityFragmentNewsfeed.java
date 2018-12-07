@@ -21,29 +21,17 @@ import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.R;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+
 
 
 public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
     private CommunityLoadingAdapter mAdapter;
     private ArrayList<CommunityItem> itemList;
     private static List<PostDO> postList;
-
-   /* private CommunityActivity communityActivity = new CommunityActivity();
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private static ArrayList<CommunityItem> list = new ArrayList<>();
-    private static List<PostDO> postList;
-    private static List<String> img;*/
 
    private static int cnt = 0;
 

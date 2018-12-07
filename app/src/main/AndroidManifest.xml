@@ -62,6 +62,7 @@
         <activity android:name=".Activity.SettingActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Activity.TestActivity"/>
 
+        <activity android:name=".Memo.MemoActivity"/>
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />

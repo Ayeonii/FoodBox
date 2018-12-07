@@ -1,6 +1,8 @@
 package com.example.dldke.foodbox.Activity;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,6 +23,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,10 +37,15 @@ import com.example.dldke.foodbox.CloudVision.PermissionUtils;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.MemoDO;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
+import com.example.dldke.foodbox.Memo.MemoActivity;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
+import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.R;
@@ -57,6 +65,12 @@ import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -66,10 +80,21 @@ import java.util.List;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
+    private  PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
 
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    private static List<RecipeDO.Ingredient> urgentList = new ArrayList<>();
+    public RefrigeratorMainActivity(){ }
     String TAG = "RefrigeratorMainActivity";
+
+    public List<RecipeDO.Ingredient> getUrgentList(){
+        return urgentList;
+    }
+
+    public void setUrgentList(List<RecipeDO.Ingredient> urgentList){
+        this.urgentList = urgentList;
+    }
 
     /*********************FloatingButtons***********************/
     //플로팅 버튼 애니메이션
@@ -128,6 +153,18 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             Mapper.createUserInfo();
             Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
         }
+
+        Mapper.checkAndCreateFirst();
+
+
+        //Mapper.createMemo();
+        if(pencilRecyclerAdapter.getClickCnt() != 0 ){
+            pencilRecyclerAdapter.setClickCnt(0);
+        }
+
+        Mapper.updateUrgentMemo();
+
+        urgentList = Mapper.scanUrgentMemo();
 
         //Separate User vs CookingClass
         isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
@@ -398,7 +435,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.startAnimation(rightAnim);
                     break;
                 case R.id.postit:
-                    Toast.makeText(RefrigeratorMainActivity.this, "포스트잇 눌림", Toast.LENGTH_SHORT).show();
+                    Intent memoActivity = new Intent(getApplicationContext(), MemoActivity.class);
+                    startActivity(memoActivity);
                     break;
             }
         }
@@ -428,6 +466,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
 
     }
+
+
 
 
 }
