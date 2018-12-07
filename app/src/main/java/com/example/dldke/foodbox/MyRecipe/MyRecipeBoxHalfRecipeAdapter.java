@@ -69,12 +69,21 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         int isIng = recipedata.get(position).isIng();
         holder.name.setText(recipedata.get(position).getSimpleName());
 
+<<<<<<< HEAD
         if(isIng==1){
             holder.isIng.setText("작성중");
             holder.isIng.setTextColor(Color.RED);
         }
         else if(isIng==0){
             holder.isIng.setText("작성 완료");
+=======
+        if(isIng == 0){
+            holder.isIng.setText("작성 완료");
+            holder.isIng.setTextColor(Color.RED);
+        }
+        else {
+            holder.isIng.setText("작성중");
+>>>>>>> hansol
             holder.isIng.setTextColor(Color.BLUE);
         }
     }

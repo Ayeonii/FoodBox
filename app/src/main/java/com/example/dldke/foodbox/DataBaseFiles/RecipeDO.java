@@ -25,6 +25,7 @@ public class RecipeDO {
     private S3Link recipeImage;
     private int Ing;
     private boolean isShare;
+    private boolean isPost;
     private String password;
 
     public S3Link getRecipeImage() {
@@ -78,9 +79,14 @@ public class RecipeDO {
         return Ing;
     }
 
+
     @DynamoDBAttribute(attributeName = "isShare")
     public void setIsShare(final boolean isShare){this.isShare = isShare;}
     public boolean getIsShare(){return isShare;}
+
+    @DynamoDBAttribute(attributeName = "isPost")
+    public void setIsPost(final boolean isPost){this.isPost = isPost;}
+    public boolean getIsPost(){return isPost;}
 
     @DynamoDBAttribute(attributeName = "password")
     public void setPassword(final String password){this.password = password;}
@@ -166,11 +172,6 @@ public class RecipeDO {
         private String _ingredientName;
         private Double _ingredientCount;
         private String _ingredientDuedate;
-
-//        public Ingredient(String _ingredientName, Double _ingredientCount) {
-//            this._ingredientName = _ingredientName;
-//            this._ingredientCount = _ingredientCount;
-//        }
 
         @DynamoDBAttribute(attributeName = "ingredientName")
         public String getIngredientName() {

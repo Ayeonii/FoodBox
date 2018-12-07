@@ -64,16 +64,30 @@ public class HalfRecipeBoxFragment extends Fragment {
     private void prepareData(){
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
+
         for(int i =0 ; i< myrecipe.size(); i++){
+            String recipeId = myrecipe.get(i);
             try{
-                String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
+                String foodname = Mapper.searchRecipe(recipeId).getDetail().getFoodName();
+                boolean isPost = Mapper.searchRecipe(recipeId).getIsPost();
+
+                if(isPost){
+                    String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
+                    int isIng = Mapper.searchRecipe(recipeId).getIng();
+
+                    data.add(new RecipeBoxData(simpleName, recipeId, isIng));
+                    isRecipe = true;
+                }
+
             }catch(NullPointerException e){
-                String recipeId = myrecipe.get(i);
+
+                recipeId = myrecipe.get(i);
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
                 int isIng = Mapper.searchRecipe(recipeId).getIng();
 
                 data.add(new RecipeBoxData(simpleName, recipeId, isIng));
                 isRecipe = true;
+
             }
         }
     }

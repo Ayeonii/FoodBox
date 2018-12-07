@@ -6,14 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 
-import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
@@ -43,7 +41,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.recipe_box_halfrecipe_detail_toolbar);
         TextView recipe_title = (TextView)findViewById(R.id.recipe_title);
         RecyclerView recipe_detail_view = (RecyclerView)findViewById(R.id.ingredient_detail_view);
-        Button ingredient_gain = (Button)findViewById(R.id.ingredient_gain);
+        Button ingredient_use = (Button)findViewById(R.id.ingredient_use);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -60,13 +58,18 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
 
 
 
-        ingredient_gain.setOnClickListener(new View.OnClickListener() {
+        ingredient_use.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
-                fullRecipeActivity.setIsHalfRecipe(true);
-                Intent FullRecipeActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.FullRecipe.FullRecipeActivity.class);
-                startActivity(FullRecipeActivity);
+
+                Mapper.updateIngInfo(2, recipe_id);
+                /********** 여기 부분에 유통기한 체크 추가 ************/
+
+//                FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
+//                fullRecipeActivity.setIsHalfRecipe(true);
+//                Intent FullRecipeActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.FullRecipe.FullRecipeActivity.class);
+//                startActivity(FullRecipeActivity);
+
             }
         });
     }
