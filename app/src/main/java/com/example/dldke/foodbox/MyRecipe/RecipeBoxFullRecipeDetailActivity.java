@@ -26,6 +26,7 @@ import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipe.FullRecipeIngredientAdapter;
 import com.example.dldke.foodbox.R;
+import com.example.dldke.foodbox.MyRecipe.CustomDialog;
 
 
 import java.io.InputStream;
@@ -37,6 +38,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
 
     private MyRecipeBoxFullRecipeAdapter myRecipeBoxFullRecipeAdapter = new MyRecipeBoxFullRecipeAdapter();
     private String recipe_id;
+    private boolean isCookingClass;
     private RecipeDO.Detail detail;
     private RecyclerView detail_recyclerview, detail_ingredient_recyclerview;
     private RecipeBoxFullRecipeDetailAdapter recipeDetailAdapter;
@@ -124,48 +126,36 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     }
 
     void showDialog(){
-        final EditText edittext = new EditText(this);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("공유하시겠습니까?").setMessage("레시피 타이틀을 작성해주세요").setView(edittext);
-
-        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //Toast.makeText(getApplicationContext(), edittext.getText().toString(), Toast.LENGTH_SHORT).show();
-                String title = edittext.getText().toString();
-
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        RecipeDO recipe = Mapper.searchRecipe(recipe_id);
-                        recipe.setIsShare(true);
-                        Mapper.getDynamoDBMapper().save(recipe);
-                    }
-
-                });
-                thread.start();
-                try{
-                    thread.join();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                Mapper.createPost(" "+title, recipe_id);
-                Mapper.updatePointInfo(10);
-
-                Intent MainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
-                MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(MainActivity);
-            }
-        });
-        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //Toast.makeText(getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.show();
+        CustomDialog customDialog = new CustomDialog(this, isCookingClass);
+        customDialog.show();
+//        final EditText edittext = new EditText(this);
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("공유하시겠습니까?").setMessage("레시피 타이틀을 작성해주세요").setView(edittext);
+//
+//        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                //Toast.makeText(getApplicationContext(), edittext.getText().toString(), Toast.LENGTH_SHORT).show();
+//                String title = edittext.getText().toString();
+//
+//                Mapper.updateIsShared(recipe_id);
+//                Mapper.createPost(" "+title, recipe_id);
+//                Mapper.updatePointInfo(10);
+//
+//                Intent MainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
+//                MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(MainActivity);
+//            }
+//        });
+//        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                //Toast.makeText(getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        builder.show();
     }
 
     @Override

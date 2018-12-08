@@ -928,6 +928,26 @@ public final class Mapper {
     }
 
 
+    public static void updateIsShared(String recipe_id){
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipe = Mapper.searchRecipe(recipe_id);
+                recipe.setIsShare(true);
+                Mapper.getDynamoDBMapper().save(recipe);
+            }
+
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     /***************** Up/Download Image Method  *************************/
 
