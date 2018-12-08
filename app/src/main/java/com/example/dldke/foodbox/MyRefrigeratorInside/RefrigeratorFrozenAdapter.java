@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.MyRefrigeratorInside;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.R;
@@ -29,10 +32,10 @@ import java.util.List;
  */
 public class RefrigeratorFrozenAdapter extends RecyclerView.Adapter<RefrigeratorFrozenAdapter.ItemViewHolder> {
 
-    List<PencilItem> mItems;
+    private static List<LocalRefrigeratorItem> mItems;
     Context context;
 
-    public RefrigeratorFrozenAdapter(ArrayList<PencilItem> items , Context context){
+    public RefrigeratorFrozenAdapter(ArrayList<LocalRefrigeratorItem> items , Context context){
         mItems = items;
         this.context = context;
     }
@@ -46,8 +49,9 @@ public class RefrigeratorFrozenAdapter extends RecyclerView.Adapter<Refrigerator
     // View 의 내용을 해당 포지션의 데이터로 바꿈.
     @Override
     public void onBindViewHolder(final RefrigeratorFrozenAdapter.ItemViewHolder holder, final int position) {
-        holder.food_img.setImageURI(mItems.get(position).getFoodImg());
-        holder.food_name.setText(mItems.get(position).getFoodName());
+        String foodImg = "file:///storage/emulated/0/Download/" + mItems.get(position).getName() + ".jpg";
+        holder.food_img.setImageURI(Uri.parse(foodImg));
+        holder.food_name.setText(mItems.get(position).getName());
     }
 
 

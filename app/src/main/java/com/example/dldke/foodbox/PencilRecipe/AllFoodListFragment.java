@@ -30,6 +30,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     public AllFoodListFragment(){}
 
     public List<String[]> getAllFoodList(){
+        Log.e("","getAllFoodList 들어옴 ");
         return allfoodList;
     }
     public List<String[]> getMeatList(){ return makeFoodListString(meatList, "meat"); }

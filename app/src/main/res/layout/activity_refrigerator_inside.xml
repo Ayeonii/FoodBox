@@ -12,14 +12,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:background="@color/colorWhite"
+        android:elevation="10dp"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tableLayout"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.599">
 
     </FrameLayout>
 
@@ -36,6 +37,7 @@
         android:fontFamily="@font/font_family"
         android:hint=" 재료를 입력해 주세요"
         android:paddingLeft="5dp"
+        android:clickable="true"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
@@ -53,17 +55,6 @@
         app:layout_constraintTop_toTopOf="@+id/refri_searchBar"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_delete_all_blue" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingButtonRecipe"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="27dp"
-        android:layout_marginBottom="27dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/mini_recipe" />
 
     <TableLayout
         android:id="@+id/tableLayout"

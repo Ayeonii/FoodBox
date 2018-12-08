@@ -12,6 +12,12 @@ import android.view.ViewGroup;
 
 import com.example.dldke.foodbox.Community.CommunityFragmentNewsfeed;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.HalfRecipe.DCItem;
+import com.example.dldke.foodbox.HalfRecipe.HalfRecipeIngreItem;
+import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
+import com.example.dldke.foodbox.MyRefrigeratorInside.InsideAdapter;
+import com.example.dldke.foodbox.MyRefrigeratorInside.InsideItemAdapter;
+import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorFrozenAdapter;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorFrozenInsideActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.R;
@@ -21,6 +27,8 @@ import java.util.List;
 
 public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
+
+    private PencilRecyclerAdapter pencilRecycler = new PencilRecyclerAdapter();
     private static AllFoodListFragment allList = new AllFoodListFragment();
     private static RefrigeratorFrozenInsideActivity frozenActivity = new RefrigeratorFrozenInsideActivity();
     private static RefrigeratorInsideActivity refriInsideActivity = new RefrigeratorInsideActivity();
@@ -31,21 +39,31 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     private static final char HANGUL_BASE_UNIT = 588;//각 자음 마다 가지는 글자수
     private static final char[] INITIAL_SOUND = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
 
-    private static List<String[]> allfoodList = new ArrayList<String[]>();
-    private static List<RefrigeratorDO.Item> frozenList = new ArrayList<>();
-    private static List<String> refriList = new ArrayList<>();
+    private static List<String[]> allfoodList = new ArrayList<>();
+    private static List<LocalRefrigeratorItem> frozenList = new ArrayList<>();
+    private static List<RefrigeratorDO.Item> refriList = new ArrayList<>();
+    private static boolean isFromRefri = false;
 
     static ArrayList<PencilItem> list = new ArrayList<>();
+    static ArrayList<LocalRefrigeratorItem> allRefriList = new ArrayList<>();
     static RecyclerView.Adapter adapter;
+    static RecyclerView.Adapter refriAdapter;
     static String searchText;
     static RecyclerView recyclerView;
     static String foodImg;
+
+
+    public SearchIngredientFragment(){}
+
+    public void setFromRefri(boolean isFromRefri) {
+        this.isFromRefri = isFromRefri;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pencilrecipe_fragment_search, container, false);
         allfoodList = allList.getAllFoodList();
-        frozenList = frozenActivity.getRefriList();
+        frozenList = frozenActivity.getFrozenList();
         refriList =refriInsideActivity.getRefrigeratorItem();
 
 
@@ -54,9 +72,15 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         recyclerView.setHasFixedSize(true);
         //어댑터 연결
         adapter = new PencilRecyclerAdapter(list,view.getContext());
+        refriAdapter = new PencilRecyclerAdapter(view.getContext(),allRefriList);
+
         recyclerView.setLayoutManager(new GridLayoutManager(context,4));
-        recyclerView.setAdapter(adapter);
-        Log.e("Frag", "SearchFrag");
+        if(!pencilRecycler.getIsRefri()) {
+            recyclerView.setAdapter(adapter);
+        }else {
+            recyclerView.setAdapter(refriAdapter);
+        }
+     //   Log.e("Frag", "SearchFrag");
 
         return view;
     }
@@ -65,7 +89,9 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     static public void search(String charText, boolean isFromPencil,boolean isFromFrozen, boolean isFromRefri, boolean isFromCommunity) {
         // 문자 입력시마다 리스트를 지우고 새로 뿌려주기 위함.
         list.clear();
+        allRefriList.clear();
         searchText = charText;
+
 
         // 문자 입력이 없을때
         if (charText.length() == 0) {
@@ -74,6 +100,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         else {
             if(isFromPencil){
                 // 리스트의 모든 데이터를 검색함.
+                Log.e("Refri",""+allfoodList.size());
                 for (int i = 0; i < allfoodList.size(); i++) {
                     if (matchString(allfoodList.get(i)[0], charText)) {
                         //검색된 데이터 리스트에 추가
@@ -90,37 +117,49 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                 adapter.notifyDataSetChanged();
             }
             else if(isFromFrozen){
+
+                //Log.e("Frozen",""+frozenList.size());
                 for (int i = 0; i < frozenList.size(); i++) {
-                    Log.e("Frozen",""+frozenList.get(i).getName());
+
                     if (matchString(frozenList.get(i).getName(), charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/" + frozenList.get(i).getName() + ".jpg";
-                        list.add(new PencilItem(frozenList.get(i).getName(), Uri.parse(foodImg), frozenList.get(i).getSection()));
+                       // foodImg = "file:///storage/emulated/0/Download/" + frozenList.get(i).getName() + ".jpg";
+                        allRefriList.add(new LocalRefrigeratorItem(frozenList.get(i).getName()
+                                                                ,frozenList.get(i).getCount()
+                                                                ,frozenList.get(i).getDueDate()
+                                                                ,frozenList.get(i).getImg()
+                                                                ,frozenList.get(i).getSection()));
                     }
                 }
-                if (list.size() == 0) {
-                    //검색된 것이 아무것도 없을때,
-                    foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
-                    list.add(new PencilItem(searchText, Uri.parse(foodImg)));
+                if(frozenList.size() == 0 ){
+                    SearchIngredientFragment searchIngredientFragment = new SearchIngredientFragment();
+                    searchIngredientFragment.setFromRefri(false);
                 }
-               // adapter.notifyDataSetChanged();
+                refriAdapter.notifyDataSetChanged();
+
             }
             else if(isFromRefri){
+                Log.e("Refri",""+refriList.size());
                 for (int i = 0; i < refriList.size(); i++) {
-                    if (matchString(refriList.get(i), charText)) {
+                    if (matchString(refriList.get(i).getName(), charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/" + refriList.get(i) + ".jpg";
-                        list.add(new PencilItem(refriList.get(i), Uri.parse(foodImg)));
+                       foodImg = "file:///storage/emulated/0/Download/" + refriList.get(i).getName() + ".jpg";
+                        allRefriList.add(new LocalRefrigeratorItem(refriList.get(i).getName()
+                                ,refriList.get(i).getCount()
+                                ,refriList.get(i).getDueDate()
+                                ,Uri.parse(foodImg)
+                                ,refriList.get(i).getSection()));
                     }
                 }
-                if (list.size() == 0) {
-                    //검색된 것이 아무것도 없을때,
-                    foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
-                    list.add(new PencilItem(searchText, Uri.parse(foodImg), "sideDish"));
+                if(refriList.size() == 0 ){
+                    SearchIngredientFragment searchIngredientFragment = new SearchIngredientFragment();
+                    searchIngredientFragment.setFromRefri(false);
                 }
-                adapter.notifyDataSetChanged();
+
+                refriAdapter.notifyDataSetChanged();
+
             }
         }
 
