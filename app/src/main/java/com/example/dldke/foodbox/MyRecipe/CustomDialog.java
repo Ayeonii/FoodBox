@@ -69,6 +69,10 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
                 Mapper.createPost(" "+title_str, recipe_id);
                 Mapper.updatePointInfo(10);
 
+                Intent MainActivity = new Intent(context, com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
+                MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(MainActivity);
+
                 if(password_str != null){
                     Mapper.updatePassword(recipe_id, password_str);
                 }

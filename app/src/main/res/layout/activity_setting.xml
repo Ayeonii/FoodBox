@@ -30,15 +30,15 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_profile"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@drawable/foodbox_icon2"
-        android:layout_marginTop="40dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/setting_toolbar"
+        android:src="@drawable/ic_person"
+        app:layout_constraintBottom_toTopOf="@+id/user_name"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/user_name"/>
+        app:layout_constraintTop_toBottomOf="@+id/setting_toolbar" />
 
         <TextView
             android:id="@+id/user_name"

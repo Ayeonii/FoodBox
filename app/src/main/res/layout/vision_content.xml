@@ -98,7 +98,7 @@
                 android:fontFamily="@font/font_family"
                 android:background="@color/colorPrimary"
                 android:layout_gravity="end"/>
-            
+
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

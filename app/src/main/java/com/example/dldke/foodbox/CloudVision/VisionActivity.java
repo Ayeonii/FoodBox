@@ -401,11 +401,6 @@ public class VisionActivity extends AppCompatActivity {
             matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), matchingItems.get(i).getisFrozenf(), dueDate));
         }
 
-        for(int t = 0; t<matchFood.size(); t++){
-            Log.e(TAG, "매칭된 음식!!!");
-            Log.e(TAG, "음식 이름 : "+matchFood.get(t).getFoodName());
-        }
-
         matchingIngredient.setHasFixedSize(true);
         adapter = new PencilCartAdapter(matchFood);
         matchingIngredient.setLayoutManager(new LinearLayoutManager(activity));
@@ -422,7 +417,7 @@ public class VisionActivity extends AppCompatActivity {
         NotMatchAdapter adapter;
 
         notmatchingIngredient.setHasFixedSize(true);
-        adapter = new NotMatchAdapter(items);
+        adapter = new NotMatchAdapter(items, activity);
         notmatchingIngredient.setLayoutManager(new LinearLayoutManager(activity));
         notmatchingIngredient.setAdapter(adapter);
     }

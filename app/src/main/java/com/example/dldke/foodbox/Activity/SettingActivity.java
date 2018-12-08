@@ -1,8 +1,15 @@
 package com.example.dldke.foodbox.Activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,9 +21,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.dldke.foodbox.CloudVision.PermissionUtils;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -25,10 +38,18 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private static String user_nickname, business_number;
     boolean isCook = false;
 
-    LinearLayout business_license_number, point_layout;
-    TextView business_N1, business_N2, business_N3;
-    TextView nickname;
-    String TAG = "SettingActivity";
+    private static final int GALLERY_PERMISSIONS_REQUEST = 0;
+    private static final int GALLERY_IMAGE_REQUEST = 1;
+    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
+    public static final int CAMERA_IMAGE_REQUEST = 3;
+    public static final String FILE_NAME = "temp.jpg";
+    private static final int MAX_DIMENSION = 1200;
+
+    private LinearLayout business_license_number, point_layout;
+    private TextView business_N1, business_N2, business_N3;
+    private TextView nickname;
+    private String TAG = "SettingActivity";
+    private CircleImageView profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -37,11 +58,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
-        CircleImageView profile = (CircleImageView) findViewById(R.id.user_profile);
         TextView user_id = (TextView) findViewById(R.id.user_name);
         TextView point = (TextView) findViewById(R.id.point);
         Switch cooking_class = (Switch) findViewById(R.id.cooking_class_btn);
         Button setting_ok = (Button) findViewById(R.id.setting_ok_btn);
+        profile = (CircleImageView) findViewById(R.id.user_profile);
         point_layout = (LinearLayout) findViewById(R.id.point_linear);
         business_license_number = (LinearLayout) findViewById(R.id.business_linear);
         business_N1 = (TextView) findViewById(R.id.business_number1);
@@ -92,6 +113,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         cooking_class.setOnClickListener(this);
         nickname.setOnClickListener(this);
         business_license_number.setOnClickListener(this);
+        profile.setOnClickListener(this);
 
     }
 
@@ -158,8 +180,112 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 business_builder.create().show();
                 break;
-
+            case R.id.user_profile:
+                AlertDialog.Builder profile_builder = new AlertDialog.Builder(this);
+                profile_builder.setMessage("사진을 등록하세요")
+                        .setPositiveButton("갤러리", (dialog, i) -> startGalleryChooser())
+                        .setNegativeButton("카메라", (dialogInterface, i) -> startCamera());
+                profile_builder.create().show();
                 default: break;
+        }
+    }
+
+    public void startGalleryChooser() {
+        if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select a photo"), GALLERY_IMAGE_REQUEST);
+        }
+    }
+
+    public void startCamera() {
+        if (PermissionUtils.requestPermission(this, CAMERA_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
+        }
+    }
+
+    public File getCameraFile() {
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return new File(dir, FILE_NAME);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                uploadImage(resultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+
+        if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            CropImage.activity(data.getData()).start(this);
+
+        } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+            CropImage.activity(photoUri).start(this);
+        }
+    }
+
+    public void uploadImage(Uri uri) {
+
+        if (uri != null) {
+            try {
+                Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
+                profile.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                Log.d(TAG, "Image picking failed because " + e.getMessage());
+                Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Log.d(TAG, "Image picker gave us a null image.");
+            Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
+
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+        int resizedWidth = maxDimension;
+        int resizedHeight = maxDimension;
+
+        if (originalHeight > originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
+        } else if (originalWidth > originalHeight) {
+            resizedWidth = maxDimension;
+            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
+        } else if (originalHeight == originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = maxDimension;
+        }
+        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case CAMERA_PERMISSIONS_REQUEST:
+                if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults))
+                    startCamera();
+                break;
+            case GALLERY_PERMISSIONS_REQUEST:
+                if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults))
+                    startGalleryChooser();
+                break;
         }
     }
 

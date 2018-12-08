@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -16,8 +17,10 @@ import android.support.v7.widget.Toolbar;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -102,10 +105,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showDialog();
-
-                Intent MainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
-                MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(MainActivity);
             }
         });
     }
@@ -135,15 +134,16 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
 
     void showDialog(){
 
-        DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
-        int width = displayMetrics.widthPixels;
-        int hegith = displayMetrics.heightPixels;
         CustomDialog customDialog = new CustomDialog(this, isCookingClass);
-        WindowManager.LayoutParams wm = customDialog.getWindow().getAttributes();
-        wm.copyFrom(customDialog.getWindow().getAttributes());
-        wm.width = width/2;
-        wm.height = hegith/2;
         customDialog.show();
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(customDialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        Window window = customDialog.getWindow();
+        window.setAttributes(lp);
+
     }
 
     @Override
