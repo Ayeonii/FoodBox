@@ -107,6 +107,8 @@ public class VisionActivity extends AppCompatActivity {
     private static Date inputDBDate ;
     private static String inputDBDateString;
     private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+    private static boolean isFrozen;
+
 
     private static String TAG = "TestActivity";
 
@@ -398,7 +400,14 @@ public class VisionActivity extends AppCompatActivity {
 
             String foodImg = "file:///storage/emulated/0/Download/"+matchingItems.get(i).getName()+".jpg";
             Uri uri = Uri.parse(foodImg);
-            matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), matchingItems.get(i).getisFrozenf(), dueDate));
+            if(matchingItems.get(i).getKindOf() == "frozen"){
+                isFrozen = true;
+            }
+            else{
+                isFrozen = false;
+            }
+
+            matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), isFrozen, dueDate));
         }
 
         matchingIngredient.setHasFixedSize(true);
