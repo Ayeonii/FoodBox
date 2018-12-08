@@ -398,7 +398,7 @@ public class VisionActivity extends AppCompatActivity {
 
             String foodImg = "file:///storage/emulated/0/Download/"+matchingItems.get(i).getName()+".jpg";
             Uri uri = Uri.parse(foodImg);
-            matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), matchingItems.get(i).getisFrozenf(), dueDate));
+            matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), true, dueDate));
         }
 
         matchingIngredient.setHasFixedSize(true);
