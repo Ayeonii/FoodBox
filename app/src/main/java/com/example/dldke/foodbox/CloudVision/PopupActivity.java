@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -28,10 +29,13 @@ public class PopupActivity extends Activity implements View.OnClickListener{
     private FloatingActionButton ok;
 
     private PopupAdapter popupAdapter;
-    private static List<String[]> allfoodList = new ArrayList<>();
+    private static List<PencilItem> allfoodListInfo = new ArrayList<>();
     private ArrayList<PencilItem> list = new ArrayList<>();
     private static List<InfoDO> freshList, meatList, etcList;
     private String foodImg;
+    private boolean isFrozen;
+
+    private String TAG="PopupActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -45,43 +49,57 @@ public class PopupActivity extends Activity implements View.OnClickListener{
         ok = (FloatingActionButton) findViewById(R.id.vision_ingredient_add);
 
 
+        freshList = getInfoDOList("fresh");
+        meatList = getInfoDOList("meat");
+        etcList = getInfoDOList("etc");
+
+        makeFoodList(freshList);
+        makeFoodList(meatList);
+        makeFoodList(etcList);
+
+
+
         ingredientView.setHasFixedSize(true);
         popupAdapter = new PopupAdapter(list);
         ingredientView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 4));
         ingredientView.setAdapter(popupAdapter);
 
-
-        freshList = Mapper.scanSection("fresh");
-        meatList = Mapper.scanSection("meat");
-        etcList = Mapper.scanSection("etc");
-
-        makeFoodList(freshList, "fresh");
-        makeFoodList(meatList,"meat");
-        makeFoodList(etcList,"etc");
-
+        setData();
 
         searchBar.setOnClickListener(this);
         deleteButton.setOnClickListener(this);
         ok.setOnClickListener(this);
     }
 
-    private void makeFoodList(List<InfoDO> foodList, String section) {
-        for(int i =0 ; i< foodList.size(); i++) {
-            allfoodList.add(new String[]{foodList.get(i).getName(), section});
-            /**********이미지 추가후 주석 삭제**********/
+    private List<InfoDO> getInfoDOList(String section) {
+        return Mapper.scanSection(section);
+    }
 
-//            File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
-//            if (!file.exists()) {
-//                Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/", section);
-//            }
+    private void makeFoodList(List<InfoDO> foodList) {
+
+        for(int i =0 ; i< foodList.size(); i++) {
+            if(foodList.get(i).getKindOf() == "frozen"){
+                isFrozen = true;
+            }
+            else {
+                isFrozen = false;
+            }
+
+            allfoodListInfo.add(new PencilItem(foodList.get(i).getName(), foodList.get(i).getSection(), isFrozen));
+
+            File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
+            if (!file.exists()) {
+                Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/", foodList.get(i).getSection());
+            }
         }
     }
 
     private void setData(){
-        for(int i =0 ; i<allfoodList.size(); i++ ){
-            foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
-            list.add(new PencilItem(allfoodList.get(i)[0], Uri.parse(foodImg),allfoodList.get(i)[1], false));
+        for(int i =0 ; i<allfoodListInfo.size(); i++ ){
+            foodImg = "file:///storage/emulated/0/Download/"+allfoodListInfo.get(i).getFoodName()+".jpg";
+            list.add(new PencilItem(allfoodListInfo.get(i).getFoodName(), Uri.parse(foodImg),allfoodListInfo.get(i).getFoodSection(), allfoodListInfo.get(i).getIsFrozen()));
         }
+        popupAdapter.notifyDataSetChanged();
     }
 
     @Override

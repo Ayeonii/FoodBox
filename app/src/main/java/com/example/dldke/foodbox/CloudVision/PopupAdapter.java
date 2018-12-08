@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.CloudVision;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,11 @@ import java.util.List;
 public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHolder> {
 
     private List<PencilItem> allFoodItems = new ArrayList<>();
-    private ArrayList <LocalRefrigeratorItem> allFoodList;
+    private String TAG="PopupAdapter";
 
     public PopupAdapter (List<PencilItem> allfoodList){
         this.allFoodItems = allfoodList;
+        Log.e(TAG, "AllFoodItems"+allFoodItems);
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
