@@ -1651,7 +1651,7 @@ public final class Mapper {
     }
 
 
-    /********************* Appreciate Recipt Section Method **********************/
+    /********************* Appreciate Receipt Section Method **********************/
 
     public static class RecipeMatching{
         private List<InfoDO> matchingList = new ArrayList<>();

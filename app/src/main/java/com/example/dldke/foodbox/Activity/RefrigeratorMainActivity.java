@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
@@ -337,7 +338,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     //Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
                     //startActivity(deepLink);
 
-                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), VisionActivity.class);
                     startActivity(intent);
 
                     break;
