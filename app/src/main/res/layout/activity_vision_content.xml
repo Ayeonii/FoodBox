@@ -38,9 +38,9 @@
                 android:layout_marginLeft="30dp" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/image_detail_view"
+                android:id="@+id/matching"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
@@ -54,11 +54,21 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="30dp"/>
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/notmatching_ingredient_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+            </android.support.v7.widget.RecyclerView>
+
 
             <Button
                 android:id="@+id/vision_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="냉장고에 넣기"
                 android:textSize="18dp"
                 android:fontFamily="@font/font_family"

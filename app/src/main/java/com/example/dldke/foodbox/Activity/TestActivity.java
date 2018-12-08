@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.icu.text.IDNA;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,14 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.CloudVision.PackageManagerUtils;
 import com.example.dldke.foodbox.CloudVision.PermissionUtils;
-import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
@@ -76,7 +72,8 @@ public class TestActivity extends AppCompatActivity {
     private Context context;
     private ImageView imageView;
 
-    private static ArrayList<PencilCartItem> matchFood = new ArrayList<>();
+   // private static ArrayList<PencilCartItem> matchFood = new ArrayList<>();
+    //private static ArrayList<PencilCartItem> notmatchFood = new ArrayList<>();
     private static GregorianCalendar cal = new GregorianCalendar();
     private static Date inputDBDate ;
     private static String inputDBDateString;
@@ -261,6 +258,8 @@ public class TestActivity extends AppCompatActivity {
         private final WeakReference<TestActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
 
+        public void LableDetectionTask(){ }
+
         LableDetectionTask(TestActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
             mRequest = annotate;
@@ -281,50 +280,20 @@ public class TestActivity extends AppCompatActivity {
             return "Cloud Vision API request failed. Check logs for details.";
         }
 
-        //인식된 글자 ImageView에 뿌려주기
+        /************* 인식된 글자 ImageView 에 뿌려주기 *********************/
         protected void onPostExecute(String result) {
+            TestActivity activity = mActivityWeakReference.get();
             List<InfoDO> matchingItems = IngredientInfo.getMatchingList();
             List<String> notmatchingItems = IngredientInfo.getNonMatchingList();
+
             String[] array = result.split("\n");
             for(int i = 0; i<array.length ; i++){
                 Log.e(TAG, ""+i+array[i]);
             }
 
-            TestActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-                //TextView imageDetail2 = activity.findViewById(R.id.image_details2);
-                RecyclerView imageDetailView = activity.findViewById(R.id.image_detail_view);
-                PencilCartAdapter adapter;
-                //imageDetail2.setText(notmatchingItems.toString());
-
-                for(int i=0; i<matchingItems.size(); i++){
-                    String str = matchingItems.get(i).getName();
-                    Log.e(TAG, "str"+ str);
-                    int dueDate;
-                    try{
-                        dueDate = Mapper.searchFood(matchingItems.get(i).getName(), matchingItems.get(i).getSection()).getDueDate();
-                    }
-                    catch (NullPointerException e){
-                        dueDate = 0;
-                    }
-                    Log.e(TAG, "유통기한 "+dueDate);
-                    cal.add(cal.DATE, dueDate);
-                    inputDBDate = cal.getTime();
-                    inputDBDateString = formatter.format(inputDBDate);
-                    String foodImg = "file:///storage/emulated/0/Download/"+matchingItems.get(i).getName()+".jpg";
-                    Uri uri = Uri.parse(foodImg);
-                    //matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), true));
-
-                }
-
-                imageDetailView.setHasFixedSize(true);
-                adapter = new PencilCartAdapter(matchFood);
-                imageDetailView.setLayoutManager(new LinearLayoutManager(activity));
-                imageDetailView.setAdapter(adapter);
-
-                for(int i = 0; i<matchFood.size(); i++){
-                    Log.d(TAG, "재료 이름 : "+matchFood.get(i).getFoodName()+" Section : "+matchFood.get(i).getFoodSection()+" 유통기한 : "+matchFood.get(i).getFoodDate());
-                }
+                activity.matchingIngredient(activity, matchingItems);
+                activity.notMatchingIngredient(activity, notmatchingItems);
             }
         }
     }
@@ -373,6 +342,63 @@ public class TestActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    public void matchingIngredient(TestActivity activity, List<InfoDO> matchingItems){
+        ArrayList<PencilCartItem> matchFood = new ArrayList<>();
+        RecyclerView matchingIngredient = activity.findViewById(R.id.matching);
+        PencilCartAdapter adapter;
+
+        for(int i=0; i<matchingItems.size(); i++){
+            String matching_name = matchingItems.get(i).getName();
+            Log.e(TAG, "matching_name"+ matching_name);
+
+            int dueDate;
+            try{
+                dueDate = Mapper.searchFood(matchingItems.get(i).getName(), matchingItems.get(i).getSection()).getDueDate();
+            }
+            catch (NullPointerException e){
+                dueDate = 0;
+            }
+            cal.add(cal.DATE, dueDate);
+            inputDBDate = cal.getTime();
+            inputDBDateString = formatter.format(inputDBDate);
+
+            String foodImg = "file:///storage/emulated/0/Download/"+matchingItems.get(i).getName()+".jpg";
+            Uri uri = Uri.parse(foodImg);
+            matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), matchingItems.get(i).getisFrozenf(), dueDate));
+        }
+
+        for(int t = 0; t<matchFood.size(); t++){
+            Log.e(TAG, "매칭된 음식!!!");
+            Log.e(TAG, "음식 이름 : "+matchFood.get(t).getFoodName());
+        }
+
+        matchingIngredient.setHasFixedSize(true);
+        adapter = new PencilCartAdapter(matchFood);
+        matchingIngredient.setLayoutManager(new LinearLayoutManager(activity));
+        matchingIngredient.setAdapter(adapter);
+
+        for(int i = 0; i<matchFood.size(); i++){
+            Log.d(TAG, "재료 이름 : "+matchFood.get(i).getFoodName()+" Section : "+matchFood.get(i).getFoodSection()+" 유통기한 : "+matchFood.get(i).getFoodDate()+"냉동고? : "+matchFood.get(i).getIsFrozen());
+        }
+    }
+
+    public void notMatchingIngredient(TestActivity activity, List<String> notmatchingItems){
+        ArrayList<PencilCartItem> notmatchFood = new ArrayList<>();
+        RecyclerView notmatchingIngredient = activity.findViewById(R.id.notmatching_ingredient_view);
+        PencilCartAdapter adapter;
+
+        for(int i = 0; i<notmatchingItems.size() ; i++){
+            Log.e(TAG, "not matching ingredient : "+notmatchingItems.get(i));
+
+            notmatchFood.add(new PencilCartItem(notmatchingItems.get(i), null, null, 0, null, null, 0));
+        }
+
+        notmatchingIngredient.setHasFixedSize(true);
+        adapter = new PencilCartAdapter(notmatchFood);
+        notmatchingIngredient.setLayoutManager(new LinearLayoutManager(activity));
+        notmatchingIngredient.setAdapter(adapter);
     }
 }
 
