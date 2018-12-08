@@ -834,7 +834,6 @@ public final class Mapper {
             URL url;
             @Override
             public void run() {
-
                 recipeItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
                         recipeId);

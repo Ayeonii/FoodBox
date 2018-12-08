@@ -28,12 +28,15 @@ import android.os.Handler;
 
 
 
+//public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
+
 public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
-    private CommunityLoadingAdapter mAdapter;
+
+        private CommunityLoadingAdapter mAdapter;
     private ArrayList<CommunityItem> itemList;
     private static List<PostDO> postList;
 
-   private static int cnt = 0;
+    private static int cnt = 0;
 
 
     @Nullable
@@ -80,26 +83,6 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
        // new PostAsync().execute();
 
     }
-
-/*
-    private class PostAsync extends AsyncTask<Void, Void, List<PostDO>> {
-        List<CommunityItem> asyncList = new ArrayList<>();
-
-        protected void onPreExecute() { //2
-            super.onPreExecute();
-            mAdapter.setProgressMore(true);
-        }
-        protected List<PostDO> doInBackground(Void... params) {
-
-           // mAdapter.setProgressMore(true);
-            mAdapter.addAll(loadData());
-            mAdapter.notifyDataSetChanged();
-            return postList;
-        }
-        protected void onPostExecute(List result) {
-            Log.e("size:","끝");
-        }
-    }*/
 
     //스크롤이 끝에 도달하였을 때 실행 내용
     @Override

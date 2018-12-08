@@ -21,7 +21,7 @@ public class MeatListFragment extends  android.support.v4.app.Fragment  {
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
     private String foodImg;
-    List<String[]> foodName = new ArrayList<>();
+    List<PencilItem> foodName = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,8 +40,8 @@ public class MeatListFragment extends  android.support.v4.app.Fragment  {
     }
     private void setData(){
         for(int i =0 ; i<foodName.size(); i++ ){
-            foodImg = "file:///storage/emulated/0/Download/"+foodName.get(i)[0]+".jpg";
-            list.add(new PencilItem(foodName.get(i)[0], Uri.parse(foodImg),foodName.get(i)[1],false ));
+            foodImg = "file:///storage/emulated/0/Download/"+foodName.get(i).getFoodName()+".jpg";
+            list.add(new PencilItem(foodName.get(i).getFoodName(), Uri.parse(foodImg),foodName.get(i).getFoodSection(), foodName.get(i).getIsFrozen()));
         }
         adapter.notifyDataSetChanged();
     }
