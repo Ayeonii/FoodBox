@@ -1,12 +1,15 @@
 package com.example.dldke.foodbox.MyRecipe;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -43,7 +46,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
     private String recipe_id = myRecipeBoxHalfRecipeAdapter.getRecipeId();
     private RecipeBoxHalfRecipeDetailAdapter recipeBoxHalfRecipeDetailAdapter;
     private List<RecipeDO.Ingredient> recipeItems = new ArrayList<>();
-
     private List<RefrigeratorDO.Item> refrigeratorItem;
     private ArrayList<DCItem> dcArray = new ArrayList<>();
     private HalfRecipeDueDateDialog dueDateDialog;
@@ -65,14 +67,19 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         recipeItems = Mapper.searchRecipe(recipe_id).getIngredient();
         String simplename = Mapper.searchRecipe(recipe_id).getSimpleName();
         int ing = Mapper.searchRecipe(recipe_id).getIng();
-        recipe_title.setText(simplename);
 
-        recipe_detail_view.setLayoutManager(new LinearLayoutManager(this));
+        // Toolbar Title Initialize
+        recipe_title.setText(simplename);
+        recipe_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+        //Typeface typeface = Typeface.createFromAsset(this.getAssets(), "my_font.ttf");
+        //recipe_title.setTypeface(typeface);
+
+        recipe_detail_view.setLayoutManager(new GridLayoutManager(this, 2));
         recipeBoxHalfRecipeDetailAdapter = new RecipeBoxHalfRecipeDetailAdapter(recipeItems);
         recipe_detail_view.setAdapter(recipeBoxHalfRecipeDetailAdapter);
 
         int cnt = recipeBoxHalfRecipeDetailAdapter.getCnt();
-        ing = Mapper.searchRecipe(recipe_id).getIng();
+        //ing = Mapper.searchRecipe(recipe_id).getIng();
 
         Log.e("test", "액티비티에서 ing : " + ing);
         Log.e("test", "cnt = "+cnt);
