@@ -19,6 +19,7 @@ import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
 
 public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeBoxHalfRecipeAdapter.ViewHolder> {
+
     public MyRecipeBoxHalfRecipeAdapter(){}
 
     public String getRecipeId(){
@@ -69,13 +70,15 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         int isIng = recipedata.get(position).isIng();
         holder.name.setText(recipedata.get(position).getSimpleName());
 
-        if(isIng == 0){
+        if(isIng==0){
             holder.isIng.setText("작성 완료");
+            holder.isIng.setTextColor(Color.BLUE);
+        } else if(isIng==1){
+            holder.isIng.setText("작성중");
             holder.isIng.setTextColor(Color.RED);
         }
-        else {
-            holder.isIng.setText("작성중");
-            holder.isIng.setTextColor(Color.BLUE);
+        else if(isIng==2){
+            holder.isIng.setText("");
         }
     }
 

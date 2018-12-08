@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.Memo;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -52,7 +53,13 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
         holder.urgentImg.setImageURI(mItems.get(position).getUrgentImg());
         holder.urgentName.setText(mItems.get(position).getUrgentName());
         CalculateDate(mItems.get(position).getUrgentDate());
-        holder.urgentDate.setText(diffDays+"일 남았습니다.");
+
+        if (diffDays < 0) {
+            holder.urgentDate.setTextColor(Color.RED);
+            holder.urgentDate.setText(Math.abs(diffDays) + "일 지났습니다.");
+        }
+        else
+            holder.urgentDate.setText(diffDays+"일 남았습니다.");
 
     }
     // 데이터 셋의 크기를 리턴
