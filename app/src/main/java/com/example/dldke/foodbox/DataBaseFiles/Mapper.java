@@ -920,6 +920,29 @@ public final class Mapper {
         }
     }
 
+    public static void updatePassword(String recipe_id,String password){
+
+        final String inputPassword = password;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipeInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipe_id);
+
+                recipeInfo.setPassword(inputPassword);
+                Mapper.getDynamoDBMapper().save(recipeInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void updateIngredient(List<RecipeDO.Ingredient> input, String recipeId){
         final String recipe_id = recipeId;
         final List<RecipeDO.Ingredient> ingredient_list = input;

@@ -14,14 +14,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapperConfig;
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipe.FullRecipeIngredientAdapter;
@@ -37,8 +40,9 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
 
 
     private MyRecipeBoxFullRecipeAdapter myRecipeBoxFullRecipeAdapter = new MyRecipeBoxFullRecipeAdapter();
+    private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
     private String recipe_id;
-    private boolean isCookingClass;
+    private boolean isCookingClass = refrigeratorMainActivity.getisCookingClass();
     private RecipeDO.Detail detail;
     private RecyclerView detail_recyclerview, detail_ingredient_recyclerview;
     private RecipeBoxFullRecipeDetailAdapter recipeDetailAdapter;
@@ -98,6 +102,10 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showDialog();
+
+                Intent MainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
+                MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(MainActivity);
             }
         });
     }
@@ -127,35 +135,15 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
 
     void showDialog(){
 
+        DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
+        int width = displayMetrics.widthPixels;
+        int hegith = displayMetrics.heightPixels;
         CustomDialog customDialog = new CustomDialog(this, isCookingClass);
+        WindowManager.LayoutParams wm = customDialog.getWindow().getAttributes();
+        wm.copyFrom(customDialog.getWindow().getAttributes());
+        wm.width = width/2;
+        wm.height = hegith/2;
         customDialog.show();
-//        final EditText edittext = new EditText(this);
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("공유하시겠습니까?").setMessage("레시피 타이틀을 작성해주세요").setView(edittext);
-//
-//        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                //Toast.makeText(getApplicationContext(), edittext.getText().toString(), Toast.LENGTH_SHORT).show();
-//                String title = edittext.getText().toString();
-//
-//                Mapper.updateIsShared(recipe_id);
-//                Mapper.createPost(" "+title, recipe_id);
-//                Mapper.updatePointInfo(10);
-//
-//                Intent MainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
-//                MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(MainActivity);
-//            }
-//        });
-//        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                //Toast.makeText(getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        builder.show();
     }
 
     @Override
