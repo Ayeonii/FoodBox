@@ -44,9 +44,9 @@
         android:layout_width="42dp"
         android:layout_height="36dp"
         android:background="#00000000"
-        app:layout_constraintBottom_toBottomOf="@+id/searchBar"
-        app:layout_constraintEnd_toEndOf="@+id/searchBar"
-        app:layout_constraintTop_toTopOf="@+id/searchBar"
+        app:layout_constraintBottom_toBottomOf="@+id/vision_searchBar"
+        app:layout_constraintEnd_toEndOf="@+id/vision_searchBar"
+        app:layout_constraintTop_toTopOf="@+id/vision_searchBar"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_delete_all_blue" />
 

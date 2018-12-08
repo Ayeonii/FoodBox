@@ -35,6 +35,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,8 +48,10 @@ import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
 import com.amazonaws.mobileconnectors.apigateway.ApiResponse;
 import com.amazonaws.util.IOUtils;
 import com.amazonaws.util.StringUtils;
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.R;
@@ -102,6 +105,7 @@ public class VisionActivity extends AppCompatActivity {
     private Context context;
     private ImageView imageView;
     private TextView loading;
+    private Button insert;
 
     private static GregorianCalendar cal = new GregorianCalendar();
     private static Date inputDBDate ;
@@ -109,8 +113,10 @@ public class VisionActivity extends AppCompatActivity {
     private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
     private static boolean isFrozen;
 
+    private ArrayList<PencilCartItem> matchFood = new ArrayList<>();
 
     private static String TAG = "TestActivity";
+
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -118,12 +124,37 @@ public class VisionActivity extends AppCompatActivity {
 
         loading = (TextView) findViewById(R.id.loading_text);
         imageView = (ImageView) findViewById(R.id.main_image);
+        insert = (Button) findViewById(R.id.vision_btn);
+
         imageView.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Choose a picture")
                     .setPositiveButton("Gallery", (dialog, i) -> startGalleryChooser())
                     .setNegativeButton("Camera", (dialogInterface, i) -> startCamera());
             builder.create().show();
+        });
+
+        insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
+                for(int i =0 ; i<matchFood.size(); i++) {
+                    PencilCartItem food = matchFood.get(i);
+                    try {
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
+                    }
+                    catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
+                    }
+                }
+                Mapper.putFood(clickedList);
+                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                Intent refMain = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(refMain);
+            }
         });
 
     }
@@ -288,10 +319,11 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     private static class LableDetectionTask extends AsyncTask<Object, Void, String> {
-        private final WeakReference<VisionActivity> mActivityWeakReference;
+        private WeakReference<VisionActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
+        public List<String> notmatchingItems;
 
-        public void LableDetectionTask(){ }
+        public LableDetectionTask(){ }
 
         LableDetectionTask(VisionActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
@@ -317,7 +349,7 @@ public class VisionActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             VisionActivity activity = mActivityWeakReference.get();
             List<InfoDO> matchingItems = IngredientInfo.getMatchingList();
-            List<String> notmatchingItems = IngredientInfo.getNonMatchingList();
+            notmatchingItems = IngredientInfo.getNonMatchingList();
 
             String[] array = result.split("\n");
             for(int i = 0; i<array.length ; i++){
@@ -330,6 +362,11 @@ public class VisionActivity extends AppCompatActivity {
                 activity.notMatchingIngredient(activity, notmatchingItems);
             }
         }
+
+        public List<String> getNotMatchingInfo(){
+            return notmatchingItems;
+        }
+
     }
 
 
@@ -379,7 +416,6 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     public void matchingIngredient(VisionActivity activity, List<InfoDO> matchingItems){
-        ArrayList<PencilCartItem> matchFood = new ArrayList<>();
         RecyclerView matchingIngredient = activity.findViewById(R.id.matching);
         PencilCartAdapter adapter;
 
