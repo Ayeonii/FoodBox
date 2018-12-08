@@ -29,21 +29,45 @@
                 android:scaleType="fitCenter"/>
 
             <TextView
+                android:id="@+id/loading_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/upload_message"
+                android:textSize="10dp"
+                android:fontFamily="@font/font_family"
+                android:gravity="center"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/colorPrimary"/>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="30dp"
                 android:text="인식된 재료"
                 android:textSize="18dp"
-                android:fontFamily="@font/font_family"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="30dp" />
+                android:fontFamily="@font/font_family" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/image_detail_view"
+                android:id="@+id/matching"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/colorPrimary"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -54,16 +78,27 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="30dp"/>
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/notmatching_ingredient_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+            </android.support.v7.widget.RecyclerView>
+
 
             <Button
                 android:id="@+id/vision_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="냉장고에 넣기"
                 android:textSize="18dp"
                 android:fontFamily="@font/font_family"
                 android:background="@color/colorPrimary"
-                android:layout_gravity="bottom"/>
+                android:layout_gravity="end"/>
+
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

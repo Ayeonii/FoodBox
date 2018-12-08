@@ -144,8 +144,8 @@ public final class Mapper {
                         com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
                         userId);
 
-                userInfo.setNickname(nickName);
-                userInfo.setIsCookingClass(isCook);
+                userInfo.setNickname(nickN);
+                userInfo.setIsCookingClass(isCooking);
                 userInfo.setRegisterNumber(registN);
                 Mapper.getDynamoDBMapper().save(userInfo);
             }
@@ -320,7 +320,16 @@ public final class Mapper {
 
                 List<RefrigeratorDO.Item> r_item = refrigeratorItem.getItem();
                 for(int i = 0; i < foods_list.size(); i++) {
-                    r_item.add(foods_list.get(i));
+                    boolean temp = false;
+                    for(int j = 0; j < r_item.size(); j++){
+                        if((r_item.get(j).getName().equals(foods_list.get(i).getName())) && (r_item.get(j).getDueDate().equals(foods_list.get(i).getDueDate()))){
+                            r_item.get(j).setCount(r_item.get(j).getCount() + foods_list.get(i).getCount());
+                            temp = true;
+                        }
+                    }
+                    if(temp == false)
+                        r_item.add(foods_list.get(i));
+
                     Log.e("putFoodIn"+i+"번째",""+r_item.get(i));
                 }
                 refrigeratorItem.setItem(r_item);
@@ -460,7 +469,37 @@ public final class Mapper {
         }
     }
 
-    public static void updateCountwithDueDate(String name, String dueDate, Double count)
+    public static void updateCount(String name, String dueDate_old, Double count_new) {
+        final String itemName = name;
+        final String oldDueDate = dueDate_old;
+        final Double newCount = count_new;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO foodItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO.class,
+                        userId);
+                for(int i = 0; i < foodItem.getItem().size(); i++)
+                {
+                    if(foodItem.getItem().get(i).getName().equals(itemName) && foodItem.getItem().get(i).getDueDate().equals(oldDueDate)) {
+                        foodItem.getItem().get(i).setCount(newCount);
+                        break;
+                    }
+                }
+
+                Mapper.getDynamoDBMapper().save(foodItem, new DynamoDBMapperConfig(DynamoDBMapperConfig.SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES));
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void minusCountwithDueDate(String name, String dueDate, Double count)
     {
         final String itemName = name;
         final Double minus = count;
@@ -501,7 +540,7 @@ public final class Mapper {
         }
     }
 
-    public static void updateCount(String name, Double count)
+    public static void minusCount(String name, Double count)
     {
         final String itemName = name;
         final Double minus = count;
@@ -880,6 +919,29 @@ public final class Mapper {
         }
     }
 
+    public static void updatePassword(String recipe_id,String password){
+
+        final String inputPassword = password;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipeInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipe_id);
+
+                recipeInfo.setPassword(inputPassword);
+                Mapper.getDynamoDBMapper().save(recipeInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void updateIngredient(List<RecipeDO.Ingredient> input, String recipeId){
         final String recipe_id = recipeId;
         final List<RecipeDO.Ingredient> ingredient_list = input;
@@ -893,6 +955,50 @@ public final class Mapper {
                 recipeItem.setIngredient(ingredient_list);
                 Mapper.getDynamoDBMapper().save(recipeItem);
             }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateIngInfo(Integer ing, String recipe_id){
+
+        final Integer Ing = ing;
+        final String recipeId = recipe_id;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipeDO = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipeId);
+
+                recipeDO.setIng(Ing);
+                Mapper.getDynamoDBMapper().save(recipeDO);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void updateIsShared(String recipe_id){
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipe = Mapper.searchRecipe(recipe_id);
+                recipe.setIsShare(true);
+                Mapper.getDynamoDBMapper().save(recipe);
+            }
+
         });
         thread.start();
         try{
@@ -1544,7 +1650,7 @@ public final class Mapper {
     }
 
 
-    /********************* Appreciate Recipt Section Method **********************/
+    /********************* Appreciate Receipt Section Method **********************/
 
     public static class RecipeMatching{
         private List<InfoDO> matchingList = new ArrayList<>();

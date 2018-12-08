@@ -66,7 +66,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private EditText foodtitle;
     private Spinner spinner;
     private Button ingredient_add, spec_add, ok_btn;
-    private ImageView food_img, food_img_real;
+    private ImageView food_img_real;
     private RecyclerView fullrecipeRecyclerView, recipe_ingredient_view;
 
     private List<RecipeDO.Ingredient> data = new ArrayList<>();
@@ -101,7 +101,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
         toolbar = (Toolbar) findViewById(R.id.fullrecipe_toolbar);
         foodtitle = (EditText) findViewById(R.id.food_title);
-        food_img = (ImageView)findViewById(R.id.food_img);
         food_img_real = (ImageView)findViewById(R.id.food_img_real);
         ingredient_add = (Button)findViewById(R.id.ingredient_add);
         spec_add = (Button) findViewById(R.id.spec_insert_btn);
@@ -166,7 +165,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         fullrecipeRecyclerView.setAdapter(mAdapter);
 
 
-        food_img.setOnClickListener(this);
+        food_img_real.setOnClickListener(this);
         ingredient_add.setOnClickListener(this);
         spec_add.setOnClickListener(this);
         ok_btn.setOnClickListener(this);
@@ -177,7 +176,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.food_img:
+            case R.id.food_img_real:
                 imageDialog();
                 break;
 
@@ -243,13 +242,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             Mapper.createFullRecipe(recipeId, FoodTitle, specList);
         }
 
-//        if(food_img_real == null){
-//            String imagePath = "/storage/emulated/0/Download/default.jpg"; //나중 default 이미지 넣기
-//            Mapper.attachRecipeImage(recipeId, imagePath);
-//        }
-//        else{
-//            Mapper.attachRecipeImage(recipeId, imagePath);
-//        }
         Mapper.attachRecipeImage(recipeId, imagePath);
         Mapper.updatePointInfo(10);
 

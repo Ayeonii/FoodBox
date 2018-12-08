@@ -1,7 +1,6 @@
 package com.example.dldke.foodbox.PencilRecipe;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
-import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.MyRefrigeratorInside.InsideDialog;
 import com.example.dldke.foodbox.R;
@@ -50,7 +48,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
 
         private SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
-        public PencilRecyclerAdapter (){ }
+        public PencilRecyclerAdapter(){ }
 
         public PencilRecyclerAdapter(Context context, ArrayList<LocalRefrigeratorItem> items){
             reItems = items;

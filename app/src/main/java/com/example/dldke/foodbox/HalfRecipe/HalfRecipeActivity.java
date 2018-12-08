@@ -82,6 +82,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         //Mapper.createMemo();
     }
 
+
     public void setInfoDOList() {
 
         infoFreshItem = Mapper.scanSection("fresh");
@@ -509,13 +510,25 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
                 recipeSimpleName = recipeName;
 
-                if (result == 1) {
-                    goHalfRecipeMaking(mItems, dueDateCheckArray);
-                } else if (result == 2) {
-                    showDueDateDialog(mItems, dueDateCheckArray);
-                } else if (result == 3) {
+                // result = 1 : 유통기한이 여러개인게 없거나 있어도 보유개수 모두 사용했을때
+                // result = 2 : 유통기한이 여러개인게 있고 보유개수 보다 적게 사용했을때
+                //              그리고 그러한 재료의 명단(dueDateCheckArray)도 같이 보냄
+                // result = 3 : 냉장고에 없는 추가재료가 하나라도 껴있으면 완료Activity로 가지 않을 거임
+
+                if (result == 1 || result ==2) {
+                    registerHalfRecipe(mItems);
+                }
+                else if (result == 3) {
                     goIngHalfRecipeMaking(mItems);
                 }
+
+//                if (result == 1) {
+//                    goHalfRecipeMaking(mItems, dueDateCheckArray);
+//                } else if (result == 2) {
+//                    showDueDateDialog(mItems, dueDateCheckArray);
+//                } else if (result == 3) {
+//                    goIngHalfRecipeMaking(mItems);
+//                }
             }
 
             @Override
@@ -530,44 +543,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         });
         recipeDialog.setCancelable(false);
         recipeDialog.show();
-    }
-
-    public void showDueDateDialog(final ArrayList<HalfRecipeRecipeItem> selectedItems, final ArrayList<String> dueDateCheckArray) {
-        dueDateDialog = new HalfRecipeDueDateDialog(this, dueDateCheckArray);
-        dueDateDialog.setDialogListener(new HalfRecipeDialogListener() {
-            @Override
-            public void onPositiveClicked(String type, Boolean[] check) {
-
-            }
-
-            @Override
-            public void onCompleteClicked(int result, String recipeName, ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
-
-            }
-
-            @Override
-            public void onDueDateOKClicked(ArrayList<HalfRecipeDueDateItem> radioCheckItems) {
-                for (int i = 0; i < selectedItems.size(); i++) {
-                    for (int j = 0; j < radioCheckItems.size(); j++) {
-                        if (selectedItems.get(i).getName().equals(radioCheckItems.get(j).getName())) {
-                            radioCheckItems.get(j).setEditCount(selectedItems.get(i).getEditCount());
-                        }
-                    }
-                }
-
-                boolean result = updateCountByDueDate(radioCheckItems);
-                if (result)
-                    goHalfRecipeMaking(selectedItems, dueDateCheckArray);
-
-            }
-
-            @Override
-            public void onIngOkClicked(int ok) {
-
-            }
-        });
-        dueDateDialog.setCancelable(false);
-        dueDateDialog.show();
     }
 
     public void showRecipeIngDialog(List<RecipeDO.Ingredient> needItem) {
@@ -601,69 +576,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         ingDialog.show();
     }
 
-    private boolean updateCountByDueDate(ArrayList<HalfRecipeDueDateItem> radioCheckItems) {
-
-        for (int i = 0; i < radioCheckItems.size(); i++) {
-
-            // 1. 해당 이름의 유통기한과 보유개수 가져오기 배열로
-            // 정수형태의 유통기한과 더블형의 보유개수를 저장할 배열 생성
-            ArrayList<DCItem> dcArray = new ArrayList<>();
-
-            for (int j = 0; j < refrigeratorItem.size(); j++) {
-                if (refrigeratorItem.get(j).getName().equals(radioCheckItems.get(i).getName())) {
-                    Integer iDueDate = Integer.parseInt(refrigeratorItem.get(j).getDueDate());
-                    dcArray.add(new DCItem(iDueDate, refrigeratorItem.get(j).getCount()));
-                }
-            }
-
-            // 2. 유통기한 기준 정렬 which = 0 이면 오름차순 1 이면 내림차순
-            switch (radioCheckItems.get(i).getWhich()) {
-                case 0: //오름차순
-                    Collections.sort(dcArray, new AscendingSort());
-                    break;
-                case 1: //내림차순
-                    Collections.sort(dcArray, new DescendingSort());
-                    break;
-            }
-
-            // 계산하고 바로 updatecount
-            Double editCount = radioCheckItems.get(i).getEditCount();
-            for (int k = 0; k < dcArray.size(); k++) {
-                if (editCount - dcArray.get(k).getCount() < 0) {
-                    Mapper.updateCountwithDueDate(radioCheckItems.get(i).getName(), Integer.toString(dcArray.get(k).getDueDate()), editCount);
-                    break;
-                } else {
-                    editCount -= dcArray.get(k).getCount();
-                    Mapper.updateCountwithDueDate(radioCheckItems.get(i).getName(), Integer.toString(dcArray.get(k).getDueDate()), dcArray.get(k).getCount());
-                }
-            }
-
-        }
-
-        return true;
-    }
-
-    private void goHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems, ArrayList<String> dueDateCheckArray) {
-
-        if (dueDateCheckArray.size() == 0) {
-            for (int i = 0; i < mItems.size(); i++) {
-                Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
-            }
-        } else {
-            // 중복 배열에 있는 거 제외하고 나머지에 대해 정상적으로 update
-            for (int i = 0; i < mItems.size(); i++) {
-                int has = 0;
-                for (int j = 0; j < dueDateCheckArray.size(); j++) {
-                    if (mItems.get(i).getName().equals(dueDateCheckArray.get(j)))
-                        has = 1;
-                }
-
-                if (has == 0) {
-                    Mapper.updateCount(mItems.get(i).getName(), mItems.get(i).getEditCount());
-                }
-            }
-        }
-
+    public void registerHalfRecipe(ArrayList<HalfRecipeRecipeItem> mItems) {
         //recipe 테이블 접근
         List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
         for (int i = 0; i < mItems.size(); i++) {
@@ -714,23 +627,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         Log.d("test", recipe_id);
 
-
-        Thread thread = new Thread(new Runnable() {
-            final String recipeId = recipe_id;
-            @Override
-            public void run() {
-
-                RecipeDO recipe = Mapper.searchRecipe(recipeId);
-                recipe.setIng(true);
-                Mapper.getDynamoDBMapper().save(recipe);
-            }
-        });
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        Mapper.updateIngInfo(1, recipe_id);
 
         Mapper.addRecipeInMyCommunity(recipe_id);
 
@@ -740,20 +637,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         //사용자에게 필요한재료 확인다이얼로그
         showRecipeIngDialog(needItem);
     }
-}
 
-class AscendingSort implements Comparator<DCItem> {
 
-    @Override
-    public int compare(DCItem t1, DCItem t2) {
-        return t1.getDueDate().compareTo(t2.getDueDate());
-    }
-}
-
-class DescendingSort implements Comparator<DCItem> {
-
-    @Override
-    public int compare(DCItem t1, DCItem t2) {
-        return t2.getDueDate().compareTo(t1.getDueDate());
-    }
+    //===================================================================================================================================
 }

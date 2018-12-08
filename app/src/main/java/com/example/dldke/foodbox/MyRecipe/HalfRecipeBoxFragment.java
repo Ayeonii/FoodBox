@@ -33,6 +33,7 @@ public class HalfRecipeBoxFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        Log.e("test", "onCreateView 들어옴");
         Log.e(TAG, "isRecipe 잘 받아오니? "+isRecipe);
         if(isRecipe)
         {
@@ -49,7 +50,6 @@ public class HalfRecipeBoxFragment extends Fragment {
         }
         //적용은 되는거 같은데 text가 안보여짐
         else {
-
             View view = inflater.inflate(R.layout.recipe_box_fragment_none, container, false);
             return view;
         }
@@ -58,22 +58,39 @@ public class HalfRecipeBoxFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         prepareData();
+
+        Log.e("test", "onCreate 들어옴");
     }
 
     //Detail이 없으면 간이레시피, Detail이 있으면 풀레시피 fragment로 보여지기 위한 작업
     private void prepareData(){
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
+
         for(int i =0 ; i< myrecipe.size(); i++){
+            String recipeId = myrecipe.get(i);
+            Log.d(TAG, "myrecipe : " + recipeId);
             try{
-                String foodname = Mapper.searchRecipe(myrecipe.get(i)).getDetail().getFoodName();
+                String foodname = Mapper.searchRecipe(recipeId).getDetail().getFoodName();
+                boolean isPost = Mapper.searchRecipe(recipeId).getIsPost();
+
+                if(isPost){
+                    String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
+                    int isIng = Mapper.searchRecipe(recipeId).getIng();
+
+                    data.add(new RecipeBoxData(simpleName, recipeId, isIng));
+                    isRecipe = true;
+                }
+
             }catch(NullPointerException e){
-                String recipeId = myrecipe.get(i);
+                Log.e(TAG, "***"+recipeId);
+                recipeId = myrecipe.get(i);
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
-                boolean isIng = Mapper.searchRecipe(recipeId).getIng();
+                int isIng = Mapper.searchRecipe(recipeId).getIng();
 
                 data.add(new RecipeBoxData(simpleName, recipeId, isIng));
                 isRecipe = true;
+
             }
         }
     }

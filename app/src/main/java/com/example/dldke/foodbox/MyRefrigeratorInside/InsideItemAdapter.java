@@ -59,8 +59,8 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
                 dcEditDialog.setDialogListener(new InsideDialogListener() {
                     @Override
                     public void onPositiveClicked(Double count, String dueDate) {
-                        //Mapper.updateCountwithDueDate(foodName, foodDueDate, count);    //변경 전 유통기한으로 개수 바꾸기
-                        //Mapper.updateDueDate(foodName, foodDueDate, dueDate);           //변경 전 유통기한으로 유통기한 바꾸기
+                        Mapper.updateCount(foodName, foodDueDate, count);               //변경 전 유통기한으로 개수 바꾸기
+                        Mapper.updateDueDate(foodName, foodDueDate, dueDate);           //변경 전 유통기한으로 유통기한 바꾸기
                         foodDueDate = dueDate;
                         foodCount = Double.toString(count);
                         holder.txtDueDate.setText(foodDueDate);

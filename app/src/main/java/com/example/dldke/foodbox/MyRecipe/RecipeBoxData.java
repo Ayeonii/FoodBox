@@ -6,7 +6,8 @@ public class RecipeBoxData {
     String foodname, recipeId, simplename;
     Integer image;
     String food_image;
-    boolean isShared, isIng;
+    boolean isShared;
+    int isIng;
 
     public RecipeBoxData(String recipeId, String imgUrl, String foodname, boolean isShared){
         this.foodname = foodname;
@@ -16,7 +17,7 @@ public class RecipeBoxData {
         this.isShared = isShared;
     }
 
-    public RecipeBoxData(String simplename, String recipeId, boolean isIng){
+    public RecipeBoxData(String simplename, String recipeId, int isIng){
         this.simplename = simplename;
         this.recipeId = recipeId;
         this.isIng = isIng;
@@ -55,7 +56,7 @@ public class RecipeBoxData {
         return isShared;
     }
 
-    public boolean isIng() {
+    public int isIng() {
         return isIng;
     }
 
