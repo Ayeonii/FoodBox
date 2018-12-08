@@ -70,13 +70,6 @@ public class InfoDO {
         return productName;
     }
 
-    public void setIsFrozen(final Boolean _isFrozen) {
-        this._isFrozen = _isFrozen;
-    }
-    @DynamoDBIndexRangeKey(attributeName = "isFrozen", globalSecondaryIndexName = "name-kindOf")
-    public Boolean getisFrozenf() {
-        return _isFrozen;
-    }
 
     public void setProductName(final List<String> productName) {
         this.productName = productName;

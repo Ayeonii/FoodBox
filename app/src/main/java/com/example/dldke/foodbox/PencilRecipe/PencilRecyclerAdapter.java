@@ -144,6 +144,8 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                                         , mItems.get(position).getFoodSection()
                                         , mItems.get(position).getIsFrozen()
                                         , dueDate));
+
+                                Log.e("","isFrozen"+mItems.get(position).getIsFrozen());
                             }
                             isAgain = false;
                         }else{

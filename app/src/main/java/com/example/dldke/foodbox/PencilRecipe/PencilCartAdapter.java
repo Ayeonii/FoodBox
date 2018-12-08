@@ -68,6 +68,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                         mItems.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mItems.size());
+                        break;
                     case R.id.frozenCheck:
                         if(!holder.frozenCheck.isChecked()) {
                             mItems.get(position).setIsFrozen(false);

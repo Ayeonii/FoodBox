@@ -39,7 +39,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     private static final char HANGUL_BASE_UNIT = 588;//각 자음 마다 가지는 글자수
     private static final char[] INITIAL_SOUND = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
 
-    private static List<String[]> allfoodList = new ArrayList<>();
+    private static List<PencilItem> allfoodList = new ArrayList<>();
     private static List<LocalRefrigeratorItem> frozenList = new ArrayList<>();
     private static List<RefrigeratorDO.Item> refriList = new ArrayList<>();
     private static boolean isFromRefri = false;
@@ -62,7 +62,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pencilrecipe_fragment_search, container, false);
-        allfoodList = allList.getAllFoodList();
+        allfoodList = allList.getAllFoodListWithFrozen();
         frozenList = frozenActivity.getFrozenList();
         refriList =refriInsideActivity.getRefrigeratorItem();
 
@@ -102,11 +102,11 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                 // 리스트의 모든 데이터를 검색함.
                 Log.e("Refri",""+allfoodList.size());
                 for (int i = 0; i < allfoodList.size(); i++) {
-                    if (matchString(allfoodList.get(i)[0], charText)) {
+                    if (matchString(allfoodList.get(i).getFoodName(), charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/" + allfoodList.get(i)[0] + ".jpg";
-                        list.add(new PencilItem(allfoodList.get(i)[0], Uri.parse(foodImg), allfoodList.get(i)[1]));
+                        foodImg = "file:///storage/emulated/0/Download/" + allfoodList.get(i).getFoodName() + ".jpg";
+                        list.add(new PencilItem(allfoodList.get(i).getFoodName(), Uri.parse(foodImg), allfoodList.get(i).getFoodSection(), allfoodList.get(i).getIsFrozen()));
                     }
                 }
                 if (list.size() == 0) {

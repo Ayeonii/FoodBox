@@ -21,6 +21,12 @@ public class PencilItem {
         this.foodSection = foodSection;
     }
 
+    public PencilItem (String foodName, String foodSection, Boolean isFrozen){
+        this.foodName = foodName;
+        this.foodSection = foodSection;
+        this.isFrozen = isFrozen;
+    }
+
 
     public PencilItem (String foodName, Uri foodImg, String foodSection, Boolean isFrozen){
         this.foodImg = foodImg;
