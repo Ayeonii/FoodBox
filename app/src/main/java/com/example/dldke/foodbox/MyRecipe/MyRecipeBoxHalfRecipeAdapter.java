@@ -46,10 +46,6 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         //'자세히 보기' 눌렀을 때, 해당 레시피 ID의 식재료 보여주기
         public void onClick(View view){
             int position = getAdapterPosition();
-
-            //포지션 확인(추후에는 지울것임 - test용)
-            //if(position != RecyclerView.NO_POSITION) Toast.makeText(context,"포지션"+position, Toast.LENGTH_SHORT).show();
-
             recipe_id = recipedata.get(position).getRecipeId();
             Intent RecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);
             context.startActivity(RecipeDetailActivity);

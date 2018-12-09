@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -43,25 +44,24 @@
         android:layout_width="42dp"
         android:layout_height="36dp"
         android:background="#00000000"
-        app:layout_constraintBottom_toBottomOf="@+id/searchBar"
-        app:layout_constraintEnd_toEndOf="@+id/searchBar"
-        app:layout_constraintTop_toTopOf="@+id/searchBar"
+        app:layout_constraintBottom_toBottomOf="@+id/vision_searchBar"
+        app:layout_constraintEnd_toEndOf="@+id/vision_searchBar"
+        app:layout_constraintTop_toTopOf="@+id/vision_searchBar"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_delete_all_blue" />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/vision_ingredient_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="489dp"
         android:background="@color/colorWhite"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/searchBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vision_searchBar" />
 
 
 </android.support.constraint.ConstraintLayout>

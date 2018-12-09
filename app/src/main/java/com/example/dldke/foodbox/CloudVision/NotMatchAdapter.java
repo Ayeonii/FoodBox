@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,12 +20,16 @@ import java.util.List;
 public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private List<String > notmatchItems;
+    private List<String> notmatchItems;
+    private RecyclerView notmatch;
     private String TAG="NotMatchAdapter";
 
-    public NotMatchAdapter(List<String> items, Context activity){
+    public NotMatchAdapter(){ }
+
+    public NotMatchAdapter(List<String> items, Context context, RecyclerView notmatch_view){
         this.notmatchItems = items;
-        this.context = activity;
+        this.context = context;
+        this.notmatch = notmatch_view;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -39,9 +45,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.vision_notmatch_list, parent, false);
-
         return new MyViewHolder(v);
     }
 
@@ -53,9 +57,18 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         myViewHolder.notmatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String foodname = notmatchItems.get(position);
                 Log.e(TAG, notmatchItems.get(position)+" 눌림");
-                Intent PopupActivity = new Intent(context, PopupActivity.class);
-                context.startActivity(PopupActivity);
+
+                PopupDialog popupDialog = new PopupDialog(context, notmatch, position, notmatchItems);
+                popupDialog.show();
+
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(popupDialog.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                Window window = popupDialog.getWindow();
+                window.setAttributes(lp);
             }
         });
         myViewHolder.delete.setOnClickListener(new View.OnClickListener() {
@@ -70,9 +83,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public int getItemCount() {
-        return notmatchItems.size();
-    }
+    public int getItemCount() {return (null != notmatchItems ? notmatchItems.size() : 0);}
 }
 
 

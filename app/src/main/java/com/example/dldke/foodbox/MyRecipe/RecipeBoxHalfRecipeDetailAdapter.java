@@ -32,7 +32,6 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     private int cnt;
     private int ing;
 
-    public RecipeBoxHalfRecipeDetailAdapter() {}
     public RecipeBoxHalfRecipeDetailAdapter(List<RecipeDO.Ingredient> ingredientdata) {
         this.items = ingredientdata;
         RecipeBoxHalfRecipeDetailActivity activity = new RecipeBoxHalfRecipeDetailActivity();
@@ -40,8 +39,6 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
         AddIngredient(items);
         ing = Mapper.searchRecipe(recipeId).getIng();
 
-        Log.e("test", "어댑터에서 레시피 아이디 : " + recipeId);
-        Log.e("test", "어댑터에서 ing : " + ing);
         if (ing == 0 || ing == 1) {
             scanRefrigeratorAndRecipe();
         }
@@ -67,7 +64,6 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_box_halfrecipe_detail_item, parent, false);
-//        AddIngredient(items);
         return new ViewHolder(v);
     }
 
@@ -94,7 +90,6 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
         }
 
         if (ing == 0 || ing == 1) {
-            Log.d("test", "refriCount[position] = " + refriCount[position] + ", count=" + count);
             if (refriCount[position] < count)
                 holder.ingredientCount.setTextColor(Color.RED);
             else
@@ -111,28 +106,20 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     }
 
     public void AddIngredient(List<RecipeDO.Ingredient> ingredientList) {
-        Log.d("test", "AddIngredient 들어옴");
 
         for (int i = 0; i < ingredientList.size(); i++) {
             String name = ingredientList.get(i).getIngredientName();
             Double count = ingredientList.get(i).getIngredientCount();
             String foodImg = "file:///storage/emulated/0/Download/" + ingredientList.get(i).getIngredientName() + ".jpg";
             recipeItems.add(new HalfRecipeRecipeItem(name, count, Uri.parse(foodImg)));
-            //Log.e("들어간다들어간다", ""+recipeItems.get(i).getName()+""+recipeItems.get(i).getCount());
-
         }
 
     }
 
     public void scanRefrigeratorAndRecipe() {
-        Log.d("test", "scanRefrigeratorAndRecipe 들어옴");
+
         refrigeratorItem = Mapper.scanRefri();
-
         refriCount = new Double[recipeItems.size()];
-
-        Log.d("test", "refriCount.length = " + refriCount.length);
-        Log.d("test", "recipeItems.size() = " + recipeItems.size());
-        Log.d("test", "refrigeratorItem.size() = " + refrigeratorItem.size());
 
         for (int i = 0; i < recipeItems.size(); i++) {
             refriCount[i] = 0.0;
@@ -146,13 +133,9 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
         cnt = 0;
         for (int i = 0; i < refriCount.length; i++) {
-            Log.d("test", "refriCount[i] ==" + refriCount[i] + ", recipeItems.get(i).getCount() = " + recipeItems.get(i).getCount());
             if (refriCount[i] == 0.0 || refriCount[i] < recipeItems.get(i).getCount())
                 cnt++;
         }
-
-        Log.d("test", recipeId);
-        Log.d("test", "cnt = " + cnt);
 
         if (cnt != 0)
             Mapper.updateIngInfo(1, recipeId);

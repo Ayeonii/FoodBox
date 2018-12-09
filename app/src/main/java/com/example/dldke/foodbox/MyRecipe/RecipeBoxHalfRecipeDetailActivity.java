@@ -1,12 +1,15 @@
 package com.example.dldke.foodbox.MyRecipe;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -38,12 +41,13 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
     }
 
     private String TAG = "RecipeBoxHalfRecipeDetailActivity";
+    private static int ing;
 
+    private HalfRecipeBoxFragment halfRecipeBoxFragment = new HalfRecipeBoxFragment();
     private MyRecipeBoxHalfRecipeAdapter myRecipeBoxHalfRecipeAdapter = new MyRecipeBoxHalfRecipeAdapter();
     private String recipe_id = myRecipeBoxHalfRecipeAdapter.getRecipeId();
     private RecipeBoxHalfRecipeDetailAdapter recipeBoxHalfRecipeDetailAdapter;
     private List<RecipeDO.Ingredient> recipeItems = new ArrayList<>();
-
     private List<RefrigeratorDO.Item> refrigeratorItem;
     private ArrayList<DCItem> dcArray = new ArrayList<>();
     private HalfRecipeDueDateDialog dueDateDialog;
@@ -64,18 +68,17 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
 
         recipeItems = Mapper.searchRecipe(recipe_id).getIngredient();
         String simplename = Mapper.searchRecipe(recipe_id).getSimpleName();
-        int ing = Mapper.searchRecipe(recipe_id).getIng();
-        recipe_title.setText(simplename);
+        ing = Mapper.searchRecipe(recipe_id).getIng();
 
-        recipe_detail_view.setLayoutManager(new LinearLayoutManager(this));
+        // Toolbar Title Initialize
+        recipe_title.setText(simplename);
+        recipe_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+
+        recipe_detail_view.setLayoutManager(new GridLayoutManager(this, 2));
         recipeBoxHalfRecipeDetailAdapter = new RecipeBoxHalfRecipeDetailAdapter(recipeItems);
         recipe_detail_view.setAdapter(recipeBoxHalfRecipeDetailAdapter);
 
         int cnt = recipeBoxHalfRecipeDetailAdapter.getCnt();
-        ing = Mapper.searchRecipe(recipe_id).getIng();
-
-        Log.e("test", "액티비티에서 ing : " + ing);
-        Log.e("test", "cnt = "+cnt);
 
         if (ing==0) {
             ingredient_use.setVisibility(View.VISIBLE);
@@ -98,9 +101,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                 refrigeratorItem = Mapper.scanRefri();
                 ArrayList<String> dueDateCheckArray = new ArrayList<>();
 
-                Log.d("test", "recipeItems.size() = " + recipeItems.size());
-                Log.d("test", "refrigeratorItem.size() = " + refrigeratorItem.size());
-
                 for (int i = 0; i < recipeItems.size(); i++) {
                     dcArray.clear();
                     for (int j = 0; j < refrigeratorItem.size(); j++) {
@@ -111,7 +111,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                         }
                     }
 
-                    Log.e("test", "유통기한과 개수 배열  dcArray.size() = "+dcArray.size());
                     for (int l=0; l<dcArray.size(); l++) {
                         Log.d("test", l + ", "+dcArray.get(l).getStrDueDate());
                     }
@@ -122,14 +121,12 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                             countSum += dcArray.get(k).getCount();
                         }
 
-                        Log.e("test", "recipeItems.get(i).getIngredientCount() = "+recipeItems.get(i).getIngredientCount()+", countSum = "+countSum);
                         if (recipeItems.get(i).getIngredientCount() < countSum) {   //유통기한이 여러개인 재료인데 보유개수보다 적게 사용했을때 따로 배열에 모아둘거임 나중에 다이얼로그 띄워서 라디오 체크하게하려고
                             dueDateCheckArray.add(recipeItems.get(i).getIngredientName());
                         }
                     }
                 }
 
-                Log.e("test", "유통기한이 여러개인데 보유개수보다 적게 사용한 재료 모음");
                 for (int i=0; i<dueDateCheckArray.size(); i++) {
                     Log.d("test", i + ", "+dueDateCheckArray.get(i));
                 }
@@ -160,6 +157,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
             MyRecipeBoxActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            halfRecipeBoxFragment.setisDetailBack(true);
             startActivity(MyRecipeBoxActivity);
         }
         return super.onOptionsItemSelected(item);
@@ -201,8 +199,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
     }
 
     private boolean minusCountByDueDate(ArrayList<HalfRecipeDueDateItem> radioCheckItems) {
-
-        Log.e("test", "minusCountByDueDate 들어옴");
 
         for (int i = 0; i < radioCheckItems.size(); i++) {
 
