@@ -23,7 +23,7 @@ public class MemoUrgentRecyclerAdapter extends RecyclerView.Adapter<MemoUrgentRe
     private ArrayList<MemoUrgentItem> mItems;
     private Context context;
 
-    public MemoUrgentRecyclerAdapter(ArrayList<MemoUrgentItem> items , Context context){
+    public MemoUrgentRecyclerAdapter(ArrayList<MemoUrgentItem> items, Context context) {
         mItems = items;
         this.context = context;
     }
@@ -31,9 +31,10 @@ public class MemoUrgentRecyclerAdapter extends RecyclerView.Adapter<MemoUrgentRe
     // 새로운 뷰 홀더 생성
     @Override
     public MemoUrgentRecyclerAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_urgent_list,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_urgent_list, parent, false);
         return new MemoUrgentRecyclerAdapter.ItemViewHolder(view);
     }
+
     // View 의 내용을 해당 포지션의 데이터로 바꿈.
     @Override
     public void onBindViewHolder(final MemoUrgentRecyclerAdapter.ItemViewHolder holder, final int position) {
@@ -44,11 +45,11 @@ public class MemoUrgentRecyclerAdapter extends RecyclerView.Adapter<MemoUrgentRe
         if (diffDays < 0) {
             holder.urgentDate.setTextColor(Color.RED);
             holder.urgentDate.setText(Math.abs(diffDays) + "일 지났습니다.");
-        }
-        else
-            holder.urgentDate.setText(diffDays+"일 남았습니다.");
+        } else
+            holder.urgentDate.setText(diffDays + "일 남았습니다.");
 
     }
+
     // 데이터 셋의 크기를 리턴
     @Override
     public int getItemCount() {
@@ -64,24 +65,24 @@ public class MemoUrgentRecyclerAdapter extends RecyclerView.Adapter<MemoUrgentRe
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            urgentImg = (ImageView)itemView.findViewById(R.id.urgentImg);
+            urgentImg = (ImageView) itemView.findViewById(R.id.urgentImg);
             urgentName = (TextView) itemView.findViewById(R.id.urgentName);
             urgentDate = (TextView) itemView.findViewById(R.id.urgentDate);
         }
     }
 
-    public void CalculateDate(String urgentFoodDate){
+    public void CalculateDate(String urgentFoodDate) {
         final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-            long diff;
-            try {
-                Date foodDate = formatter.parse(urgentFoodDate);
-                Date curDay = formatter.parse(currentDate.getCurrenDate());
-                diff = foodDate.getTime() - curDay.getTime();
-                diffDays = diff / (24 * 60 * 60 * 1000);
+        long diff;
+        try {
+            Date foodDate = formatter.parse(urgentFoodDate);
+            Date curDay = formatter.parse(currentDate.getCurrenDate());
+            diff = foodDate.getTime() - curDay.getTime();
+            diffDays = diff / (24 * 60 * 60 * 1000);
 
-            } catch (ParseException e){
-                e.printStackTrace();
-            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 
