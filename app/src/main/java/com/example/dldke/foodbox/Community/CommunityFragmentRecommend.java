@@ -35,6 +35,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
     private static int cnt = 0;
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -53,79 +54,99 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         return view;
     }
 
-
     private class PostAsync extends AsyncTask<Void, Void, List<PostDO>> {
 
         protected void onPreExecute() { //2
+
             super.onPreExecute();
             mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
-
-                return postList;
-
+            return postList;
         }
 
         protected void onPostExecute(List result) {
             Log.e("size:","끝");
             // setData(3);
-            loadData();
+            try{
+                if(postList.size() != 0 ){
+                    loadData();
+                }
+            }catch (NullPointerException e) {
+                Log.e("","Nullposiont");
+                mAdapter.setProgressMore(false);
+            }
         }
     }
-
 
     @Override
     public void onStart() {
         super.onStart();
-        new PostAsync().execute();
+
         postList = Mapper.recommendRecipe();
+
+            if(postList.size()!=0){
+                new PostAsync().execute();
+            }
+            else{
+                Log.e("","else 들어옴");
+                noneRecommend.setVisibility(View.VISIBLE);
+            }
+
 
         Log.e("RecommendFrag", "onStart");
     }
 
-    //스크롤이 끝에 도달하였을 때 실행 내용
     @Override
     public void onLoadMore() {
 
-                Log.e("Recoomend", "onLoadMore==================");
-                mAdapter.setProgressMore(true);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.e("MainActivity_", "onLoadMoreRUN!!!==================");
-                        itemList.clear();
-                        mAdapter.setProgressMore(false);
+        Log.e("MainActivity_", "onLoadMore==================");
 
-                        int start = mAdapter.getItemCount();
-                        int end = start + 1;
+        mAdapter.setProgressMore(true);
+        if (postList.size() != 0) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("MainActivity_", "onLoadMoreRUN!!!==================");
+                    itemList.clear();
+                    mAdapter.setProgressMore(false);
 
-                        try {
-                            for (int i = start + 1; i <= end; i++) {
-                                String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                                Bitmap bm = new CommunityFragmentNewsfeed.DownloadImageTask().execute(imgUrl).get();
-                                Log.e("start:end", "" + start + ":" + end);
-                                Log.e("loadMore", "" + postList.get(i).getTitle());
+                    int start = mAdapter.getItemCount() - 1;
+                    int end = start + 2;
 
-                                itemList.add(new CommunityItem(postList.get(i).getWriter()
-                                        , postList.get(i).getTitle()
-                                        , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                                        , bm
-                                        , R.drawable.temp_profile4
-                                        , Mapper.matchFavorite(postList.get(i).getPostId())
-                                        , postList.get(i).getPostId()
-                                        , postList.get(i).getRecipeId()
-                                ));
-                                cnt = 1;
-                            }
+                    Log.e("postList", "postList : " + postList.size() + "end : " + end);
 
-                        } catch (Exception e) {
-
-                        }
-                        mAdapter.addItemMore(itemList);
-                        mAdapter.setMoreLoading(false);
+                    if (end >= postList.size()) {
+                        end = start + (end - postList.size());
                     }
-                }, 2000);
+                    try {
+                        for (int i = start + 1; i <= end + 1; i++) {
+                            String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
+                            Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
+                            Log.e("start:end", "" + start + ":" + end);
+                            Log.e("loadMore", "" + postList.get(i).getTitle());
 
+                            itemList.add(new CommunityItem(postList.get(i).getWriter()
+                                    , postList.get(i).getTitle()
+                                    , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
+                                    , bm
+                                    , R.drawable.temp_profile4
+                                    , Mapper.matchFavorite(postList.get(i).getPostId())
+                                    , postList.get(i).getPostId()
+                                    , postList.get(i).getRecipeId()
+                            ));
+                            cnt = 1;
+                        }
+
+                    } catch (Exception e) {
+
+                    }
+                    mAdapter.addItemMore(itemList);
+                    mAdapter.setMoreLoading(false);
+                }
+            }, 2000);
+
+        }
 
     }
 
@@ -180,6 +201,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         protected void onPostExecute(Bitmap result){
         }
     }
+
 
 
 }

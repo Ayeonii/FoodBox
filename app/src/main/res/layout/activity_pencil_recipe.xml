@@ -88,12 +88,12 @@
 
     <FrameLayout
         android:id="@+id/child_fragment_container"
-        android:layout_width="345dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorWhite"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.512"

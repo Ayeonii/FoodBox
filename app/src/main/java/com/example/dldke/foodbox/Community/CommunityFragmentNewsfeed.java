@@ -32,11 +32,22 @@ import android.os.Handler;
 
 public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
 
-        private CommunityLoadingAdapter mAdapter;
+    private CommunityLoadingAdapter mAdapter;
     private ArrayList<CommunityItem> itemList;
+    private static ArrayList<CommunityItem> favoriteList  = new ArrayList<>();
     private static List<PostDO> postList;
 
-    private static int cnt = 0;
+    public CommunityFragmentNewsfeed(){}
+
+    public List<PostDO> getPostList(){
+        return postList;
+    }
+
+
+    public List<CommunityItem> getFavoriteList(){
+        return favoriteList;
+    }
+
 
 
     @Nullable
@@ -64,13 +75,26 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         }
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.scanPost();
-        return postList;
+
+            if(postList.size()!=0){
+
+            }
+            else{
+               isCancelled();
+            }
+            return postList;
         }
 
         protected void onPostExecute(List result) {
             Log.e("size:","끝");
            // setData(3);
-            loadData();
+            try{
+            if(postList.size() != 0 ){
+                loadData();
+            }
+            }catch (NullPointerException e) {
+                mAdapter.setProgressMore(false);
+            }
         }
     }
 
@@ -78,91 +102,105 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
     @Override
     public void onStart() {
         super.onStart();
+
         new PostAsync().execute();
-        Log.e("MainActivity_", "onStart");
-       // new PostAsync().execute();
+
+
 
     }
+
 
     //스크롤이 끝에 도달하였을 때 실행 내용
     @Override
     public void onLoadMore() {
 
             Log.e("MainActivity_", "onLoadMore==================");
-            mAdapter.setProgressMore(true);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Log.e("MainActivity_", "onLoadMoreRUN!!!==================");
-                    itemList.clear();
-                    mAdapter.setProgressMore(false);
 
-                    int start = mAdapter.getItemCount();
-                    int end = start + 1;
+                mAdapter.setProgressMore(true);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("MainActivity_", "onLoadMoreRUN!!!==================");
+                            itemList.clear();
+                            mAdapter.setProgressMore(false);
 
-                    try {
-                        for (int i = start + 1; i <= end; i++) {
-                            String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                            Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
-                            Log.e("start:end", ""+start+":"+end);
-                            Log.e("loadMore", "" + postList.get(i).getTitle());
+                            int start = mAdapter.getItemCount() - 1;
+                            int end = start + 2;
 
-                            itemList.add(new CommunityItem(postList.get(i).getWriter()
-                                    , postList.get(i).getTitle()
-                                    , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                                    , bm
-                                    , R.drawable.temp_profile4
-                                    , Mapper.matchFavorite(postList.get(i).getPostId())
-                                    , postList.get(i).getPostId()
-                                    , postList.get(i).getRecipeId()
-                            ));
-                            cnt=1;
+                            Log.e("postList", "postList : " + postList.size() + "end : " + end);
+
+                            if (end >= postList.size()) {
+                                end = start + (end - postList.size());
+                            }
+                            try {
+                                for (int i = start + 1; i <= end + 1; i++) {
+                                    String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
+                                    Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
+                                    Log.e("start:end", "" + start + ":" + end);
+                                    Log.e("loadMore", "" + postList.get(i).getTitle());
+
+                                    itemList.add(new CommunityItem(postList.get(i).getWriter()
+                                            , postList.get(i).getTitle()
+                                            , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
+                                            , bm
+                                            , R.drawable.temp_profile4
+                                            , Mapper.matchFavorite(postList.get(i).getPostId())
+                                            , postList.get(i).getPostId()
+                                            , postList.get(i).getRecipeId()
+                                    ));
+                                }
+
+                            } catch (Exception e) {
+
+                            }
+                            mAdapter.addItemMore(itemList);
+                            mAdapter.setMoreLoading(false);
                         }
-
-                    } catch (Exception e) {
-
-                    }
-                    mAdapter.addItemMore(itemList);
-                    mAdapter.setMoreLoading(false);
-                }
-            },2000);
+                    }, 2000);
 
     }
 
     private void loadData() {
         itemList.clear();
-        Log.e("MainActivity_", "loadData==============");
-        try {
-            for (int i = 0; i <= 4; i++) {
+        Log.e("MainActivity_", "loadData");
 
-              //비동기
-                String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
+            if (postList.size() != 0) {
+                int end;
+                if(postList.size() < 4)
+                {
+                    end = postList.size() ;
+                }
+                else{
+                    end = 3;
+                }
+                try {
+                    for (int i = 0; i <= end; i++) {
 
-                /* 동기식
-                Log.e("load", "" + postList.get(i).getTitle());
-                String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                InputStream in = new java.net.URL(imgUrl).openStream();
-                Bitmap bm = BitmapFactory.decodeStream(in);
-                */
+                        //비동기
+                        String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
+                        Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                itemList.add(new CommunityItem(postList.get(i).getWriter()
-                        , postList.get(i).getTitle()
-                        , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                        , bm
-                        , R.drawable.temp_profile4
-                        , Mapper.matchFavorite(postList.get(i).getPostId())
-                        , postList.get(i).getPostId()
-                        , postList.get(i).getRecipeId()
-                ));
 
-                Log.e("load", "" + postList.get(i).getTitle());
+                        itemList.add(new CommunityItem(postList.get(i).getWriter()
+                                , postList.get(i).getTitle()
+                                , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
+                                , bm
+                                , R.drawable.temp_profile4
+                                , Mapper.matchFavorite(postList.get(i).getPostId())
+                                , postList.get(i).getPostId()
+                                , postList.get(i).getRecipeId()
+                        ));
+
+                        Log.e("load", "" + postList.get(i).getTitle());
+                    }
+
+                } catch (Exception e) {
+
+                }
             }
 
-        }catch (Exception e) {
+            mAdapter.addAll(itemList);
 
-        }
-        mAdapter.addAll(itemList);
     }
 
     public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

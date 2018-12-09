@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -19,6 +21,14 @@ import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
 
 import android.widget.Toast;
+
+
+
+
+
+
+
+
 
 
 public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecyclerAdapter.ItemViewHolder> {
@@ -144,3 +154,4 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
         }
     }
 }
+

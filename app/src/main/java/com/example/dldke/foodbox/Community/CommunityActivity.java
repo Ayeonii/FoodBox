@@ -1,16 +1,20 @@
 package com.example.dldke.foodbox.Community;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.example.dldke.foodbox.PencilRecipe.SearchIngredientFragment;
 import com.example.dldke.foodbox.R;
 
 public class CommunityActivity extends AppCompatActivity implements View.OnClickListener {
-
+    FrameLayout frag;
     String searchText;
     ImageButton deleteButton;
     EditText searchBar;
@@ -31,7 +35,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         fragmentNewsfeed = new CommunityFragmentNewsfeed();
         fragmentFavorite = new CommunityFragmentFavorite();
         fragmentRecommend = new CommunityFragmentRecommend();
-
+        frag = (FrameLayout)findViewById(R.id.favorite_fragment_container); //검색시 나오는 화면
 
         searchText = "";
         searchBar = (EditText)findViewById(R.id.community_commentBar);
@@ -87,16 +91,23 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch (view.getId()){
             case R.id.home_btn:
+                frag.setVisibility(View.GONE);
                 setFrag(0);
                 setBackeGroundAccent(homeBtn, favoriteBtn,recommendBtn);
                 break;
             case R.id.favorite_btn:
-                setFrag(1);
+                Log.e("","favorite btn 누름 ");
                 setBackeGroundAccent(favoriteBtn, homeBtn,recommendBtn);
+                frag.setVisibility(View.VISIBLE);
+                CommunityFragmentFavorite FavoriteFragment = new CommunityFragmentFavorite();
+                transaction.replace(R.id.favorite_fragment_container, FavoriteFragment);
+                transaction.commit();
                 break;
             case R.id.recommend_btn:
+                frag.setVisibility(View.GONE);
                 setFrag(2);
                 setBackeGroundAccent(recommendBtn, favoriteBtn,homeBtn);
                 break;
@@ -114,10 +125,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         switch (n){
             case 0:
                 tran.replace(R.id.frag_layout, fragmentNewsfeed);
-                tran.commit();
-                break;
-            case 1:
-                tran.replace(R.id.frag_layout, fragmentFavorite);
                 tran.commit();
                 break;
             case 2:

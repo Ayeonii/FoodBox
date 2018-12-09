@@ -27,7 +27,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommunityFragmentFavorite extends Fragment {
+public class CommunityFragmentFavorite extends android.support.v4.app.Fragment {
     private CommunityRecyclerAdapter communityRecyclerAdapter = new CommunityRecyclerAdapter();
     View view;
     private RecyclerView recyclerView;
@@ -50,7 +50,7 @@ public class CommunityFragmentFavorite extends Fragment {
         recyclerView.setAdapter(adapter);
 
         favorite_list = Mapper.scanFavorite();
-        adapter.notifyDataSetChanged();
+
         setData();
 
         return view;

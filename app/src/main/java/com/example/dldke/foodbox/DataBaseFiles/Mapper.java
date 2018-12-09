@@ -1414,6 +1414,7 @@ public final class Mapper {
         }
         List<com.example.dldke.foodbox.DataBaseFiles.PostDO> postItem = (List<PostDO>)thread.getResult();
 
+        Log.e("","postItem.get(0)"+postItem.get(0));
         return postItem;
     }
 
