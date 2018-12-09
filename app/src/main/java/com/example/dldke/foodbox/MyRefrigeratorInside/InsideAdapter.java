@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.MyRefrigeratorInside;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,14 @@ public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHo
 
     ArrayList<HalfRecipeIngreItem> mItems;
     String ingreType;
+    Context context;
+
+    public InsideAdapter(ArrayList<HalfRecipeIngreItem> mItems, Context context) {
+        this.mItems = mItems;
+        this.context = context;
+
+    }
+
 
     public InsideAdapter(ArrayList<HalfRecipeIngreItem> mItems, String ingreType) {
         this.mItems = mItems;
@@ -36,6 +45,12 @@ public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHo
         String foodName = mItems.get(position).getName();
         holder.mNameTv.setText(foodName);
         String foodImgUri;
+
+        if(ingreType == null) {
+            ingreType = mItems.get(position).getSection();
+
+        }
+
         if (ingreType.equals("sideDish")) {
             foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
         } else {

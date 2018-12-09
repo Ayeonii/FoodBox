@@ -26,6 +26,7 @@
             android:layout_gravity="center"
             android:text=""
             android:textSize="23dp"
+            android:fontFamily="@font/font_family"
             android:textStyle="bold" />
     </android.support.v7.widget.Toolbar>
 

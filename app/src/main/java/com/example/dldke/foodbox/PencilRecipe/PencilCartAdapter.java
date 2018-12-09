@@ -24,10 +24,9 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     private Context context;
     private static ArrayList<PencilCartItem> mItems;
+    String TAG ="PencilCartAdapter";
 
-    public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){
-        this.mItems = cartItems;
-    }
+    public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){ this.mItems = cartItems;}
     public PencilCartAdapter(){}
 
     public ArrayList<PencilCartItem> getCartItems(){return mItems; }
@@ -69,6 +68,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                         mItems.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mItems.size());
+                        break;
                     case R.id.frozenCheck:
                         if(!holder.frozenCheck.isChecked()) {
                             mItems.get(position).setIsFrozen(false);
@@ -95,11 +95,18 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         holder.minus_btn.setOnClickListener(onClickListener);
         holder.delete_btn.setOnClickListener(onClickListener);
         holder.frozenCheck.setOnClickListener(onClickListener);
-        if(mItems.get(position).getIsFrozen()){
-            Log.e("ㅇㄴㄻㅇㄹ","들어옴");
+//        if(mItems.get(position).getIsFrozen()){
+//            Log.e("ㅇㄴㄻㅇㄹ","들어옴");
+//            holder.frozenCheck.setChecked(true);
+//        } else{
+//            Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
+//            holder.frozenCheck.setChecked(false);
+//        }
+        try{
+            //Log.e("ㅇㄴㄻㅇㄹ","들어옴");
             holder.frozenCheck.setChecked(true);
-        } else{
-            Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
+        }catch(NullPointerException e){
+            //Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
             holder.frozenCheck.setChecked(false);
         }
     }

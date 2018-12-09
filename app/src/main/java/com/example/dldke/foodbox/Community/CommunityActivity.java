@@ -20,7 +20,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     CommunityFragmentNewsfeed fragmentNewsfeed;
     CommunityFragmentFavorite fragmentFavorite;
     CommunityFragmentRecommend fragmentRecommend;
-    CommunityFragmentSearch fragmentSearch;
+
 
 
     @Override
@@ -31,7 +31,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         fragmentNewsfeed = new CommunityFragmentNewsfeed();
         fragmentFavorite = new CommunityFragmentFavorite();
         fragmentRecommend = new CommunityFragmentRecommend();
-        fragmentSearch = new CommunityFragmentSearch();
+
 
         searchText = "";
         searchBar = (EditText)findViewById(R.id.community_commentBar);

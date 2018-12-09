@@ -29,45 +29,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activity.MainActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity
-            android:name=".Activity.LoginActivity"
-            android:windowSoftInputMode="adjustNothing" />
+
+        <activity android:name=".Activity.MainActivity" android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".Activity.LoginActivity" android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".Activity.SettingActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Activity.RefrigeratorMainActivity" />
-        <activity
-            android:name=".FullRecipe.FullRecipeActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".MyRefrigeratorInside.RefrigeratorInsideActivity" />
-        <activity android:name=".MyRefrigeratorInside.RefrigeratorFrozenInsideActivity" />
+        <activity android:name=".FullRecipe.FullRecipeActivity" android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".MyRefrigeratorInside.RefrigeratorInsideActivity" android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".MyRefrigeratorInside.RefrigeratorFrozenInsideActivity" android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".HalfRecipe.HalfRecipeActivity" />
-        <activity
-            android:name=".MyRecipe.MyRecipeBoxActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name=".PencilRecipe.PencilRecipeActivity"
-            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".HalfRecipe.HalfRecipeCompleteActivity"/>
         <activity android:name=".HalfRecipe.HalfRecipeIngDialog"/>
+        <activity android:name=".PencilRecipe.PencilRecipeActivity" android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".MyRecipe.RecipeBoxHalfRecipeDetailActivity"/>
         <activity android:name=".MyRecipe.RecipeBoxFullRecipeDetailActivity"/>
-        <activity
-            android:name=".Community.CommunityActivity"
-            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".MyRecipe.MyRecipeBoxActivity" android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".CloudVision.PopupActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".CloudVision.VisionActivity" />
-        <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Community.CommunityDetailActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".Activity.SettingActivity" android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".Activity.TestActivity"/>
-
+        <activity android:name=".CloudVision.VisionReturnActivity" />
+        <activity android:name=".Community.CommunityActivity" android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".Community.CommunityDetailActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Memo.MemoActivity"/>
-        <service
-            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
-            android:enabled="true" />
+        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".Activity.DeepLinkActivity" android:label="A deeplink!"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -78,7 +63,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -97,12 +81,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
-        <activity android:name=".CloudVision.VisionReturnActivity" />
-        <activity
-            android:name=".Activity.DeepLinkActivity"
-            android:label="A deeplink!">
-        </activity>
     </application>
 
 </manifest>

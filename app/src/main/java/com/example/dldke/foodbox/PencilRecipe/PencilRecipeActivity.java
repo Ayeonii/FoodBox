@@ -30,9 +30,9 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     ImageButton deleteButton;
     EditText searchBar;
     TabLayout tabLayout;
-    String searchText;
     FloatingActionButton floating;
 
+    private PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
     private static int enterCnt = 0;
     private static boolean isFull = false;
     private static CartPopupDialog customDialog;
@@ -54,23 +54,29 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pencil_recipe);
-        searchText = "";
+        //searchText = "";
+
+        pencilRecyclerAdapter.setIsRefri(false);
         tabLayout = (TabLayout)findViewById(R.id.sliding_tabs); //탭 레이아웃
         searchBar = (EditText)findViewById(R.id.searchBar); //서치 창
         deleteButton = (ImageButton)findViewById(R.id.delete_button); //x버튼
         floating = (FloatingActionButton)findViewById(R.id.floating); //플로팅
         frag = (FrameLayout)findViewById(R.id.child_fragment_container); //검색시 나오는 화면
         customDialog = new CartPopupDialog(PencilRecipeActivity.this);
+
         /**view pager**/
         vp = (ViewPager) findViewById(R.id.pager);
         vp.setAdapter(new PencilPagerAdapter(getSupportFragmentManager()));
         vp.setCurrentItem(0);
+
         //탭 레이아웃과 뷰페이저 연결
         tabLayout.setupWithViewPager(vp);
         frag.setVisibility(View.GONE);
+
+        //클릭리스너
         searchBar.setOnClickListener(this);
         floating.setOnClickListener(this);
-
+        deleteButton.setOnClickListener(this);
         //Mapper.createRefrigerator();
 
         if (Mapper.checkFirst()) {
@@ -99,19 +105,6 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-
-        /****************delete button***********************/
-        deleteButton = (ImageButton) findViewById(R.id.delete_button);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //텍스트가 존재 시, 모두 지운다.
-                if (searchBar.getText().length() != 0) {
-                    searchBar.setHint(" 재료명을 입력하세요.");
-                    searchBar.setText(null);
-                }
-            }
-        });
     
     }
 
@@ -141,8 +134,14 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                     //customDialog.setisFull(isFull);
                     customDialog.callFunction(getApplicationContext());
                 }
-                //customDialog.callFunction(getApplicationContext());
                 break;
+            case R.id.delete_button:
+                if (searchBar.getText().length() != 0) {
+                    searchBar.setHint(" 재료명을 입력하세요.");
+                    searchBar.setText(null);
+                }
+                break;
+
         }
     }
 }

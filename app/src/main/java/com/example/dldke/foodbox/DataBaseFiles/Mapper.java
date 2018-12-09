@@ -873,7 +873,6 @@ public final class Mapper {
             URL url;
             @Override
             public void run() {
-
                 recipeItem = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
                         recipeId);
@@ -910,6 +909,29 @@ public final class Mapper {
 
                 userInfo.setPoint(point);
                 Mapper.getDynamoDBMapper().save(userInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updatePassword(String recipe_id,String password){
+
+        final String inputPassword = password;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipeInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipe_id);
+
+                recipeInfo.setPassword(inputPassword);
+                Mapper.getDynamoDBMapper().save(recipeInfo);
             }
         });
         thread.start();
@@ -957,6 +979,26 @@ public final class Mapper {
                 recipeDO.setIng(Ing);
                 Mapper.getDynamoDBMapper().save(recipeDO);
             }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void updateIsShared(String recipe_id){
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipe = Mapper.searchRecipe(recipe_id);
+                recipe.setIsShare(true);
+                Mapper.getDynamoDBMapper().save(recipe);
+            }
+
         });
         thread.start();
         try{
@@ -1608,7 +1650,7 @@ public final class Mapper {
     }
 
 
-    /********************* Appreciate Recipt Section Method **********************/
+    /********************* Appreciate Receipt Section Method **********************/
 
     public static class RecipeMatching{
         private List<InfoDO> matchingList = new ArrayList<>();

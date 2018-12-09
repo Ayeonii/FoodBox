@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
@@ -35,7 +36,6 @@ import java.util.List;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
-    private  PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
 
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
@@ -113,9 +113,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
 
         //Mapper.createMemo();
-        if(pencilRecyclerAdapter.getClickCnt() != 0 ){
-            pencilRecyclerAdapter.setClickCnt(0);
+        if(pencilAdapter.getClickCnt() != 0 ){
+            pencilAdapter.setClickCnt(0);
         }
+
 
         Mapper.updateUrgentMemo();
 
@@ -337,7 +338,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     //Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
                     //startActivity(deepLink);
 
-                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), VisionActivity.class);
                     startActivity(intent);
 
                     break;
