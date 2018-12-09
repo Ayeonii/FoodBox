@@ -95,20 +95,20 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         holder.minus_btn.setOnClickListener(onClickListener);
         holder.delete_btn.setOnClickListener(onClickListener);
         holder.frozenCheck.setOnClickListener(onClickListener);
-//        if(mItems.get(position).getIsFrozen()){
-//            Log.e("ㅇㄴㄻㅇㄹ","들어옴");
-//            holder.frozenCheck.setChecked(true);
-//        } else{
-//            Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
-//            holder.frozenCheck.setChecked(false);
-//        }
-        try{
-            //Log.e("ㅇㄴㄻㅇㄹ","들어옴");
+        if(mItems.get(position).getIsFrozen()){
+            Log.e("ㅇㄴㄻㅇㄹ","들어옴");
             holder.frozenCheck.setChecked(true);
-        }catch(NullPointerException e){
-            //Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
+        } else{
+            Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
             holder.frozenCheck.setChecked(false);
         }
+//        try{
+//            //Log.e("ㅇㄴㄻㅇㄹ","들어옴");
+//            holder.frozenCheck.setChecked(true);
+//        }catch(NullPointerException e){
+//            //Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
+//            holder.frozenCheck.setChecked(false);
+//        }
     }
 
     @Override
