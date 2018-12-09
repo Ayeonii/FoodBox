@@ -23,15 +23,15 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public List<String> notmatchItems;
     private String TAG="NotMatchAdapter";
 
-    public void setNotmatchItems(List<String> items){
-        this.notmatchItems = items;
+    public NotMatchAdapter(){
+        Log.e(TAG, "생성자 들어옴2");
     }
-
-    public NotMatchAdapter(){}
 
     public NotMatchAdapter(List<String> items, Context activity){
         this.notmatchItems = items;
         this.context = activity;
+
+        Log.e(TAG, "생성자 들어옴");
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -47,6 +47,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.e(TAG, "onCreateViewHolder");
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.vision_notmatch_list, parent, false);
 
@@ -55,6 +56,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Log.e(TAG, "onBindViewHolder");
 
         MyViewHolder myViewHolder = (MyViewHolder) holder;
         myViewHolder.notmatch.setText(notmatchItems.get(position));
@@ -63,6 +65,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View view) {
                 String foodname = notmatchItems.get(position);
                 Log.e(TAG, notmatchItems.get(position)+" 눌림");
+
                 PopupDialog popupDialog = new PopupDialog(context, position, notmatchItems);
                 popupDialog.show();
 

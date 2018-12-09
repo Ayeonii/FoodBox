@@ -43,7 +43,7 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
     private String foodImg;
     private boolean isFrozen;
 
-    private String TAG="PopupActivity";
+    private String TAG="PopupDialog";
 
     public PopupDialog(Context context, int index, List<String> items){
         super(context);
@@ -51,11 +51,15 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
         //this.foodname = foodname;
         this.notMatchingInfo = items;
         this.index = index;
+
+        Log.e(TAG, "PopupDialog");
     }
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vision_ingredient_popup);
+
+        Log.e(TAG, "onCreate");
 
         ingredientView = (RecyclerView) findViewById(R.id.vision_ingredient_view);
         searchBar = (EditText) findViewById(R.id.vision_searchBar);
@@ -63,9 +67,6 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
         ok = (FloatingActionButton) findViewById(R.id.vision_ingredient_add);
 
         Log.e(TAG, "바꿀 음식 이름 : "+foodname);
-//        for(int i = 0;i<notMatchingInfo.size(); i++){
-//            Log.e(TAG, ""+notMatchingInfo.get(i));
-//        }
 
         freshList = getInfoDOList("fresh");
         meatList = getInfoDOList("meat");
@@ -132,12 +133,14 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
                 }
                 break;
             case R.id.vision_ingredient_add:
+                Log.e(TAG, "리스트 위치 : "+index);
                 notMatchingInfo.remove(index);
-                notMatchAdapter.setNotmatchItems(notMatchingInfo);
-                notMatchAdapter.notifyItemRemoved(index);
-                notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
-                notMatchAdapter.notifyDataSetChanged();
-                cancel();
+//                notMatchAdapter.setNotmatchItems(notMatchingInfo);
+//                notMatchAdapter.notifyItemRemoved(index);
+//                notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
+//                notMatchAdapter.notifyDataSetChanged();
+                //cancel();
+                dismiss();
                 break;
 
             default:
