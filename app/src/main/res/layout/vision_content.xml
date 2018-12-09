@@ -19,13 +19,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
 
             <ImageView
                 android:id="@+id/main_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="400dp"
+                android:layout_marginTop="30dp"
                 android:scaleType="fitCenter"/>
 
             <TextView
@@ -34,60 +35,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/upload_message"
-                android:textSize="10dp"
+                android:textSize="20dp"
                 android:fontFamily="@font/font_family"
                 android:gravity="center"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:background="@color/colorPrimary"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="30dp"
-                android:text="인식된 재료"
-                android:textSize="18dp"
-                android:fontFamily="@font/font_family" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/matching_ingredient_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="2dp"
-                android:background="@color/colorPrimary"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="인식안된 재료"
-                android:textSize="18dp"
-                android:fontFamily="@font/font_family"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="30dp"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/notmatching_ingredient_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
-            </android.support.v7.widget.RecyclerView>
-
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

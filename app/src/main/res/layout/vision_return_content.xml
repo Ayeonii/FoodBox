@@ -21,23 +21,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/vision_return_main_image"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitCenter"/>
-
-            <TextView
-                android:id="@+id/vision_return_loading_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/upload_message"
-                android:textSize="10dp"
-                android:fontFamily="@font/font_family"
-                android:gravity="center"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -87,7 +70,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp">
             </android.support.v7.widget.RecyclerView>
-
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

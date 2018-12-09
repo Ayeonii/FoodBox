@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.MyRecipe.CustomDialog;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.R;
 
@@ -41,6 +42,7 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
     private static List<InfoDO> freshList, meatList, etcList;
     private String foodImg;
     private boolean isFrozen;
+    private static List<PencilCartItem> changeItem;
 
     private String TAG="PopupDialog";
 
@@ -50,6 +52,10 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
         this.notMatchingInfo = items;
         this.index = index;
         this.notmatch = notmatch_view;
+    }
+
+    public void setChangeItem(List<PencilCartItem> items){
+        this.changeItem = items;
     }
 
     protected void onCreate(Bundle savedInstanceState){
@@ -131,8 +137,11 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
                 for(int i = 0; i<allfoodListInfo.size(); i++)
                 {
                    if(allfoodListInfo.get(i).getFoodName().equals(notMatchingInfo.get(index)));
+                    {
+
+                    }
                 }
-                Log.e(TAG, "리스트 위치 : "+index);
+                Log.e(TAG, "리스트 위치 : "+notMatchingInfo.get(index)+"와");
                 notMatchingInfo.remove(index);
                 for(int i = 0; i<notMatchingInfo.size(); i++){
                     Log.e(TAG, "재료 : "+notMatchingInfo.get(i));

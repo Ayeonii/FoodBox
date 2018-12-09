@@ -73,7 +73,6 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
     private static Mapper.RecipeMatching IngredientInfo;
     private ImageView imageView;
     private TextView loading;
-    private Bitmap bitmap;
 
     private static String TAG = "TestActivity";
 
@@ -83,10 +82,6 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
 
     public List<InfoDO> getMatch(){
         return IngredientInfo.getMatchingList();
-    }
-
-    public Bitmap getBitmap(){
-        return bitmap;
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -164,7 +159,7 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
         if (uri != null) {
             try {
                 // scale the image to save on bandwidth
-                bitmap = scaleBitmapDown(MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
+                Bitmap bitmap = scaleBitmapDown(MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
                 callCloudVision(bitmap);
                 imageView.setImageBitmap(bitmap);
             } catch (IOException e) {
