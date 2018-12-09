@@ -1,6 +1,9 @@
 {
   "UserAgent": "MobileHub/1.0",
   "Version": "1.0",
+  "IdentityManager": {
+    "Default": {}
+  },
   "CredentialsProvider": {
     "CognitoIdentity": {
       "Default": {
@@ -8,9 +11,6 @@
         "Region": "ap-northeast-2"
       }
     }
-  },
-  "IdentityManager": {
-    "Default": {}
   },
   "CognitoUserPool": {
     "Default": {

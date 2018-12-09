@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,22 +24,72 @@ import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.AWSStartupHandler;
 import com.amazonaws.mobile.client.AWSStartupResult;
 
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobile.client.UserStateListener;
+import com.amazonaws.mobile.client.results.SignInResult;
+import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 
 public class MainActivity extends AppCompatActivity {
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
+    public static boolean isRunning = true;
 
+    public static boolean isAlive = true;
     Button join_btn, login_btn, login_ok_btn;
     EditText id_edittext, pw_edittext;
     RelativeLayout login_box, login_back;
     boolean inputID=false, inputPW=false;
     public static Editable id,pw;
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+    private static PinpointManager pinpointManager;
+
+    public static PinpointManager getPinpointManager(final Context applicationContext) {
+
+        if (pinpointManager == null) {
+            AWSMobileClient.getInstance().initialize(applicationContext, new AWSConfiguration(applicationContext),new Callback<UserStateDetails>() {
+                @Override
+                public void onResult(UserStateDetails userStateDetails) {
+                    Log.i("INIT", userStateDetails.getUserState().toString());
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("INIT", "Initialization error.", e);
+                }
+            });
+
+            PinpointConfiguration pinpointConfig = new PinpointConfiguration(
+                    applicationContext,
+                    AWSMobileClient.getInstance(),
+                    new AWSConfiguration(applicationContext));
+                    //AWSMobileClient.getInstance().getConfiguration());
+
+            pinpointManager = new PinpointManager(pinpointConfig);
+
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            final String token = task.getResult().getToken();
+                            Log.d(TAG, "Registering push notifications token: " + token);
+                            pinpointManager.getNotificationClient().registerDeviceToken(token);
+                        }
+                    });
+        }
+        return pinpointManager;
+    }
 
 
 
@@ -47,12 +98,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
-                @Override
-                public void onComplete(AWSStartupResult awsStartupResult) {
-                    Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
+        AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
+
+                    @Override
+                    public void onResult(UserStateDetails userStateDetails) {
+                        switch (userStateDetails.getUserState()){
+                            case SIGNED_IN:
+                                Log.e("자동로그인","자동로그인");
+                                Mapper.setUserId(getApplicationContext());
+                                Mapper.setBucketName(getApplicationContext());
+                                Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
+                                getPinpointManager(getApplicationContext());
+                                String locate = getIntent().getStringExtra("locate");
+                                Intent RefriActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                                RefriActivity.putExtra("locate",locate);
+                                startActivity(RefriActivity);
+                                break;
+                            case SIGNED_OUT_FEDERATED_TOKENS_INVALID:
+                            case SIGNED_OUT_USER_POOLS_TOKENS_INVALID:
+                                Log.i("userState", "need to login again.");
+                                Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(LoginActivity);
+                                //Alternatively call .showSignIn()
+                                break;
+                        }
+                        Log.i("INIT", "onResult: " + userStateDetails.getUserState());
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("INIT", "Initialization error.", e);
+                    }
                 }
-            }).execute();
+        );
+
 
 
         login_btn = (Button)findViewById(R.id.btn_login);
@@ -63,6 +142,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+
+    protected void onPause() {
+
+        isAlive = false;
+
+        super.onPause();
+
+    }
+
+
+
+    @Override
+
+    protected void onResume() {
+
+        isAlive = true;
+
+        super.onResume();
+
+    }
+
+
+
+    public void restart() {
+
+        Intent intent = this.getIntent();
+
+        this.finish();
+
+        this.startActivity(intent);
+
+    }
+
+
 
 }
 

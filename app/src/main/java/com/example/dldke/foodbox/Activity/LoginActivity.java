@@ -21,10 +21,16 @@ import com.amazonaws.mobile.auth.ui.AuthUIConfiguration;
 import com.amazonaws.mobile.auth.ui.SignInUI;
 import com.amazonaws.mobile.client.AWSMobileClient;
 
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.SignInUIOptions;
+import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobile.client.UserStateListener;
+import com.amazonaws.mobile.client.results.SignInResult;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 public class LoginActivity extends AppCompatActivity {
+    public static final String TAG = LoginActivity.class.getSimpleName();
     Button ok_btn;
     EditText id_edittext, pw_edittext;
     boolean isFirst;
@@ -33,28 +39,42 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        AWSMobileClient.getInstance().initialize(this).execute();
+        AWSMobileClient.getInstance().showSignIn(
+                LoginActivity.this,
+                SignInUIOptions.builder()
+                        .nextActivity(RefrigeratorMainActivity.class)
+                        .logo(R.drawable.splash_background)
+                        .backgroundColor(Color.WHITE)
+                        .canCancel(false)
+                        .build(),
+                new Callback<UserStateDetails>() {
+                    @Override
+                    public void onResult(UserStateDetails result) {
+                        Log.d(TAG, "onResult: " + result.getUserState());
+                        switch (result.getUserState()){
+                            case SIGNED_IN:
+                                Log.i("INIT", "logged in!");
+                                break;
+                            case SIGNED_OUT:
+                                Log.i(TAG, "onResult: User did not choose to sign-in");
+                                break;
+                            default:
+                                AWSMobileClient.getInstance().signOut();
+                                break;
+                        }
+                    }
 
-        // Sign-in listener
-        IdentityManager.getDefaultIdentityManager().addSignInStateChangeListener(new SignInStateChangeListener() {
-            @Override
-            public void onUserSignedIn() {
-                Log.d("login", "User Signed In");
-            }
-
-            // Sign-out listener
-            @Override
-            public void onUserSignedOut() {
-
-                Log.d("logout", "User Signed Out");
-                showSignIn();
-            }
-        });
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "onError: ", e);
+                    }
+                }
+        );
         ok_btn = (Button)findViewById(R.id.login_button);
         id_edittext = (EditText)findViewById(R.id.edittext_id);
         pw_edittext = (EditText)findViewById(R.id.edittext_pw);
 
-        showSignIn();
+        //showSignIn();
 
 
     }
@@ -79,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         signinUI.login(LoginActivity.this, RefrigeratorMainActivity.class).authUIConfiguration(config).execute();
 
 
-        Mapper.setDynamoDBMapper();
+        //Mapper.setDynamoDBMapper();
         Mapper.setUserId(LoginActivity.this);
         Mapper.setBucketName(LoginActivity.this);
     }

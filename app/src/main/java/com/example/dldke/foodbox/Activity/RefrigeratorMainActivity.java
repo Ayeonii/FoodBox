@@ -1,10 +1,17 @@
 package com.example.dldke.foodbox.Activity;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,7 +24,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -26,12 +39,22 @@ import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.HashMap;
+
+import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    public static final String TAG = RefrigeratorMainActivity.class.getSimpleName();
 
     /*********************FloatingButtons***********************/
     //플로팅 버튼 애니메이션
@@ -68,11 +91,49 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     ImageView postit;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        // unregister notification receiver
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register notification receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
+                new IntentFilter(PushListenerService.ACTION_PUSH_NOTIFICATION));
+    }
+
+    private final BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
+            HashMap<String,String> hm = (HashMap<String,String>) intent.getExtras().get(PushListenerService.INTENT_SNS_NOTIFICATION_DATA);
+
+            Log.e("bundle",hm.toString());
+            String message = PushListenerService.getMessage(hm,"data");
+            String title = PushListenerService.getMessage(hm,"title");
+            new AlertDialog.Builder(RefrigeratorMainActivity.this)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+        }
+    };
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
         Mapper.setUserId(getApplicationContext());
+        Mapper.setBucketName(getApplicationContext());
+        Log.e("들어와라","들어왔니");
+        Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
+        getPinpointManager(getApplicationContext());
 
         //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
         //pencilAdapter.getClickFoodString().clear();
@@ -151,6 +212,16 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         listview.setOnItemClickListener(listClickListener);
 
         postit.setOnClickListener(onClickListener);
+        try{
+            if (getIntent().getStringExtra("locate").equals("pencil")){
+                Intent recipeboxIntent = new Intent(getApplicationContext(),MyRecipeBoxActivity.class);
+                startActivity(recipeboxIntent);
+            }
+        }
+        catch (Exception e){
+            Log.e("pencil error","error");
+        }
+
     }
 
     /*************리스트뷰 리스너************/
@@ -161,7 +232,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             String strText = (String) parent.getItemAtPosition(position);
 
             if (strText.equals("로그아웃")) {
-                IdentityManager.getDefaultIdentityManager().signOut();
+                AWSMobileClient.getInstance().signOut();
                 Intent MainActivity = new Intent(getApplicationContext(), MainActivity.class);
                 //로그아웃 후, 뒤로가기 누르면 다시 로그인 된 상태로 가는 것을 방지
                 MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

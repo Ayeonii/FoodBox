@@ -4,7 +4,9 @@ import android.content.Context;
 import android.icu.text.IDNA;
 import android.util.Log;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -42,24 +44,25 @@ public final class Mapper {
     public static DynamoDBMapper getDynamoDBMapper(){
         return dynamoDBMapper;
     }
-    public static void setDynamoDBMapper(){
+    public static void setDynamoDBMapper(AWSMobileClient awsMobileClient){
 
         // Add code to instantiate a AmazonDynamoDBClient
-        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(AWSMobileClient.getInstance().getCredentialsProvider());
+        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(awsMobileClient.getCredentials());
             dynamoDBMapper = DynamoDBMapper.builder()
                     .dynamoDBClient(dynamoDBClient)
                     .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                    .awsCredentialsProviderForS3(AWSMobileClient.getInstance().getCredentialsProvider())
+                    .awsCredentialsProviderForS3(awsMobileClient.getCredentialsProvider())
                     .build();
 
     }
     public static void setUserId(Context context){
-        JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(AWSMobileClient.getInstance().getConfiguration().toString());
-        PoolConfig poolConfig= new Gson().fromJson(element.getAsJsonObject().get("CognitoUserPool"), PoolConfig.class);
-        CognitoUserPool cognitoUserPool = new CognitoUserPool(context,poolConfig.config.poolId,poolConfig.config.clientId,poolConfig.config.clientSecret);
+        //JsonParser parser = new JsonParser();
+        //JsonElement element = parser.parse(AWSMobileClient.getInstance().getConfiguration().toString());
+        //PoolConfig poolConfig= new Gson().fromJson(element.getAsJsonObject().get("CognitoUserPool"), PoolConfig.class);
+        CognitoUserPool cognitoUserPool = new CognitoUserPool(context,AWSMobileClient.getInstance().getConfiguration());
         CognitoUser user = cognitoUserPool.getCurrentUser();
         userId = user.getUserId();
+        Log.d("userId",userId);
     }
     public static String getUserId(){
         return userId;
