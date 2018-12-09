@@ -20,21 +20,23 @@ import java.util.List;
 
 public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private PencilRecipeActivity pencil = new PencilRecipeActivity();
-    private static List<String[]> allfoodList = new ArrayList<String[]>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
+    private static ArrayList<PencilItem> allfoodListInfo = new ArrayList<>();
     private static List<InfoDO> freshList, meatList, etcList;
     private String foodImg;
+    private boolean isFrozen;
 
     public AllFoodListFragment(){}
 
-    public List<String[]> getAllFoodList(){
-        return allfoodList;
+    public List<PencilItem> getAllFoodListWithFrozen(){
+        return allfoodListInfo;
     }
-    public List<String[]> getMeatList(){ return makeFoodListString(meatList, "meat"); }
-    public List<String[]> getFreshList(){ return makeFoodListString(freshList,"fresh"); }
-    public List<String[]> getEtcList(){ return makeFoodListString(etcList,"etc"); }
+
+    public List<PencilItem> getMeatList(){ return makeFoodListString(meatList); }
+    public List<PencilItem> getFreshList(){ return makeFoodListString(freshList); }
+    public List<PencilItem> getEtcList(){ return makeFoodListString(etcList); }
 
 
     @Override
@@ -58,9 +60,9 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
             meatList = getInfoDOList("meat");
             etcList = getInfoDOList("etc");
 
-            makeFoodList(freshList, "fresh");
-            makeFoodList(meatList,"meat");
-            makeFoodList(etcList,"etc");
+            makeFoodList(freshList);
+            makeFoodList(meatList);
+            makeFoodList(etcList);
 
             pencil.setEnterTime(1);
         }
@@ -80,29 +82,39 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
         return Mapper.scanSection(section);
     }
 
-    private void makeFoodList(List<InfoDO> foodList, String section) {
+    private void makeFoodList(List<InfoDO> foodList) {
             for(int i =0 ; i< foodList.size(); i++) {
-                allfoodList.add(new String[]{foodList.get(i).getName(), section});
+                if(foodList.get(i).getKindOf() == "frozen"){
+                    isFrozen = true;
+                }
+                else
+                    isFrozen = false;
+                allfoodListInfo.add(new PencilItem(foodList.get(i).getName(), foodList.get(i).getSection(), isFrozen));
                 /**********이미지 추가후 주석 삭제**********/
 
                 File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
                 if (!file.exists()) {
-                    Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/", section);
+                    Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/", foodList.get(i).getSection());
                 }
             }
     }
 
-    private List<String[]> makeFoodListString(List<InfoDO> foodList, String section){
-        List<String[]> foodListString = new ArrayList<String[]>();
+    private List<PencilItem> makeFoodListString(List<InfoDO> foodList){
+        List<PencilItem> foodListString = new ArrayList<>();
         for(int i =0 ; i< foodList.size(); i++) {
-            foodListString.add(new String[]{foodList.get(i).getName(), section});
+            if(foodList.get(i).getKindOf() == "frozen")
+                isFrozen = true;
+            else
+                isFrozen = false;
+            foodListString.add(new PencilItem(foodList.get(i).getName(), foodList.get(i).getSection(), isFrozen));
         }
         return foodListString;
     }
+
     private void setData(){
-        for(int i =0 ; i<allfoodList.size(); i++ ){
-            foodImg = "file:///storage/emulated/0/Download/"+allfoodList.get(i)[0]+".jpg";
-            list.add(new PencilItem(allfoodList.get(i)[0], Uri.parse(foodImg),allfoodList.get(i)[1] ));
+        for(int i =0 ; i<allfoodListInfo.size(); i++ ){
+            foodImg = "file:///storage/emulated/0/Download/"+allfoodListInfo.get(i).getFoodName()+".jpg";
+            list.add(new PencilItem(allfoodListInfo.get(i).getFoodName(), Uri.parse(foodImg),allfoodListInfo.get(i).getFoodSection(), allfoodListInfo.get(i).getIsFrozen()));
         }
         adapter.notifyDataSetChanged();
     }

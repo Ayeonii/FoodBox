@@ -1,13 +1,22 @@
 package com.example.dldke.foodbox.MyRefrigeratorInside;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
+import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.PencilRecipe.SearchIngredientFragment;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -15,19 +24,37 @@ import java.util.List;
 
 public class RefrigeratorInsideActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnSidedish, btnDairy, btnEtc, btnMeat, btnFresh;
 
-    private List<RefrigeratorDO.Item> refrigeratorItem;
+    private PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
+    private FrameLayout frag;
+    private Button btnSidedish, btnDairy, btnEtc, btnMeat, btnFresh;
+    private static List<RefrigeratorDO.Item> refrigeratorItem;
     private ArrayList<LocalRefrigeratorItem> localSideDish, localDairy, localEtc, localMeat, localFresh;
     private ArrayList<String> nameSideDish, nameDairy, nameEtc, nameMeat, nameFresh;
     private ArrayList<String> dupliArray = new ArrayList<>();
-
     private InsideDialog dialog;
+    private EditText searchBar;
+    private ImageButton deleteButton;
+
+    public RefrigeratorInsideActivity(){}
+    public List<RefrigeratorDO.Item> getRefrigeratorItem(){
+        Log.e("","getRefirgeratorItem 들어옴 ");
+        return refrigeratorItem;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator_inside);
+
+        searchBar = (EditText)findViewById(R.id.refri_searchBar);
+        deleteButton = (ImageButton) findViewById(R.id.delete_button3);
+        frag = (FrameLayout)findViewById(R.id.refri_fragment_container); //검색시 나오는 화면
+        frag.setVisibility(View.GONE);
+
+        searchBar.setOnClickListener(this);
+        deleteButton.setOnClickListener(this);
 
         btnSidedish = (Button) findViewById(R.id.btn_sidedish);
         btnDairy = (Button) findViewById(R.id.btn_dairy);
@@ -40,6 +67,32 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         btnEtc.setOnClickListener(this);
         btnMeat.setOnClickListener(this);
         btnFresh.setOnClickListener(this);
+
+        pencilRecyclerAdapter.setIsRefri(true);
+
+
+        /****************search bar input *****************************/
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text;
+                text = searchBar.getText().toString();
+                if (text.length() == 0) {
+                    frag.setVisibility(View.GONE);
+                }
+                else {
+                    frag.setVisibility(View.VISIBLE);
+                }
+                SearchIngredientFragment.search(text, false,false,true, false);
+            }
+        });
+
 
         scanToLocalRefrigerator();
         setDuplicateArray();
@@ -59,6 +112,9 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         localEtc = new ArrayList<>();
         localMeat = new ArrayList<>();
         localFresh = new ArrayList<>();
+
+
+
 
         Log.d("test", "refrigeratorItem.size : " + refrigeratorItem.size());
         for (int i = 0; i < refrigeratorItem.size(); i++) {
@@ -107,6 +163,8 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         nameEtc = new ArrayList<>();
         nameMeat = new ArrayList<>();
         nameFresh = new ArrayList<>();
+
+
 
         for (int i = 0; i < localSideDish.size(); i++) {
             int check = 0;
@@ -189,9 +247,29 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         }
     }
 
+
+
     @Override
     public void onClick(View view) {
+        scanToLocalRefrigerator();
+        setDuplicateArray();
+
         switch (view.getId()) {
+            case R.id.refri_searchBar:
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                Log.e("refri ", "onclick은 들어오냐 ");
+                SearchIngredientFragment SearchFragment = new SearchIngredientFragment();
+                transaction.replace(R.id.refri_fragment_container, SearchFragment);
+                transaction.commit();
+                break;
+            case R.id.delete_button3:
+                Log.e("refri","deleteButton");
+                if (searchBar.getText().length() != 0) {
+                    searchBar.setHint(" 재료명을 입력하세요.");
+                    searchBar.setText(null);
+                }
+                break;
+
             case R.id.btn_sidedish:
                 showIngredientDialog("sideDish", localSideDish, nameSideDish);
                 break;

@@ -42,9 +42,6 @@ import com.google.firebase.iid.InstanceIdResult;
 
 public class MainActivity extends AppCompatActivity {
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
-    public static boolean isRunning = true;
-
-    public static boolean isAlive = true;
     Button join_btn, login_btn, login_ok_btn;
     EditText id_edittext, pw_edittext;
     RelativeLayout login_box, login_back;
@@ -142,41 +139,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    @Override
-
-    protected void onPause() {
-
-        isAlive = false;
-
-        super.onPause();
-
-    }
-
-
-
-    @Override
-
-    protected void onResume() {
-
-        isAlive = true;
-
-        super.onResume();
-
-    }
-
-
-
-    public void restart() {
-
-        Intent intent = this.getIntent();
-
-        this.finish();
-
-        this.startActivity(intent);
-
-    }
-
-
 
 }
 

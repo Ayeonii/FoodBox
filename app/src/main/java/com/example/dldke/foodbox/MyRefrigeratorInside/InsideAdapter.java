@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.MyRefrigeratorInside;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -17,9 +18,19 @@ import java.util.ArrayList;
 public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHolder> {
 
     ArrayList<HalfRecipeIngreItem> mItems;
+    String ingreType;
+    Context context;
 
-    public InsideAdapter(ArrayList<HalfRecipeIngreItem> mItems) {
+    public InsideAdapter(ArrayList<HalfRecipeIngreItem> mItems, Context context) {
         this.mItems = mItems;
+        this.context = context;
+
+    }
+
+
+    public InsideAdapter(ArrayList<HalfRecipeIngreItem> mItems, String ingreType) {
+        this.mItems = mItems;
+        this.ingreType = ingreType;
     }
 
     @NonNull
@@ -33,8 +44,19 @@ public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHo
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         String foodName = mItems.get(position).getName();
         holder.mNameTv.setText(foodName);
-        String foodUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
-        holder.food_Img.setImageURI(Uri.parse(foodUri));
+        String foodImgUri;
+
+        if(ingreType == null) {
+            ingreType = mItems.get(position).getSection();
+
+        }
+
+        if (ingreType.equals("sideDish")) {
+            foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
+        } else {
+            foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+        }
+        holder.food_Img.setImageURI(Uri.parse(foodImgUri));
     }
 
     @Override

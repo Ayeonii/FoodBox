@@ -2,8 +2,10 @@ package com.example.dldke.foodbox.MyRecipe;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
 
 public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeBoxHalfRecipeAdapter.ViewHolder> {
+
     public MyRecipeBoxHalfRecipeAdapter(){}
 
     public String getRecipeId(){
@@ -30,21 +33,19 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView name;
         private Context context;
+        private TextView isIng;
 
         public ViewHolder(Context context, View view){
             super(view);
             this.name = (TextView)view.findViewById(R.id.half_recipe_title);
             this.context = context;
+            this.isIng = (TextView) view.findViewById(R.id.ing);
             view.setOnClickListener(this);
         }
 
         //'자세히 보기' 눌렀을 때, 해당 레시피 ID의 식재료 보여주기
         public void onClick(View view){
             int position = getAdapterPosition();
-
-            //포지션 확인(추후에는 지울것임 - test용)
-            //if(position != RecyclerView.NO_POSITION) Toast.makeText(context,"포지션"+position, Toast.LENGTH_SHORT).show();
-
             recipe_id = recipedata.get(position).getRecipeId();
             Intent RecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);
             context.startActivity(RecipeDetailActivity);
@@ -62,7 +63,19 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     }
 
     public void onBindViewHolder(final MyRecipeBoxHalfRecipeAdapter.ViewHolder holder, final int position){
+        int isIng = recipedata.get(position).isIng();
         holder.name.setText(recipedata.get(position).getSimpleName());
+
+        if(isIng==0){
+            holder.isIng.setText("작성 완료");
+            holder.isIng.setTextColor(Color.BLUE);
+        } else if(isIng==1){
+            holder.isIng.setText("작성중");
+            holder.isIng.setTextColor(Color.RED);
+        }
+        else if(isIng==2){
+            holder.isIng.setText("");
+        }
     }
 
     public int getItemCount(){

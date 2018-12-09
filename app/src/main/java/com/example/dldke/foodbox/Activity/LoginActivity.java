@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         AuthUIConfiguration config =
                 new AuthUIConfiguration.Builder()
                         .userPools(true)  // true? show the Email and Password UI
-                        .signInButton(GoogleButton.class) // Show Google button
+                        //.signInButton(GoogleButton.class) // Show Google button
                         .backgroundColor(Color.WHITE) // Change the backgroundColor
                         .logoResId(R.drawable.splash_background)
                         .isBackgroundColorFullScreen(true) // Full screen backgroundColor the backgroundColor full screenff

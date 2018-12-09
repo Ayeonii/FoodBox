@@ -18,7 +18,9 @@ public class InfoDO {
     private Integer _dueDate;
     private String _kindOf;
     private List<String> productName;
+    private Boolean _isFrozen;
     private S3Link infoImage;
+
 
     public S3Link getInfoImage() {
         return infoImage;
@@ -67,6 +69,7 @@ public class InfoDO {
     public List<String> getProductName() {
         return productName;
     }
+
 
     public void setProductName(final List<String> productName) {
         this.productName = productName;

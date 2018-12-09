@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class CartPopupDialog {
 
     private PencilCartAdapter pencilCartAdapter = new PencilCartAdapter(clickFood);
     private ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
+
 
     public CartPopupDialog(Context context) {
         this.context = context;
@@ -66,13 +68,15 @@ public class CartPopupDialog {
                 for(int i =0 ; i<clickItems.size(); i++) {
                     PencilCartItem food = clickItems.get(i);
                     try {
-                        clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate()));
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
                     catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
-                        clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate()));
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
                 }
-                Log.e("clickedList",""+clickedList);
+                //Log.e("clickedList",""+clickedList);
                 Mapper.putFood(clickedList);
                 Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 pencilAdapter.getClickFood().clear();

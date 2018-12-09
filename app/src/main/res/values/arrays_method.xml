@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="MethodSpinner">
+        <item>방법을 선택하세요</item>
         <item>끓인다</item>
         <item>볶는다</item>
         <item>씻는다</item>

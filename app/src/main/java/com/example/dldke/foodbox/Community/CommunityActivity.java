@@ -1,20 +1,12 @@
 package com.example.dldke.foodbox.Community;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.example.dldke.foodbox.PencilRecipe.SearchIngredientFragment;
 import com.example.dldke.foodbox.R;
 
 public class CommunityActivity extends AppCompatActivity implements View.OnClickListener {
@@ -28,7 +20,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     CommunityFragmentNewsfeed fragmentNewsfeed;
     CommunityFragmentFavorite fragmentFavorite;
     CommunityFragmentRecommend fragmentRecommend;
-    CommunityFragmentSearch fragmentSearch;
+
 
 
     @Override
@@ -39,10 +31,10 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         fragmentNewsfeed = new CommunityFragmentNewsfeed();
         fragmentFavorite = new CommunityFragmentFavorite();
         fragmentRecommend = new CommunityFragmentRecommend();
-        fragmentSearch = new CommunityFragmentSearch();
+
 
         searchText = "";
-        searchBar = (EditText)findViewById(R.id.community_searchBar);
+        searchBar = (EditText)findViewById(R.id.community_commentBar);
         deleteButton = (ImageButton)findViewById(R.id.community_delete_button);
 
         homeBtn = (ImageView)findViewById(R.id.home_btn);

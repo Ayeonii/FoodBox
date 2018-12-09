@@ -21,31 +21,22 @@ import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.R;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
+
+
+//public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
 
 public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
-    private CommunityLoadingAdapter mAdapter;
+
+        private CommunityLoadingAdapter mAdapter;
     private ArrayList<CommunityItem> itemList;
     private static List<PostDO> postList;
 
-   /* private CommunityActivity communityActivity = new CommunityActivity();
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private static ArrayList<CommunityItem> list = new ArrayList<>();
-    private static List<PostDO> postList;
-    private static List<String> img;*/
-
-   private static int cnt = 0;
+    private static int cnt = 0;
 
 
     @Nullable
@@ -93,26 +84,6 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
     }
 
-/*
-    private class PostAsync extends AsyncTask<Void, Void, List<PostDO>> {
-        List<CommunityItem> asyncList = new ArrayList<>();
-
-        protected void onPreExecute() { //2
-            super.onPreExecute();
-            mAdapter.setProgressMore(true);
-        }
-        protected List<PostDO> doInBackground(Void... params) {
-
-           // mAdapter.setProgressMore(true);
-            mAdapter.addAll(loadData());
-            mAdapter.notifyDataSetChanged();
-            return postList;
-        }
-        protected void onPostExecute(List result) {
-            Log.e("size:","끝");
-        }
-    }*/
-
     //스크롤이 끝에 도달하였을 때 실행 내용
     @Override
     public void onLoadMore() {
@@ -143,6 +114,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                                     , R.drawable.temp_profile4
                                     , Mapper.matchFavorite(postList.get(i).getPostId())
                                     , postList.get(i).getPostId()
+                                    , postList.get(i).getRecipeId()
                             ));
                             cnt=1;
                         }
@@ -181,6 +153,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                         , R.drawable.temp_profile4
                         , Mapper.matchFavorite(postList.get(i).getPostId())
                         , postList.get(i).getPostId()
+                        , postList.get(i).getRecipeId()
                 ));
 
                 Log.e("load", "" + postList.get(i).getTitle());

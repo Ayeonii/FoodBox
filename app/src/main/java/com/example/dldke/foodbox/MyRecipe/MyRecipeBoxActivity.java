@@ -6,6 +6,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
@@ -23,12 +25,15 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
         return position;
     }
 
+
     private String TAG = "MyRecipeBoxActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_box);
+
+        Log.e(TAG, "onCreate 실행한다.");
 
         //Cutomized Toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -52,8 +57,8 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
         tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
                 position = tab.getPosition();
+                viewPager.setCurrentItem(position);
                 //MyRecipeBoxHalfRecipeAdapter recipeBoxAdapter = new MyRecipeBoxHalfRecipeAdapter();
                 //recipeBoxAdapter.setTabPosition(position);
             }
@@ -73,10 +78,16 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
     //뒤로 가기 버튼 눌렀을 시 메인화면으로 넘어가기
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
-            RefrigeratorMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(RefrigeratorMainActivity);
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                RefrigeratorMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(RefrigeratorMainActivity);
+                break;
+
+                default:
+                    break;
         }
         return super.onOptionsItemSelected(item);
     }

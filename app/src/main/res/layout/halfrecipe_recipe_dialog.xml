@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="322dp"
             android:gravity="center"
-            android:text="냉장고 칸을 눌러\n재료를 선택하세요"
+            android:text="재료를 선택하세요"
             android:textSize="20sp"
             android:visibility="gone" />
     </RelativeLayout>
@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,32 +70,59 @@
             android:visibility="visible"
             android:weightSum="10">
 
-            <TextView
-                android:id="@+id/txt_back"
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/btn_addmore"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:gravity="center"
-                android:text="뒤로"
                 android:fontFamily="@font/font_family"
+                android:gravity="center"
+                android:text="추가재료"
                 android:textColor="@color/colorAccent"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/txt_complete"
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="63dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"
+                android:fontFamily="@font/font_family"
+                android:gravity="center"
+                android:text="취소"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_complete"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="@font/font_family"
                 android:gravity="center"
                 android:text="작성완료"
-                android:fontFamily="@font/font_family"
                 android:textColor="@color/colorAccent"
-                android:textSize="16sp" />
-        </LinearLayout>
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
 
 
         <LinearLayout
@@ -109,13 +136,12 @@
             android:visibility="gone"
             android:weightSum="10">
 
-            <TextView
-                android:id="@+id/txt_back_empty"
+            <Button
+                android:id="@+id/btn_back_empty"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"
                 android:gravity="center"
                 android:text="뒤로"
                 android:textColor="@color/colorAccent"

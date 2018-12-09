@@ -23,8 +23,9 @@ public class RecipeDO {
     private Detail _detail;
     private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
     private S3Link recipeImage;
-    private boolean Ing;
+    private int Ing;
     private boolean isShare;
+    private boolean isPost;
     private String password;
 
     public S3Link getRecipeImage() {
@@ -66,35 +67,38 @@ public class RecipeDO {
     public Detail getDetail() {
         return _detail;
     }
+    public void setDetail(final Detail _detail) {
+        this._detail = _detail;
+    }
 
-    public void setIng(final boolean Ing) {
+    @DynamoDBAttribute(attributeName = "Ing")
+    public void setIng(final int Ing) {
         this.Ing = Ing;
     }
-    @DynamoDBAttribute(attributeName = "Ing")
-    public boolean getIng() {
+    public int getIng() {
         return Ing;
     }
+
 
     @DynamoDBAttribute(attributeName = "isShare")
     public void setIsShare(final boolean isShare){this.isShare = isShare;}
     public boolean getIsShare(){return isShare;}
 
+    @DynamoDBAttribute(attributeName = "isPost")
+    public void setIsPost(final boolean isPost){this.isPost = isPost;}
+    public boolean getIsPost(){return isPost;}
+
     @DynamoDBAttribute(attributeName = "password")
     public void setPassword(final String password){this.password = password;}
     public String getPassword(){return password;}
 
-    public void setDetail(final Detail _detail) {
-        this._detail = _detail;
-    }
+
 
     @DynamoDBAttribute(attributeName = "ingredient")
     public List<Ingredient> getIngredient() {
         return _ingredient;
     }
-
-    public void setIngredient(final List<Ingredient> _ingredient) {
-        this._ingredient = _ingredient;
-    }
+    public void setIngredient(final List<Ingredient> _ingredient) {this._ingredient = _ingredient;}
 
 
 

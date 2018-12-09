@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.auth.core.IdentityManager;
@@ -34,8 +33,12 @@ import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
+import com.example.dldke.foodbox.Memo.MemoActivity;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
+import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorFrozenInsideActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
@@ -47,15 +50,26 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.HashMap;
-
+import java.util.ArrayList;
+import java.util.List;
 import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
+
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     public static final String TAG = RefrigeratorMainActivity.class.getSimpleName();
+    private static List<RecipeDO.Ingredient> urgentList = new ArrayList<>();
+    public RefrigeratorMainActivity(){ }
 
+    public List<RecipeDO.Ingredient> getUrgentList(){
+        return urgentList;
+    }
+
+    public void setUrgentList(List<RecipeDO.Ingredient> urgentList){
+        this.urgentList = urgentList;
+    }
     /*********************FloatingButtons***********************/
     //플로팅 버튼 애니메이션
     Animation ShowPlus, HidePlus, LayHide, ShowMinus, HideMinus, LayShow;
@@ -72,7 +86,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     //메뉴 배경 레이아웃
     LinearLayout menuTransBack;
     //메뉴창에 들어갈 리스트
-    static final String[] LIST_MENU = {"내 레시피 보기", "Community", "Store", "로그아웃"};
+    static final String[] LIST_MENU = {"내 레시피 보기", "Community", "Store", "설정", "로그아웃"};
     //메뉴 슬라이딩 열기/닫기 플래그
     boolean isPageOpen = false;
     //메뉴 슬라이드 열기/닫기 애니메이션
@@ -89,6 +103,15 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     /***************************etc********************************/
     ImageView postit;
+    public static boolean isCookingClass;
+    private String user_id;
+
+
+    //public RefrigeratorMainActivity(){  }
+
+    public boolean getisCookingClass(){
+        return isCookingClass;
+    }
 
     @Override
     protected void onPause() {
@@ -129,11 +152,35 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        //User DB Create
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
-        Log.e("들어와라","들어왔니");
+
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
         getPinpointManager(getApplicationContext());
+        try {
+            user_id = Mapper.searchUserInfo().getUserId();
+            Log.e(TAG, "유저 아이디 : "+user_id);
+        } catch (NullPointerException e) {
+            Mapper.createUserInfo();
+            Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
+        }
+
+        Mapper.checkAndCreateFirst();
+
+
+        //Mapper.createMemo();
+        if(pencilAdapter.getClickCnt() != 0 ){
+            pencilAdapter.setClickCnt(0);
+        }
+
+
+        Mapper.updateUrgentMemo();
+
+        urgentList = Mapper.scanUrgentMemo();
+
+        //Separate User vs CookingClass
+        isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
 
         //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
         //pencilAdapter.getClickFoodString().clear();
@@ -249,6 +296,11 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent communityActivity = new Intent(getApplicationContext(), CommunityActivity.class);
                 startActivity(communityActivity);
             }
+            if (strText.equals("설정")){
+                Intent settingActivity = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(settingActivity);
+            }
+
             if (isPageOpen) {
                 //fabPlus.setElevation(10);
                 //fabMinus.setElevation(10);
@@ -349,22 +401,34 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     //Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
                     //startActivity(visionIntent);
-                    Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
-                    startActivity(deepLink);
+                    //Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
+                    //startActivity(deepLink);
+
+                    Intent intent = new Intent(getApplicationContext(), VisionActivity.class);
+                    startActivity(intent);
+
                     break;
                 case R.id.fabPencil:
-                    //Toast.makeText(RefrigeratorMainActivity.this, "직접입력 누름", Toast.LENGTH_SHORT).show();
                     Intent PencilActivity = new Intent(getApplicationContext(),PencilRecipeActivity.class);
                     startActivity(PencilActivity);
                     //다음 화면이 아래에서 올라오는 애니메이션
                     overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
                     break;
                 case R.id.fabFull:
-                    //Toast.makeText(RefrigeratorMainActivity.this, "풀 레시피 누름", Toast.LENGTH_SHORT).show();
-                    Intent myRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
-                    startActivity(myRecipeBoxActivity);
-                    //다음 화면이 아래에서 올라오는 애니메이션
-                    overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    if(isCookingClass){
+                        FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
+                        fullRecipeActivity.setIsHalfRecipe(false);
+                        Intent FullRecipeActivity = new Intent(getApplicationContext(), FullRecipeActivity.class);
+                        startActivity(FullRecipeActivity);
+                        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    }
+                    else{
+                        Intent myRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+                        startActivity(myRecipeBoxActivity);
+                        //다음 화면이 아래에서 올라오는 애니메이션
+                        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                    }
+
                     break;
                 case R.id.fabMini:
                     Intent halfRecipeActivity = new Intent(getApplicationContext(), HalfRecipeActivity.class);
@@ -378,7 +442,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     startActivity(rightSideActivity);
                     break;
                 case R.id.leftButton:
-                    Toast.makeText(RefrigeratorMainActivity.this, "왼쪽 도어 누름", Toast.LENGTH_SHORT).show();
+                    Intent leftSideActivity = new Intent(getApplicationContext(), RefrigeratorFrozenInsideActivity.class);
+                    startActivity(leftSideActivity);
                     break;
                 case R.id.menu:
                     menuPage.startAnimation(leftAnim);
@@ -393,12 +458,12 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.startAnimation(rightAnim);
                     break;
                 case R.id.postit:
-                    Toast.makeText(RefrigeratorMainActivity.this, "포스트잇 눌림", Toast.LENGTH_SHORT).show();
+                    Intent memoActivity = new Intent(getApplicationContext(), MemoActivity.class);
+                    startActivity(memoActivity);
                     break;
             }
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -424,6 +489,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
 
     }
+
+
 
 
 }

@@ -17,6 +17,7 @@
 package com.example.dldke.foodbox.CloudVision;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -29,8 +30,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +48,12 @@ import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
 import com.amazonaws.mobileconnectors.apigateway.ApiResponse;
 import com.amazonaws.util.IOUtils;
 import com.amazonaws.util.StringUtils;
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
+import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.R;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -67,7 +77,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,45 +88,74 @@ import java.util.Map;
 
 public class VisionActivity extends AppCompatActivity {
 
-
-    private static final String CLOUD_VISION_API_KEY = "AIzaSyAeWacP0qlIcDN_dWHv6PFBZdnUtg0CVvA";
-    public static final String FILE_NAME = "temp.jpg";
-    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
-    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-    private static final int MAX_LABEL_RESULTS = 10;
-    private static final int MAX_DIMENSION = 1200;
-
-    private static final String TAG = VisionActivity.class.getSimpleName();
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
-    private TextView mImageDetails;
-    private ImageView mMainImage;
+    public static final String FILE_NAME = "temp.jpg";
+    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
+    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
+    private static final String CLOUD_VISION_API_KEY = "AIzaSyAeWacP0qlIcDN_dWHv6PFBZdnUtg0CVvA";
+    private static final int MAX_LABEL_RESULTS = 10;
+    private static final int MAX_DIMENSION = 1200;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    private static Mapper.RecipeMatching IngredientInfo;
+    private Context context;
+    private ImageView imageView;
+    private TextView loading;
+    private Button insert;
+
+    private static GregorianCalendar cal = new GregorianCalendar();
+    private static Date inputDBDate ;
+    private static String inputDBDateString;
+    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+    private static boolean isFrozen;
+
+    private ArrayList<PencilCartItem> matchFood = new ArrayList<>();
+
+    private static String TAG = "TestActivity";
+
+
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vision);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(VisionActivity.this);
-            builder
-                    .setMessage(R.string.dialog_select_prompt)
-                    .setPositiveButton(R.string.dialog_select_gallery, (dialog, which) -> startGalleryChooser())
-                    .setNegativeButton(R.string.dialog_select_camera, (dialog, which) -> startCamera());
+        loading = (TextView) findViewById(R.id.loading_text);
+        imageView = (ImageView) findViewById(R.id.main_image);
+        insert = (Button) findViewById(R.id.vision_btn);
+
+        imageView.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Choose a picture")
+                    .setPositiveButton("Gallery", (dialog, i) -> startGalleryChooser())
+                    .setNegativeButton("Camera", (dialogInterface, i) -> startCamera());
             builder.create().show();
         });
 
-
-
-        mImageDetails = findViewById(R.id.image_details);
-        mMainImage = findViewById(R.id.main_image);
+        insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
+                for(int i =0 ; i<matchFood.size(); i++) {
+                    PencilCartItem food = matchFood.get(i);
+                    try {
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
+                    }
+                    catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
+                        Log.e("Dialog",""+food.getIsFrozen());
+                        clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
+                    }
+                }
+                Mapper.putFood(clickedList);
+                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                Intent refMain = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(refMain);
+            }
+        });
 
     }
 
@@ -122,8 +164,7 @@ public class VisionActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select a photo"),
-                    GALLERY_IMAGE_REQUEST);
+            startActivityForResult(Intent.createChooser(intent, "Select a photo"), GALLERY_IMAGE_REQUEST);
         }
     }
 
@@ -149,54 +190,35 @@ public class VisionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
                 uploadImage(resultUri);
+                loading.setText(R.string.loading_message);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
         }
+
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            CropImage.activity(data.getData())
-                    .start(this);
+            CropImage.activity(data.getData()).start(this);
+
         } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
-            CropImage.activity(photoUri)
-                    .start(this);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case CAMERA_PERMISSIONS_REQUEST:
-                if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
-                    startCamera();
-                }
-                break;
-            case GALLERY_PERMISSIONS_REQUEST:
-                if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults)) {
-                    startGalleryChooser();
-                }
-                break;
+            CropImage.activity(photoUri).start(this);
         }
     }
 
     public void uploadImage(Uri uri) {
+
         if (uri != null) {
             try {
                 // scale the image to save on bandwidth
-                Bitmap bitmap =
-                        scaleBitmapDown(
-                                MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
-                                MAX_DIMENSION);
-
+                Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
                 callCloudVision(bitmap);
-                mMainImage.setImageBitmap(bitmap);
+                imageView.setImageBitmap(bitmap);
 
             } catch (IOException e) {
                 Log.d(TAG, "Image picking failed because " + e.getMessage());
@@ -208,38 +230,61 @@ public class VisionActivity extends AppCompatActivity {
         }
     }
 
+    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
+
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+        int resizedWidth = maxDimension;
+        int resizedHeight = maxDimension;
+
+        if (originalHeight > originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
+        } else if (originalWidth > originalHeight) {
+            resizedWidth = maxDimension;
+            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
+        } else if (originalHeight == originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = maxDimension;
+        }
+        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+    }
+
+    private void callCloudVision(final Bitmap bitmap) {
+        // Switch text to loading
+
+        // Do the real work in an async task, because we need to use the network anyway
+        try {
+            AsyncTask<Object, Void, String> labelDetectionTask = new VisionActivity.LableDetectionTask(this, prepareAnnotationRequest(bitmap));
+            labelDetectionTask.execute();
+        } catch (IOException e) {
+            Log.d(TAG, "failed to make API request because of other IOException " + e.getMessage());
+        }
+    }
+
+
     private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-        VisionRequestInitializer requestInitializer =
-                new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
-                    /**
-                     * We override this so we can inject important identifying fields into the HTTP
-                     * headers. This enables use of a restricted cloud platform API key.
-                     */
-                    @Override
-                    protected void initializeVisionRequest(VisionRequest<?> visionRequest)
-                            throws IOException {
-                        super.initializeVisionRequest(visionRequest);
-
-                        String packageName = getPackageName();
-                        visionRequest.getRequestHeaders().set(ANDROID_PACKAGE_HEADER, packageName);
-
-                        String sig = PackageManagerUtils.getSignature(getPackageManager(), packageName);
-
-                        visionRequest.getRequestHeaders().set(ANDROID_CERT_HEADER, sig);
-                    }
-                };
+        VisionRequestInitializer requestInitializer = new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
+            @Override
+            protected void initializeVisionRequest(VisionRequest<?> visionRequest) throws IOException {
+                super.initializeVisionRequest(visionRequest);
+                String packageName = getPackageName();
+                visionRequest.getRequestHeaders().set(ANDROID_PACKAGE_HEADER, packageName);
+                String sig = PackageManagerUtils.getSignature(getPackageManager(), packageName);
+                visionRequest.getRequestHeaders().set(ANDROID_CERT_HEADER, sig);
+            }
+        };
 
         Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
         builder.setVisionRequestInitializer(requestInitializer);
-
         Vision vision = builder.build();
 
-        BatchAnnotateImagesRequest batchAnnotateImagesRequest =
-                new BatchAnnotateImagesRequest();
+        BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
         batchAnnotateImagesRequest.setRequests(new ArrayList<AnnotateImageRequest>() {{
+
             AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
 
             // Add the image
@@ -266,18 +311,19 @@ public class VisionActivity extends AppCompatActivity {
             add(annotateImageRequest);
         }});
 
-        Vision.Images.Annotate annotateRequest =
-                vision.images().annotate(batchAnnotateImagesRequest);
+        Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
         // Due to a bug: requests to Vision API containing large images fail when GZipped.
         annotateRequest.setDisableGZipContent(true);
         Log.d(TAG, "created Cloud Vision request object, sending request");
-
         return annotateRequest;
     }
 
     private static class LableDetectionTask extends AsyncTask<Object, Void, String> {
-        private final WeakReference<VisionActivity> mActivityWeakReference;
+        private WeakReference<VisionActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
+        public List<String> notmatchingItems;
+
+        public LableDetectionTask(){ }
 
         LableDetectionTask(VisionActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
@@ -287,64 +333,45 @@ public class VisionActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Object... params) {
             try {
-                Log.d(TAG, "created Cloud Vision request object, sending request");
+                //Log.d(TAG, "created Cloud Vision request object, sending request");
                 BatchAnnotateImagesResponse response = mRequest.execute();
                 return convertResponseToString(response);
 
             } catch (GoogleJsonResponseException e) {
-                Log.d(TAG, "failed to make API request because " + e.getContent());
+                //Log.d(TAG, "failed to make API request because " + e.getContent());
             } catch (IOException e) {
-                Log.d(TAG, "failed to make API request because of other IOException " +
-                        e.getMessage());
+                //Log.d(TAG, "failed to make API request because of other IOException " +e.getMessage());
             }
             return "Cloud Vision API request failed. Check logs for details.";
         }
 
+        /************* 인식된 글자 ImageView 에 뿌려주기 *********************/
         protected void onPostExecute(String result) {
             VisionActivity activity = mActivityWeakReference.get();
-            if (activity != null && !activity.isFinishing()) {
-                TextView imageDetail = activity.findViewById(R.id.image_details);
+            List<InfoDO> matchingItems = IngredientInfo.getMatchingList();
+            notmatchingItems = IngredientInfo.getNonMatchingList();
 
-                imageDetail.setText(result);
+            String[] array = result.split("\n");
+            for(int i = 0; i<array.length ; i++){
+                Log.e(TAG, ""+i+array[i]);
+            }
+
+            if (activity != null && !activity.isFinishing()) {
+                activity.loading.setVisibility(View.INVISIBLE);
+                activity.matchingIngredient(activity, matchingItems);
+                activity.notMatchingIngredient(activity, notmatchingItems);
             }
         }
-    }
 
-    private void callCloudVision(final Bitmap bitmap) {
-        // Switch text to loading
-        mImageDetails.setText(R.string.loading_message);
-
-        // Do the real work in an async task, because we need to use the network anyway
-        try {
-            AsyncTask<Object, Void, String> labelDetectionTask = new LableDetectionTask(this, prepareAnnotationRequest(bitmap));
-            labelDetectionTask.execute();
-        } catch (IOException e) {
-            Log.d(TAG, "failed to make API request because of other IOException " +
-                    e.getMessage());
+        public List<String> getNotMatchingInfo(){
+            return notmatchingItems;
         }
+
     }
 
-    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
-
-        int originalWidth = bitmap.getWidth();
-        int originalHeight = bitmap.getHeight();
-        int resizedWidth = maxDimension;
-        int resizedHeight = maxDimension;
-
-        if (originalHeight > originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
-        } else if (originalWidth > originalHeight) {
-            resizedWidth = maxDimension;
-            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
-        } else if (originalHeight == originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = maxDimension;
-        }
-        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
-    }
 
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
+
         StringBuilder message = new StringBuilder("");
 
         List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
@@ -363,9 +390,81 @@ public class VisionActivity extends AppCompatActivity {
         } else {
             message.append("nothing");
         }*/
-        Mapper.matchingInfo(message.toString());
+
+        //영수증 재료와 DB data 비교
+        IngredientInfo = Mapper.matchingInfo(message.toString());
 
         return message.toString();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case CAMERA_PERMISSIONS_REQUEST:
+                if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
+                    startCamera();
+                }
+                break;
+            case GALLERY_PERMISSIONS_REQUEST:
+                if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults)) {
+                    startGalleryChooser();
+                }
+                break;
+        }
+    }
+
+    public void matchingIngredient(VisionActivity activity, List<InfoDO> matchingItems){
+        RecyclerView matchingIngredient = activity.findViewById(R.id.matching);
+        PencilCartAdapter adapter;
+
+        for(int i=0; i<matchingItems.size(); i++){
+            String matching_name = matchingItems.get(i).getName();
+            Log.e(TAG, "matching_name"+ matching_name);
+
+            int dueDate;
+            try{
+                dueDate = Mapper.searchFood(matchingItems.get(i).getName(), matchingItems.get(i).getSection()).getDueDate();
+            }
+            catch (NullPointerException e){
+                dueDate = 0;
+            }
+            cal.add(cal.DATE, dueDate);
+            inputDBDate = cal.getTime();
+            inputDBDateString = formatter.format(inputDBDate);
+
+            String foodImg = "file:///storage/emulated/0/Download/"+matchingItems.get(i).getName()+".jpg";
+            Uri uri = Uri.parse(foodImg);
+            if(matchingItems.get(i).getKindOf() == "frozen"){
+                isFrozen = true;
+            }
+            else{
+                isFrozen = false;
+            }
+
+            matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), isFrozen, dueDate));
+        }
+
+        matchingIngredient.setHasFixedSize(true);
+        adapter = new PencilCartAdapter(matchFood);
+        matchingIngredient.setLayoutManager(new LinearLayoutManager(activity));
+        matchingIngredient.setAdapter(adapter);
+
+        for(int i = 0; i<matchFood.size(); i++){
+            Log.d(TAG, "재료 이름 : "+matchFood.get(i).getFoodName()+" Section : "+matchFood.get(i).getFoodSection()+" 유통기한 : "+matchFood.get(i).getFoodDate()+"냉동고? : "+matchFood.get(i).getIsFrozen());
+        }
+    }
+
+    public void notMatchingIngredient(VisionActivity activity, List<String> notmatchingItems){
+        List<String > items = notmatchingItems;
+        RecyclerView notmatchingIngredient = activity.findViewById(R.id.notmatching_ingredient_view);
+        NotMatchAdapter adapter;
+
+        notmatchingIngredient.setHasFixedSize(true);
+        adapter = new NotMatchAdapter(items, activity);
+        notmatchingIngredient.setLayoutManager(new LinearLayoutManager(activity));
+        notmatchingIngredient.setAdapter(adapter);
     }
 
 }

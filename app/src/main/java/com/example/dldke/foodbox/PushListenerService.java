@@ -189,25 +189,5 @@ public class PushListenerService extends FirebaseMessagingService {
         notificationManager.notify(0, notificationBuilder.build());
         */
     }
-    class myServiceHandler extends Handler {
 
-        @Override
-
-        public void handleMessage(android.os.Message msg) {
-
-            Intent intent = new Intent(PushListenerService.this, MainActivity.class);
-
-            if (!MainActivity.isRunning) {
-
-                intent = new Intent();
-
-                if (!MainActivity.isAlive) {
-
-                    new MainActivity().restart();
-
-                }
-
-            }
-        }
-    }
 }
