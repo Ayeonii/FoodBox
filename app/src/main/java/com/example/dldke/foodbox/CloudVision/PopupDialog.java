@@ -28,10 +28,9 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
     private Context context;
     private NotMatchAdapter notMatchAdapter = new NotMatchAdapter();
     public List<String> notMatchingInfo;
-    private String foodname;
     private int index;
 
-    private RecyclerView ingredientView;
+    private RecyclerView ingredientView, notmatch;
     private EditText searchBar;
     private ImageButton deleteButton;
     private FloatingActionButton ok;
@@ -45,14 +44,12 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
 
     private String TAG="PopupDialog";
 
-    public PopupDialog(Context context, int index, List<String> items){
+    public PopupDialog(Context context, RecyclerView notmatch_view, int index, List<String> items){
         super(context);
         this.context = context;
-        //this.foodname = foodname;
         this.notMatchingInfo = items;
         this.index = index;
-
-        Log.e(TAG, "PopupDialog");
+        this.notmatch = notmatch_view;
     }
 
     protected void onCreate(Bundle savedInstanceState){
@@ -66,7 +63,6 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
         deleteButton = (ImageButton) findViewById(R.id.vision_delete_button);
         ok = (FloatingActionButton) findViewById(R.id.vision_ingredient_add);
 
-        Log.e(TAG, "바꿀 음식 이름 : "+foodname);
 
         freshList = getInfoDOList("fresh");
         meatList = getInfoDOList("meat");
@@ -75,7 +71,6 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
         makeFoodList(freshList);
         makeFoodList(meatList);
         makeFoodList(etcList);
-
 
 
         ingredientView.setHasFixedSize(true);
@@ -133,12 +128,20 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
                 }
                 break;
             case R.id.vision_ingredient_add:
+                for(int i = 0; i<allfoodListInfo.size(); i++)
+                {
+                   if(allfoodListInfo.get(i).getFoodName().equals(notMatchingInfo.get(index)));
+                }
                 Log.e(TAG, "리스트 위치 : "+index);
                 notMatchingInfo.remove(index);
-//                notMatchAdapter.setNotmatchItems(notMatchingInfo);
-//                notMatchAdapter.notifyItemRemoved(index);
-//                notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
-//                notMatchAdapter.notifyDataSetChanged();
+                for(int i = 0; i<notMatchingInfo.size(); i++){
+                    Log.e(TAG, "재료 : "+notMatchingInfo.get(i));
+                }
+                VisionReturnActivity visionReturnActivity = new VisionReturnActivity();
+                visionReturnActivity.notMatchingIngredient(notmatch, notMatchingInfo);
+                //notMatchAdapter.notifyItemRemoved(index);
+                //notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
+                notMatchAdapter.notifyDataSetChanged();
                 //cancel();
                 dismiss();
                 break;
