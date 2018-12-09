@@ -1,34 +1,19 @@
 package com.example.dldke.foodbox.Activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.amazonaws.mobile.auth.core.IdentityManager;
-import com.amazonaws.mobile.auth.ui.SignInUI;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.AWSStartupHandler;
 import com.amazonaws.mobile.client.AWSStartupResult;
-
-import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
-import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
-import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     boolean inputID=false, inputPW=false;
     public static Editable id,pw;
 
-
+    int MY_PERMISSIONS_REQUEST_CAMERA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +48,37 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(LoginActivity);
             }
         });
+
+
+//        PermissionCheck();
     }
 
+//    void PermissionCheck() {
+//        int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA);
+//
+//        if (permissionCheck!=PackageManager.PERMISSION_GRANTED) {
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
+//                // dialog
+//                Log.e("test", "다이얼로그 띄워서 권한 요청하는 부분");
+//            } else {
+//                ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+//
+//                Log.e("test", "권한허가요청을 받아서 결과를 받는 부분");
+//            }
+//
+//        } else {
+//
+//        }
+//    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        switch (requestCode) {
+//            case MY_PERMISSIONS_REQUEST_CAMERA:
+//                return;
+//        }
+//    }
 }
 

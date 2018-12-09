@@ -1,7 +1,6 @@
 package com.example.dldke.foodbox.DataBaseFiles;
 
 import android.content.Context;
-import android.icu.text.IDNA;
 import android.util.Log;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -922,13 +921,14 @@ public final class Mapper {
     public static void updatePassword(String recipe_id,String password){
 
         final String inputPassword = password;
+        final String recipeId = recipe_id;
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 RecipeDO recipeInfo = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
-                        recipe_id);
+                        recipeId);
 
                 recipeInfo.setPassword(inputPassword);
                 Mapper.getDynamoDBMapper().save(recipeInfo);
@@ -991,10 +991,12 @@ public final class Mapper {
 
     public static void updateIsShared(String recipe_id){
 
+        final String recipeId = recipe_id;
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                RecipeDO recipe = Mapper.searchRecipe(recipe_id);
+                RecipeDO recipe = Mapper.searchRecipe(recipeId);
                 recipe.setIsShare(true);
                 Mapper.getDynamoDBMapper().save(recipe);
             }
@@ -1623,13 +1625,13 @@ public final class Mapper {
 
     public static List<RecipeDO.Ingredient> scanToBuyMemo() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
-            final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
-                    com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
-                    userId);
 
             List<RecipeDO.Ingredient> toBuy;
             @Override
             public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                        userId);
                 toBuy = memoItem.getTobuy();
             }
 

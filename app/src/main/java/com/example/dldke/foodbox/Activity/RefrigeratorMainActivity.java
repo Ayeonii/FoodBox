@@ -40,11 +40,16 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     private static List<RecipeDO.Ingredient> urgentList = new ArrayList<>();
+    private static List<RecipeDO.Ingredient> tobuyList = new ArrayList<>();
     public RefrigeratorMainActivity(){ }
     String TAG = "RefrigeratorMainActivity";
 
     public List<RecipeDO.Ingredient> getUrgentList(){
         return urgentList;
+    }
+
+    public List<RecipeDO.Ingredient> getTobuyList() {
+        return tobuyList;
     }
 
     public void setUrgentList(List<RecipeDO.Ingredient> urgentList){
@@ -121,6 +126,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         Mapper.updateUrgentMemo();
 
         urgentList = Mapper.scanUrgentMemo();
+        tobuyList = Mapper.scanToBuyMemo();
+        Log.e("test", "메인화면에서 장보기 목록을 잘 가져오는지 확인");
+        for (int i=0; i<tobuyList.size(); i++)
+            Log.d("test", tobuyList.get(i).getIngredientName() + ", " + tobuyList.get(i).getIngredientCount());
 
         //Separate User vs CookingClass
         isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
