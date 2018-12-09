@@ -101,6 +101,7 @@ public class HalfRecipeBoxFragment extends Fragment {
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
 
+
         for (int i = 0; i < myrecipe.size(); i++) {
             String recipeId = myrecipe.get(i);
             try {

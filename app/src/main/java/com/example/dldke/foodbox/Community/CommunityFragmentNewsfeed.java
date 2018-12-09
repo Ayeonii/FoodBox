@@ -190,7 +190,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 } catch (Exception e) {
 
                 }
-                
+
             mAdapter.addAll(itemList);
 
     }

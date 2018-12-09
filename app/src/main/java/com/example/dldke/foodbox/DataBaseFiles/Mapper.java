@@ -1009,6 +1009,27 @@ public final class Mapper {
     }
 
 
+    public static void updateIsPost(String recipe_id){
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecipeDO recipe = Mapper.searchRecipe(recipe_id);
+                recipe.setIsPost(true);
+                Mapper.getDynamoDBMapper().save(recipe);
+            }
+
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     /***************** Up/Download Image Method  *************************/
 
@@ -1237,6 +1258,7 @@ public final class Mapper {
             e.printStackTrace();
         }
     }
+    
 
     public static com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO searchMyCommunity() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
