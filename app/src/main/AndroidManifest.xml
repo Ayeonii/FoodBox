@@ -36,20 +36,17 @@
         <activity android:name=".MyRefrigeratorInside.RefrigeratorFrozenInsideActivity" android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".HalfRecipe.HalfRecipeActivity" />
         <activity android:name=".HalfRecipe.HalfRecipeCompleteActivity"/>
-        <activity android:name=".HalfRecipe.HalfRecipeIngDialog"/>
         <activity android:name=".PencilRecipe.PencilRecipeActivity" android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".MyRecipe.RecipeBoxHalfRecipeDetailActivity"/>
         <activity android:name=".MyRecipe.RecipeBoxFullRecipeDetailActivity"/>
         <activity android:name=".MyRecipe.MyRecipeBoxActivity" android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".CloudVision.PopupActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".CloudVision.VisionActivity" />
-        <activity android:name=".CloudVision.VisionReturnActivity" />
         <activity android:name=".Community.CommunityActivity" android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Community.CommunityDetailActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Memo.MemoActivity"/>
         <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Activity.DeepLinkActivity" android:label="A deeplink!"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
