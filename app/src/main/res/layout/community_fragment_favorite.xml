@@ -21,9 +21,9 @@
         android:layout_width="0dp"
         android:layout_height="54dp"
         android:background="@color/colorActivated"
+        android:fontFamily="@font/font_family"
         android:gravity="center"
         android:text="내가 북마크한 레시피"
-        android:fontFamily="@font/font_family"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textSize="18sp"
@@ -32,4 +32,20 @@
         app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/noneFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_family"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="좋아하는 레시피가 없습니다."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 </android.support.constraint.ConstraintLayout>

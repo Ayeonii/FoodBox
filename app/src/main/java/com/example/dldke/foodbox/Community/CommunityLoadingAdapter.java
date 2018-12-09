@@ -137,6 +137,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case R.id.user_id:
                         Toast.makeText(context, "user_id click", Toast.LENGTH_SHORT).show();
                         break;
+
                 }
             }
         } ;
@@ -151,12 +152,11 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                 public void onClick(View view) {
                     if(itemList.get(position).getFavorite()) {
                         ((StudentViewHolder) holder).star_btn.setSelected(false);
-
                         Mapper.deleteFavorite(itemList.get(position).getPostId());
+
                     }
                     else if(!itemList.get(position).getFavorite()){
                         ((StudentViewHolder) holder).star_btn.setSelected(true);
-
                         Mapper.addFavoriteInMyCommunity(itemList.get(position).getPostId());
 
                     }

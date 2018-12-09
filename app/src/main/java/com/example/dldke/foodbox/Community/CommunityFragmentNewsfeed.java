@@ -36,6 +36,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
     private ArrayList<CommunityItem> itemList;
     private static ArrayList<CommunityItem> favoriteList  = new ArrayList<>();
     private static List<PostDO> postList;
+    private  boolean isFalse = true;
 
     public CommunityFragmentNewsfeed(){}
 
@@ -76,23 +77,21 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.scanPost();
 
-            if(postList.size()!=0){
+            if(postList.size()==0){
+                isCancelled();
+            }
 
-            }
-            else{
-               isCancelled();
-            }
             return postList;
         }
 
         protected void onPostExecute(List result) {
             Log.e("size:","끝");
            // setData(3);
-            try{
+
             if(postList.size() != 0 ){
                 loadData();
             }
-            }catch (NullPointerException e) {
+            else{
                 mAdapter.setProgressMore(false);
             }
         }
@@ -114,30 +113,27 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
     @Override
     public void onLoadMore() {
 
-            Log.e("MainActivity_", "onLoadMore==================");
-
                 mAdapter.setProgressMore(true);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e("MainActivity_", "onLoadMoreRUN!!!==================");
                             itemList.clear();
                             mAdapter.setProgressMore(false);
 
-                            int start = mAdapter.getItemCount() - 1;
+                            int start = mAdapter.getItemCount() -1 ;
                             int end = start + 2;
 
-                            Log.e("postList", "postList : " + postList.size() + "end : " + end);
-
-                            if (end >= postList.size()) {
-                                end = start + (end - postList.size());
-                            }
                             try {
+
+
+                                if (end >= postList.size()) {
+                                    end = start + (end - postList.size());
+                                    isFalse = false;
+                                }
                                 for (int i = start + 1; i <= end + 1; i++) {
                                     String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                                     Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
-                                    Log.e("start:end", "" + start + ":" + end);
-                                    Log.e("loadMore", "" + postList.get(i).getTitle());
+
 
                                     itemList.add(new CommunityItem(postList.get(i).getWriter()
                                             , postList.get(i).getTitle()
@@ -150,11 +146,13 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                                     ));
                                 }
 
+                                mAdapter.addItemMore(itemList);
+                                mAdapter.setMoreLoading(isFalse);
+
                             } catch (Exception e) {
 
                             }
-                            mAdapter.addItemMore(itemList);
-                            mAdapter.setMoreLoading(false);
+
                         }
                     }, 2000);
 
@@ -162,17 +160,12 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
     private void loadData() {
         itemList.clear();
-        Log.e("MainActivity_", "loadData");
 
-            if (postList.size() != 0) {
                 int end;
                 if(postList.size() < 4)
-                {
                     end = postList.size() ;
-                }
-                else{
-                    end = 3;
-                }
+                else
+                    end = 4;
                 try {
                     for (int i = 0; i <= end; i++) {
 
@@ -197,13 +190,12 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 } catch (Exception e) {
 
                 }
-            }
-
+                
             mAdapter.addAll(itemList);
 
     }
 
-    public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    public  class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         protected Bitmap doInBackground(String... urls) {
             String urlImg =urls[0];
             Bitmap foodImg = null;
