@@ -5,7 +5,12 @@ import android.icu.text.IDNA;
 import android.util.Log;
 
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AwsChunkedEncodingInputStream;
+import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.auth.google.GoogleSignInProvider;
+import com.amazonaws.mobile.auth.userpools.CognitoUserPoolsSignInProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.IdentityProvider;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
@@ -20,6 +25,8 @@ import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.Region;
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -56,10 +63,16 @@ public final class Mapper {
 
     }
     public static void setUserId(Context context){
-
-        CognitoUserPool cognitoUserPool = new CognitoUserPool(context,AWSMobileClient.getInstance().getConfiguration());
-        CognitoUser user = cognitoUserPool.getCurrentUser();
-        userId = user.getUserId();
+        try{
+            Log.e("username",AWSMobileClient.getInstance().getUsername());
+            CognitoUserPool cognitoUserPool = new CognitoUserPool(context,AWSMobileClient.getInstance().getConfiguration());
+            CognitoUser user = cognitoUserPool.getCurrentUser();
+            userId = user.getUserId();
+        }
+        catch (Exception e){
+            userId = GoogleSignIn.getLastSignedInAccount(context).getEmail();
+        }
+        Log.e("Login userId",userId);
 
     }
     public static String getUserId(){
@@ -1816,9 +1829,17 @@ public final class Mapper {
                 scanExpression.addFilterCondition("name", condition);
                 itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
                 updateItem = itemList.get(0);
-                List<String> tmpList = updateItem.getProductName();
-                tmpList.add(productName);
-                updateItem.setProductName(tmpList);
+                try{
+                    List<String> tmpList = updateItem.getProductName();
+                    tmpList.add(productName);
+                    updateItem.setProductName(tmpList);
+                }
+                catch(Exception e){
+                    List<String> tmpList = new ArrayList<>();
+                    tmpList.add(productName);
+                    updateItem.setProductName(tmpList);
+                }
+
                 Mapper.getDynamoDBMapper().save(updateItem);
 
             }

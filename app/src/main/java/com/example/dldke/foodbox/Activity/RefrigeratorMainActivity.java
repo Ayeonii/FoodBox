@@ -25,9 +25,12 @@ import android.widget.RelativeLayout;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.auth.google.GoogleSignInProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.IdentityProvider;
 import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoUserToken;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
@@ -44,6 +47,10 @@ import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccountCreator;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -123,8 +130,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         Mapper.setBucketName(getApplicationContext());
 
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
-        PinpointManager tmp =getPinpointManager(getApplicationContext());
-        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+
         //Mapper.attachSpecImage("kitawo3242018-12-09, 11:16:51 AM","/storage/emulated/0/Download/버섯.jpg",0);
         //Log.e("UserUrl",Mapper.getImageUrlSpec("kitawo3242018-12-09, 11:16:51 AM",0));
         try {
