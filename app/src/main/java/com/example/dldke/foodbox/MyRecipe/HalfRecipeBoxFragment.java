@@ -136,6 +136,7 @@ public class HalfRecipeBoxFragment extends Fragment {
 
             } catch (NullPointerException e) {
                 recipeId = myrecipe.get(i);
+                Log.e("recipeID",recipeId);
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
                 isIng = Mapper.searchRecipe(recipeId).getIng();
                 isPost = false;

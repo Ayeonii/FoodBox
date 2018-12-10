@@ -123,17 +123,21 @@ public final class Mapper {
 
         List<RecipeDO.Ingredient> urgent = scanUrgentMemo();
         try {
-            if(urgent.get(0) != null)
+            if(urgent.get(0) != null) {
+                Log.e("설마?","유통기한");
                 list.add("유통기한");
-            else
-                list.add("유통기한X");
+                Log.e("endpointId",target.currentEndpoint().getEndpointId());
+                target.addAttribute("urgent",list);
+                target.updateEndpointProfile();
+            }
 
+        }
+        catch(Exception e){
+            Log.e("정말","유통기한X");
+            list.add("유통기한X");
             Log.e("endpointId",target.currentEndpoint().getEndpointId());
             target.addAttribute("urgent",list);
             target.updateEndpointProfile();
-        }
-        catch(Exception e){
-            Log.e("urgent error", "으에에");
         }
     }
 

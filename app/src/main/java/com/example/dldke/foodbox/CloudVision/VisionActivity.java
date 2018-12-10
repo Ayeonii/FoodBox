@@ -29,6 +29,7 @@ import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.R;
@@ -109,6 +110,7 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_vision);
 
         popup.setChangeItemClear();
+        popup.setNewOldNameClear();
         transaction = getSupportFragmentManager().beginTransaction();
         toolbar = (Toolbar) findViewById(R.id.vision_toolbar);
         loading = (TextView) findViewById(R.id.loading_text);
@@ -226,6 +228,13 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
         } catch (IOException e) {
             Log.d(TAG, "failed to make API request because of other IOException " + e.getMessage());
         }
+    }
+    @Override public void onBackPressed() {
+
+        Intent refMain = new Intent(VisionActivity.this, RefrigeratorMainActivity.class);
+        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        VisionActivity.this.startActivity(refMain);
+        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
     }
 
 
