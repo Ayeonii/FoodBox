@@ -38,6 +38,8 @@ import static com.example.dldke.foodbox.CloudVision.VisionActivity.CAMERA_IMAGE_
 import static com.example.dldke.foodbox.CloudVision.VisionActivity.CAMERA_PERMISSIONS_REQUEST;
 import static com.example.dldke.foodbox.CloudVision.VisionActivity.FILE_NAME;
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
+
+import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
 import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
@@ -346,7 +348,13 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
+    @Override public void onBackPressed() {
 
+        Intent refMain = new Intent(FullRecipeActivity.this, RefrigeratorMainActivity.class);
+        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        FullRecipeActivity.this.startActivity(refMain);
+        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

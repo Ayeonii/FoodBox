@@ -138,7 +138,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                         String password = Mapper.searchRecipe(recipeId).getPassword();
                         Log.e(TAG, "password : "+password);
 
-                        if(password.equals(null)){
+                        if(password==null){
 
                             setClickedRecipeId(itemList.get(position).getRecipeId());
                             setClickedPostId(itemList.get(position).getPostId());

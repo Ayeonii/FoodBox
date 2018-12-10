@@ -155,7 +155,7 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
     public void notMatchingIngredient(RecyclerView notmatch_view, List<String> items) {
         NotMatchAdapter adapter;
         notmatch_view.setHasFixedSize(true);
-        adapter = new NotMatchAdapter(items, this, notmatch_view);
+        adapter = new NotMatchAdapter(items,notmatch_view);
         notmatch_view.setLayoutManager(new LinearLayoutManager(this));
         notmatch_view.setAdapter(adapter);
     }

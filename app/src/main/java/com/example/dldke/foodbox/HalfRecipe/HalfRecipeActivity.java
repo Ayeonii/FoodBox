@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
+import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -344,6 +346,15 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
+
+    @Override public void onBackPressed() {
+
+        Intent refMain = new Intent(HalfRecipeActivity.this, RefrigeratorMainActivity.class);
+        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        HalfRecipeActivity.this.startActivity(refMain);
+        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+    }
+
 
     private void setResult(String type, Boolean[] check) {
         switch (type) {

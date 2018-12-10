@@ -52,6 +52,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import java.io.File;
 import java.util.HashMap;
 
 import java.text.ParseException;
@@ -266,6 +267,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         urgent_postit.setOnClickListener(onClickListener);
         tobuy_postit.setOnClickListener(onClickListener);
 
+
     }
 
     @Override
@@ -327,7 +329,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             //슬라이드 열기->닫기
             if (isPageOpen) {
                 //fabPlus.setElevation(10);
-                //fabMinus.setElevation(10);
+                fabMinus.setElevation(10);
                 menuTransBack.setVisibility(View.GONE);
                 menuPage.setVisibility(View.GONE);
                 listview.setVisibility(View.GONE);
@@ -455,7 +457,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.setVisibility(View.VISIBLE);
                     listview.setVisibility(View.VISIBLE);
                     //fabPlus.setElevation(0);
-                    //fabMinus.setElevation(0);
+                    fabMinus.setElevation(-1);
                     menuTransBack.setVisibility(View.VISIBLE);
                     break;
                 case R.id.transparentBack:
