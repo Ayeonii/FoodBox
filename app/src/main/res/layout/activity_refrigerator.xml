@@ -356,24 +356,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
-                android:fontFamily="@font/font_family"
-                android:text="계란 -3일" />
+                android:fontFamily="@font/font_family" />
 
             <TextView
                 android:id="@+id/urgent_item2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
-                android:fontFamily="@font/font_family"
-                android:text="우유 -2일" />
+                android:fontFamily="@font/font_family" />
 
             <TextView
                 android:id="@+id/urgent_item3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
-                android:fontFamily="@font/font_family"
-                android:text="케첩 -4일" />
+                android:fontFamily="@font/font_family" />
         </LinearLayout>
 
         <LinearLayout

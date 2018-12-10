@@ -215,7 +215,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                     }
                 }
 
-                // 추가재로가 하나라도 껴있으면 result = 3
+                // 추가재료가 하나라도 껴있으면 result = 3
                 for (int i=0; i<mItems.size(); i++)
                     if ( mItems.get(i).getEditCount() - mItems.get(i).getCount() > 0 )
                         result = 3;

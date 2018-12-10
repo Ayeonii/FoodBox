@@ -82,37 +82,40 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     public void setInfoDOList() {
 
+        //반찬을 제외한 나머지 재료 가져와서 섹션별로 따로따로 담기
         infoFreshItem = Mapper.scanSection("fresh");
         infoMeatItem = Mapper.scanSection("meat");
         infoEtcItem = Mapper.scanSection("etc");
 
         nameAll = new ArrayList<>();
-        int[] check = new int[100];
+        int[] check;
 
         // fresh======================
+        check = new int[infoFreshItem.size()];
         Arrays.fill(check, 0);
 
-        for (int i=0; i<nameFresh.size(); i++) {    //내가 가지고 있는 신선칸 재료들
-            for (int j = 0; j < infoFreshItem.size(); j++) {    //기본 infoDO에 있는 신선칸 재료들
-                if (infoFreshItem.get(j).getName().equals(nameFresh.get(i))) {
-                    check[j] = 1;
+        for (int i=0; i<infoFreshItem.size(); i++) {        //기본 infoDO에 있는 신선칸 재료들
+            for (int j=0; j<nameFresh.size(); j++) {        //내가 가지고 있는 신선칸 재료들
+                if (infoFreshItem.get(i).getName().equals(nameFresh.get(j))) {
+                    check[i] = 1;
                     break;  // j for문을 나온다
                 }
             }
         }
 
-        for (int i=0; i<infoFreshItem.size(); i++) {
-            if (check[i]==0)
+        for (int i = 0; i < infoFreshItem.size(); i++) {
+            if (check[i] == 0)
                 nameAll.add(infoFreshItem.get(i).getName());
         }
 
         // meat======================
+        check = new int[infoMeatItem.size()];
         Arrays.fill(check, 0);
 
-        for (int i=0; i<nameMeat.size(); i++) {
-            for (int j=0; j<infoMeatItem.size(); j++) {
-                if (infoMeatItem.get(j).getName().equals(nameMeat.get(i))) {
-                    check[j] = 1;
+        for (int i=0; i<infoMeatItem.size(); i++) {
+            for (int j=0; j<nameMeat.size(); j++) {
+                if (infoMeatItem.get(i).getName().equals(nameMeat.get(j))) {
+                    check[i] = 1;
                     break;
                 }
             }
@@ -124,21 +127,22 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         }
 
         // etc======================
+        check = new int[infoEtcItem.size()];
         Arrays.fill(check, 0);
 
-        for (int i=0; i<nameEtc.size(); i++) {
-            for (int j=0; j<infoEtcItem.size(); j++) {
-                if (infoEtcItem.get(j).getName().equals(nameEtc.get(i))) {
-                    check[j] = 1;
+        for (int i=0; i<infoEtcItem.size(); i++) {
+            for (int j=0; j<nameDairy.size(); j++) {
+                if (infoEtcItem.get(i).getName().equals(nameDairy.get(j))) {
+                    check[i] = 1;
                     break;
                 }
             }
         }
 
-        for (int i=0; i<nameDairy.size(); i++) {
-            for (int j=0; j<infoEtcItem.size(); j++) {
-                if (infoEtcItem.get(j).getName().equals(nameDairy.get(i))) {
-                    check[j] = 1;
+        for (int i=0; i<infoEtcItem.size(); i++) {
+            for (int j=0; j<nameEtc.size(); j++) {
+                if (infoEtcItem.get(i).getName().equals(nameEtc.get(j))) {
+                    check[i] = 1;
                     break;
                 }
             }
@@ -587,6 +591,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
         halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        halfRecipeCompleteActivity.putExtra("complete", 0);
         startActivity(halfRecipeCompleteActivity);
     }
 
