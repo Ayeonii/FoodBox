@@ -51,8 +51,6 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
         this.notMatchingInfo = notMatchingInfo;
         this.dlg = dlg;
         searchIngredientFragment.setFromRefri(false);
-
-
     }
 
     public void setNewOldName(int removedPosition){
@@ -67,6 +65,10 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
 
     public List<String[]> getNewOldName(){
         return newOldName;
+    }
+
+    public void setNewOldNameClear(){
+        newOldName.clear();
     }
 
     public List<PencilCartItem> getChangeItem(){

@@ -107,6 +107,7 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_vision);
 
         popup.setChangeItemClear();
+        popup.setNewOldNameClear();
         transaction = getSupportFragmentManager().beginTransaction();
 
         loading = (TextView) findViewById(R.id.loading_text);

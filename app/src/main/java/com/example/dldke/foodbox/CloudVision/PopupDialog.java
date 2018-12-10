@@ -129,8 +129,6 @@ public class PopupDialog implements View.OnClickListener {
 
         setData();
 
-
-
         searchBar.setOnClickListener(this);
         deleteButton.setOnClickListener(this);
         ok.setOnClickListener(this);

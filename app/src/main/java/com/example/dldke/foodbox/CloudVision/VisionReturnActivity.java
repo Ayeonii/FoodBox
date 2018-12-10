@@ -50,7 +50,7 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
     private PencilCartAdapter matchingAdapter;
     private List<InfoDO> matchingList = new ArrayList<>();
     private List<String> notmatchingList = new ArrayList<>();
-    private Bitmap bitmap;
+
 
     private PopupAdapter popupAdapter  = new PopupAdapter();
     private static GregorianCalendar cal = new GregorianCalendar();
@@ -183,6 +183,7 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 Mapper.putFood(inputList);
+                popupAdapter.setNewOldNameClear();
 
                 Toast.makeText(getApplicationContext(), "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Intent refMain = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
