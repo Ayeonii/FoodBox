@@ -90,6 +90,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
                 else
                     isFrozen = false;
                 allfoodListInfo.add(new PencilItem(foodList.get(i).getName(), foodList.get(i).getSection(), isFrozen));
+                /**********이미지 추가후 주석 삭제**********/
 
                 File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
                 if (!file.exists()) {

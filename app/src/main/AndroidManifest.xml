@@ -72,7 +72,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".CloudVision.VisionReturnActivity" />
+
         <activity
             android:name=".Activity.DeepLinkActivity"
             android:label="A deeplink!" >
