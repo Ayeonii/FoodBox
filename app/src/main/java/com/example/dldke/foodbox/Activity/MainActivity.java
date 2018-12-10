@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
             AWSMobileClient.getInstance().initialize(applicationContext, new AWSConfiguration(applicationContext),new Callback<UserStateDetails>() {
                 @Override
                 public void onResult(UserStateDetails userStateDetails) {
+                    //Mapper.setUserId(applicationContext);
+                    //Mapper.setBucketName(applicationContext);
+                    //Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
                     Log.i("INIT", userStateDetails.getUserState().toString());
                 }
 

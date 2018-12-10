@@ -73,23 +73,41 @@ public final class Mapper {
         bucketName = element.getAsJsonObject().get("S3TransferUtility").getAsJsonObject().get("Default").getAsJsonObject().get("Bucket").getAsString();
     }
     public static void updateRecipePushEndPoint(TargetingClient target){
-
         List<String> list = new ArrayList<String>();
-
 
         MyCommunityDO mycommu = searchMyCommunity();
         List<String> my_recipe = mycommu.getMyRecipes();
 
-        for(int i = 0; i < my_recipe.size(); i++){
+        boolean isDone = false;
+        int i;
+        for(i = 0; i < my_recipe.size(); i++){
             if((searchRecipe(my_recipe.get(i)).getIng()) == 1){
                 list.add("작성중");
                 break;
             }
             else if((searchRecipe(my_recipe.get(i)).getIng()) == 0){
-                list.add("작성완료");
-                break;
+                isDone = true;
             }
         }
+        if(i == my_recipe.size() && isDone)
+            list.add("작성완료");
+        else if(i == my_recipe.size() && !(isDone))
+            list.add("사용완료");
+
+
+        Log.e("endpointId",target.currentEndpoint().getEndpointId());
+        target.addAttribute("flag",list);
+        target.updateEndpointProfile();
+    }
+
+    public static void updateUrgentPushEndPoint(TargetingClient target){
+        List<String> list = new ArrayList<String>();
+
+        List<RecipeDO.Ingredient> urgent = scanUrgentMemo();
+
+        if(urgent.get(0) != null)
+            list.add("유통기한");
+
         Log.e("endpointId",target.currentEndpoint().getEndpointId());
         target.addAttribute("flag",list);
         target.updateEndpointProfile();
@@ -946,13 +964,14 @@ public final class Mapper {
     public static void updatePassword(String recipe_id,String password){
 
         final String inputPassword = password;
+        final String recipeId = recipe_id;
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 RecipeDO recipeInfo = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
-                        recipe_id);
+                        recipeId);
 
                 recipeInfo.setPassword(inputPassword);
                 Mapper.getDynamoDBMapper().save(recipeInfo);
@@ -1015,10 +1034,12 @@ public final class Mapper {
 
     public static void updateIsShared(String recipe_id){
 
+        final String recipeId = recipe_id;
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                RecipeDO recipe = Mapper.searchRecipe(recipe_id);
+                RecipeDO recipe = Mapper.searchRecipe(recipeId);
                 recipe.setIsShare(true);
                 Mapper.getDynamoDBMapper().save(recipe);
             }
