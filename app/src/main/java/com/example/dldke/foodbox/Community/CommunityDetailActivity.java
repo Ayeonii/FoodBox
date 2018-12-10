@@ -68,6 +68,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_community_detail);
        // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
+
         takenBtn = (Button)findViewById(R.id.takeBtn);
         commentBar = (EditText)findViewById(R.id.community_commentBar);
         okBtn = (ImageView)findViewById(R.id.community_ok_btn);
@@ -83,6 +84,21 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         String imgUrl = Mapper.getImageUrlRecipe(recipe_id);
         new GetImage(mainImg).execute(imgUrl);
 
+        //이미 가져온 레시피이거나, 내가 작성한 레시피일 경우 가져가기 버튼 숨긴다.
+        try{
+            if(Mapper.matchMyRecipe(recipe_id) || communityLoadingAdapter.getClickedPostId() == Mapper.getUserId()){
+                Log.e("searchRecipe", ""+ Mapper.searchRecipe(recipe_id).getSimpleName());
+                takenBtn.setVisibility(View.GONE);
+                Log.e("taken try if", "gone");
+            }else{
+                takenBtn.setVisibility(View.VISIBLE);
+                Log.e("taken try if", "visible");
+            }
+
+        }catch (NullPointerException e){
+            takenBtn.setVisibility(View.VISIBLE);
+            Log.e("taken catch", "visible");
+        }
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.community_detail_collasping_toolbar);
         String foodName = detail.getFoodName();
         collapsingToolbarLayout.setTitle(foodName);
@@ -111,6 +127,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         }
 
         AddStep(specList);
+
 
         takenBtn.setOnClickListener(this);
         okBtn.setOnClickListener(this);
@@ -141,7 +158,9 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
                detail_adapter.notifyDataSetChanged();
                break;
             case R.id.takeBtn:
+                Log.e("taken", "가져가기 완료");
                 Mapper.updateIsPost(recipe_id);
+                Mapper.addRecipeInMyCommunity(recipe_id);
                 break;
 
 

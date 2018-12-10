@@ -84,7 +84,7 @@ public class UserDO {
     public S3Link getProfileImage() {
         return profileImage;
     }
-    public void setProfileImage(S3Link infoImage) {
+    public void setProfileImage(S3Link profileImage) {
         this.profileImage = profileImage;
     }
 
