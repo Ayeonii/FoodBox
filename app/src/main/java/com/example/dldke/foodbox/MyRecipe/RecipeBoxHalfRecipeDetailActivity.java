@@ -79,7 +79,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
 
         int cnt = recipeBoxHalfRecipeDetailAdapter.getCnt();
 
-        if (ing==0) {
+        if (ing==0 && cnt==0) {
             ingredient_use.setVisibility(View.VISIBLE);
             fullrecipe_make.setVisibility(View.GONE);
         } else if (ing==1 || cnt!=0) {

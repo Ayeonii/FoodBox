@@ -174,6 +174,7 @@ public final class Mapper {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
 
             UserDO userInfo;
+
             @Override
             public void run() {
                 userInfo = Mapper.getDynamoDBMapper().load(
@@ -267,47 +268,6 @@ public static String getImageUrlUser(final String userid){
     }
     return url;
 }
-
-//public static String getImageUrlUser(){
-//    returnThread thread = new returnThread(new CustomRunnable() {
-//
-//        com.example.dldke.foodbox.DataBaseFiles.UserDO user;
-//        URL url;
-//        @Override
-//        public void run() {
-//            user = Mapper.getDynamoDBMapper().load(
-//                    com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-//                    userId);
-//            // Log.d("why",Mapper.bucketName);
-//            try{
-//                url = user.getProfileImage().getAmazonS3Client().getUrl(user.getProfileImage().getBucketName(),"Users/"+userId+".jpg");
-//
-//            }
-//            catch (Exception e){
-//                url = null;
-//            }
-//        }
-//        @Override
-//        public Object getResult(){
-//            return url.toString();
-//        }
-//    });
-//    thread.start();
-//    try{
-//        thread.join();
-//    }catch (Exception e){
-//        e.printStackTrace();
-//    }
-//    String url;
-//    if(thread.getResult()==null){
-//        url = "default";
-//
-//    }
-//    else{
-//        url = (String)thread.getResult();
-//    }
-//    return url;
-//}
 
 
     /************************* Refrigerator Section Method *********************************/

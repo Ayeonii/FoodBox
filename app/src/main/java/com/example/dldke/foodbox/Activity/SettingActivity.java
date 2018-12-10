@@ -95,7 +95,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
 
 
-
+        user_id.setText(Mapper.getUserId());
         point.setText(String.valueOf(Mapper.searchUserInfo().getPoint()));
         isCook = Mapper.searchUserInfo().getIsCookingClass();
 

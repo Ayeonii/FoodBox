@@ -137,7 +137,7 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
                 break;
             case R.id.btn_ok:
                 checkIngre = adapter.getCheckIngre();
-                dialogListener.onPositiveClicked(ingreType, checkIngre);
+                dialogListener.onPositiveClicked(ingreType, adapter.getCheckIngre());
                 dismiss();
                 break;
         }
