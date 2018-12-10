@@ -124,7 +124,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     private CurrentDate currentDate = new CurrentDate();
 
     /***************************etc********************************/
-    ImageView postit;
     public static boolean isCookingClass;
     private String user_id;
     private static boolean isMemo;
@@ -134,41 +133,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     public boolean getisCookingClass(){
         return isCookingClass;
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // unregister notification receiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        MemoCreate();
-        // register notification receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
-                new IntentFilter(PushListenerService.ACTION_PUSH_NOTIFICATION));
-    }
-
-    private final BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
-            HashMap<String,String> hm = (HashMap<String,String>) intent.getExtras().get(PushListenerService.INTENT_SNS_NOTIFICATION_DATA);
-
-            Log.e("bundle",hm.toString());
-            String message = PushListenerService.getMessage(hm,"data");
-            String title = PushListenerService.getMessage(hm,"title");
-            new AlertDialog.Builder(RefrigeratorMainActivity.this)
-                    .setTitle(title)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,9 +145,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
 
+        Mapper.checkAndCreateFirst();
+
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
-        PinpointManager tmp =getPinpointManager(getApplicationContext());
-        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
         try {
             user_id = Mapper.searchUserInfo().getUserId();
@@ -192,8 +156,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             Mapper.createUserInfo();
             Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
         }
-
-        Mapper.checkAndCreateFirst();
 
 
         //Mapper.createMemo();
@@ -292,6 +254,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent recipeboxIntent = new Intent(getApplicationContext(),MyRecipeBoxActivity.class);
                 startActivity(recipeboxIntent);
             }
+            else if(getIntent().getStringExtra("locate").equals("memo")){
+                Intent memoIntent = new Intent(getApplicationContext(),MemoActivity.class);
+                startActivity(memoIntent);
+            }
         }
         catch (Exception e){
             Log.e("pencil error","error");
@@ -300,9 +266,15 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         urgent_postit.setOnClickListener(onClickListener);
         tobuy_postit.setOnClickListener(onClickListener);
 
-        MemoCreate();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.e("test", "onResume() 들어옴");
+        MemoCreate();
+    }
 
     /*************리스트뷰 리스너************/
     class ListClickListener implements AdapterView.OnItemClickListener {
@@ -532,41 +504,53 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     public void MemoCreate() {
         Log.e("test", "MemoCreate() 들어옴");
         Mapper.updateUrgentMemo();
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateUrgentPushEndPoint(tmp.getTargetingClient());
 
-        urgentList = Mapper.scanUrgentMemo();
-        tobuyList = Mapper.scanToBuyMemo();
 
+        try {
+            urgentList = Mapper.scanUrgentMemo();
+            setUrgentMemo();
+        } catch (NullPointerException e) {
+
+        }
+
+        try {
+            tobuyList = Mapper.scanToBuyMemo();
+            setTobuyMemo();
+        } catch (NullPointerException e) {
+
+        }
+    }
+
+    public void setUrgentMemo() {
         // 유통기한 : 최상위 3개만 메모에 보여지기
-
         ArrayList<DCItem> dnArray = new ArrayList<>();
         for (int i=0; i<urgentList.size(); i++) {
             dnArray.add(new DCItem(Integer.parseInt(urgentList.get(i).getIngredientDuedate()), urgentList.get(i).getIngredientName()));
         }
 
         Collections.sort(dnArray, new AscendingSort());
+        String[] dueDateInfo = new String[3];
 
-        String dueDateInfo="";
-        CalculateDate(Integer.toString(dnArray.get(0).getDueDate()));
-        if (diffDays < 0)
-            dueDateInfo = dnArray.get(0).getName() + " +" + Math.abs(diffDays) + "일";
-        else
-            dueDateInfo = dnArray.get(0).getName() + " -" + Math.abs(diffDays) + "일";
-        txtUrgent1.setText(dueDateInfo);
+        for (int i=0; i<3; i++) {
+            try {
+                CalculateDate(Integer.toString(dnArray.get(i).getDueDate()));
+                if (diffDays < 0)
+                    dueDateInfo[i] = dnArray.get(i).getName() + " +" + Math.abs(diffDays) + "일";
+                else
+                    dueDateInfo[i] = dnArray.get(i).getName() + " -" + Math.abs(diffDays) + "일";
+            } catch (IndexOutOfBoundsException e) {
+                dueDateInfo[i] = "";
+            }
+        }
 
-        CalculateDate(Integer.toString(dnArray.get(1).getDueDate()));
-        if (diffDays < 0)
-            dueDateInfo = dnArray.get(1).getName() + " +" + Math.abs(diffDays) + "일";
-        else
-            dueDateInfo = dnArray.get(1).getName() + " -" + Math.abs(diffDays) + "일";
-        txtUrgent2.setText(dueDateInfo);
+        txtUrgent1.setText(dueDateInfo[0]);
+        txtUrgent2.setText(dueDateInfo[1]);
+        txtUrgent3.setText(dueDateInfo[2]);
+    }
 
-/*        CalculateDate(Integer.toString(dnArray.get(2).getDueDate()));
-        if (diffDays < 0)
-            dueDateInfo = dnArray.get(2).getName() + " +" + Math.abs(diffDays) + "일";
-        else
-            dueDateInfo = dnArray.get(2).getName() + " -" + Math.abs(diffDays) + "일";
-        txtUrgent3.setText(dueDateInfo);*/
-
+    public void setTobuyMemo() {
         // 장보기
         Log.e("test", "장보기 목록");
         for (int i=0; i<tobuyList.size(); i++)

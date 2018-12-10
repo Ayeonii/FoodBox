@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.MyRecipe;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
@@ -19,6 +21,8 @@ import com.example.dldke.foodbox.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
 
 public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<RecipeBoxHalfRecipeDetailAdapter.ViewHolder> {
@@ -31,9 +35,11 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     private String recipeId;
     private int cnt;
     private int ing;
+    Context context;
 
-    public RecipeBoxHalfRecipeDetailAdapter(List<RecipeDO.Ingredient> ingredientdata) {
+    public RecipeBoxHalfRecipeDetailAdapter(Context context, List<RecipeDO.Ingredient> ingredientdata) {
         this.items = ingredientdata;
+        this.context = context;
         RecipeBoxHalfRecipeDetailActivity activity = new RecipeBoxHalfRecipeDetailActivity();
         recipeId = activity.getRecipeId();
         AddIngredient(items);
@@ -137,10 +143,13 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
                 cnt++;
         }
 
+        PinpointManager tmp = getPinpointManager(context);
+
         if (cnt != 0)
             Mapper.updateIngInfo(1, recipeId);
         else
             Mapper.updateIngInfo(0, recipeId);
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
     }
 }
