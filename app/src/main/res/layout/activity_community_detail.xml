@@ -8,8 +8,8 @@
     android:fitsSystemWindows="true"
     tools:context=".MyRecipe.RecipeBoxFullRecipeDetailActivity">
 
-
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -30,7 +30,7 @@
             android:id="@+id/community_detail_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="55dp"
             android:fontFamily="@font/font_family"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +56,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/colorAccent"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -73,7 +73,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/community_detail_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="50dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -81,8 +81,21 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        layout="@layout/community_detail_content" />
+    <include layout="@layout/community_detail_content" />
+
+    <Button
+        android:id="@+id/takeBtn"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginLeft="300dp"
+        android:background="@drawable/make_radius"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="@font/font_family"
+        android:text="가져가기"
+        android:textSize="12dp"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/commentLayout"
@@ -125,6 +138,7 @@
             app:layout_constraintTop_toTopOf="@+id/community_commentBar"
             app:layout_constraintVertical_bias="0.6" />
     </android.support.constraint.ConstraintLayout>
+
 
 
 </android.support.design.widget.CoordinatorLayout>

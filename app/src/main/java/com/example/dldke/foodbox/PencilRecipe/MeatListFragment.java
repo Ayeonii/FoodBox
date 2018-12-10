@@ -33,7 +33,7 @@ public class MeatListFragment extends  android.support.v4.app.Fragment  {
         adapter = new PencilRecyclerAdapter(list,view.getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         recyclerView.setAdapter(adapter);
-        Log.e("Frag", "meat");
+
         setData();
 
         return view;

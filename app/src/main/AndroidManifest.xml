@@ -40,8 +40,8 @@
         <activity android:name=".MyRecipe.RecipeBoxHalfRecipeDetailActivity"/>
         <activity android:name=".MyRecipe.RecipeBoxFullRecipeDetailActivity"/>
         <activity android:name=".MyRecipe.MyRecipeBoxActivity" android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".CloudVision.PopupActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".CloudVision.VisionActivity" />
+        <activity android:name=".CloudVision.VisionReturnActivity" />
         <activity android:name=".Community.CommunityActivity" android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Community.CommunityDetailActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Memo.MemoActivity"/>

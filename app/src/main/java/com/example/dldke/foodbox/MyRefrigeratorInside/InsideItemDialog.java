@@ -44,11 +44,6 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.refrigeratorinside_item_dialog);
 
-        Log.e("test", "상세보기다이얼로그 create하자마자 보여지는 dcArray size: "+dcArray.size());
-        for (int i=0; i<dcArray.size(); i++) {
-            Log.d("test", i+","+dcArray.get(i).getStrDueDate()+", "+dcArray.get(i).getCount());
-        }
-
         txtName = (TextView) findViewById(R.id.txt_name);
         btnOk = (Button) findViewById(R.id.btn_ok);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -88,12 +83,8 @@ public class InsideItemDialog extends Dialog implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ok:
-                Log.e("test", "아이템다이얼로그에서 오케이버튼 클릭했을때");
+
                 dcArray = adapter.getDcArray();
-                Log.e("test", "어댑터에서 받아오는 (수정/삭제 후) 유통기한리스트");
-                for (int i=0; i<dcArray.size(); i++) {
-                    Log.d("test", i+","+dcArray.get(i).getStrDueDate() + ", " + dcArray.get(i).getCount());
-                }
                 dialogListener.onOkClicked(dcArray);
                 dismiss();
                 break;

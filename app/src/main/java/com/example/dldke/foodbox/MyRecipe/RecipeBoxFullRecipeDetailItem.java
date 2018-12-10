@@ -1,6 +1,5 @@
 package com.example.dldke.foodbox.MyRecipe;
 
-import android.net.Uri;
 
 public class RecipeBoxFullRecipeDetailItem {
     String description;
@@ -13,9 +12,5 @@ public class RecipeBoxFullRecipeDetailItem {
 
     public String getDescription(){
         return description;
-    }
-
-    public int getStepImage(){
-        return stepImage;
     }
 }

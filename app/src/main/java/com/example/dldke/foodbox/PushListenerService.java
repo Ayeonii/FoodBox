@@ -19,6 +19,7 @@ import com.amazonaws.mobileconnectors.pinpoint.targeting.notification.Notificati
 import com.amazonaws.mobileconnectors.pinpoint.targeting.notification.NotificationDetails;
 import com.example.dldke.foodbox.Activity.MainActivity;
 import com.example.dldke.foodbox.Activity.SplashActivity;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
@@ -47,8 +48,6 @@ public class PushListenerService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
-
-        Log.d(TAG, "Registering push notifications token: " + token);
         MainActivity.getPinpointManager(getApplicationContext()).getNotificationClient().registerDeviceToken(token);
     }
 

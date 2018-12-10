@@ -81,9 +81,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
     private FullRecipeStepDialog stepDialog;
 
-
-    private final String TAG = "FullRecipe DB Test";
-
     public FullRecipeActivity(){}
 
     public void setIsHalfRecipe(boolean isHalfRecipe){

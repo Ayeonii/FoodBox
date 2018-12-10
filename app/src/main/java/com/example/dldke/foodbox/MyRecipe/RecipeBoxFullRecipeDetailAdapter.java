@@ -22,21 +22,16 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     List<RecipeDO.Ingredient> specIngredientList;
     List<RecipeBoxFullRecipeDetailItem> stepList = new ArrayList<>();
 
-    String TAG = "RecipeBoxFullRecipeDetail";
-
     public RecipeBoxFullRecipeDetailAdapter(String recipeId){
         this.recipe_id = recipeId;
         specList = Mapper.searchRecipe(recipe_id).getDetail().getSpecList();
-        Log.e(TAG, ""+recipe_id);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        public ImageView stepImage;
         public TextView stepDescrip;
 
         public ViewHolder(View view){
             super(view);
-            stepImage = (ImageView) view.findViewById(R.id.fullrecipe_detail_stepimg);
             stepDescrip = (TextView) view.findViewById(R.id.fullrecipe_detail_stepdescrip);
         }
     }
@@ -55,8 +50,6 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        //holder.stepImage.setImageURI(stepList.get(position).getStepImage());
-        holder.stepImage.setImageResource(stepList.get(position).getStepImage());
         holder.stepDescrip.setText(stepList.get(position).getDescription());
     }
 
@@ -75,7 +68,6 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
             }
             int number = i+1;
             String descrip = number+". "+result+" 을/를 "+specList.get(i).getSpecMinute()+"분 동안 "+specList.get(i).getSpecMethod()+".\r\n"+"불 세기는 "+specList.get(i).getSpecFire();
-            Log.e(TAG, "레시피 설명  : "+descrip);
             stepList.add(new RecipeBoxFullRecipeDetailItem(R.drawable.strawberry, descrip));
 
             specIngredientList.clear();

@@ -10,13 +10,22 @@
 
     <LinearLayout
         android:layout_width="329dp"
-        android:layout_height="434dp"
+        android:layout_height="460dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/font_family"
+            android:gravity="center"
+            android:text="체크하면 냉동실로 들어갑니다." />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/cart_recycler"
@@ -48,11 +57,11 @@
                 android:layout_marginEnd="1dp"
                 android:layout_weight="1"
                 android:background="@color/colorActivated"
-                android:text="내 냉장고에 넣기"
+                android:fontFamily="@font/font_family"
+                android:text="내 냉장(동)고에 넣기"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/font_family"/>
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/completeButton"
@@ -60,11 +69,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/colorActivated"
+                android:fontFamily="@font/font_family"
                 android:text="확인"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/font_family"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

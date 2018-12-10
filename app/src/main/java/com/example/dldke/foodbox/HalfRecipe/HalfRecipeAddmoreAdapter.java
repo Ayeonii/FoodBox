@@ -60,7 +60,6 @@ public class HalfRecipeAddmoreAdapter extends RecyclerView.Adapter<HalfRecipeAdd
             holder.ivCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d("test", "check clicked!");
                     holder.ivCheck.setVisibility(View.GONE);
                     checkAddFood[position] = false;
                 }

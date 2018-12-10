@@ -1,22 +1,7 @@
-/*
- * Copyright 2016 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.dldke.foodbox.CloudVision;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,7 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,19 +20,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.http.HttpMethodName;
-import com.amazonaws.mobile.api.id3idutfky0i.TestMobileHubClient;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
-import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
-import com.amazonaws.mobileconnectors.apigateway.ApiResponse;
-import com.amazonaws.util.IOUtils;
-import com.amazonaws.util.StringUtils;
+
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -69,94 +46,93 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
-import com.theartofdev.edmodo.cropper.CropImageView;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+public class VisionActivity extends AppCompatActivity implements View.OnClickListener{
 
-public class VisionActivity extends AppCompatActivity {
 
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
+    public PopupAdapter popup = new PopupAdapter();
     public static final String FILE_NAME = "temp.jpg";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAeWacP0qlIcDN_dWHv6PFBZdnUtg0CVvA";
     private static final int MAX_LABEL_RESULTS = 10;
     private static final int MAX_DIMENSION = 1200;
+    private static List<InfoDO> matchingList = new ArrayList<>();
 
+    private static FragmentTransaction transaction;
 
     private static Mapper.RecipeMatching IngredientInfo;
-    private Context context;
     private ImageView imageView;
     private TextView loading;
-    private Button insert;
+    private Toolbar toolbar;
+    private static int enterCnt = 0;
 
-    private static GregorianCalendar cal = new GregorianCalendar();
-    private static Date inputDBDate ;
-    private static String inputDBDateString;
-    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-    private static boolean isFrozen;
+    public VisionActivity(){}
 
-    private ArrayList<PencilCartItem> matchFood = new ArrayList<>();
+    public FragmentTransaction getTransaction(){
+        return transaction;
+    }
+
+    public void setEnterTime(int enterCnt){
+        this.enterCnt = enterCnt;
+    }
+    public int getEnterTime(){ return enterCnt;}
 
     private static String TAG = "TestActivity";
 
+    public List<String> getNotMatch(){
+        return IngredientInfo.getNonMatchingList();
+    }
 
-    public void onCreate(Bundle savedInstanceState){
+    public List<InfoDO> getMatch(){
+        return matchingList;
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vision);
 
+        popup.setChangeItemClear();
+        transaction = getSupportFragmentManager().beginTransaction();
+        toolbar = (Toolbar) findViewById(R.id.vision_toolbar);
         loading = (TextView) findViewById(R.id.loading_text);
         imageView = (ImageView) findViewById(R.id.main_image);
-        insert = (Button) findViewById(R.id.vision_btn);
 
-        imageView.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Choose a picture")
-                    .setPositiveButton("Gallery", (dialog, i) -> startGalleryChooser())
-                    .setNegativeButton("Camera", (dialogInterface, i) -> startCamera());
-            builder.create().show();
-        });
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        insert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
-                for(int i =0 ; i<matchFood.size(); i++) {
-                    PencilCartItem food = matchFood.get(i);
-                    try {
-                        Log.e("Dialog",""+food.getIsFrozen());
-                        clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
-                    }
-                    catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
-                        Log.e("Dialog",""+food.getIsFrozen());
-                        clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
-                    }
-                }
-                Mapper.putFood(clickedList);
-                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                Intent refMain = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
-                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(refMain);
-            }
-        });
+        imageView.setOnClickListener(this);
+    }
 
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.main_image:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Choose a picture")
+                        .setPositiveButton("Gallery", (dialog, i) -> startGalleryChooser())
+                        .setNegativeButton("Camera", (dialogInterface, i) -> startCamera());
+                builder.create().show();
+                break;
+            default:
+                break;
+        }
     }
 
     public void startGalleryChooser() {
@@ -169,11 +145,7 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     public void startCamera() {
-        if (PermissionUtils.requestPermission(
-                this,
-                CAMERA_PERMISSIONS_REQUEST,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA)) {
+        if (PermissionUtils.requestPermission(this, CAMERA_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
@@ -190,7 +162,6 @@ public class VisionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
@@ -204,7 +175,6 @@ public class VisionActivity extends AppCompatActivity {
 
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             CropImage.activity(data.getData()).start(this);
-
         } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
             CropImage.activity(photoUri).start(this);
@@ -212,14 +182,12 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     public void uploadImage(Uri uri) {
-
         if (uri != null) {
             try {
                 // scale the image to save on bandwidth
-                Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
+                Bitmap bitmap = scaleBitmapDown(MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
                 callCloudVision(bitmap);
                 imageView.setImageBitmap(bitmap);
-
             } catch (IOException e) {
                 Log.d(TAG, "Image picking failed because " + e.getMessage());
                 Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
@@ -231,7 +199,6 @@ public class VisionActivity extends AppCompatActivity {
     }
 
     private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
-
         int originalWidth = bitmap.getWidth();
         int originalHeight = bitmap.getHeight();
         int resizedWidth = maxDimension;
@@ -252,7 +219,6 @@ public class VisionActivity extends AppCompatActivity {
 
     private void callCloudVision(final Bitmap bitmap) {
         // Switch text to loading
-
         // Do the real work in an async task, because we need to use the network anyway
         try {
             AsyncTask<Object, Void, String> labelDetectionTask = new VisionActivity.LableDetectionTask(this, prepareAnnotationRequest(bitmap));
@@ -284,9 +250,7 @@ public class VisionActivity extends AppCompatActivity {
 
         BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
         batchAnnotateImagesRequest.setRequests(new ArrayList<AnnotateImageRequest>() {{
-
             AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
-
             // Add the image
             Image base64EncodedImage = new Image();
             // Convert the bitmap to a JPEG
@@ -294,11 +258,9 @@ public class VisionActivity extends AppCompatActivity {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] imageBytes = byteArrayOutputStream.toByteArray();
-
             // Base64 encode the JPEG
             base64EncodedImage.encodeContent(imageBytes);
             annotateImageRequest.setImage(base64EncodedImage);
-
             // add the features we want
             annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
                 Feature labelDetection = new Feature();
@@ -321,9 +283,6 @@ public class VisionActivity extends AppCompatActivity {
     private static class LableDetectionTask extends AsyncTask<Object, Void, String> {
         private WeakReference<VisionActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
-        public List<String> notmatchingItems;
-
-        public LableDetectionTask(){ }
 
         LableDetectionTask(VisionActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
@@ -336,7 +295,6 @@ public class VisionActivity extends AppCompatActivity {
                 //Log.d(TAG, "created Cloud Vision request object, sending request");
                 BatchAnnotateImagesResponse response = mRequest.execute();
                 return convertResponseToString(response);
-
             } catch (GoogleJsonResponseException e) {
                 //Log.d(TAG, "failed to make API request because " + e.getContent());
             } catch (IOException e) {
@@ -348,37 +306,29 @@ public class VisionActivity extends AppCompatActivity {
         /************* 인식된 글자 ImageView 에 뿌려주기 *********************/
         protected void onPostExecute(String result) {
             VisionActivity activity = mActivityWeakReference.get();
-            List<InfoDO> matchingItems = IngredientInfo.getMatchingList();
-            notmatchingItems = IngredientInfo.getNonMatchingList();
+//            List<InfoDO> matchingItems = IngredientInfo.getMatchingList();
+//            List<String> notmatchingItems = IngredientInfo.getNonMatchingList();
 
             String[] array = result.split("\n");
-            for(int i = 0; i<array.length ; i++){
-                Log.e(TAG, ""+i+array[i]);
+            for (int i = 0; i < array.length; i++) {
+                Log.e(TAG, "" + i + array[i]);
             }
 
             if (activity != null && !activity.isFinishing()) {
-                activity.loading.setVisibility(View.INVISIBLE);
-                activity.matchingIngredient(activity, matchingItems);
-                activity.notMatchingIngredient(activity, notmatchingItems);
+                Intent intent = new Intent(activity, VisionReturnActivity.class);
+                activity.startActivity(intent);
             }
         }
 
-        public List<String> getNotMatchingInfo(){
-            return notmatchingItems;
-        }
 
     }
 
 
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-
         StringBuilder message = new StringBuilder("");
-
         List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
         if (labels != null) {
-            //for (EntityAnnotation label : labels) {
             message.append(labels.get(0).getDescription());
-            //}
         } else {
             message.append("nothing");
         }
@@ -392,8 +342,8 @@ public class VisionActivity extends AppCompatActivity {
         }*/
 
         //영수증 재료와 DB data 비교
-        IngredientInfo = Mapper.matchingInfo(message.toString());
-
+        IngredientInfo = Mapper.matchingInfo(message.toString());///////////////////
+        matchingList = IngredientInfo.getMatchingList();
         return message.toString();
     }
 
@@ -402,69 +352,17 @@ public class VisionActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case CAMERA_PERMISSIONS_REQUEST:
-                if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
-                    startCamera();
-                }
+                case CAMERA_PERMISSIONS_REQUEST:
+                    if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
+                        startCamera();
+                    }
                 break;
-            case GALLERY_PERMISSIONS_REQUEST:
-                if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults)) {
-                    startGalleryChooser();
-                }
-                break;
+
+                case GALLERY_PERMISSIONS_REQUEST:
+                    if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults)) {
+                        startGalleryChooser();
+                    }
+                    break;
         }
     }
-
-    public void matchingIngredient(VisionActivity activity, List<InfoDO> matchingItems){
-        RecyclerView matchingIngredient = activity.findViewById(R.id.matching);
-        PencilCartAdapter adapter;
-
-        for(int i=0; i<matchingItems.size(); i++){
-            String matching_name = matchingItems.get(i).getName();
-            Log.e(TAG, "matching_name"+ matching_name);
-
-            int dueDate;
-            try{
-                dueDate = Mapper.searchFood(matchingItems.get(i).getName(), matchingItems.get(i).getSection()).getDueDate();
-            }
-            catch (NullPointerException e){
-                dueDate = 0;
-            }
-            cal.add(cal.DATE, dueDate);
-            inputDBDate = cal.getTime();
-            inputDBDateString = formatter.format(inputDBDate);
-
-            String foodImg = "file:///storage/emulated/0/Download/"+matchingItems.get(i).getName()+".jpg";
-            Uri uri = Uri.parse(foodImg);
-            if(matchingItems.get(i).getKindOf() == "frozen"){
-                isFrozen = true;
-            }
-            else{
-                isFrozen = false;
-            }
-
-            matchFood.add(new PencilCartItem(matchingItems.get(i).getName(), uri, inputDBDateString, 1, matchingItems.get(i).getSection(), isFrozen, dueDate));
-        }
-
-        matchingIngredient.setHasFixedSize(true);
-        adapter = new PencilCartAdapter(matchFood);
-        matchingIngredient.setLayoutManager(new LinearLayoutManager(activity));
-        matchingIngredient.setAdapter(adapter);
-
-        for(int i = 0; i<matchFood.size(); i++){
-            Log.d(TAG, "재료 이름 : "+matchFood.get(i).getFoodName()+" Section : "+matchFood.get(i).getFoodSection()+" 유통기한 : "+matchFood.get(i).getFoodDate()+"냉동고? : "+matchFood.get(i).getIsFrozen());
-        }
-    }
-
-    public void notMatchingIngredient(VisionActivity activity, List<String> notmatchingItems){
-        List<String > items = notmatchingItems;
-        RecyclerView notmatchingIngredient = activity.findViewById(R.id.notmatching_ingredient_view);
-        NotMatchAdapter adapter;
-
-        notmatchingIngredient.setHasFixedSize(true);
-        adapter = new NotMatchAdapter(items, activity);
-        notmatchingIngredient.setLayoutManager(new LinearLayoutManager(activity));
-        notmatchingIngredient.setAdapter(adapter);
-    }
-
 }

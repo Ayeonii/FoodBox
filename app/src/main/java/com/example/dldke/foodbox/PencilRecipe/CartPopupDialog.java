@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -55,12 +54,16 @@ public class CartPopupDialog {
         cart_list_view.setLayoutManager(new LinearLayoutManager(context));
         cart_list_view.setAdapter(adapter);
 
+
+        //확인버튼
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dlg.dismiss();
             }
         });
+
+        //냉장고에 넣기 버튼
         getInside.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,16 +71,15 @@ public class CartPopupDialog {
                 for(int i =0 ; i<clickItems.size(); i++) {
                     PencilCartItem food = clickItems.get(i);
                     try {
-                        Log.e("Dialog",""+food.getIsFrozen());
                         clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
                     catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
-                        Log.e("Dialog",""+food.getIsFrozen());
                         clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
                 }
                 //Log.e("clickedList",""+clickedList);
                 Mapper.putFood(clickedList);
+                Mapper.updateToBuyMemo(clickedList);
                 Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 pencilAdapter.getClickFood().clear();
                 pencilAdapter.setClickCnt(0);

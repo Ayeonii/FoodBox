@@ -3,6 +3,7 @@ package com.example.dldke.foodbox.HalfRecipe;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeRecipeAdapter.ItemViewHolder> {
 
     private ArrayList<HalfRecipeRecipeItem> mItems;
-//    private ArrayList<HalfRecipeRecipeItem> needItems = new ArrayList<>();
     private Double editCount;
     private String strEditCount;
 
@@ -37,12 +37,19 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
         //재료의 이름 세팅
         holder.txtName.setText(mItems.get(position).getName());
         //재료 보유 개수 세팅
-        final Double iCount = mItems.get(position).getCount();
-        String strCount = Double.toString(iCount);
+        Double count = mItems.get(position).getCount();
+        String strCount = Double.toString(count);
         holder.txtCount.setText(strCount);
 
-        //기본으로 사용할 개수 1.0으로 세팅
-        editCount = 1.0;
+        // 보유 개수가 0.5이면 사용개수 0.5부터 가능하도록 그 이상이면 1.0부터 가능하도록
+        if (count < 1.0)
+            editCount = 0.5;
+        else
+            editCount = 1.0;
+
+        strCount = Double.toString(editCount);
+        holder.txtCountEdit.setText(strCount);
+
         mItems.get(position).setEditCount(editCount);
 
         holder.imgFood.setImageURI(mItems.get(position).getImage());
@@ -51,14 +58,12 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (mItems.get(position).getEditCount() < mItems.get(position).getCount()) {
-                    double plus = mItems.get(position).getEditCount() + 0.5;
-                    strEditCount = Double.toString(plus);
-                    holder.txtCountEdit.setText(strEditCount);
-                    mItems.get(position).setEditCount(plus);
-//                }
+                double plus = mItems.get(position).getEditCount() + 0.5;
+                strEditCount = Double.toString(plus);
+                holder.txtCountEdit.setText(strEditCount);
+                mItems.get(position).setEditCount(plus);
 
-                if (mItems.get(position).getEditCount()-mItems.get(position).getCount() > 0) {
+                if (mItems.get(position).getEditCount() - mItems.get(position).getCount() > 0) {
                     holder.txtCountEdit.setTextColor(Color.parseColor("#990000"));
                     mItems.get(position).setEditCount(plus);
                 }
@@ -76,7 +81,7 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
                     mItems.get(position).setEditCount(minus);
                 }
 
-                if (mItems.get(position).getEditCount()-mItems.get(position).getCount() == 0
+                if (mItems.get(position).getEditCount() - mItems.get(position).getCount() == 0
                         || mItems.get(position).getEditCount() - mItems.get(position).getCount() < 0) {
                     holder.txtCountEdit.setTextColor(Color.parseColor("#000099"));
                     mItems.get(position).setEditCount(minus);
@@ -84,7 +89,7 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
             }
         });
 
-        if (mItems.get(position).getEditCount()-mItems.get(position).getCount() > 0)
+        if (mItems.get(position).getEditCount() - mItems.get(position).getCount() > 0)
             holder.txtCountEdit.setTextColor(Color.parseColor("#990000"));
     }
 

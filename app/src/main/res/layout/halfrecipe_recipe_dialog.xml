@@ -50,6 +50,7 @@
             android:gravity="center"
             android:text="재료를 선택하세요"
             android:textSize="20sp"
+            android:fontFamily="@font/font_family"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -145,7 +146,8 @@
                 android:gravity="center"
                 android:text="뒤로"
                 android:textColor="@color/colorAccent"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:fontFamily="@font/font_family"/>
         </LinearLayout>
     </RelativeLayout>
 

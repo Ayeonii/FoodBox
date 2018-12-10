@@ -88,6 +88,4 @@ public class UserDO {
         this._themeList = _themeList;
     }
 
-
-
 }

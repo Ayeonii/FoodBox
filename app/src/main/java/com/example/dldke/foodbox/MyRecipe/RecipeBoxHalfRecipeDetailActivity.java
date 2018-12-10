@@ -1,11 +1,9 @@
 package com.example.dldke.foodbox.MyRecipe;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
@@ -33,6 +31,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
+
 public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
     public RecipeBoxHalfRecipeDetailActivity(){}
 
@@ -40,7 +40,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         return recipe_id;
     }
 
-    private String TAG = "RecipeBoxHalfRecipeDetailActivity";
     private static int ing;
 
     private HalfRecipeBoxFragment halfRecipeBoxFragment = new HalfRecipeBoxFragment();
@@ -75,7 +74,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         recipe_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 
         recipe_detail_view.setLayoutManager(new GridLayoutManager(this, 2));
-        recipeBoxHalfRecipeDetailAdapter = new RecipeBoxHalfRecipeDetailAdapter(recipeItems);
+        recipeBoxHalfRecipeDetailAdapter = new RecipeBoxHalfRecipeDetailAdapter(getApplicationContext(), recipeItems);
         recipe_detail_view.setAdapter(recipeBoxHalfRecipeDetailAdapter);
 
         int cnt = recipeBoxHalfRecipeDetailAdapter.getCnt();
@@ -111,10 +110,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                         }
                     }
 
-                    for (int l=0; l<dcArray.size(); l++) {
-                        Log.d("test", l + ", "+dcArray.get(l).getStrDueDate());
-                    }
-
                     if (dcArray.size() > 1) {
                         Double countSum = 0.0;  // 총 보유개수
                         for (int k = 0; k < dcArray.size(); k++) {
@@ -125,10 +120,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                             dueDateCheckArray.add(recipeItems.get(i).getIngredientName());
                         }
                     }
-                }
-
-                for (int i=0; i<dueDateCheckArray.size(); i++) {
-                    Log.d("test", i + ", "+dueDateCheckArray.get(i));
                 }
 
                 if (dueDateCheckArray.size() > 0) {
@@ -159,6 +150,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
             MyRecipeBoxActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             halfRecipeBoxFragment.setisDetailBack(true);
             startActivity(MyRecipeBoxActivity);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -206,7 +198,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
             // 정수형태의 유통기한과 더블형의 보유개수를 저장할 배열 생성
             ArrayList<DCItem> dcArray = new ArrayList<>();
 
-            Log.e("test", "정수형태의 유통기한과 더블형의 보유개수를 저장할 배열");
             for (int j = 0; j < refrigeratorItem.size(); j++) {
                 if (refrigeratorItem.get(j).getName().equals(radioCheckItems.get(i).getName())) {
                     Integer iDueDate = Integer.parseInt(refrigeratorItem.get(j).getDueDate());
@@ -214,10 +205,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                 }
             }
 
-            for (int j=0; j<dcArray.size(); j++)
-                Log.d("test", dcArray.get(j).getDueDate() + ", " + dcArray.get(j).getCount());
-
-            Log.d("test", "radioCheckItems.get(i).getWhich() = " + radioCheckItems.get(i).getWhich());
             // 2. 유통기한 기준 정렬 which = 0 이면 오름차순 1 이면 내림차순
             switch (radioCheckItems.get(i).getWhich()) {
                 case 0: //오름차순
@@ -228,10 +215,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                     break;
             }
 
-            Log.e("test", "정렬된 후의 dcArray");
-            for (int a=0; a<dcArray.size(); a++) {
-                Log.d("test", a+ " : "+dcArray.get(a).getDueDate() + ", " + dcArray.get(a).getCount());
-            }
 
             // 계산하고 바로 updatecount
             // 예를들어 감자 2.0개 + 3.0개, 근데 사용할 개수는 1.0개
@@ -273,9 +256,12 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         }
 
         Mapper.updateIngInfo(2, recipe_id); // 레시피 사용완료
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
         halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        halfRecipeCompleteActivity.putExtra("complete", 2);
         startActivity(halfRecipeCompleteActivity);
     }
 }

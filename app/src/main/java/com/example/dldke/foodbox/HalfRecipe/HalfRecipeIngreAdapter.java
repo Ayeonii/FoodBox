@@ -3,6 +3,7 @@ package com.example.dldke.foodbox.HalfRecipe;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +17,18 @@ import java.util.ArrayList;
 public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngreAdapter.ItemViewHolder> {
 
     ArrayList<HalfRecipeIngreItem> mItems;
-    Boolean[] checkIngre = new Boolean[50];
+    private Boolean[] checkIngre;
     String ingreType;
 
     public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems, int arraySize, Boolean[] check, String ingreType) {
         this.mItems = mItems;
+        checkIngre = new Boolean[arraySize];
         System.arraycopy(check, 0, this.checkIngre, 0, arraySize);
         this.ingreType = ingreType;
+    }
+
+    public Boolean[] getCheckIngre() {
+        return checkIngre;
     }
 
     @NonNull
@@ -33,7 +39,7 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         String foodName = mItems.get(position).getName();
         String foodImgUri;
         if (ingreType.equals("sideDish")) {
@@ -44,10 +50,25 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
         holder.mNameTv.setText(foodName);
         holder.food_Img.setImageURI(Uri.parse(foodImgUri));
 
-        if (checkIngre[position])
+        if (checkIngre[position]) {
             holder.ivCheck.setVisibility(View.VISIBLE);
-        else
+            holder.ivCheck.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.ivCheck.setVisibility(View.GONE);
+                    checkIngre[position] = false;
+                }
+            });
+        } else {
             holder.ivCheck.setVisibility(View.GONE);
+            holder.food_Img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.ivCheck.setVisibility(View.VISIBLE);
+                    checkIngre[position] = true;
+                }
+            });
+        }
     }
 
     @Override

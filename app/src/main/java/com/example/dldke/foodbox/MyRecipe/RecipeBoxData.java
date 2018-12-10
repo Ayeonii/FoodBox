@@ -6,21 +6,21 @@ public class RecipeBoxData {
     String foodname, recipeId, simplename;
     Integer image;
     String food_image;
-    boolean isShared;
+    boolean isShared, isPost;
     int isIng;
 
     public RecipeBoxData(String recipeId, String imgUrl, String foodname, boolean isShared){
         this.foodname = foodname;
-        //this.image = image;
         this.food_image = imgUrl;
         this.recipeId = recipeId;
         this.isShared = isShared;
     }
 
-    public RecipeBoxData(String simplename, String recipeId, int isIng){
+    public RecipeBoxData(String simplename, String recipeId, int isIng, boolean isPost){
         this.simplename = simplename;
         this.recipeId = recipeId;
         this.isIng = isIng;
+        this.isPost = isPost;
     }
 
 
@@ -34,10 +34,6 @@ public class RecipeBoxData {
 
     public String getSimpleName(){
         return simplename;
-    }
-
-    public void setSimplename(String simplename){
-        this.simplename = simplename;
     }
 
     public Integer getImage() {
@@ -60,4 +56,7 @@ public class RecipeBoxData {
         return isIng;
     }
 
+    public boolean isPost() {
+        return isPost;
+    }
 }

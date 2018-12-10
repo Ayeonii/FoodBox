@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.CloudVision;
 
+import android.app.Dialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilItem;
+import com.example.dldke.foodbox.PencilRecipe.SearchIngredientFragment;
 import com.example.dldke.foodbox.R;
 
 import java.text.SimpleDateFormat;
@@ -22,18 +24,59 @@ import java.util.List;
 
 public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHolder> {
 
-    private List<PencilItem> allFoodItems = new ArrayList<>();
-    private List<PencilCartItem> changeItem = new ArrayList<>();
+    private NotMatchAdapter notMatchAdapter = new NotMatchAdapter();
+    private SearchIngredientFragment searchIngredientFragment = new SearchIngredientFragment();
+    private static List<PencilItem> allFoodItems = new ArrayList<>();
+    private static ArrayList<PencilCartItem> changeItem = new ArrayList<>();
     private GregorianCalendar cal = new GregorianCalendar();
     private static Date inputDBDate ;
     private static String inputDBDateString;
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
     private String TAG="PopupAdapter";
+    private RecyclerView notmatch;
+    private int index;
+    private List<String> notMatchingInfo;
+    private Dialog dlg;
+    private static List<String[]> newOldName = new ArrayList<String[]>();
+    private int matchSize = VisionReturnActivity.matchSize;
 
-    public PopupAdapter (List<PencilItem> allfoodList){
+
+    public PopupAdapter(){}
+
+
+    public PopupAdapter (List<PencilItem> allfoodList,RecyclerView notmatch, int index, List<String> notMatchingInfo, Dialog dlg){
         this.allFoodItems = allfoodList;
-        Log.e(TAG, "AllFoodItems"+allFoodItems);
+        this.index = index;
+        this.notmatch = notmatch;
+        this.notMatchingInfo = notMatchingInfo;
+        this.dlg = dlg;
+        searchIngredientFragment.setFromRefri(false);
+
+
     }
+
+    public void setNewOldName(int removedPosition){
+        if(removedPosition>=matchSize) {
+            int idx = removedPosition - matchSize;
+            Log.e(TAG, "idx"+idx+"removedPosition: "+removedPosition+"matchSize = "+matchSize);
+            Log.e(TAG, ""+newOldName.get(idx));
+            newOldName.remove(idx);
+        }
+
+    }
+
+    public List<String[]> getNewOldName(){
+        return newOldName;
+    }
+
+    public List<PencilCartItem> getChangeItem(){
+        return changeItem;
+    }
+
+    public void setChangeItemClear(){
+        changeItem.clear();
+    }
+
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView food_name;
@@ -82,9 +125,29 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
                     isFrozen = false;
                 }
 
-                changeItem.add(new PencilCartItem(allFoodItems.get(position).getFoodName(), allFoodItems.get(position).getFoodImg(), inputDBDateString, 1, allFoodItems.get(position).getFoodSection(), isFrozen, dueDate));
-                Log.e(TAG, "선택한 재료 : "+allFoodItems.get(position).getFoodName());
+                changeItem.add(new PencilCartItem(allFoodItems.get(position).getFoodName()
+                                                , allFoodItems.get(position).getFoodImg()
+                                                , inputDBDateString
+                                                , 1
+                                                , allFoodItems.get(position).getFoodSection()
+                                                , isFrozen
+                                                , dueDate));
 
+                Log.e(TAG, "선택한 재료 : "+allFoodItems.get(position).getFoodName());
+                Log.e(TAG, "삭제될 재료 : "+notMatchingInfo.get(index));
+                newOldName.add(new String[]{notMatchingInfo.get(index),allFoodItems.get(position).getFoodName()});
+                notMatchingInfo.remove(index);
+                for(int i = 0; i<notMatchingInfo.size(); i++){
+                    Log.e(TAG, "재료 : "+notMatchingInfo.get(i));
+                }
+                VisionReturnActivity visionReturnActivity = new VisionReturnActivity();
+                visionReturnActivity.notMatchingIngredient(notmatch, notMatchingInfo);
+                visionReturnActivity.matchingIngredient();
+                //notMatchAdapter.notifyItemRemoved(index);
+                //notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
+                notMatchAdapter.notifyDataSetChanged();
+                //cancel();
+               dlg.dismiss();
             }
         });
     }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
@@ -17,10 +18,9 @@ import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
 public class HalfRecipeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -43,6 +43,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private String user_id;
     private String recipeSimpleName;
+    private static String TAG="HalfRecipeActivity";
 
     // 추가재료 부분================
     private List<InfoDO> infoFreshItem, infoMeatItem, infoEtcItem;
@@ -82,40 +83,42 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         //Mapper.createMemo();
     }
 
-
     public void setInfoDOList() {
 
+        //반찬을 제외한 나머지 재료 가져와서 섹션별로 따로따로 담기
         infoFreshItem = Mapper.scanSection("fresh");
         infoMeatItem = Mapper.scanSection("meat");
         infoEtcItem = Mapper.scanSection("etc");
 
         nameAll = new ArrayList<>();
-        int[] check = new int[100];
+        int[] check;
 
         // fresh======================
+        check = new int[infoFreshItem.size()];
         Arrays.fill(check, 0);
 
-        for (int i=0; i<nameFresh.size(); i++) {    //내가 가지고 있는 신선칸 재료들
-            for (int j = 0; j < infoFreshItem.size(); j++) {    //기본 infoDO에 있는 신선칸 재료들
-                if (infoFreshItem.get(j).getName().equals(nameFresh.get(i))) {
-                    check[j] = 1;
+        for (int i=0; i<infoFreshItem.size(); i++) {        //기본 infoDO에 있는 신선칸 재료들
+            for (int j=0; j<nameFresh.size(); j++) {        //내가 가지고 있는 신선칸 재료들
+                if (infoFreshItem.get(i).getName().equals(nameFresh.get(j))) {
+                    check[i] = 1;
                     break;  // j for문을 나온다
                 }
             }
         }
 
-        for (int i=0; i<infoFreshItem.size(); i++) {
-            if (check[i]==0)
+        for (int i = 0; i < infoFreshItem.size(); i++) {
+            if (check[i] == 0)
                 nameAll.add(infoFreshItem.get(i).getName());
         }
 
         // meat======================
+        check = new int[infoMeatItem.size()];
         Arrays.fill(check, 0);
 
-        for (int i=0; i<nameMeat.size(); i++) {
-            for (int j=0; j<infoMeatItem.size(); j++) {
-                if (infoMeatItem.get(j).getName().equals(nameMeat.get(i))) {
-                    check[j] = 1;
+        for (int i=0; i<infoMeatItem.size(); i++) {
+            for (int j=0; j<nameMeat.size(); j++) {
+                if (infoMeatItem.get(i).getName().equals(nameMeat.get(j))) {
+                    check[i] = 1;
                     break;
                 }
             }
@@ -127,21 +130,22 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         }
 
         // etc======================
+        check = new int[infoEtcItem.size()];
         Arrays.fill(check, 0);
 
-        for (int i=0; i<nameEtc.size(); i++) {
-            for (int j=0; j<infoEtcItem.size(); j++) {
-                if (infoEtcItem.get(j).getName().equals(nameEtc.get(i))) {
-                    check[j] = 1;
+        for (int i=0; i<infoEtcItem.size(); i++) {
+            for (int j=0; j<nameDairy.size(); j++) {
+                if (infoEtcItem.get(i).getName().equals(nameDairy.get(j))) {
+                    check[i] = 1;
                     break;
                 }
             }
         }
 
-        for (int i=0; i<nameDairy.size(); i++) {
-            for (int j=0; j<infoEtcItem.size(); j++) {
-                if (infoEtcItem.get(j).getName().equals(nameDairy.get(i))) {
-                    check[j] = 1;
+        for (int i=0; i<infoEtcItem.size(); i++) {
+            for (int j=0; j<nameEtc.size(); j++) {
+                if (infoEtcItem.get(i).getName().equals(nameEtc.get(j))) {
+                    check[i] = 1;
                     break;
                 }
             }
@@ -168,41 +172,40 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         localMeat = new ArrayList<>();
         localFresh = new ArrayList<>();
 
-        Log.d("test", "refrigeratorItem.size : " + refrigeratorItem.size());
         for (int i = 0; i < refrigeratorItem.size(); i++) {
             try {
                 if (refrigeratorItem.get(i).getSection().equals("sideDish"))
                     localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
-                Log.d("test", "sideDish null: " + e.getMessage());
+                Log.d(TAG, "sideDish null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getKindOf().equals("dairy"))
                     localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
-                Log.d("test", "dairy null: " + e.getMessage());
+                Log.d(TAG, "dairy null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getKindOf().equals("beverage") || refrigeratorItem.get(i).getKindOf().equals("sauce"))
                     localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
-                Log.d("test", "etc null: " + e.getMessage());
+                Log.d(TAG, "etc null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getSection().equals("meat"))
                     localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
-                Log.d("test", "meat null: " + e.getMessage());
+                Log.d(TAG, "meat null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getSection().equals("fresh"))
                     localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
-                Log.d("test", "fresh null: " + e.getMessage());
+                Log.d(TAG, "fresh null: " + e.getMessage());
             }
         }
     }
@@ -521,14 +524,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 else if (result == 3) {
                     goIngHalfRecipeMaking(mItems);
                 }
-
-//                if (result == 1) {
-//                    goHalfRecipeMaking(mItems, dueDateCheckArray);
-//                } else if (result == 2) {
-//                    showDueDateDialog(mItems, dueDateCheckArray);
-//                } else if (result == 3) {
-//                    goIngHalfRecipeMaking(mItems);
-//                }
             }
 
             @Override
@@ -584,21 +579,22 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         }
 
         String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
-        Log.d("test", recipe_id);
 
         Mapper.addRecipeInMyCommunity(recipe_id);
 
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
         halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        halfRecipeCompleteActivity.putExtra("complete", 0);
         startActivity(halfRecipeCompleteActivity);
     }
 
     private void goIngHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
-        Log.d("test", "===HalfRecipeActivity로 넘어온 mItems===");
         List<RecipeDO.Ingredient> needItem = new ArrayList<>();
 
         for (int i=0; i<mItems.size(); i++) {
-            Log.d("test", "name : " + mItems.get(i).getName() + ", count : " + mItems.get(i).getCount() + ", editCount : " + mItems.get(i).getEditCount());
 
             if ( mItems.get(i).getEditCount() - mItems.get(i).getCount() > 0 ) {
                 RecipeDO.Ingredient setlist = new RecipeDO.Ingredient();
@@ -606,17 +602,11 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 setlist.setIngredientName(mItems.get(i).getName());
                 setlist.setIngredientCount(mItems.get(i).getEditCount() - mItems.get(i).getCount());
 
-                Log.d("test", "name : " + setlist.getIngredientName() + ", needCount : " + setlist.getIngredientCount());
                 needItem.add(setlist);
             }
         }
 
         // 필요한 재료를 담은 array : needItem
-        Log.d("test", "=====needItems=====");
-        Log.d("test", "size : " + needItem.size());
-        for(int i=0; i<needItem.size(); i++) {
-            Log.d("test", "name : " + needItem.get(i).getIngredientName() + ", needCount : " + needItem.get(i).getIngredientCount());
-        }
 
         //recipe 테이블 접근
         List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
@@ -625,8 +615,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         }
         final String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
 
-        Log.d("test", recipe_id);
-
         Mapper.updateIngInfo(1, recipe_id);
 
         Mapper.addRecipeInMyCommunity(recipe_id);
@@ -634,10 +622,10 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         // memo table
         Mapper.appendToBuyMemo(needItem);
 
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+
         //사용자에게 필요한재료 확인다이얼로그
         showRecipeIngDialog(needItem);
     }
-
-
-    //===================================================================================================================================
 }

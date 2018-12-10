@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -27,8 +28,6 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     private String recipe_id;
     private boolean isCookignClass;
 
-    String TAG="CustomDialog";
-
     public CustomDialog(Context context, boolean isCookingClass){
         super(context);
         this.context = context;
@@ -40,7 +39,6 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_box_fullrecipe_detail_popup1);
 
-        Log.e(TAG, "쿠킹 클래스"+isCookignClass);
         recipe_id = myRecipeBoxFullRecipeAdapter.getRecipeId();
 
         ok = (TextView) findViewById(R.id.dialog_ok);
@@ -65,19 +63,23 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
                 String title_str = title.getText().toString();
                 String password_str = password.getText().toString();
 
-                Mapper.updateIsShared(recipe_id);
-                Mapper.createPost(" "+title_str, recipe_id);
-                Mapper.updatePointInfo(10);
-
-                Intent MainActivity = new Intent(context, com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
-                MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(MainActivity);
-
-                if(password_str != null){
+                if (title_str.equals("")){
+                    Toast.makeText(context, "공유할 레시피 제목을 입력해주세요", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Mapper.createPost(" "+title_str, recipe_id);
                     Mapper.updatePassword(recipe_id, password_str);
+                    Mapper.updateIsShared(recipe_id);
+                    Mapper.updatePointInfo(10);
+
+                    Toast.makeText(context, "레시피가 공유되었습니다.", Toast.LENGTH_SHORT).show();
+
+                    Intent MainActivity = new Intent(context, com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
+                    MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(MainActivity);
+                    cancel();
                 }
 
-                cancel();
                 break;
             case R.id.dialog_cancel:
                 cancel();
