@@ -1033,41 +1033,6 @@ public final class Mapper {
         return url;
     }
 
-    public static String getImageUrlProfile(final String userid){
-
-        returnThread thread = new returnThread(new CustomRunnable() {
-
-            com.example.dldke.foodbox.DataBaseFiles.UserDO userItem;
-            URL url;
-            @Override
-            public void run() {
-                userItem = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-                        userid);
-                // Log.d("why",Mapper.bucketName);
-                try {
-                    url = userItem.getProfileImage().getAmazonS3Client().getUrl(userItem.getProfileImage().getBucketName(), "Recipes/" + userId + ".jpg");
-                    Log.d("gerUserProfile", url.toString());
-                }catch (NullPointerException e){
-
-                }
-            }
-            @Override
-            public Object getResult(){
-                return url.toString();
-            }
-        });
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        String url = (String)thread.getResult();
-        return url;
-    }
-
-
 
     public static void updatePointInfo(Integer Point){
 
@@ -1091,6 +1056,7 @@ public final class Mapper {
             e.printStackTrace();
         }
     }
+
 
     public static void updatePassword(String recipe_id,String password){
 
