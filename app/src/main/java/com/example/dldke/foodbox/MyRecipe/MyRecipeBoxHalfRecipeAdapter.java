@@ -3,18 +3,14 @@ package com.example.dldke.foodbox.MyRecipe;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -105,6 +101,7 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         }
 
     }
+
 
     public int getItemCount(){
         return recipedata.size();

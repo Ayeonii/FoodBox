@@ -78,7 +78,7 @@
         android:id="@+id/fullrecipe_write"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="풀레시피로 가져가기"
+        android:text="재료 소진하기"
         android:textSize="15dp"
         android:fontFamily="@font/font_family"
         android:background="@color/colorPrimary"
