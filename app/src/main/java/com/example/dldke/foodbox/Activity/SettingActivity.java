@@ -74,24 +74,28 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         business_N2 = (TextView) findViewById(R.id.business_number2);
         business_N3 = (TextView) findViewById(R.id.business_number3);
         nickname = (TextView) findViewById(R.id.nickname);
+        user_id.setText(Mapper.getUserId());
+        String userId = user_id.getText().toString();
 
-
-        //User Profile Image
         try {
-            String imgUrl = Mapper.getImageUrlUser();
-            new DownloadImageTask(profile).execute(imgUrl);
+            String imgUrl = Mapper.getImageUrlUser(userId);
+            if(imgUrl.equals("default")){
+                profile.setImageDrawable(getApplication().getResources().getDrawable(R.drawable.ic_person, null));
+            }
+            else{
+                new DownloadImageTask(profile).execute(imgUrl);
+            }
 
         } catch (Exception e){
 
         }
-
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);  //기존 toolbar없애기
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
 
 
-        user_id.setText(Mapper.getUserId());
+
         point.setText(String.valueOf(Mapper.searchUserInfo().getPoint()));
         isCook = Mapper.searchUserInfo().getIsCookingClass();
 
@@ -274,7 +278,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             try {
                 String real_path = uri.getPath();
                 imagePath = real_path;
-                Log.e("","imagePath:"+imagePath);
                 Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
                 profile.setImageBitmap(bitmap);
 

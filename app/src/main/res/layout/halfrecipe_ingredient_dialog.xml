@@ -40,6 +40,7 @@
             android:gravity="center"
             android:text="이 칸은 비어있습니다."
             android:textSize="20sp"
+            android:fontFamily="@font/font_family"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -105,7 +106,8 @@
                 android:gravity="center"
                 android:text="뒤로"
                 android:textColor="@color/colorAccent"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:fontFamily="@font/font_family"/>
         </LinearLayout>
 
     </RelativeLayout>

@@ -32,20 +32,12 @@ public class HalfRecipeBoxFragment extends Fragment {
     private static boolean isDetailBack;
     private static View view;
 
-    public boolean getIsPost(){
-        return isPost;
-    }
-
     public void setisDetailBack(boolean isDetailBack){
         this.isDetailBack = isDetailBack;
     }
 
-    private String TAG = "HalfRecipeBoxFragment";
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e(TAG, "onCreateView");
 
         if (isRecipe) {
             view = inflater.inflate(R.layout.recipe_box_fragment_halfrecipe, container, false);
@@ -67,13 +59,11 @@ public class HalfRecipeBoxFragment extends Fragment {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate");
         prepareData();
     }
 
     @Override
     public void onStart(){
-        Log.e(TAG, "onStart");
        if(isDetailBack){
            data.clear();
             prepareData();
@@ -91,19 +81,16 @@ public class HalfRecipeBoxFragment extends Fragment {
 
     @Override
     public void onResume(){
-        Log.e(TAG, "onResume");
         super.onResume();
     }
 
     @Override
     public void onPause(){
-        Log.e(TAG, "onPause");
         super.onPause();
     }
 
     @Override
     public void onStop(){
-        Log.e(TAG, "onStop");
         super.onStop();
     }
 
@@ -121,7 +108,6 @@ public class HalfRecipeBoxFragment extends Fragment {
                 if (isPost) {
                     String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
                     Mapper.updateIngInfo(0, recipeId);
-                    Log.e(TAG, "음식 이름 : "+simpleName+" 작성중?(0:작성완료/1:작성중) "+isIng+"isPost : "+isPost);
                     data.add(new RecipeBoxData(simpleName, recipeId, 0, isPost));
                     isRecipe = true;
                 }
@@ -131,7 +117,6 @@ public class HalfRecipeBoxFragment extends Fragment {
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
                 isIng = Mapper.searchRecipe(recipeId).getIng();
                 isPost = false;
-                Log.e(TAG, "음식 이름 : "+simpleName+" 작성중?(0:작성완료/1:작성중) "+isIng);
                 data.add(new RecipeBoxData(simpleName, recipeId, isIng, isPost));
                 isRecipe = true;
 

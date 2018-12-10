@@ -31,8 +31,6 @@ public class FullRecipeBoxFragment extends Fragment {
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
     private boolean isRecipe = false;
 
-    private String TAG="FullRecipeBox";
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

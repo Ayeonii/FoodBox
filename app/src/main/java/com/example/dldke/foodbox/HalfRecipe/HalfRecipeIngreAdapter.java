@@ -55,7 +55,6 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
             holder.ivCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("test", "check clicked!");
                     holder.ivCheck.setVisibility(View.GONE);
                     checkIngre[position] = false;
                 }
@@ -65,7 +64,6 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
             holder.food_Img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("test", "food clicked!");
                     holder.ivCheck.setVisibility(View.VISIBLE);
                     checkIngre[position] = true;
                 }

@@ -151,10 +151,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
         try {
             user_id = Mapper.searchUserInfo().getUserId();
-            Log.e(TAG, "유저 아이디 : "+user_id);
         } catch (NullPointerException e) {
             Mapper.createUserInfo();
-            Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
         }
 
 
@@ -166,8 +164,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         //Separate User vs CookingClass
         isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
 
-        //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
-        //pencilAdapter.getClickFoodString().clear();
         pencilAdapter.getClickFood().clear();
         /*메뉴*/
         menuTransBack = (LinearLayout) findViewById(R.id.transparentBack);
@@ -271,8 +267,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        Log.e("test", "onResume() 들어옴");
         MemoCreate();
     }
 
@@ -403,12 +397,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fabCamera:
-                    //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    //Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
-                    //startActivity(visionIntent);
-                    //Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
-                    //startActivity(deepLink);
-
                     Intent intent = new Intent(getApplicationContext(), VisionActivity.class);
                     startActivity(intent);
 
@@ -502,7 +490,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     }
 
     public void MemoCreate() {
-        Log.e("test", "MemoCreate() 들어옴");
         Mapper.updateUrgentMemo();
         PinpointManager tmp =getPinpointManager(getApplicationContext());
         Mapper.updateUrgentPushEndPoint(tmp.getTargetingClient());
@@ -552,10 +539,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     public void setTobuyMemo() {
         // 장보기
-        Log.e("test", "장보기 목록");
-        for (int i=0; i<tobuyList.size(); i++)
-            Log.d("test", tobuyList.get(i).getIngredientName() + ", " + tobuyList.get(i).getIngredientCount());
-
         String tobuyStr = "";
         long intCount = 0;
         for (int i=1; i<tobuyList.size()+1; i++) {

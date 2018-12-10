@@ -17,7 +17,6 @@ public class CurrentDate {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
         String str_date = df.format(new Date());
 
-        Log.e("Date of Today",""+str_date);
         return str_date;
     }
 

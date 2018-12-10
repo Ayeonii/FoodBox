@@ -17,12 +17,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
@@ -79,6 +80,7 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
     private static Mapper.RecipeMatching IngredientInfo;
     private ImageView imageView;
     private TextView loading;
+    private Toolbar toolbar;
     private static int enterCnt = 0;
 
     public VisionActivity(){}
@@ -108,9 +110,14 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
 
         popup.setChangeItemClear();
         transaction = getSupportFragmentManager().beginTransaction();
-
+        toolbar = (Toolbar) findViewById(R.id.vision_toolbar);
         loading = (TextView) findViewById(R.id.loading_text);
         imageView = (ImageView) findViewById(R.id.main_image);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         imageView.setOnClickListener(this);
     }
 

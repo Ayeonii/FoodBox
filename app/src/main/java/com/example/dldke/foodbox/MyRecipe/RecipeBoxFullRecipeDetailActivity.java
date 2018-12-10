@@ -54,8 +54,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
     private List<RecipeDO.Ingredient> data;
 
-    String TAG = "FullRecipeDetailActivity";
-
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_box_fullrecipe_detail);

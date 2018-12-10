@@ -25,15 +25,10 @@ public class MyRecipeBoxActivity extends AppCompatActivity {
         return position;
     }
 
-
-    private String TAG = "MyRecipeBoxActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_box);
-
-        Log.e(TAG, "onCreate 실행한다.");
 
         //Cutomized Toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);

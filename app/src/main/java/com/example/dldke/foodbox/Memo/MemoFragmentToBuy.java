@@ -47,10 +47,6 @@ public class MemoFragmentToBuy extends android.support.v4.app.Fragment {
 
         tobuyList = refrigeratorMainActivity.getTobuyList();
 
-        Log.e("test", "프레그먼트에서 장보기 목록을 잘 가져오는지 확인");
-        for (int i=0; i<tobuyList.size(); i++)
-            Log.d("test", tobuyList.get(i).getIngredientName() + ", " + tobuyList.get(i).getIngredientCount());
-
         setRecyclerView();
 
         return view;

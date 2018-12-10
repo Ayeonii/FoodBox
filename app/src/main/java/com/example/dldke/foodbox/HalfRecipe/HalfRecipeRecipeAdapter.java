@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeRecipeAdapter.ItemViewHolder> {
 
     private ArrayList<HalfRecipeRecipeItem> mItems;
-    //    private ArrayList<HalfRecipeRecipeItem> needItems = new ArrayList<>();
     private Double editCount;
     private String strEditCount;
 
@@ -43,12 +42,11 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
         holder.txtCount.setText(strCount);
 
         // 보유 개수가 0.5이면 사용개수 0.5부터 가능하도록 그 이상이면 1.0부터 가능하도록
-        Log.e("test", "count = " + count);
         if (count < 1.0)
             editCount = 0.5;
         else
             editCount = 1.0;
-        Log.e("test", "editCount = " + editCount);
+
         strCount = Double.toString(editCount);
         holder.txtCountEdit.setText(strCount);
 

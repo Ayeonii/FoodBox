@@ -134,19 +134,18 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case R.id.communityFoodTitle:
                     case R.id.community_cardview :
                     case R.id.communityFoodName:
+
                         String recipeId = itemList.get(position).getRecipeId();
                         String password = Mapper.searchRecipe(recipeId).getPassword();
-                        Log.e(TAG, "password : "+password);
-
-                        if(password.equals(null)){
-
+                        if(password == null) {
                             setClickedRecipeId(itemList.get(position).getRecipeId());
                             setClickedPostId(itemList.get(position).getPostId());
                             Intent refMain = new Intent(context, CommunityDetailActivity.class);
                             refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             context.startActivity(refMain);
-                        }
-                        else{
+                        }else{
+
+                            Log.e(TAG, "password : "+password);
                             EditText editText = new EditText(context);
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("비밀번호를 입력하세요");
@@ -173,8 +172,6 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                             builder.create().show();
                         }
-
-
                         break ;
 
                     case R.id.user_id:

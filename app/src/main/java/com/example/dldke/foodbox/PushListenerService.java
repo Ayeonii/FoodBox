@@ -48,8 +48,6 @@ public class PushListenerService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
-
-        Log.d(TAG, "Registering push notifications token: " + token);
         MainActivity.getPinpointManager(getApplicationContext()).getNotificationClient().registerDeviceToken(token);
     }
 

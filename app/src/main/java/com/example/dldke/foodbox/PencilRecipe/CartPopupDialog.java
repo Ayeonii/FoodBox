@@ -71,11 +71,9 @@ public class CartPopupDialog {
                 for(int i =0 ; i<clickItems.size(); i++) {
                     PencilCartItem food = clickItems.get(i);
                     try {
-                        Log.e("Dialog",""+food.getIsFrozen());
                         clickedList.add(Mapper.createFood(Mapper.searchFood(food.getFoodName(), food.getFoodSection()), food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
                     catch (NullPointerException e){ //디비에 없는 재료를 냉장고에 넣고 싶을 때
-                        Log.e("Dialog",""+food.getIsFrozen());
                         clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
                 }

@@ -28,7 +28,6 @@ import java.util.List;
 
 public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeBoxFullRecipeAdapter.ViewHolder>{
 
-    private String TAG = "MyRecipeBoxFullRecipeAdapter";
     private ArrayList<RecipeBoxData> recipedata = new ArrayList<>();
     private static String recipe_id;
     private static boolean shared;
@@ -81,7 +80,6 @@ public class MyRecipeBoxFullRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         holder.name.setText(name);
         new DownloadImageTask(holder.image).execute(recipedata.get(position).food_image);
 
-        //holder.image.setImageResource(recipedata.get(position).getImage());
         if(shared){
             holder.share.setVisibility(View.VISIBLE);
         }
