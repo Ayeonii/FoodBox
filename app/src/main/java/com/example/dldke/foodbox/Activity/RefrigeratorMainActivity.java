@@ -157,7 +157,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         Mapper.setBucketName(getApplicationContext());
 
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
-        getPinpointManager(getApplicationContext());
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+
         try {
             user_id = Mapper.searchUserInfo().getUserId();
             Log.e(TAG, "유저 아이디 : "+user_id);

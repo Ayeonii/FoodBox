@@ -24,6 +24,13 @@ public class UserDO {
     private List<String> _themeList;
     private S3Link profileImage;
 
+    public S3Link getProfileImage() {
+        return profileImage;
+    }
+    public void setProfileImage(S3Link profileImage) {
+        this.profileImage = profileImage;
+    }
+
     @DynamoDBHashKey(attributeName = "userId")
     @DynamoDBAttribute(attributeName = "userId")
     public String getUserId() {
@@ -81,11 +88,6 @@ public class UserDO {
         this._themeList = _themeList;
     }
 
-    public S3Link getProfileImage() {
-        return profileImage;
-    }
-    public void setProfileImage(S3Link infoImage) {
-        this.profileImage = profileImage;
-    }
+
 
 }
