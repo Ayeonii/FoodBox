@@ -127,10 +127,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     ImageView postit;
     public static boolean isCookingClass;
     private String user_id;
+    private static boolean isMemo;
 
 
-    //public RefrigeratorMainActivity(){  }
-
+    public boolean getIsMemo(){ return isMemo; }
     public boolean getisCookingClass(){
         return isCookingClass;
     }
@@ -491,10 +491,12 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.startAnimation(rightAnim);
                     break;
                 case R.id.urgent_postit:
+                    isMemo = false;
                     Intent memoActivity1 = new Intent(getApplicationContext(), MemoActivity.class);
                     startActivity(memoActivity1);
                     break;
                 case R.id.tobuy_postit:
+                    isMemo = true;
                     Intent memoActivity2 = new Intent(getApplicationContext(), MemoActivity.class);
                     startActivity(memoActivity2);
                     break;
