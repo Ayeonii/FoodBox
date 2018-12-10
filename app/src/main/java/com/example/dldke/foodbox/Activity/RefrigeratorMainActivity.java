@@ -145,10 +145,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
 
+        Mapper.checkAndCreateFirst();
+
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
-        PinpointManager tmp =getPinpointManager(getApplicationContext());
-        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
-        Mapper.updateUrgentPushEndPoint(tmp.getTargetingClient());
 
         try {
             user_id = Mapper.searchUserInfo().getUserId();
@@ -157,8 +156,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             Mapper.createUserInfo();
             Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
         }
-
-        Mapper.checkAndCreateFirst();
 
 
         //Mapper.createMemo();
@@ -505,6 +502,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     public void MemoCreate() {
         Log.e("test", "MemoCreate() 들어옴");
         Mapper.updateUrgentMemo();
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateUrgentPushEndPoint(tmp.getTargetingClient());
+
 
         try {
             urgentList = Mapper.scanUrgentMemo();

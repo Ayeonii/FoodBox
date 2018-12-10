@@ -77,41 +77,50 @@ public final class Mapper {
         MyCommunityDO mycommu = searchMyCommunity();
         List<String> my_recipe = mycommu.getMyRecipes();
 
-        boolean isDone = false;
-        int i;
-        for(i = 0; i < my_recipe.size(); i++){
-            if((searchRecipe(my_recipe.get(i)).getIng()) == 1){
-                list.add("작성중");
-                break;
+        if(my_recipe != null)
+        {
+            boolean isDone = false;
+            int i;
+            for(i = 0; i < my_recipe.size(); i++){
+                if((searchRecipe(my_recipe.get(i)).getIng()) == 1){
+                    list.add("작성중");
+                    break;
+                }
+                else if((searchRecipe(my_recipe.get(i)).getIng()) == 0){
+                    isDone = true;
+                }
             }
-            else if((searchRecipe(my_recipe.get(i)).getIng()) == 0){
-                isDone = true;
-            }
+            if(i == my_recipe.size() && isDone)
+                list.add("작성완료");
+            else if(i == my_recipe.size() && !(isDone))
+                list.add("사용완료");
+
+
+            Log.e("endpointId",target.currentEndpoint().getEndpointId());
+            target.addAttribute("flag",list);
+            target.updateEndpointProfile();
         }
-        if(i == my_recipe.size() && isDone)
-            list.add("작성완료");
-        else if(i == my_recipe.size() && !(isDone))
-            list.add("사용완료");
 
 
-        Log.e("endpointId",target.currentEndpoint().getEndpointId());
-        target.addAttribute("flag",list);
-        target.updateEndpointProfile();
     }
 
     public static void updateUrgentPushEndPoint(TargetingClient target){
         List<String> list = new ArrayList<String>();
 
         List<RecipeDO.Ingredient> urgent = scanUrgentMemo();
+        try {
+            if(urgent.get(0) != null)
+                list.add("유통기한");
+            else
+                list.add("유통기한X");
 
-        if(urgent.get(0) != null)
-            list.add("유통기한");
-        else
-            list.add("유통기한X");
-
-        Log.e("endpointId",target.currentEndpoint().getEndpointId());
-        target.addAttribute("urgent",list);
-        target.updateEndpointProfile();
+            Log.e("endpointId",target.currentEndpoint().getEndpointId());
+            target.addAttribute("urgent",list);
+            target.updateEndpointProfile();
+        }
+        catch(Exception e){
+            Log.e("urgent error", "으에에");
+        }
     }
 
     //String name => InfoDO item
