@@ -1,15 +1,17 @@
 package com.example.dldke.foodbox.DataBaseFiles;
 
 import android.content.Context;
-import android.icu.text.IDNA;
 import android.util.Log;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapperConfig;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
+import com.amazonaws.mobileconnectors.pinpoint.targeting.TargetingClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
@@ -42,24 +44,23 @@ public final class Mapper {
     public static DynamoDBMapper getDynamoDBMapper(){
         return dynamoDBMapper;
     }
-    public static void setDynamoDBMapper(){
+    public static void setDynamoDBMapper(AWSMobileClient awsMobileClient){
 
         // Add code to instantiate a AmazonDynamoDBClient
-        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(AWSMobileClient.getInstance().getCredentialsProvider());
-        dynamoDBMapper = DynamoDBMapper.builder()
-                .dynamoDBClient(dynamoDBClient)
-                .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                .awsCredentialsProviderForS3(AWSMobileClient.getInstance().getCredentialsProvider())
-                .build();
+        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(awsMobileClient.getCredentials());
+            dynamoDBMapper = DynamoDBMapper.builder()
+                    .dynamoDBClient(dynamoDBClient)
+                    .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                    .awsCredentialsProviderForS3(awsMobileClient.getCredentialsProvider())
+                    .build();
 
     }
     public static void setUserId(Context context){
-        JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(AWSMobileClient.getInstance().getConfiguration().toString());
-        PoolConfig poolConfig= new Gson().fromJson(element.getAsJsonObject().get("CognitoUserPool"), PoolConfig.class);
-        CognitoUserPool cognitoUserPool = new CognitoUserPool(context,poolConfig.config.poolId,poolConfig.config.clientId,poolConfig.config.clientSecret);
+
+        CognitoUserPool cognitoUserPool = new CognitoUserPool(context,AWSMobileClient.getInstance().getConfiguration());
         CognitoUser user = cognitoUserPool.getCurrentUser();
         userId = user.getUserId();
+
     }
     public static String getUserId(){
         return userId;
@@ -70,6 +71,46 @@ public final class Mapper {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(AWSMobileClient.getInstance().getConfiguration().toString());
         bucketName = element.getAsJsonObject().get("S3TransferUtility").getAsJsonObject().get("Default").getAsJsonObject().get("Bucket").getAsString();
+    }
+    public static void updateRecipePushEndPoint(TargetingClient target){
+        List<String> list = new ArrayList<String>();
+
+        MyCommunityDO mycommu = searchMyCommunity();
+        List<String> my_recipe = mycommu.getMyRecipes();
+
+        boolean isDone = false;
+        int i;
+        for(i = 0; i < my_recipe.size(); i++){
+            if((searchRecipe(my_recipe.get(i)).getIng()) == 1){
+                list.add("작성중");
+                break;
+            }
+            else if((searchRecipe(my_recipe.get(i)).getIng()) == 0){
+                isDone = true;
+            }
+        }
+        if(i == my_recipe.size() && isDone)
+            list.add("작성완료");
+        else if(i == my_recipe.size() && !(isDone))
+            list.add("사용완료");
+
+
+        Log.e("endpointId",target.currentEndpoint().getEndpointId());
+        target.addAttribute("flag",list);
+        target.updateEndpointProfile();
+    }
+
+    public static void updateUrgentPushEndPoint(TargetingClient target){
+        List<String> list = new ArrayList<String>();
+
+        List<RecipeDO.Ingredient> urgent = scanUrgentMemo();
+
+        if(urgent.get(0) != null)
+            list.add("유통기한");
+
+        Log.e("endpointId",target.currentEndpoint().getEndpointId());
+        target.addAttribute("flag",list);
+        target.updateEndpointProfile();
     }
 
     //String name => InfoDO item
@@ -1042,13 +1083,14 @@ public final class Mapper {
     public static void updatePassword(String recipe_id,String password){
 
         final String inputPassword = password;
+        final String recipeId = recipe_id;
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 RecipeDO recipeInfo = Mapper.getDynamoDBMapper().load(
                         com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
-                        recipe_id);
+                        recipeId);
 
                 recipeInfo.setPassword(inputPassword);
                 Mapper.getDynamoDBMapper().save(recipeInfo);
@@ -1111,10 +1153,12 @@ public final class Mapper {
 
     public static void updateIsShared(String recipe_id){
 
+        final String recipeId = recipe_id;
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                RecipeDO recipe = Mapper.searchRecipe(recipe_id);
+                RecipeDO recipe = Mapper.searchRecipe(recipeId);
                 recipe.setIsShare(true);
                 Mapper.getDynamoDBMapper().save(recipe);
             }
@@ -1171,7 +1215,6 @@ public final class Mapper {
                 Mapper.getDynamoDBMapper().save(infoItem);
 
             }
-
         });
         thread.start();
         try{
@@ -1179,7 +1222,6 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     public static void downLoadImage(final String infoName, final String locatePath, final String sectionName){
@@ -1205,8 +1247,6 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
 
     public static void downLoadImageRecipe(final String recipeId, final String locatePath){
@@ -1464,6 +1504,9 @@ public final class Mapper {
         }
         return resultPost;
     }
+
+
+
 
     /************************** Post Section Method  ******************************/
 
@@ -1798,13 +1841,13 @@ public final class Mapper {
 
     public static List<RecipeDO.Ingredient> scanToBuyMemo() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
-            final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
-                    com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
-                    userId);
 
             List<RecipeDO.Ingredient> toBuy;
             @Override
             public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                        userId);
                 toBuy = memoItem.getTobuy();
             }
 
@@ -1980,6 +2023,64 @@ public final class Mapper {
         boolean result = (boolean)thread.getResult();
 
         return result;
+    }
+
+    //Register User Profile Image in S3
+    public static void uploadUserImage(final String filePath){
+
+        Thread thread = new Thread(new Runnable() {
+
+            com.example.dldke.foodbox.DataBaseFiles.UserDO user;
+            @Override
+            public void run() {
+                user = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+                Log.d("why",Mapper.bucketName);
+                user.setProfileImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Users/"+userId+".jpg"));
+                user.getProfileImage().uploadFrom(new File(filePath));
+                user.getProfileImage().setAcl(CannedAccessControlList.PublicRead);
+                Mapper.getDynamoDBMapper().save(user);
+
+            }
+
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String getImageUrlUser(){
+        returnThread thread = new returnThread(new CustomRunnable() {
+
+            com.example.dldke.foodbox.DataBaseFiles.UserDO user;
+            URL url;
+            @Override
+            public void run() {
+                user = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+                // Log.d("why",Mapper.bucketName);
+                url = user.getProfileImage().getAmazonS3Client().getUrl(user.getProfileImage().getBucketName(),"Users/"+userId+".jpg");
+                Log.d("getImageUrl",url.toString());
+            }
+            @Override
+            public Object getResult(){
+                return url.toString();
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String url = (String)thread.getResult();
+        return url;
     }
 
 
