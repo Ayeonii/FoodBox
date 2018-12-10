@@ -88,10 +88,4 @@ public class UserDO {
         this._themeList = _themeList;
     }
 
-    public S3Link getProfileImage() {
-        return profileImage;
-    }
-    public void setProfileImage(S3Link profileImage) {
-        this.profileImage = profileImage;
-    }
 }

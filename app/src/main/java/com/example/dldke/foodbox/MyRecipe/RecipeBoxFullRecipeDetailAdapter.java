@@ -31,12 +31,10 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        public ImageView stepImage;
         public TextView stepDescrip;
 
         public ViewHolder(View view){
             super(view);
-            stepImage = (ImageView) view.findViewById(R.id.fullrecipe_detail_stepimg);
             stepDescrip = (TextView) view.findViewById(R.id.fullrecipe_detail_stepdescrip);
         }
     }
@@ -55,8 +53,6 @@ public class RecipeBoxFullRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        //holder.stepImage.setImageURI(stepList.get(position).getStepImage());
-        holder.stepImage.setImageResource(stepList.get(position).getStepImage());
         holder.stepDescrip.setText(stepList.get(position).getDescription());
     }
 

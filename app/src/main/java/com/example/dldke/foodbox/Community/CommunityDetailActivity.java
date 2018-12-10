@@ -72,8 +72,6 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_detail);
-        // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
 
         takenBtn = (Button)findViewById(R.id.takeBtn);
         commentBar = (EditText)findViewById(R.id.community_commentBar);

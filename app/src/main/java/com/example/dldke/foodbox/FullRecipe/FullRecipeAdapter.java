@@ -1,9 +1,16 @@
 package com.example.dldke.foodbox.FullRecipe;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,16 +28,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.dldke.foodbox.CloudVision.PermissionUtils;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.R;
+import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.support.constraint.Constraints.TAG;
+import static com.example.dldke.foodbox.CloudVision.VisionActivity.FILE_NAME;
 
 public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.FullRecipeViewHolder> {
 
@@ -47,7 +60,9 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     private List<RecipeDO.Spec> specList = new ArrayList<>();
     private Dialog dialog;
 
-    private final String TAG = "FullRecipeAdapter";
+    private final int CAMERA_CODE = 1;
+    private final int GALLERY_CODE = 2;
+    private static final int MAX_DIMENSION = 1200;
 
     public FullRecipeAdapter(Context context, ArrayList<FullRecipeData> list) {
         mList = list;
@@ -57,12 +72,10 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     public class FullRecipeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         protected TextView StepDetail;
-        protected ImageView StepImage;
 
         public FullRecipeViewHolder(View view) {
             super(view);
             this.StepDetail = (TextView) view.findViewById(R.id.full_recipe_step_detail);
-            this.StepImage = (ImageView) view.findViewById(R.id.imgview_foodimg);
             view.setOnCreateContextMenuListener(this);
         }
 
@@ -95,9 +108,6 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
                         ingredient_view.setLayoutManager(new LinearLayoutManager(mContext));
                         adapter = new FullRecipeStepAdapter(ingredients);
                         ingredient_view.setAdapter(adapter);
-                        //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, new LinearLayoutManager(context).getOrientation());
-                        //ingredient_view.addItemDecoration(dividerItemDecoration);
-
 
                         //방법, 시간, 불세기 spinner
                         String[] methodStr = mContext.getResources().getStringArray(R.array.MethodSpinner);

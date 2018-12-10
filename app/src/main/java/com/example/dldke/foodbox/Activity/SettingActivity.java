@@ -79,7 +79,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         //User Profile Image
         try {
             String imgUrl = Mapper.getImageUrlUser();
-            Log.e(TAG, "사용자 프로필 : "+imgUrl);
             new DownloadImageTask(profile).execute(imgUrl);
 
         } catch (Exception e){
@@ -97,18 +96,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         isCook = Mapper.searchUserInfo().getIsCookingClass();
 
         String nicknameStr = Mapper.searchUserInfo().getNickname();
-        Log.e(TAG, "유저 닉네임 : "+nicknameStr);
+
         if(nicknameStr != null){
             nickname.setText(nicknameStr);
         }
-
-//        try{
-//            String nicknameStr = Mapper.searchUserInfo().getNickname();
-//            Log.e(TAG, "등록되어있는 닉네임 : "+nicknameStr);
-//            nickname.setText(nicknameStr);
-//        }
-//        catch (NullPointerException e){
-//        }
 
         if(isCook){
             cooking_class.setChecked(true);
@@ -159,8 +150,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.setting_ok_btn:
                 user_nickname = nickname.getText().toString();
                 business_number = business_N1.getText().toString() + business_N2.getText().toString() + business_N3.getText().toString();
-                Log.e(TAG, "닉네임 : "+user_nickname+"사업자 번호 : "+business_number);
-                Log.e(TAG, "이미지 경로 : "+imagePath);
 
                 Mapper.updateUserInfo(user_nickname, isCook, business_number);
                 Mapper.uploadUserImage(imagePath);

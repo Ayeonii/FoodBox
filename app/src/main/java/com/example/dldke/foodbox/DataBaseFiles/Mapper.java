@@ -202,33 +202,6 @@ public final class Mapper {
 
 
 /****************************User Profile***********************************/
-    public static void uploadUserImage(final String filePath){
-
-        Thread thread = new Thread(new Runnable() {
-
-            com.example.dldke.foodbox.DataBaseFiles.UserDO user;
-            @Override
-            public void run() {
-                user = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-                        userId);
-                Log.d("why",Mapper.bucketName);
-                user.setProfileImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Users/"+userId+".jpg"));
-                user.getProfileImage().uploadFrom(new File(filePath));
-                user.getProfileImage().setAcl(CannedAccessControlList.PublicRead);
-                Mapper.getDynamoDBMapper().save(user);
-
-            }
-
-        });
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
 
     public static String getImageUrlUser(){
         returnThread thread = new returnThread(new CustomRunnable() {
@@ -1030,32 +1003,7 @@ public final class Mapper {
         return url;
     }
 
-    public static void attachProfileImage( final String filePath){
-        Thread thread = new Thread(new Runnable() {
 
-            com.example.dldke.foodbox.DataBaseFiles.UserDO user;
-            @Override
-            public void run() {
-                user = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-                        userId);
-                Log.d("why",Mapper.bucketName);
-                user.setProfileImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Users/"+userId+".jpg"));
-                user.getProfileImage().uploadFrom(new File(filePath));
-                user.getProfileImage().setAcl(CannedAccessControlList.PublicRead);
-                Mapper.getDynamoDBMapper().save(user);
-
-            }
-
-        });
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
 
     public static void updatePointInfo(Integer Point){
 
@@ -2054,18 +2002,44 @@ public final class Mapper {
 
     }
 
-    public static String getImageUrlUser(){
+    //Register Food each Spec Image in S3
+    public static void attachSpecImage(String recipeId, final String filePath, final int index){
+        final String recipe_id = recipeId;
+        Thread thread = new Thread(new Runnable() {
+
+            com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
+            @Override
+            public void run() {
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipe_id);
+                recipeItem.getDetail().getSpecList().get(index).setSpecImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Recipes/"+recipe_id+"_"+index+".jpg"));
+                recipeItem.getDetail().getSpecList().get(index).getSpecImage().uploadFrom(new File(filePath));
+                recipeItem.getDetail().getSpecList().get(index).getSpecImage().setAcl(CannedAccessControlList.PublicRead);
+                Mapper.getDynamoDBMapper().save(recipeItem);
+
+            }
+
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public static String getImageUrlSpec(final String recipeId, final int index){
         returnThread thread = new returnThread(new CustomRunnable() {
 
-            com.example.dldke.foodbox.DataBaseFiles.UserDO user;
+            com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
             URL url;
             @Override
             public void run() {
-                user = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-                        userId);
-                // Log.d("why",Mapper.bucketName);
-                url = user.getProfileImage().getAmazonS3Client().getUrl(user.getProfileImage().getBucketName(),"Users/"+userId+".jpg");
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipeId);
+                url = recipeItem.getDetail().getSpecList().get(index).getSpecImage().getAmazonS3Client().getUrl(recipeItem.getRecipeImage().getBucketName(),"Recipes/"+recipeId+"_"+index+".jpg");
                 Log.d("getImageUrl",url.toString());
             }
             @Override
@@ -2082,7 +2056,6 @@ public final class Mapper {
         String url = (String)thread.getResult();
         return url;
     }
-
 
     private class PoolConfig{
         @SerializedName("Default")

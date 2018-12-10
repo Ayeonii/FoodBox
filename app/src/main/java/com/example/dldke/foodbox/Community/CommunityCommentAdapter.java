@@ -82,7 +82,6 @@ public class CommunityCommentAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private void initLayoutTwo(ViewHolderDetail holder, int position) {
-        holder.stepImage.setImageResource(mItems.get(position).getStepImage());
         holder.stepDescrip.setText(mItems.get(position).getDescription());
     }
 
@@ -103,11 +102,9 @@ public class CommunityCommentAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     static class ViewHolderDetail extends RecyclerView.ViewHolder {
-        public ImageView stepImage;
         public TextView stepDescrip;
         public ViewHolderDetail(View itemView) {
             super(itemView);
-            stepImage = (ImageView) itemView.findViewById(R.id.fullrecipe_detail_stepimg);
             stepDescrip = (TextView) itemView.findViewById(R.id.fullrecipe_detail_stepdescrip);
         }
     }
