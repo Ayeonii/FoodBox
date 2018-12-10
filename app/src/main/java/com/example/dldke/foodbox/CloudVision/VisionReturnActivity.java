@@ -72,15 +72,9 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
         Log.e(TAG, "notmatching"+notmatchingList);
 
         //toolbar = (Toolbar) findViewById(R.id.vision_return_toolbar);
-        receipt_img = (ImageView) findViewById(R.id.vision_return_main_image);
-        loading = (TextView) findViewById(R.id.vision_return_loading_text);
         insert = (Button) findViewById(R.id.vision_return_btn);
         match = (RecyclerView) findViewById(R.id.vision_return_matching_ingredient_view);
         notmatch = (RecyclerView) findViewById(R.id.vision_return_notmatching_ingredient_view);
-
-        bitmap = visionActivity.getBitmap();
-        receipt_img.setImageBitmap(bitmap);
-        loading.setVisibility(View.INVISIBLE);
 
         matchingList = visionActivity.getMatch();
         notmatchingList = visionActivity.getNotMatch();
