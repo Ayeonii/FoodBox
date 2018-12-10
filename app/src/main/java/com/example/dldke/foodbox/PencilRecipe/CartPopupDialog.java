@@ -55,12 +55,16 @@ public class CartPopupDialog {
         cart_list_view.setLayoutManager(new LinearLayoutManager(context));
         cart_list_view.setAdapter(adapter);
 
+
+        //확인버튼
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dlg.dismiss();
             }
         });
+
+        //냉장고에 넣기 버튼
         getInside.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

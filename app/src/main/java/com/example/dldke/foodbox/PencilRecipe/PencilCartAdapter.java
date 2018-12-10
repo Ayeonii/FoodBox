@@ -72,11 +72,9 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                     case R.id.frozenCheck:
                         if(!holder.frozenCheck.isChecked()) {
                             mItems.get(position).setIsFrozen(false);
-                            Log.e("isFozen: true 이어야함",""+ mItems.get(position).getIsFrozen());
                         }
                         else{
                             mItems.get(position).setIsFrozen(true);
-                            Log.e("isFozen: false이어야함",""+ mItems.get(position).getIsFrozen());
                         }
                         break ;
                 }
@@ -96,19 +94,11 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         holder.delete_btn.setOnClickListener(onClickListener);
         holder.frozenCheck.setOnClickListener(onClickListener);
         if(mItems.get(position).getIsFrozen()){
-            Log.e("ㅇㄴㄻㅇㄹ","들어옴");
             holder.frozenCheck.setChecked(true);
         } else{
-            Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
             holder.frozenCheck.setChecked(false);
         }
-//        try{
-//            //Log.e("ㅇㄴㄻㅇㄹ","들어옴");
-//            holder.frozenCheck.setChecked(true);
-//        }catch(NullPointerException e){
-//            //Log.e("ㅇㄴㄻㅇㄹ","else 들어옴"+mItems.get(position).getFoodName());
-//            holder.frozenCheck.setChecked(false);
-//        }
+
     }
 
     @Override

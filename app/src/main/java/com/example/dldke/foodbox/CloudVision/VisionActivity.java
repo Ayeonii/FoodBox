@@ -58,6 +58,7 @@ import java.util.List;
 
 public class VisionActivity extends AppCompatActivity implements View.OnClickListener{
 
+
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
@@ -73,6 +74,14 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
     private static Mapper.RecipeMatching IngredientInfo;
     private ImageView imageView;
     private TextView loading;
+    private static int enterCnt = 0;
+
+    public VisionActivity(){}
+
+    public void setEnterTime(int enterCnt){
+        this.enterCnt = enterCnt;
+    }
+    public int getEnterTime(){ return enterCnt;}
 
     private static String TAG = "TestActivity";
 
@@ -87,10 +96,8 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vision);
-
         loading = (TextView) findViewById(R.id.loading_text);
         imageView = (ImageView) findViewById(R.id.main_image);
-
         imageView.setOnClickListener(this);
     }
 

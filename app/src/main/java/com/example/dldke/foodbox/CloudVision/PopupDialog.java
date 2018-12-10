@@ -10,8 +10,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -24,12 +26,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopupDialog extends Dialog implements View.OnClickListener {
+public class PopupDialog implements View.OnClickListener {
 
     private Context context;
     private NotMatchAdapter notMatchAdapter = new NotMatchAdapter();
-    public List<String> notMatchingInfo;
-    private int index;
+    public static List<String> notMatchingInfo = new ArrayList<>();
+    private static int index;
+    private VisionActivity visionActivity = new VisionActivity();
+
 
     private RecyclerView ingredientView, notmatch;
     private EditText searchBar;
@@ -42,49 +46,47 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
     private static List<InfoDO> freshList, meatList, etcList;
     private String foodImg;
     private boolean isFrozen;
-    private static List<PencilCartItem> changeItem;
-
+  //  private static List<PencilCartItem> changeItem;
+    private static Dialog dlg;
     private String TAG="PopupDialog";
 
-    public PopupDialog(Context context, RecyclerView notmatch_view, int index, List<String> items){
-        super(context);
+    public PopupDialog(Context context, RecyclerView notmatch, int index, List<String> notMatchingInfo){
         this.context = context;
-        this.notMatchingInfo = items;
+        this.notmatch = notmatch;
         this.index = index;
-        this.notmatch = notmatch_view;
+        this.notMatchingInfo = notMatchingInfo;
     }
 
-    public void setChangeItem(List<PencilCartItem> items){
-        this.changeItem = items;
-    }
+    public void callFunction( ) {
 
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.vision_ingredient_popup);
-
-        Log.e(TAG, "onCreate");
-
-        ingredientView = (RecyclerView) findViewById(R.id.vision_ingredient_view);
-        searchBar = (EditText) findViewById(R.id.vision_searchBar);
-        deleteButton = (ImageButton) findViewById(R.id.vision_delete_button);
-        ok = (FloatingActionButton) findViewById(R.id.vision_ingredient_add);
+        dlg = new Dialog(context);
+    //    dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dlg.setContentView(R.layout.vision_ingredient_popup);
+        dlg.show();
 
 
-        freshList = getInfoDOList("fresh");
-        meatList = getInfoDOList("meat");
-        etcList = getInfoDOList("etc");
+        ingredientView = (RecyclerView) dlg.findViewById(R.id.vision_ingredient_view);
+        searchBar = (EditText) dlg.findViewById(R.id.vision_searchBar);
+        deleteButton = (ImageButton) dlg.findViewById(R.id.vision_delete_button);
+        ok = (FloatingActionButton) dlg.findViewById(R.id.vision_ingredient_add);
 
-        makeFoodList(freshList);
-        makeFoodList(meatList);
-        makeFoodList(etcList);
+        if(visionActivity.getEnterTime() == 0 ) {
+            freshList = getInfoDOList("fresh");
+            meatList = getInfoDOList("meat");
+            etcList = getInfoDOList("etc");
 
+            makeFoodList(freshList);
+            makeFoodList(meatList);
+            makeFoodList(etcList);
 
-        ingredientView.setHasFixedSize(true);
-        popupAdapter = new PopupAdapter(list);
-        ingredientView.setLayoutManager(new GridLayoutManager(context, 4));
-        ingredientView.setAdapter(popupAdapter);
+            visionActivity.setEnterTime(1);
+        }
+            ingredientView.setHasFixedSize(true);
+            popupAdapter = new PopupAdapter(list);
+            ingredientView.setLayoutManager(new GridLayoutManager(context, 4));
+            ingredientView.setAdapter(popupAdapter);
 
-        setData();
+            setData();
 
         searchBar.setOnClickListener(this);
         deleteButton.setOnClickListener(this);
@@ -134,14 +136,6 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
                 }
                 break;
             case R.id.vision_ingredient_add:
-                for(int i = 0; i<allfoodListInfo.size(); i++)
-                {
-                   if(allfoodListInfo.get(i).getFoodName().equals(notMatchingInfo.get(index)));
-                    {
-
-                    }
-                }
-                Log.e(TAG, "리스트 위치 : "+notMatchingInfo.get(index)+"와");
                 notMatchingInfo.remove(index);
                 for(int i = 0; i<notMatchingInfo.size(); i++){
                     Log.e(TAG, "재료 : "+notMatchingInfo.get(i));
@@ -152,7 +146,7 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
                 //notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
                 notMatchAdapter.notifyDataSetChanged();
                 //cancel();
-                dismiss();
+                dlg.dismiss();
                 break;
 
             default:
