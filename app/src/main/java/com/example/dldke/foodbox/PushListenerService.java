@@ -80,7 +80,9 @@ public class PushListenerService extends FirebaseMessagingService {
             if (NotificationClient.CampaignPushResult.APP_IN_FOREGROUND.equals(pushResult)) {
                 /* Create a message that will display the raw data of the campaign push in a dialog. */
                 final HashMap<String, String> dataMap = new HashMap<>(remoteMessage.getData());
-                broadcast(remoteMessage.getFrom(), dataMap);
+                Log.e("Foreground","앱 켜져있어요!");
+                sendNotification(remoteMessage);
+
 
             }
             else if (NotificationClient.CampaignPushResult.SILENT.equals(pushResult)) {
@@ -88,21 +90,13 @@ public class PushListenerService extends FirebaseMessagingService {
                 final HashMap<String, String> dataMap = new HashMap<>(remoteMessage.getData());
                 Log.e("Silent","들어온거야만거야");
                 sendNotification(remoteMessage);
-                //broadcast(remoteMessage.getFrom(), dataMap);
+
 
 
             }
 
             return;
         }
-    }
-
-    private void broadcast(final String from, final HashMap<String, String> dataMap) {
-        Intent intent = new Intent(ACTION_PUSH_NOTIFICATION);
-        intent.putExtra(INTENT_SNS_NOTIFICATION_FROM, from);
-        intent.putExtra(INTENT_SNS_NOTIFICATION_DATA, dataMap);
-
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     /**
@@ -166,29 +160,6 @@ public class PushListenerService extends FirebaseMessagingService {
         builder.setAutoCancel(true);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
 
-        /*
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Log.e("Nofi제발","여긴왔어?");
-        //intent.putExtra(INTENT_SNS_NOTIFICATION_FROM, remoteMessage.getFrom());
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,getString(R.string.default_notification_channel_id))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                //.setContentTitle(remoteMessage.getData().get("title"))
-                .setContentTitle("Hello")
-                //.setContentText(remoteMessage.getData().get("body"))
-                .setContentText("Hello??")
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent);
-
-
-        notificationManager.notify(0, notificationBuilder.build());
-        */
     }
 
 }

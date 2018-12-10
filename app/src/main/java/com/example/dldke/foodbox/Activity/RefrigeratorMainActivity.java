@@ -136,46 +136,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        // unregister notification receiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        MemoCreate();
-        // register notification receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
-                new IntentFilter(PushListenerService.ACTION_PUSH_NOTIFICATION));
-    }
-
-    private final BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
-            HashMap<String,String> hm = (HashMap<String,String>) intent.getExtras().get(PushListenerService.INTENT_SNS_NOTIFICATION_DATA);
-
-            Log.e("bundle",hm.toString());
-            String message = PushListenerService.getMessage(hm,"data");
-            String title = PushListenerService.getMessage(hm,"title");
-            new AlertDialog.Builder(RefrigeratorMainActivity.this)
-                    .setTitle(title)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show();
-        }
-    };
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_refrigerator);
-
-        Log.e("test", "onCreate() 들어옴");
+        setContentView(LAYOUT);
 
         //User DB Create
         Mapper.setUserId(getApplicationContext());
@@ -184,6 +147,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
         PinpointManager tmp =getPinpointManager(getApplicationContext());
         Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+        Mapper.updateUrgentPushEndPoint(tmp.getTargetingClient());
 
         try {
             user_id = Mapper.searchUserInfo().getUserId();
@@ -200,6 +164,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         if(pencilAdapter.getClickCnt() != 0 ){
             pencilAdapter.setClickCnt(0);
         }
+
 
         //Separate User vs CookingClass
         isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
@@ -292,6 +257,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent recipeboxIntent = new Intent(getApplicationContext(),MyRecipeBoxActivity.class);
                 startActivity(recipeboxIntent);
             }
+            else if(getIntent().getStringExtra("locate").equals("memo")){
+                Intent memoIntent = new Intent(getApplicationContext(),MemoActivity.class);
+                startActivity(memoIntent);
+            }
         }
         catch (Exception e){
             Log.e("pencil error","error");
@@ -300,7 +269,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         urgent_postit.setOnClickListener(onClickListener);
         tobuy_postit.setOnClickListener(onClickListener);
 
-        MemoCreate();
+
     }
 
 
@@ -527,6 +496,12 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MemoCreate();
+    }
+
     public void MemoCreate() {
         Log.e("test", "MemoCreate() 들어옴");
         Mapper.updateUrgentMemo();
@@ -551,14 +526,14 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             dueDateInfo = dnArray.get(0).getName() + " -" + Math.abs(diffDays) + "일";
         txtUrgent1.setText(dueDateInfo);
 
-        CalculateDate(Integer.toString(dnArray.get(1).getDueDate()));
+/*        CalculateDate(Integer.toString(dnArray.get(1).getDueDate()));
         if (diffDays < 0)
             dueDateInfo = dnArray.get(1).getName() + " +" + Math.abs(diffDays) + "일";
         else
             dueDateInfo = dnArray.get(1).getName() + " -" + Math.abs(diffDays) + "일";
         txtUrgent2.setText(dueDateInfo);
 
-/*        CalculateDate(Integer.toString(dnArray.get(2).getDueDate()));
+        CalculateDate(Integer.toString(dnArray.get(2).getDueDate()));
         if (diffDays < 0)
             dueDateInfo = dnArray.get(2).getName() + " +" + Math.abs(diffDays) + "일";
         else

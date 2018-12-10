@@ -106,9 +106,11 @@ public final class Mapper {
 
         if(urgent.get(0) != null)
             list.add("유통기한");
+        else
+            list.add("유통기한X");
 
         Log.e("endpointId",target.currentEndpoint().getEndpointId());
-        target.addAttribute("flag",list);
+        target.addAttribute("urgent",list);
         target.updateEndpointProfile();
     }
 
@@ -736,7 +738,60 @@ public final class Mapper {
 
         return spec1;
     }
+    //Register Food each Spec Image in S3
+    public static void attachSpecImage(String recipeId, final String filePath, final int index){
+        final String recipe_id = recipeId;
+        Thread thread = new Thread(new Runnable() {
 
+            com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
+            @Override
+            public void run() {
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipe_id);
+                recipeItem.getDetail().getSpecList().get(index).setSpecImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Recipes/"+recipe_id+"_"+index+".jpg"));
+                recipeItem.getDetail().getSpecList().get(index).getSpecImage().uploadFrom(new File(filePath));
+                recipeItem.getDetail().getSpecList().get(index).getSpecImage().setAcl(CannedAccessControlList.PublicRead);
+                Mapper.getDynamoDBMapper().save(recipeItem);
+
+            }
+
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public static String getImageUrlSpec(final String recipeId, final int index){
+        returnThread thread = new returnThread(new CustomRunnable() {
+
+            com.example.dldke.foodbox.DataBaseFiles.RecipeDO recipeItem;
+            URL url;
+            @Override
+            public void run() {
+                recipeItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.RecipeDO.class,
+                        recipeId);
+                url = recipeItem.getDetail().getSpecList().get(index).getSpecImage().getAmazonS3Client().getUrl(recipeItem.getRecipeImage().getBucketName(),"Recipes/"+recipeId+"_"+index+".jpg");
+                Log.d("getImageUrl",url.toString());
+            }
+            @Override
+            public Object getResult(){
+                return url.toString();
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String url = (String)thread.getResult();
+        return url;
+    }
 
     //Create FullRecipe
     public static void createFullRecipe(String recipeId, String name, List<com.example.dldke.foodbox.DataBaseFiles.RecipeDO.Spec> spec)
@@ -1648,8 +1703,10 @@ public final class Mapper {
 
                 for(int k = 0; k < toBuyMemo.size(); k++)
                 {
-                    if(toBuyMemo.get(k).getIngredientCount() <= 0)
+                    if(toBuyMemo.get(k).getIngredientCount() <= 0) {
                         toBuyMemo.remove(k);
+                        k--;
+                    }
                 }
 
                 memoItem.setTobuy(toBuyMemo);
