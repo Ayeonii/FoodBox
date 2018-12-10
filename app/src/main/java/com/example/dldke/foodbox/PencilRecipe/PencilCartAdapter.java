@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.CloudVision.PopupAdapter;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -25,10 +26,17 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     private Context context;
     private static ArrayList<PencilCartItem> mItems;
     String TAG ="PencilCartAdapter";
+    private static int removedPosition;
 
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){ this.mItems = cartItems;}
     public PencilCartAdapter(){}
 
+    public void setRemovedPosition(int removedPosition){
+        this.removedPosition = removedPosition;
+    }
+    public int getRemovedPosition(){
+        return removedPosition;
+    }
     public ArrayList<PencilCartItem> getCartItems(){return mItems; }
 
 
@@ -64,7 +72,9 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                         pencilAdapter.setClickCnt(pencilAdapter.getClickCnt()-1);
                         break ;
                     case R.id.deleteButton :
+                        PopupAdapter popup = new PopupAdapter();
                         pencilAdapter.setClickCnt(pencilAdapter.getClickCnt()-(int)mItems.get(position).getFoodCount());
+                        popup.setNewOldName(position);
                         mItems.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mItems.size());

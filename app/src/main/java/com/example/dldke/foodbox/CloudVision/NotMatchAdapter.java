@@ -24,6 +24,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private RecyclerView notmatch;
     private String TAG="NotMatchAdapter";
     private static Context notMatchAdapterContext ;
+    private int matchSize;
 
     public NotMatchAdapter(){ }
 
@@ -31,6 +32,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.notmatchItems = items;
      //   this.context = context;
         this.notmatch = notmatch_view;
+        this.matchSize = matchSize;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -60,7 +62,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View view) {
                 Log.e(TAG, notmatchItems.get(position)+" 눌림");
-                PopupDialog popupDialog = new PopupDialog(notMatchAdapterContext, notmatch, position, notmatchItems);
+                PopupDialog popupDialog = new PopupDialog(notMatchAdapterContext, notmatch, position, notmatchItems, matchSize);
                 popupDialog.callFunction();
             }
         });
