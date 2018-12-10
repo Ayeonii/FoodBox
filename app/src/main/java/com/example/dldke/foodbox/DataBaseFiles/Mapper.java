@@ -1607,8 +1607,10 @@ public final class Mapper {
 
                 for(int k = 0; k < toBuyMemo.size(); k++)
                 {
-                    if(toBuyMemo.get(k).getIngredientCount() <= 0)
+                    if(toBuyMemo.get(k).getIngredientCount() <= 0) {
                         toBuyMemo.remove(k);
+                        k--;
+                    }
                 }
 
                 memoItem.setTobuy(toBuyMemo);
