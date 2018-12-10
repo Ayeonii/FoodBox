@@ -1,6 +1,8 @@
 package com.example.dldke.foodbox.Community;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -131,12 +134,49 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case R.id.communityFoodTitle:
                     case R.id.community_cardview :
                     case R.id.communityFoodName:
-                        setClickedRecipeId(itemList.get(position).getRecipeId());
-                        setClickedPostId(itemList.get(position).getPostId());
-                        Intent refMain = new Intent(context, CommunityDetailActivity.class);
-                        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        context.startActivity(refMain);
+                        String recipeId = itemList.get(position).getRecipeId();
+                        String password = Mapper.searchRecipe(recipeId).getPassword();
+                        Log.e(TAG, "password : "+password);
+
+                        if(password.equals(null)){
+
+                            setClickedRecipeId(itemList.get(position).getRecipeId());
+                            setClickedPostId(itemList.get(position).getPostId());
+                            Intent refMain = new Intent(context, CommunityDetailActivity.class);
+                            refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            context.startActivity(refMain);
+                        }
+                        else{
+                            EditText editText = new EditText(context);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("비밀번호를 입력하세요");
+                            builder.setView(editText);
+                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                    String check_pw = editText.getText().toString();
+                                    if(password.equals(check_pw)){
+                                        setClickedRecipeId(itemList.get(position).getRecipeId());
+                                        setClickedPostId(itemList.get(position).getPostId());
+                                        Intent refMain = new Intent(context, CommunityDetailActivity.class);
+                                        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        context.startActivity(refMain);
+                                    }
+                                }
+                            });
+                            builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.create().show();
+                        }
+
+
                         break ;
+
                     case R.id.user_id:
                         Toast.makeText(context, "user_id click", Toast.LENGTH_SHORT).show();
                         break;

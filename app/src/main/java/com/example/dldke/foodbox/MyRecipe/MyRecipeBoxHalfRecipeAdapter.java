@@ -70,6 +70,10 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
 
     public MyRecipeBoxHalfRecipeAdapter(ArrayList<RecipeBoxData> recipedata){
         this.recipedata = recipedata;
+        Log.e(TAG, "recipedata");
+        for(int i = 0; i<recipedata.size(); i++){
+            Log.e(TAG, "simplename : "+ recipedata.get(i).getFoodname());
+        }
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){

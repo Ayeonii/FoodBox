@@ -54,7 +54,7 @@ public class HalfRecipeBoxFragment extends Fragment {
             adapter = new MyRecipeBoxHalfRecipeAdapter(data);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyclerview.setLayoutManager(layoutManager);
-            recyclerview.setItemAnimator(new DefaultItemAnimator());
+            //recyclerview.setItemAnimator(new DefaultItemAnimator());
             recyclerview.setAdapter(adapter);
 
             return view;
@@ -75,14 +75,15 @@ public class HalfRecipeBoxFragment extends Fragment {
     public void onStart(){
         Log.e(TAG, "onStart");
        if(isDetailBack){
+           data.clear();
             prepareData();
             isDetailBack = false;
+
             recyclerview = (RecyclerView) view.findViewById(R.id.recycler_view2);
             recyclerview.setHasFixedSize(true);
+            recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
             adapter = new MyRecipeBoxHalfRecipeAdapter(data);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-            recyclerview.setLayoutManager(layoutManager);
-            recyclerview.setItemAnimator(new DefaultItemAnimator());
+            //recyclerview.setItemAnimator(new DefaultItemAnimator());
             recyclerview.setAdapter(adapter);
         }
         super.onStart();
