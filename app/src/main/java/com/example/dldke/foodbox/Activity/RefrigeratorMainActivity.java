@@ -159,7 +159,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
         PinpointManager tmp =getPinpointManager(getApplicationContext());
         Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
-
+        //Mapper.attachSpecImage("kitawo3242018-12-09, 11:16:51 AM","/storage/emulated/0/Download/버섯.jpg",0);
+        //Log.e("UserUrl",Mapper.getImageUrlSpec("kitawo3242018-12-09, 11:16:51 AM",0));
         try {
             user_id = Mapper.searchUserInfo().getUserId();
             Log.e(TAG, "유저 아이디 : "+user_id);
