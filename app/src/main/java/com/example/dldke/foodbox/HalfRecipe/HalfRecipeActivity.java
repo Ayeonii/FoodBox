@@ -587,6 +587,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
         halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        halfRecipeCompleteActivity.putExtra("complete", 0);
         startActivity(halfRecipeCompleteActivity);
     }
 

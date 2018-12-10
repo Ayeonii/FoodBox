@@ -284,6 +284,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
 
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
         halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        halfRecipeCompleteActivity.putExtra("complete", 2);
         startActivity(halfRecipeCompleteActivity);
     }
 }
