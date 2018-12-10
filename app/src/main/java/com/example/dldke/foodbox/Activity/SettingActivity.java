@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -24,12 +26,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.CloudVision.PermissionUtils;
+import com.example.dldke.foodbox.Community.CommunityFragmentNewsfeed;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -38,6 +42,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private static String user_nickname, business_number;
     boolean isCook = false;
 
+    private String imagePath;
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
@@ -71,6 +76,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         nickname = (TextView) findViewById(R.id.nickname);
 
 
+        //User Profile Image
+        try {
+            String imgUrl = Mapper.getImageUrlUser();
+            Log.e(TAG, "사용자 프로필 : "+imgUrl);
+            new DownloadImageTask(profile).execute(imgUrl);
+
+        } catch (Exception e){
+
+        }
+
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);  //기존 toolbar없애기
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
@@ -81,6 +97,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         isCook = Mapper.searchUserInfo().getIsCookingClass();
 
         String nicknameStr = Mapper.searchUserInfo().getNickname();
+        Log.e(TAG, "유저 닉네임 : "+nicknameStr);
         if(nicknameStr != null){
             nickname.setText(nicknameStr);
         }
@@ -117,17 +134,41 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    public  class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        CircleImageView profile;
+        public DownloadImageTask(CircleImageView profile){this.profile = profile;}
+
+        protected Bitmap doInBackground(String... urls) {
+            String urlImg =urls[0];
+            Bitmap foodImg = null;
+            try {
+                InputStream in = new java.net.URL(urlImg).openStream();
+                foodImg = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return foodImg;
+        }
+        protected void onPostExecute(Bitmap result){
+            profile.setImageBitmap(result);
+        }
+    }
+
     public void onClick(View v){
         switch (v.getId()){
             case R.id.setting_ok_btn:
-                //user_nickname = nickname.getText().toString();
+                user_nickname = nickname.getText().toString();
                 business_number = business_N1.getText().toString() + business_N2.getText().toString() + business_N3.getText().toString();
                 Log.e(TAG, "닉네임 : "+user_nickname+"사업자 번호 : "+business_number);
+                Log.e(TAG, "이미지 경로 : "+imagePath);
+
                 Mapper.updateUserInfo(user_nickname, isCook, business_number);
+                Mapper.uploadUserImage(imagePath);
 
                 Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
                 startActivity(RefrigeratorMainActivity);
                 break;
+
             case R.id.cooking_class_btn:
                 business_license_number.setVisibility(View.VISIBLE);
                 isCook = true;
@@ -165,11 +206,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 business_builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                       String temp = business_et.getText().toString();
-                       business_N1.setText(temp.substring(0,3));
-                       business_N2.setText(temp.substring(4,6));
-                       business_N3.setText(temp.substring(7,10));
-                       dialog.dismiss();
+                        String temp = business_et.getText().toString();
+                        business_N1.setText(temp.substring(0,3));
+                        business_N2.setText(temp.substring(4,6));
+                        business_N3.setText(temp.substring(7,10));
+                        dialog.dismiss();
                     }
                 });
                 business_builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -180,13 +221,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 business_builder.create().show();
                 break;
+
             case R.id.user_profile:
                 AlertDialog.Builder profile_builder = new AlertDialog.Builder(this);
                 profile_builder.setMessage("사진을 등록하세요")
                         .setPositiveButton("갤러리", (dialog, i) -> startGalleryChooser())
                         .setNegativeButton("카메라", (dialogInterface, i) -> startCamera());
                 profile_builder.create().show();
-                default: break;
+            default: break;
         }
     }
 
@@ -241,6 +283,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         if (uri != null) {
             try {
+                String real_path = uri.getPath();
+                imagePath = real_path;
+                Log.e("","imagePath:"+imagePath);
                 Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
                 profile.setImageBitmap(bitmap);
 

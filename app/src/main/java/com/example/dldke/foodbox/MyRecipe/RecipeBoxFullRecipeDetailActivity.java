@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
 
 
     private MyRecipeBoxFullRecipeAdapter myRecipeBoxFullRecipeAdapter = new MyRecipeBoxFullRecipeAdapter();
+    private MyRecipeBoxHalfRecipeAdapter myRecipeBoxHalfRecipeAdapter = new MyRecipeBoxHalfRecipeAdapter();
     private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
     private String recipe_id;
     private boolean isCookingClass = refrigeratorMainActivity.getisCookingClass();
@@ -58,7 +60,16 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_box_fullrecipe_detail);
 
-        recipe_id = myRecipeBoxFullRecipeAdapter.getRecipeId();
+        boolean isPost = myRecipeBoxHalfRecipeAdapter.IsPost();
+
+        if(isPost){
+            recipe_id = myRecipeBoxHalfRecipeAdapter.getRecipeId();
+        }
+        else{
+            recipe_id = myRecipeBoxFullRecipeAdapter.getRecipeId();
+        }
+
+
         String imgUrl = Mapper.getImageUrlRecipe(recipe_id);
         boolean isShared = Mapper.searchRecipe(recipe_id).getIsShare();
 
@@ -66,6 +77,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         ImageView mainImg = (ImageView)findViewById(R.id.fullrecipe_detail_foodimg);
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.fullrecipe_detail_collasping_toolbar);
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        Button post_fullrecipe_write = (Button) findViewById(R.id.fullrecipe_write);
 
 
         new DownloadImageTask(mainImg).execute(imgUrl);
@@ -99,6 +111,13 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         }
         else {
             floatingActionButton.setVisibility(View.VISIBLE);
+        }
+
+        if(isPost){
+            post_fullrecipe_write.setVisibility(View.VISIBLE);
+        }
+        else{
+            post_fullrecipe_write.setVisibility(View.INVISIBLE);
         }
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {

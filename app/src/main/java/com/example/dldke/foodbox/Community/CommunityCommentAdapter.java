@@ -77,7 +77,7 @@ public class CommunityCommentAdapter extends RecyclerView.Adapter<RecyclerView.V
     private void initLayoutOne(ViewHolderComment holder, int position) {
         holder.userId.setText(mItems.get(position).getUserId());
         holder.comment.setText(mItems.get(position).getComment());
-        holder.userImg.setImageDrawable(context.getResources().getDrawable(mItems.get(position).getUserImg(), null));
+        holder.userImg.setImageBitmap(mItems.get(position).getUserImg());
         holder.date.setText(mItems.get(position).getDate());
     }
 

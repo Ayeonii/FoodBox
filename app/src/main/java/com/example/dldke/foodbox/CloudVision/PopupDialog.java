@@ -134,14 +134,7 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
                 }
                 break;
             case R.id.vision_ingredient_add:
-                for(int i = 0; i<allfoodListInfo.size(); i++)
-                {
-                   if(allfoodListInfo.get(i).getFoodName().equals(notMatchingInfo.get(index)));
-                    {
 
-                    }
-                }
-                Log.e(TAG, "리스트 위치 : "+notMatchingInfo.get(index)+"와");
                 notMatchingInfo.remove(index);
                 for(int i = 0; i<notMatchingInfo.size(); i++){
                     Log.e(TAG, "재료 : "+notMatchingInfo.get(i));

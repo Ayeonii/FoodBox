@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,6 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Context context;
     private static String clicked_Recipe_id;
     private static String clicked_Post_id;
-    private static String postWriter;
     private OnLoadMoreListener onLoadMoreListener;
     private LinearLayoutManager mLinearLayoutManager;
 
@@ -40,15 +40,8 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     private int visibleThreshold = 1;
     int firstVisibleItem, visibleItemCount, totalItemCount, lastVisibleItem;
 
+    private String TAG="CommunityLoadingAdapter";
 
-
-    /*********clickedPostInfo*******/
-    private void setClickedPostWriter(String postWriter){
-        this.postWriter = postWriter;
-    }
-    private String getClickedPostWriter(){
-        return postWriter;
-    }
     private void setClickedRecipeId(String clicked_Recipe_id){
         this.clicked_Recipe_id = clicked_Recipe_id;
     }
@@ -117,10 +110,10 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     }
     public void addAll(List<CommunityItem> lst){
-            itemList.clear();
-            itemList.addAll(lst);
-            favoriteList.clear();
-            notifyDataSetChanged();
+        itemList.clear();
+        itemList.addAll(lst);
+        favoriteList.clear();
+        notifyDataSetChanged();
     }
 
     public void addItemMore(List<CommunityItem> lst){
@@ -140,7 +133,6 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case R.id.communityFoodName:
                         setClickedRecipeId(itemList.get(position).getRecipeId());
                         setClickedPostId(itemList.get(position).getPostId());
-                        setClickedPostWriter(itemList.get(position).getUserId());
                         Intent refMain = new Intent(context, CommunityDetailActivity.class);
                         refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         context.startActivity(refMain);
@@ -183,17 +175,22 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                 ((StudentViewHolder) holder).star_btn.setSelected(false);
             }
             Bitmap foodImgUrl = itemList.get(position).getCommunity_foodImg();
+            Bitmap userUrl = itemList.get(position).getCommunity_profile();
             if(foodImgUrl == null) {
+                Log.e(TAG, "foodImg null");
                 ((StudentViewHolder) holder).communityFoodImg.setImageDrawable(context.getResources().getDrawable(R.drawable.splash_background, null));
             } else {
+                Log.e(TAG, "foodImg exist");
                 ((StudentViewHolder) holder).communityFoodImg.setImageBitmap(foodImgUrl);
                 //new CommunityLoadingAdapter.DownloadImageTask( ((StudentViewHolder) holder).communityFoodImg).execute(foodImgUrl);
             }
-            if(itemList.get(position).getCommunity_profile() ==-1)
+            if(userUrl == null) {
                 ((StudentViewHolder) holder).communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
-            else
-                ((StudentViewHolder) holder).communityProfile.setImageDrawable(context.getResources().getDrawable(itemList.get(position).getCommunity_profile(),null));
+            }
+            else{
+                ((StudentViewHolder) holder).communityProfile.setImageBitmap(itemList.get(position).getCommunity_profile());
 
+            }
 
             ((StudentViewHolder) holder).cardView.setOnClickListener(onClickListener);
             ((StudentViewHolder) holder).communityProfile.setOnClickListener(onClickListener);
@@ -220,7 +217,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
         } else {
-            itemList.remove(itemList.size() - 1);
+            itemList.remove(itemList.size()-1 );
             notifyItemRemoved(itemList.size());
         }
     }
