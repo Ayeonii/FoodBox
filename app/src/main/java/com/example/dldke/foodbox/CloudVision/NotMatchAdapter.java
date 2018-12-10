@@ -23,13 +23,16 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<String> notmatchItems;
     private RecyclerView notmatch;
     private String TAG="NotMatchAdapter";
+    private static Context notMatchAdapterContext ;
+    private int matchSize;
 
     public NotMatchAdapter(){ }
 
     public NotMatchAdapter(List<String> items, Context context, RecyclerView notmatch_view){
         this.notmatchItems = items;
-        this.context = context;
+     //   this.context = context;
         this.notmatch = notmatch_view;
+        this.matchSize = matchSize;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -46,6 +49,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.vision_notmatch_list, parent, false);
+        notMatchAdapterContext = v.getContext();
         return new MyViewHolder(v);
     }
 
@@ -57,18 +61,9 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         myViewHolder.notmatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String foodname = notmatchItems.get(position);
                 Log.e(TAG, notmatchItems.get(position)+" 눌림");
-
-                PopupDialog popupDialog = new PopupDialog(context, notmatch, position, notmatchItems);
-                popupDialog.show();
-
-                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                lp.copyFrom(popupDialog.getWindow().getAttributes());
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                Window window = popupDialog.getWindow();
-                window.setAttributes(lp);
+                PopupDialog popupDialog = new PopupDialog(notMatchAdapterContext, notmatch, position, notmatchItems, matchSize);
+                popupDialog.callFunction();
             }
         });
         myViewHolder.delete.setOnClickListener(new View.OnClickListener() {

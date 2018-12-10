@@ -1938,9 +1938,17 @@ public final class Mapper {
                 scanExpression.addFilterCondition("name", condition);
                 itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
                 updateItem = itemList.get(0);
-                List<String> tmpList = updateItem.getProductName();
-                tmpList.add(productName);
-                updateItem.setProductName(tmpList);
+                try{
+                    List<String> tmpList = updateItem.getProductName();
+                    tmpList.add(productName);
+                    updateItem.setProductName(tmpList);
+                }
+                catch(Exception e){
+                    List<String> tmpList = new ArrayList<>();
+                    tmpList.add(productName);
+                    updateItem.setProductName(tmpList);
+                }
+
                 Mapper.getDynamoDBMapper().save(updateItem);
 
             }
@@ -1959,7 +1967,6 @@ public final class Mapper {
         InfoDO item = (InfoDO)thread.getResult();
         return item;
     }
-
 
 
 
