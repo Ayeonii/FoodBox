@@ -114,40 +114,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        // unregister notification receiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // register notification receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
-                new IntentFilter(PushListenerService.ACTION_PUSH_NOTIFICATION));
-    }
-
-    private final BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
-            HashMap<String,String> hm = (HashMap<String,String>) intent.getExtras().get(PushListenerService.INTENT_SNS_NOTIFICATION_DATA);
-
-            Log.e("bundle",hm.toString());
-            String message = PushListenerService.getMessage(hm,"data");
-            String title = PushListenerService.getMessage(hm,"title");
-            new AlertDialog.Builder(RefrigeratorMainActivity.this)
-                    .setTitle(title)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show();
-        }
-    };
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
