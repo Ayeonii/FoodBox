@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.auth.core.IdentityManager;
@@ -35,11 +36,13 @@ import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
+import com.example.dldke.foodbox.HalfRecipe.DCItem;
 import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
 import com.example.dldke.foodbox.Memo.MemoActivity;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorFrozenInsideActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
+import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.PushListenerService;
@@ -50,7 +53,13 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.HashMap;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
@@ -61,15 +70,21 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     public static final String TAG = RefrigeratorMainActivity.class.getSimpleName();
     private static List<RecipeDO.Ingredient> urgentList = new ArrayList<>();
+    private static List<RecipeDO.Ingredient> tobuyList = new ArrayList<>();
     public RefrigeratorMainActivity(){ }
 
     public List<RecipeDO.Ingredient> getUrgentList(){
         return urgentList;
     }
 
+    public List<RecipeDO.Ingredient> getTobuyList() {
+        return tobuyList;
+    }
+
     public void setUrgentList(List<RecipeDO.Ingredient> urgentList){
         this.urgentList = urgentList;
     }
+
     /*********************FloatingButtons***********************/
     //플로팅 버튼 애니메이션
     Animation ShowPlus, HidePlus, LayHide, ShowMinus, HideMinus, LayShow;
@@ -101,6 +116,13 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     Button leftDoor;
     Button rightDoor;
 
+    /***************************memo********************************/
+    private ImageView urgent_postit, tobuy_postit;
+    private TextView txtUrgent1, txtUrgent2, txtUrgent3;
+    private TextView txtTobuy;
+    private static long diffDays;
+    private CurrentDate currentDate = new CurrentDate();
+
     /***************************etc********************************/
     ImageView postit;
     public static boolean isCookingClass;
@@ -125,6 +147,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        MemoCreate();
         // register notification receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
                 new IntentFilter(PushListenerService.ACTION_PUSH_NOTIFICATION));
@@ -150,7 +173,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(LAYOUT);
+        setContentView(R.layout.activity_refrigerator);
+
+        Log.e("test", "onCreate() 들어옴");
 
         //User DB Create
         Mapper.setUserId(getApplicationContext());
@@ -175,11 +200,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         if(pencilAdapter.getClickCnt() != 0 ){
             pencilAdapter.setClickCnt(0);
         }
-
-
-        Mapper.updateUrgentMemo();
-
-        urgentList = Mapper.scanUrgentMemo();
 
         //Separate User vs CookingClass
         isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
@@ -233,10 +253,17 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         LayHide = AnimationUtils.loadAnimation(
                 RefrigeratorMainActivity.this, R.anim.hide_layout);
 
+        /*memo*/
+        urgent_postit = (ImageView) findViewById(R.id.urgent_postit);
+        tobuy_postit = (ImageView) findViewById(R.id.tobuy_postit);
+        txtUrgent1 = (TextView) findViewById(R.id.urgent_item1);
+        txtUrgent2 = (TextView) findViewById(R.id.urgent_item2);
+        txtUrgent3 = (TextView) findViewById(R.id.urgent_item3);
+        txtTobuy = (TextView) findViewById(R.id.tobuy_items);
+
         /*etc 버튼들*/
         leftDoor = (Button) findViewById(R.id.leftButton);
         rightDoor = (Button) findViewById(R.id.rightButton);
-        postit = (ImageView) findViewById(R.id.postit);
 
         BtnOnClickListener onClickListener = new BtnOnClickListener();
         ListClickListener listClickListener = new ListClickListener();
@@ -260,7 +287,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         menuTransBack.setOnClickListener(onClickListener);
         listview.setOnItemClickListener(listClickListener);
 
-        postit.setOnClickListener(onClickListener);
         try{
             if (getIntent().getStringExtra("locate").equals("pencil")){
                 Intent recipeboxIntent = new Intent(getApplicationContext(),MyRecipeBoxActivity.class);
@@ -271,7 +297,12 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             Log.e("pencil error","error");
         }
 
+        urgent_postit.setOnClickListener(onClickListener);
+        tobuy_postit.setOnClickListener(onClickListener);
+
+        MemoCreate();
     }
+
 
     /*************리스트뷰 리스너************/
     class ListClickListener implements AdapterView.OnItemClickListener {
@@ -459,9 +490,13 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     //메뉴 누른 후 뒷배경 버튼 안 먹게 하기 위함.
                     menuPage.startAnimation(rightAnim);
                     break;
-                case R.id.postit:
-                    Intent memoActivity = new Intent(getApplicationContext(), MemoActivity.class);
-                    startActivity(memoActivity);
+                case R.id.urgent_postit:
+                    Intent memoActivity1 = new Intent(getApplicationContext(), MemoActivity.class);
+                    startActivity(memoActivity1);
+                    break;
+                case R.id.tobuy_postit:
+                    Intent memoActivity2 = new Intent(getApplicationContext(), MemoActivity.class);
+                    startActivity(memoActivity2);
                     break;
             }
         }
@@ -492,7 +527,91 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     }
 
+    public void MemoCreate() {
+        Log.e("test", "MemoCreate() 들어옴");
+        Mapper.updateUrgentMemo();
 
+        urgentList = Mapper.scanUrgentMemo();
+        tobuyList = Mapper.scanToBuyMemo();
 
+        // 유통기한 : 최상위 3개만 메모에 보여지기
 
+        ArrayList<DCItem> dnArray = new ArrayList<>();
+        for (int i=0; i<urgentList.size(); i++) {
+            dnArray.add(new DCItem(Integer.parseInt(urgentList.get(i).getIngredientDuedate()), urgentList.get(i).getIngredientName()));
+        }
+
+        Collections.sort(dnArray, new AscendingSort());
+
+        String dueDateInfo="";
+        CalculateDate(Integer.toString(dnArray.get(0).getDueDate()));
+        if (diffDays < 0)
+            dueDateInfo = dnArray.get(0).getName() + " +" + Math.abs(diffDays) + "일";
+        else
+            dueDateInfo = dnArray.get(0).getName() + " -" + Math.abs(diffDays) + "일";
+        txtUrgent1.setText(dueDateInfo);
+
+        CalculateDate(Integer.toString(dnArray.get(1).getDueDate()));
+        if (diffDays < 0)
+            dueDateInfo = dnArray.get(1).getName() + " +" + Math.abs(diffDays) + "일";
+        else
+            dueDateInfo = dnArray.get(1).getName() + " -" + Math.abs(diffDays) + "일";
+        txtUrgent2.setText(dueDateInfo);
+
+/*        CalculateDate(Integer.toString(dnArray.get(2).getDueDate()));
+        if (diffDays < 0)
+            dueDateInfo = dnArray.get(2).getName() + " +" + Math.abs(diffDays) + "일";
+        else
+            dueDateInfo = dnArray.get(2).getName() + " -" + Math.abs(diffDays) + "일";
+        txtUrgent3.setText(dueDateInfo);*/
+
+        // 장보기
+        Log.e("test", "장보기 목록");
+        for (int i=0; i<tobuyList.size(); i++)
+            Log.d("test", tobuyList.get(i).getIngredientName() + ", " + tobuyList.get(i).getIngredientCount());
+
+        String tobuyStr = "";
+        long intCount = 0;
+        for (int i=1; i<tobuyList.size()+1; i++) {
+            intCount = Math.round(tobuyList.get(i-1).getIngredientCount());
+            if (intCount > tobuyList.get(i-1).getIngredientCount())
+                tobuyStr += tobuyList.get(i-1).getIngredientName() + "(" + tobuyList.get(i-1).getIngredientCount() + ")";
+            else
+                tobuyStr += tobuyList.get(i-1).getIngredientName() + "(" + intCount + ")";
+
+            if (i%2==0)
+                tobuyStr += "\n";
+            else {
+                if (i==tobuyList.size())
+                    tobuyStr += "";
+                else
+                    tobuyStr += ", ";
+            }
+        }
+
+        txtTobuy.setText(tobuyStr);
+    }
+
+    public void CalculateDate(String urgentFoodDate){
+        final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        long diff;
+        try {
+            Date foodDate = formatter.parse(urgentFoodDate);
+            Date curDay = formatter.parse(currentDate.getCurrenDate());
+            diff = foodDate.getTime() - curDay.getTime();
+            diffDays = diff / (24 * 60 * 60 * 1000);
+
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+
+    }
+}
+
+class AscendingSort implements Comparator<DCItem> {
+
+    @Override
+    public int compare(DCItem t1, DCItem t2) {
+        return t1.getDueDate().compareTo(t2.getDueDate());
+    }
 }

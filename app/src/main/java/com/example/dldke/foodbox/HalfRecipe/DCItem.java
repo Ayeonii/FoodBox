@@ -4,10 +4,16 @@ public class DCItem {
     private Integer dueDate;
     private Double count;
     private String strDueDate;
+    private String name;
 
     public DCItem(Integer dueDate, Double count) {
         this.dueDate = dueDate;
         this.count = count;
+    }
+
+    public DCItem(Integer dueDate, String name) {
+        this.dueDate = dueDate;
+        this.name = name;
     }
 
     public DCItem(String strDueDate, Double count) {
@@ -37,5 +43,9 @@ public class DCItem {
 
     public void setStrDueDate(String strDueDate) {
         this.strDueDate = strDueDate;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -17,8 +17,6 @@ import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
@@ -81,7 +79,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         //create하는거 (처음에 한번만 하는거) 나중에 하나로 합칠거임!!
         //Mapper.createMemo();
     }
-
 
     public void setInfoDOList() {
 
@@ -637,7 +634,4 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         //사용자에게 필요한재료 확인다이얼로그
         showRecipeIngDialog(needItem);
     }
-
-
-    //===================================================================================================================================
 }

@@ -1,7 +1,6 @@
 package com.example.dldke.foodbox.DataBaseFiles;
 
 import android.content.Context;
-import android.icu.text.IDNA;
 import android.util.Log;
 
 import com.amazonaws.auth.AWSCredentials;
@@ -1667,13 +1666,13 @@ public final class Mapper {
 
     public static List<RecipeDO.Ingredient> scanToBuyMemo() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
-            final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
-                    com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
-                    userId);
 
             List<RecipeDO.Ingredient> toBuy;
             @Override
             public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MemoDO memoItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MemoDO.class,
+                        userId);
                 toBuy = memoItem.getTobuy();
             }
 

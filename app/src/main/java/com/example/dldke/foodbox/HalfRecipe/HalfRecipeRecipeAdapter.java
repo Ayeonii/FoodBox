@@ -41,8 +41,11 @@ public class HalfRecipeRecipeAdapter extends RecyclerView.Adapter<HalfRecipeReci
         String strCount = Double.toString(iCount);
         holder.txtCount.setText(strCount);
 
-        //기본으로 사용할 개수 1.0으로 세팅
-        editCount = 1.0;
+        //기본으로 사용할 개수 1.0으로 세팅 -> 고침
+        if (iCount == 0.5)
+            editCount = 0.5;
+        else
+            editCount = 1.0;
         mItems.get(position).setEditCount(editCount);
 
         holder.imgFood.setImageURI(mItems.get(position).getImage());

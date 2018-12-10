@@ -11,11 +11,11 @@
         android:id="@+id/fabMinus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|start"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         android:elevation="6dp"
         android:src="@drawable/min"
         fab:backgroundTint="@color/colorPrimary"
@@ -29,19 +29,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/translucent_background"
-        android:visibility="gone"
         android:elevation="5dp"
-       >
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/fullLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom|start"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
             android:elevation="10dp"
             android:orientation="horizontal"
             android:visibility="invisible"
@@ -67,12 +66,12 @@
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:fontFamily="@font/font_family"
                 android:text="풀 레시피"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:fontFamily="@font/font_family"/>
+                android:textSize="14sp" />
 
 
         </LinearLayout>
@@ -81,11 +80,11 @@
             android:id="@+id/miniLayout"
             android:layout_width="161dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom|start"
-            android:layout_marginBottom="12dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="12dp"
             android:elevation="10dp"
             android:orientation="horizontal"
             android:visibility="invisible"
@@ -113,12 +112,12 @@
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="99dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:fontFamily="@font/font_family"
                 android:text="간이 레시피"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:fontFamily="@font/font_family"/>
+                android:textSize="14sp" />
 
 
         </LinearLayout>
@@ -130,11 +129,11 @@
         android:id="@+id/fabPlus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:elevation="12dp"
         android:src="@drawable/add"
         fab:backgroundTint="@color/colorPrimary"
@@ -148,18 +147,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/translucent_background"
-        android:visibility="gone"
-        android:elevation="5dp">
+        android:elevation="5dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/cameraLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:elevation="10dp"
             android:orientation="horizontal"
             android:visibility="invisible"
@@ -171,13 +170,13 @@
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
                 android:elevation="10dp"
+                android:fontFamily="@font/font_family"
                 android:text="카메라 입력"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:fontFamily="@font/font_family"/>
+                android:textSize="14sp" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabCamera"
@@ -201,11 +200,11 @@
             android:id="@+id/pencilLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="12dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="12dp"
             android:elevation="12dp"
             android:orientation="horizontal"
             android:visibility="invisible"
@@ -218,12 +217,12 @@
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:fontFamily="@font/font_family"
                 android:text="직접 입력"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:fontFamily="@font/font_family"/>
+                android:textSize="14sp" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabPencil"
@@ -256,8 +255,10 @@
             android:elevation="0dp"
             fab:layout_constraintBottom_toBottomOf="parent"
             fab:layout_constraintEnd_toEndOf="@+id/view2"
+            fab:layout_constraintHorizontal_bias="0.0"
             fab:layout_constraintStart_toStartOf="parent"
-            fab:layout_constraintTop_toTopOf="parent" />
+            fab:layout_constraintTop_toTopOf="parent"
+            fab:layout_constraintVertical_bias="0.0" />
 
         <View
             android:id="@+id/view2"
@@ -288,9 +289,9 @@
             android:id="@+id/menu"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginEnd="3dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="3dp"
+            android:layout_marginEnd="3dp"
             android:elevation="5dp"
             fab:layout_constraintEnd_toEndOf="parent"
             fab:layout_constraintHorizontal_bias="1.0"
@@ -299,80 +300,113 @@
             fab:srcCompat="@drawable/menu" />
 
         <ImageView
-            android:id="@+id/postit"
-            android:layout_width="162dp"
-            android:layout_height="157dp"
-            android:layout_marginEnd="8dp"
+            android:id="@+id/urgent_postit"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
             android:elevation="3dp"
-            fab:layout_constraintEnd_toEndOf="parent"
-            fab:layout_constraintHorizontal_bias="1.0"
+            fab:layout_constraintEnd_toEndOf="@+id/rightButton"
+            fab:layout_constraintHorizontal_bias="0.036"
             fab:layout_constraintStart_toStartOf="parent"
-            fab:layout_constraintTop_toBottomOf="@+id/menu"
+            fab:layout_constraintTop_toTopOf="@+id/leftButton"
             fab:srcCompat="@drawable/post" />
 
-        <TextView
-            android:id="@+id/durationText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:elevation="10dp"
-            android:text="유통기한 임박!"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            fab:layout_constraintEnd_toEndOf="@+id/postit"
-            fab:layout_constraintHorizontal_bias="0.391"
-            fab:layout_constraintStart_toStartOf="@+id/postit"
-            fab:layout_constraintTop_toTopOf="@+id/postit"
-            android:fontFamily="@font/font_family"/>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="19dp"
-            android:layout_marginEnd="8dp"
+        <ImageView
+            android:id="@+id/tobuy_postit"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
-            android:elevation="10dp"
-            android:text="계란 -3일"
-            fab:layout_constraintEnd_toEndOf="@+id/postit"
-            fab:layout_constraintHorizontal_bias="0.45"
-            fab:layout_constraintStart_toStartOf="@+id/postit"
-            fab:layout_constraintTop_toBottomOf="@+id/durationText"
-            android:fontFamily="@font/font_family"/>
+            android:layout_marginEnd="8dp"
+            android:elevation="3dp"
+            fab:layout_constraintEnd_toEndOf="@+id/rightButton"
+            fab:layout_constraintHorizontal_bias="0.036"
+            fab:layout_constraintStart_toStartOf="parent"
+            fab:layout_constraintTop_toBottomOf="@+id/urgent_postit"
+            fab:srcCompat="@drawable/post" />
 
-        <TextView
-            android:id="@+id/textView3"
+        <LinearLayout
+            android:id="@+id/layout_urgent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:elevation="10dp"
-            android:text="우유 -2일"
-            fab:layout_constraintEnd_toEndOf="@+id/postit"
-            fab:layout_constraintHorizontal_bias="0.443"
-            fab:layout_constraintStart_toStartOf="@+id/postit"
-            fab:layout_constraintTop_toBottomOf="@+id/textView2"
-            android:fontFamily="@font/font_family"/>
+            android:gravity="center"
+            android:orientation="vertical"
+            fab:layout_constraintBottom_toBottomOf="@+id/urgent_postit"
+            fab:layout_constraintEnd_toEndOf="@+id/urgent_postit"
+            fab:layout_constraintHorizontal_bias="0.454"
+            fab:layout_constraintStart_toStartOf="@+id/urgent_postit"
+            fab:layout_constraintTop_toTopOf="@+id/urgent_postit"
+            fab:layout_constraintVertical_bias="0.507">
 
-        <TextView
-            android:id="@+id/textView4"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family"
+                android:text="유통기한 임박!"
+                android:layout_marginBottom="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/urgent_item1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="@font/font_family"
+                android:text="계란 -3일" />
+
+            <TextView
+                android:id="@+id/urgent_item2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="@font/font_family"
+                android:text="우유 -2일" />
+
+            <TextView
+                android:id="@+id/urgent_item3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="@font/font_family"
+                android:text="케첩 -4일" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_tobuy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
             android:elevation="10dp"
-            android:text="케첩 -4일"
-            fab:layout_constraintEnd_toEndOf="@+id/postit"
-            fab:layout_constraintHorizontal_bias="0.443"
-            fab:layout_constraintStart_toStartOf="@+id/postit"
-            fab:layout_constraintTop_toBottomOf="@+id/textView3"
-            android:fontFamily="@font/font_family"/>
+            android:gravity="center"
+            android:orientation="vertical"
+            fab:layout_constraintBottom_toBottomOf="@+id/tobuy_postit"
+            fab:layout_constraintEnd_toEndOf="@+id/tobuy_postit"
+            fab:layout_constraintHorizontal_bias="0.458"
+            fab:layout_constraintStart_toStartOf="@+id/tobuy_postit"
+            fab:layout_constraintTop_toTopOf="@+id/tobuy_postit"
+            fab:layout_constraintVertical_bias="0.587">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:fontFamily="@font/font_family"
+                android:text="사야할것"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tobuy_items"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/font_family"
+                android:text="살것1" />
+        </LinearLayout>
 
 
     </android.support.constraint.ConstraintLayout>
@@ -400,7 +434,7 @@
                 android:id="@+id/optionList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@font/font_family"/>
+                android:fontFamily="@font/font_family" />
         </LinearLayout>
     </LinearLayout>
 
