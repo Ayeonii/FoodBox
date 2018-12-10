@@ -8,16 +8,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,10 +23,6 @@ import android.widget.Toast;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxFullRecipeDetailAdapter;
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxFullRecipeDetailItem;
-import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
-import com.example.dldke.foodbox.PencilRecipe.SearchIngredientFragment;
 import com.example.dldke.foodbox.R;
 
 import java.io.IOException;
@@ -169,9 +161,6 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
                 Mapper.updateIsPost(recipe_id);
                 Mapper.addRecipeInMyCommunity(recipe_id);
                 break;
-
-
-
         }
     }
     public void AddStep(List<RecipeDO.Spec> specList){

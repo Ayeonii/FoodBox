@@ -1,11 +1,8 @@
 package com.example.dldke.foodbox.MyRecipe;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,34 +11,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapperConfig;
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.FullRecipe.FullRecipeIngredientAdapter;
 import com.example.dldke.foodbox.R;
-import com.example.dldke.foodbox.MyRecipe.CustomDialog;
-
 
 import java.io.InputStream;
 import java.util.List;
 
 
 public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
-
 
     private MyRecipeBoxFullRecipeAdapter myRecipeBoxFullRecipeAdapter = new MyRecipeBoxFullRecipeAdapter();
     private MyRecipeBoxHalfRecipeAdapter myRecipeBoxHalfRecipeAdapter = new MyRecipeBoxHalfRecipeAdapter();
@@ -69,7 +56,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
             recipe_id = myRecipeBoxFullRecipeAdapter.getRecipeId();
         }
 
-
         String imgUrl = Mapper.getImageUrlRecipe(recipe_id);
         boolean isShared = Mapper.searchRecipe(recipe_id).getIsShare();
 
@@ -79,9 +65,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         Button post_fullrecipe_write = (Button) findViewById(R.id.fullrecipe_write);
 
-
         new DownloadImageTask(mainImg).execute(imgUrl);
-
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -89,7 +73,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         String foodName = detail.getFoodName();
         collapsingToolbarLayout.setTitle(foodName);
         collapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
-
 
         detail_ingredient_recyclerview = (RecyclerView)findViewById(R.id.fullrecipe_detail_ingredient_view);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -99,12 +82,10 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         recipeIngredientAdapter = new FullRecipeIngredientAdapter(this, data);
         detail_ingredient_recyclerview.setAdapter(recipeIngredientAdapter);
 
-
         detail_recyclerview = (RecyclerView)findViewById(R.id.fullrecipe_detail_view);
         detail_recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recipeDetailAdapter = new RecipeBoxFullRecipeDetailAdapter(recipe_id);
         detail_recyclerview.setAdapter(recipeDetailAdapter);
-
 
         if(isShared){
             floatingActionButton.setVisibility(View.INVISIBLE);
@@ -124,6 +105,14 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showDialog();
+            }
+        });
+
+        // 레시피 사용으로 내 냉장고에서 재고 소진 플로우 시작
+        post_fullrecipe_write.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -152,7 +141,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     }
 
     void showDialog(){
-
         CustomDialog customDialog = new CustomDialog(this, isCookingClass);
         customDialog.show();
 
@@ -162,7 +150,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         Window window = customDialog.getWindow();
         window.setAttributes(lp);
-
     }
 
     @Override

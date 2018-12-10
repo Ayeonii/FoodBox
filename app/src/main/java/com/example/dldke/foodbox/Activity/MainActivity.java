@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                                 Mapper.setUserId(getApplicationContext());
                                 Mapper.setBucketName(getApplicationContext());
                                 Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
-                                getPinpointManager(getApplicationContext());
                                 String locate = getIntent().getStringExtra("locate");
                                 Intent RefriActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
                                 RefriActivity.putExtra("locate",locate);

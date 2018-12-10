@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.CloudVision.PermissionUtils;
-import com.example.dldke.foodbox.Community.CommunityFragmentNewsfeed;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -79,7 +78,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         //User Profile Image
         try {
             String imgUrl = Mapper.getImageUrlUser();
-            new DownloadImageTask(profile).execute(imgUrl);
+            if(imgUrl.equals("default")){
+                profile.setImageDrawable(getApplication().getResources().getDrawable(R.drawable.ic_person, null));
+            }
+            else{
+                new DownloadImageTask(profile).execute(imgUrl);
+            }
 
         } catch (Exception e){
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,13 +142,12 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
                 cnt++;
         }
 
-        PinpointManager tmp = getPinpointManager(context);
-
         if (cnt != 0)
             Mapper.updateIngInfo(1, recipeId);
         else
             Mapper.updateIngInfo(0, recipeId);
-        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
+        PinpointManager tmp = getPinpointManager(context);
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
     }
 }

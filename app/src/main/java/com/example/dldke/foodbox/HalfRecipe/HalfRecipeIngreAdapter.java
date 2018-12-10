@@ -39,7 +39,7 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     }
 
     @Override
-    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
+    public void onBindViewHolder(ItemViewHolder holder, int position) {
         String foodName = mItems.get(position).getName();
         String foodImgUri;
         if (ingreType.equals("sideDish")) {
@@ -50,27 +50,29 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
         holder.mNameTv.setText(foodName);
         holder.food_Img.setImageURI(Uri.parse(foodImgUri));
 
-        if (checkIngre[position]) {
-            holder.ivCheck.setVisibility(View.VISIBLE);
-            holder.ivCheck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("test", "check clicked!");
-                    holder.ivCheck.setVisibility(View.GONE);
-                    checkIngre[position] = false;
-                }
-            });
-        } else {
+        if (!checkIngre[position]) {
             holder.ivCheck.setVisibility(View.GONE);
-            holder.food_Img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("test", "food clicked!");
-                    holder.ivCheck.setVisibility(View.VISIBLE);
-                    checkIngre[position] = true;
-                }
-            });
+        } else {
+            holder.ivCheck.setVisibility(View.VISIBLE);
         }
+
+        holder.food_Img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("test", "food clicked!");
+                holder.ivCheck.setVisibility(View.VISIBLE);
+                checkIngre[position] = true;
+            }
+        });
+
+        holder.ivCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("test", "check clicked!");
+                holder.ivCheck.setVisibility(View.GONE);
+                checkIngre[position] = false;
+            }
+        });
     }
 
     @Override

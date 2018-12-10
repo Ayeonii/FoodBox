@@ -1,15 +1,9 @@
 package com.example.dldke.foodbox.Activity;
 
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,12 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.client.Callback;
-import com.amazonaws.mobile.client.UserStateDetails;
-import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
@@ -45,14 +34,7 @@ import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
-import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-
-import java.util.HashMap;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,6 +43,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
 import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
 
@@ -144,10 +127,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         //User DB Create
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
-
-        Mapper.checkAndCreateFirst();
-
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
+        Mapper.checkAndCreateFirst();
 
         try {
             user_id = Mapper.searchUserInfo().getUserId();
