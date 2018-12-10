@@ -1,17 +1,16 @@
 package com.example.dldke.foodbox.MyRecipe;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
@@ -31,6 +30,7 @@ public class HalfRecipeBoxFragment extends Fragment {
     private static boolean isPost;
     private static boolean isDetailBack;
     private static View view;
+    private static List<String> myrecipeId = new ArrayList<>();
 
     public void setisDetailBack(boolean isDetailBack){
         this.isDetailBack = isDetailBack;
@@ -49,6 +49,7 @@ public class HalfRecipeBoxFragment extends Fragment {
             //recyclerview.setItemAnimator(new DefaultItemAnimator());
             recyclerview.setAdapter(adapter);
 
+
             return view;
         }
         else {
@@ -60,6 +61,25 @@ public class HalfRecipeBoxFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prepareData();
+        if(isPost) {
+            enableSwipeToDeleteAndUndo();
+        }
+    }
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+                final int position = viewHolder.getAdapterPosition();
+                data.remove(position);
+                adapter.notifyDataSetChanged();
+
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerview);
     }
 
     @Override
@@ -105,7 +125,9 @@ public class HalfRecipeBoxFragment extends Fragment {
                 String foodname = Mapper.searchRecipe(recipeId).getDetail().getFoodName();
                 isPost = Mapper.searchRecipe(recipeId).getIsPost();
 
+
                 if (isPost) {
+
                     String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
                     Mapper.updateIngInfo(0, recipeId);
                     data.add(new RecipeBoxData(simpleName, recipeId, 0, isPost));
@@ -114,6 +136,7 @@ public class HalfRecipeBoxFragment extends Fragment {
 
             } catch (NullPointerException e) {
                 recipeId = myrecipe.get(i);
+                Log.e("recipeID",recipeId);
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
                 isIng = Mapper.searchRecipe(recipeId).getIng();
                 isPost = false;
@@ -121,6 +144,8 @@ public class HalfRecipeBoxFragment extends Fragment {
                 isRecipe = true;
 
             }
+
+
         }
     }
 

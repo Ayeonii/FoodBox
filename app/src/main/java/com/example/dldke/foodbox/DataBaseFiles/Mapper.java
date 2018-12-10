@@ -4,7 +4,12 @@ import android.content.Context;
 import android.util.Log;
 
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AwsChunkedEncodingInputStream;
+import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.auth.google.GoogleSignInProvider;
+import com.amazonaws.mobile.auth.userpools.CognitoUserPoolsSignInProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.IdentityProvider;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
@@ -19,6 +24,8 @@ import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.Region;
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -56,10 +63,16 @@ public final class Mapper {
 
     }
     public static void setUserId(Context context){
-
-        CognitoUserPool cognitoUserPool = new CognitoUserPool(context,AWSMobileClient.getInstance().getConfiguration());
-        CognitoUser user = cognitoUserPool.getCurrentUser();
-        userId = user.getUserId();
+        try{
+            Log.e("username",AWSMobileClient.getInstance().getUsername());
+            CognitoUserPool cognitoUserPool = new CognitoUserPool(context,AWSMobileClient.getInstance().getConfiguration());
+            CognitoUser user = cognitoUserPool.getCurrentUser();
+            userId = user.getUserId();
+        }
+        catch (Exception e){
+            userId = GoogleSignIn.getLastSignedInAccount(context).getEmail();
+        }
+        Log.e("Login userId",userId);
 
     }
     public static String getUserId(){
@@ -110,17 +123,21 @@ public final class Mapper {
 
         List<RecipeDO.Ingredient> urgent = scanUrgentMemo();
         try {
-            if(urgent.get(0) != null)
+            if(urgent.get(0) != null) {
+                Log.e("설마?","유통기한");
                 list.add("유통기한");
-            else
-                list.add("유통기한X");
+                Log.e("endpointId",target.currentEndpoint().getEndpointId());
+                target.addAttribute("urgent",list);
+                target.updateEndpointProfile();
+            }
 
+        }
+        catch(Exception e){
+            Log.e("정말","유통기한X");
+            list.add("유통기한X");
             Log.e("endpointId",target.currentEndpoint().getEndpointId());
             target.addAttribute("urgent",list);
             target.updateEndpointProfile();
-        }
-        catch(Exception e){
-            Log.e("urgent error", "으에에");
         }
     }
 
@@ -161,6 +178,7 @@ public final class Mapper {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new returnThread(new CustomRunnable() {
 
             UserDO userInfo;
+
             @Override
             public void run() {
                 userInfo = Mapper.getDynamoDBMapper().load(
@@ -254,47 +272,6 @@ public static String getImageUrlUser(final String userid){
     }
     return url;
 }
-
-//public static String getImageUrlUser(){
-//    returnThread thread = new returnThread(new CustomRunnable() {
-//
-//        com.example.dldke.foodbox.DataBaseFiles.UserDO user;
-//        URL url;
-//        @Override
-//        public void run() {
-//            user = Mapper.getDynamoDBMapper().load(
-//                    com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-//                    userId);
-//            // Log.d("why",Mapper.bucketName);
-//            try{
-//                url = user.getProfileImage().getAmazonS3Client().getUrl(user.getProfileImage().getBucketName(),"Users/"+userId+".jpg");
-//
-//            }
-//            catch (Exception e){
-//                url = null;
-//            }
-//        }
-//        @Override
-//        public Object getResult(){
-//            return url.toString();
-//        }
-//    });
-//    thread.start();
-//    try{
-//        thread.join();
-//    }catch (Exception e){
-//        e.printStackTrace();
-//    }
-//    String url;
-//    if(thread.getResult()==null){
-//        url = "default";
-//
-//    }
-//    else{
-//        url = (String)thread.getResult();
-//    }
-//    return url;
-//}
 
 
     /************************* Refrigerator Section Method *********************************/

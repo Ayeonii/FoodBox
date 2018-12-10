@@ -172,6 +172,8 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                             builder.create().show();
                         }
+
+
                         break ;
 
                     case R.id.user_id:

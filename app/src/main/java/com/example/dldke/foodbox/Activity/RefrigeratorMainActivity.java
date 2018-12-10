@@ -26,9 +26,12 @@ import android.widget.TextView;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.auth.google.GoogleSignInProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.IdentityProvider;
 import com.amazonaws.mobile.client.UserStateDetails;
+
 import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
@@ -47,11 +50,16 @@ import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccountCreator;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import java.io.File;
 import java.util.HashMap;
 
 import java.text.ParseException;
@@ -144,11 +152,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         //User DB Create
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
-
-        Mapper.checkAndCreateFirst();
-
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
-
+        Mapper.checkAndCreateFirst();
         try {
             user_id = Mapper.searchUserInfo().getUserId();
         } catch (NullPointerException e) {
@@ -262,6 +267,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         urgent_postit.setOnClickListener(onClickListener);
         tobuy_postit.setOnClickListener(onClickListener);
 
+
     }
 
     @Override
@@ -321,7 +327,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             //슬라이드 열기->닫기
             if (isPageOpen) {
                 //fabPlus.setElevation(10);
-                //fabMinus.setElevation(10);
+                fabMinus.setElevation(10);
                 menuTransBack.setVisibility(View.GONE);
                 menuPage.setVisibility(View.GONE);
                 listview.setVisibility(View.GONE);
@@ -443,7 +449,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.setVisibility(View.VISIBLE);
                     listview.setVisibility(View.VISIBLE);
                     //fabPlus.setElevation(0);
-                    //fabMinus.setElevation(0);
+                    fabMinus.setElevation(-1);
                     menuTransBack.setVisibility(View.VISIBLE);
                     break;
                 case R.id.transparentBack:
@@ -491,6 +497,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     public void MemoCreate() {
         Mapper.updateUrgentMemo();
+        Log.e("memoCreate","chk");
         PinpointManager tmp =getPinpointManager(getApplicationContext());
         Mapper.updateUrgentPushEndPoint(tmp.getTargetingClient());
 
