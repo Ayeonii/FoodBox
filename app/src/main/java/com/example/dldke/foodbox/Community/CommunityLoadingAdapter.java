@@ -32,6 +32,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Context context;
     private static String clicked_Recipe_id;
     private static String clicked_Post_id;
+    private static String postWriter;
     private OnLoadMoreListener onLoadMoreListener;
     private LinearLayoutManager mLinearLayoutManager;
 
@@ -39,6 +40,15 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     private int visibleThreshold = 1;
     int firstVisibleItem, visibleItemCount, totalItemCount, lastVisibleItem;
 
+
+
+    /*********clickedPostInfo*******/
+    private void setClickedPostWriter(String postWriter){
+        this.postWriter = postWriter;
+    }
+    private String getClickedPostWriter(){
+        return postWriter;
+    }
     private void setClickedRecipeId(String clicked_Recipe_id){
         this.clicked_Recipe_id = clicked_Recipe_id;
     }
@@ -130,6 +140,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case R.id.communityFoodName:
                         setClickedRecipeId(itemList.get(position).getRecipeId());
                         setClickedPostId(itemList.get(position).getPostId());
+                        setClickedPostWriter(itemList.get(position).getUserId());
                         Intent refMain = new Intent(context, CommunityDetailActivity.class);
                         refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         context.startActivity(refMain);

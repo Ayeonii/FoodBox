@@ -33,6 +33,7 @@ import java.util.List;
 public final class Mapper {
     private static CurrentDate currentDate = new CurrentDate();
     private static boolean isFavorite = false;
+    private static boolean isMyRecipe = false;
     private static DynamoDBMapper dynamoDBMapper;
     private static String userId;
     private static String bucketName;
@@ -156,6 +157,65 @@ public final class Mapper {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+/****************************User Profile***********************************/
+    public static void uploadUserImage(final String filePath){
+
+        Thread thread = new Thread(new Runnable() {
+
+            com.example.dldke.foodbox.DataBaseFiles.UserDO user;
+            @Override
+            public void run() {
+                user = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+                Log.d("why",Mapper.bucketName);
+                user.setProfileImage(Mapper.getDynamoDBMapper().createS3Link(Region.AP_Seoul,Mapper.bucketName,"Users/"+userId+".jpg"));
+                user.getProfileImage().uploadFrom(new File(filePath));
+                user.getProfileImage().setAcl(CannedAccessControlList.PublicRead);
+                Mapper.getDynamoDBMapper().save(user);
+
+            }
+
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String getImageUrlUser(){
+        returnThread thread = new returnThread(new CustomRunnable() {
+
+            com.example.dldke.foodbox.DataBaseFiles.UserDO user;
+            URL url;
+            @Override
+            public void run() {
+                user = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+                // Log.d("why",Mapper.bucketName);
+                url = user.getProfileImage().getAmazonS3Client().getUrl(user.getProfileImage().getBucketName(),"Users/"+userId+".jpg");
+                Log.d("getImageUrl",url.toString());
+            }
+            @Override
+            public Object getResult(){
+                return url.toString();
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String url = (String)thread.getResult();
+        return url;
     }
 
 
@@ -1166,6 +1226,38 @@ public final class Mapper {
             e.printStackTrace();
         }
         return isFavorite;
+    }
+
+    public static boolean matchMyRecipe(String recipe_id) {
+        final String recipeId = recipe_id;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO communityItem = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO.class,
+                        userId);
+
+                for(int i =0; i < communityItem.getFavorites().size(); i++)
+                {
+                    if(communityItem.getMyRecipes().get(i).equals(recipeId)) {
+                        isMyRecipe = true;
+                        break;
+                    }
+                    else{
+                        isMyRecipe = false;
+                    }
+                }
+
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return isMyRecipe;
     }
 
     public static List<PostDO> scanFavorite() {

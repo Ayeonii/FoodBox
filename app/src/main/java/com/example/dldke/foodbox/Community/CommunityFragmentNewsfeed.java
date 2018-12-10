@@ -24,8 +24,8 @@ import com.example.dldke.foodbox.R;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import android.os.Handler;
 
+import android.os.Handler;
 
 
 //public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
@@ -34,21 +34,9 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
     private CommunityLoadingAdapter mAdapter;
     private ArrayList<CommunityItem> itemList;
-    private static ArrayList<CommunityItem> favoriteList  = new ArrayList<>();
+    private static ArrayList<CommunityItem> favoriteList = new ArrayList<>();
     private static List<PostDO> postList;
-    private  boolean isFalse = true;
-
-    public CommunityFragmentNewsfeed(){}
-
-    public List<PostDO> getPostList(){
-        return postList;
-    }
-
-
-    public List<CommunityItem> getFavoriteList(){
-        return favoriteList;
-    }
-
+    private boolean isFalse = true;
 
 
     @Nullable
@@ -67,33 +55,24 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
         return view;
     }
+
     private class PostAsync extends AsyncTask<Void, Void, List<PostDO>> {
 
         protected void onPreExecute() { //2
-
             super.onPreExecute();
             mAdapter.setProgressMore(true);
         }
+
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.scanPost();
-
-            if(postList.size()==0){
-                isCancelled();
-            }
-
             return postList;
         }
 
         protected void onPostExecute(List result) {
-            Log.e("size:","끝");
-           // setData(3);
-
-            if(postList.size() != 0 ){
+            if (postList.size() != 0)
                 loadData();
-            }
-            else{
+            else
                 mAdapter.setProgressMore(false);
-            }
         }
     }
 
@@ -101,11 +80,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
     @Override
     public void onStart() {
         super.onStart();
-
         new PostAsync().execute();
-
-
-
     }
 
 
@@ -113,63 +88,24 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
     @Override
     public void onLoadMore() {
 
-                mAdapter.setProgressMore(true);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            itemList.clear();
-                            mAdapter.setProgressMore(false);
+        mAdapter.setProgressMore(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                itemList.clear();
+                mAdapter.setProgressMore(false);
 
-                            int start = mAdapter.getItemCount() -1 ;
-                            int end = start + 2;
+                int start = mAdapter.getItemCount() - 1;
+                int end = start + 2;
 
-                            try {
-
-
-                                if (end >= postList.size()) {
-                                    end = start + (end - postList.size());
-                                    isFalse = false;
-                                }
-                                for (int i = start + 1; i <= end + 1; i++) {
-                                    String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                                    Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
-
-
-                                    itemList.add(new CommunityItem(postList.get(i).getWriter()
-                                            , postList.get(i).getTitle()
-                                            , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                                            , bm
-                                            , R.drawable.temp_profile4
-                                            , Mapper.matchFavorite(postList.get(i).getPostId())
-                                            , postList.get(i).getPostId()
-                                            , postList.get(i).getRecipeId()
-                                    ));
-                                }
-
-                                mAdapter.addItemMore(itemList);
-                                mAdapter.setMoreLoading(isFalse);
-
-                            } catch (Exception e) {
-
-                            }
-
-                        }
-                    }, 2000);
-
-    }
-
-    private void loadData() {
-        itemList.clear();
-
-                int end;
-                if(postList.size() < 4)
-                    end = postList.size() ;
-                else
-                    end = 4;
                 try {
-                    for (int i = 0; i <= end; i++) {
 
-                        //비동기
+
+                    if (end >= postList.size()) {
+                        end = start + (end - postList.size());
+                        isFalse = false;
+                    }
+                    for (int i = start + 1; i <= end + 1; i++) {
                         String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                         Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
@@ -183,21 +119,60 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                                 , postList.get(i).getPostId()
                                 , postList.get(i).getRecipeId()
                         ));
-
-                        Log.e("load", "" + postList.get(i).getTitle());
                     }
+
+                    mAdapter.addItemMore(itemList);
+                    mAdapter.setMoreLoading(isFalse);
 
                 } catch (Exception e) {
 
                 }
 
-            mAdapter.addAll(itemList);
+            }
+        }, 2000);
 
     }
 
-    public  class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    private void loadData() {
+        itemList.clear();
+
+        int end;
+        if (postList.size() < 4)
+            end = postList.size();
+        else
+            end = 3;
+        try {
+            for (int i = 0; i <= end; i++) {
+
+                //비동기
+                String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
+                Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
+
+
+                itemList.add(new CommunityItem(postList.get(i).getWriter()
+                        , postList.get(i).getTitle()
+                        , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
+                        , bm
+                        , R.drawable.temp_profile4
+                        , Mapper.matchFavorite(postList.get(i).getPostId())
+                        , postList.get(i).getPostId()
+                        , postList.get(i).getRecipeId()
+                ));
+
+                Log.e("load", "" + postList.get(i).getTitle());
+            }
+
+        } catch (Exception e) {
+
+        }
+
+        mAdapter.addAll(itemList);
+
+    }
+
+    public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         protected Bitmap doInBackground(String... urls) {
-            String urlImg =urls[0];
+            String urlImg = urls[0];
             Bitmap foodImg = null;
             try {
                 InputStream in = new java.net.URL(urlImg).openStream();
@@ -207,7 +182,8 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
             }
             return foodImg;
         }
-        protected void onPostExecute(Bitmap result){
+
+        protected void onPostExecute(Bitmap result) {
         }
     }
 
