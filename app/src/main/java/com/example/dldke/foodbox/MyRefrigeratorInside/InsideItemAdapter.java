@@ -13,16 +13,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.HalfRecipe.DCItem;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.ItemViewHolder> {
 
     private static ArrayList<DCItem> dcArray = new ArrayList<>();
     private String foodName, foodDueDate, foodCount;
     private Context context;
+    private Double foodCount_double;
 
     public InsideItemAdapter(Context context, ArrayList<DCItem> dcArray, String foodName) {
         this.context = context;
@@ -38,7 +42,6 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.refrigeratorinside_item_recyclerview_item, parent, false);
-//        this.context = parent.getContext();
         return new ItemViewHolder(view);
     }
 
@@ -46,7 +49,8 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         //유통기한이랑 개수받아오는 부분
         foodDueDate = dcArray.get(position).getStrDueDate();
-        foodCount = Double.toString(dcArray.get(position).getCount());
+        foodCount_double = dcArray.get(position).getCount();
+        foodCount = Double.toString(foodCount_double);
         holder.txtDueDate.setText(foodDueDate);
         holder.txtCount.setText(foodCount);
 
@@ -59,14 +63,16 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
                 dcEditDialog.setDialogListener(new InsideDialogListener() {
                     @Override
                     public void onPositiveClicked(Double count, String dueDate) {
-                        Mapper.updateCount(foodName, foodDueDate, count);               //변경 전 유통기한으로 개수 바꾸기
-                        Mapper.updateDueDate(foodName, foodDueDate, dueDate);
+                        Mapper.updateCount(foodName, foodDueDate, count);       //변경 전 유통기한으로 개수 바꾸기
+                        Mapper.updateDueDate(foodName, foodDueDate, dueDate);   //유통기한 변경
                         foodDueDate = dueDate;
                         foodCount = Double.toString(count);
                         holder.txtDueDate.setText(foodDueDate);
                         holder.txtCount.setText(foodCount);
                         dcArray.get(position).setStrDueDate(dueDate);
                         dcArray.get(position).setCount(count);
+
+                        MemoUpdate(count);
                     }
 
                     @Override
@@ -97,6 +103,44 @@ public class InsideItemAdapter extends RecyclerView.Adapter<InsideItemAdapter.It
                         .show();
             }
         });
+    }
+
+    private void MemoUpdate(Double count) {
+        // memo upadate
+        List<RecipeDO.Ingredient> tobuyList = new ArrayList<>();
+        List<RefrigeratorDO.Item> updateItem = new ArrayList<>();
+        List<RecipeDO.Ingredient> appendItem = new ArrayList<>();
+        try {
+            tobuyList = Mapper.scanToBuyMemo();
+            for (int i=0; i<tobuyList.size(); i++) {
+                if (tobuyList.get(i).getIngredientName().equals(foodName)) {
+                    // 수정전 : foodCount_double, 수정후 : count
+                    if (foodCount_double < count) {
+                        RefrigeratorDO.Item setlist = new RefrigeratorDO.Item();
+
+                        setlist.setName(foodName);
+                        setlist.setCount(count-foodCount_double);
+
+                        updateItem.add(setlist);
+
+                        Mapper.updateToBuyMemo(updateItem);
+
+                    } else if ( foodCount_double > count) {
+                        RecipeDO.Ingredient setlist = new RecipeDO.Ingredient();
+
+                        setlist.setIngredientName(foodName);
+                        setlist.setIngredientCount(foodCount_double-count);
+
+                        appendItem.add(setlist);
+
+                        Mapper.appendToBuyMemo(appendItem);
+                    }
+                }
+            }
+
+        } catch (NullPointerException e) {
+
+        }
     }
 
     @Override
