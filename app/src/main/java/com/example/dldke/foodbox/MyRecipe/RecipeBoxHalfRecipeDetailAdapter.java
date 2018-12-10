@@ -35,6 +35,7 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     private int cnt;
     private int ing;
     Context context;
+    private String foodName;
 
     public RecipeBoxHalfRecipeDetailAdapter(Context context, List<RecipeDO.Ingredient> ingredientdata) {
         this.items = ingredientdata;
@@ -73,7 +74,7 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String foodName = recipeItems.get(position).getName();
+        foodName = recipeItems.get(position).getName();
         String foodImgUri;
         File file = new File("/storage/emulated/0/Download/" + foodName + ".jpg");
 
@@ -95,15 +96,14 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
         }
 
         if (ing == 0 || ing == 1) {
-            if (refriCount[position] < count)
+            if (refriCount[position] < count) {
                 holder.ingredientCount.setTextColor(Color.RED);
-            else
+                MemoUpdate(refriCount[position], count);
+            } else
                 holder.ingredientCount.setTextColor(Color.BLACK);
         } else if (ing == 2) {
             holder.ingredientCount.setTextColor(Color.GRAY);
         }
-
-
     }
 
     public int getItemCount() {
@@ -149,5 +149,34 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
         PinpointManager tmp = getPinpointManager(context);
         Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+    }
+
+    private void MemoUpdate(Double refriCount, Double recipeCount) {
+        List<RecipeDO.Ingredient> tobuyList = new ArrayList<>();
+        List<RefrigeratorDO.Item> updateItem = new ArrayList<>();
+        List<RecipeDO.Ingredient> appendItem = new ArrayList<>();
+
+        try {
+            tobuyList = Mapper.scanToBuyMemo();
+
+            int cnt=0;
+            for (int i=0; i<tobuyList.size(); i++)
+                if (tobuyList.get(i).getIngredientName().equals(foodName))
+                    cnt++;
+
+            if (cnt==0) {
+                RecipeDO.Ingredient setlist = new RecipeDO.Ingredient();
+
+                setlist.setIngredientName(foodName);
+                setlist.setIngredientCount(recipeCount - refriCount);
+
+                appendItem.add(setlist);
+
+                Mapper.appendToBuyMemo(appendItem);
+            }
+
+        } catch (NullPointerException e) {
+
+        }
     }
 }
