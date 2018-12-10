@@ -144,10 +144,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         //User DB Create
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
-
+        Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
         Mapper.checkAndCreateFirst();
 
-        Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
+
 
         try {
             user_id = Mapper.searchUserInfo().getUserId();
