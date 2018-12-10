@@ -159,6 +159,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
             MyRecipeBoxActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             halfRecipeBoxFragment.setisDetailBack(true);
             startActivity(MyRecipeBoxActivity);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

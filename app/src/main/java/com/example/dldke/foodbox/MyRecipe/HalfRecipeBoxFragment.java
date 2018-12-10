@@ -45,6 +45,7 @@ public class HalfRecipeBoxFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e(TAG, "onCreateView");
 
         if (isRecipe) {
             view = inflater.inflate(R.layout.recipe_box_fragment_halfrecipe, container, false);
@@ -66,7 +67,43 @@ public class HalfRecipeBoxFragment extends Fragment {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "onCreate");
         prepareData();
+    }
+
+    @Override
+    public void onStart(){
+        Log.e(TAG, "onStart");
+//       if(isDetailBack){
+//            prepareData();
+//            isDetailBack = false;
+//            recyclerview = (RecyclerView) view.findViewById(R.id.recycler_view2);
+//            recyclerview.setHasFixedSize(true);
+//            adapter = new MyRecipeBoxHalfRecipeAdapter(data);
+//            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+//            recyclerview.setLayoutManager(layoutManager);
+//            recyclerview.setItemAnimator(new DefaultItemAnimator());
+//            recyclerview.setAdapter(adapter);
+//        }
+        super.onStart();
+    }
+
+    @Override
+    public void onResume(){
+        Log.e(TAG, "onResume");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        Log.e(TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop(){
+        Log.e(TAG, "onStop");
+        super.onStop();
     }
 
     private void prepareData() {

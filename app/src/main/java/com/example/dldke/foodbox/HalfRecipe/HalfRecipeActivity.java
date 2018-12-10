@@ -634,13 +634,14 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         Log.d("test", recipe_id);
 
         Mapper.updateIngInfo(1, recipe_id);
-        PinpointManager tmp =getPinpointManager(getApplicationContext());
-        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
         Mapper.addRecipeInMyCommunity(recipe_id);
 
         // memo table
         Mapper.appendToBuyMemo(needItem);
+
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
         //사용자에게 필요한재료 확인다이얼로그
         showRecipeIngDialog(needItem);
