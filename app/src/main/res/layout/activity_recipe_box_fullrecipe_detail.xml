@@ -74,4 +74,15 @@
         android:layout_margin="5dp"
         android:src="@android:drawable/ic_menu_share" />
 
+    <Button
+        android:id="@+id/fullrecipe_write"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="풀레시피로 가져가기"
+        android:textSize="15dp"
+        android:fontFamily="@font/font_family"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="bottom"
+        android:visibility="gone"/>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -1,9 +1,10 @@
 package com.example.dldke.foodbox.Community;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class CommunityCommentItem {
 
-    private int userImg;
+    private Bitmap userImg;
     private String userId;
     private String comment;
     private String date;
@@ -15,8 +16,8 @@ public class CommunityCommentItem {
         ONE_ITEM, TWO_ITEM;
     }
 
-    public CommunityCommentItem (String userId, int userImg, String comment, String date
-                                , int stepImage, String description, ItemType itemType){
+    public CommunityCommentItem (String userId, Bitmap userImg, String comment, String date
+            , int stepImage, String description, ItemType itemType){
         this.userId = userId;
         this.userImg = userImg;
         this.comment = comment;
@@ -30,7 +31,7 @@ public class CommunityCommentItem {
         return userId;
     }
 
-    public int getUserImg() { return userImg; }
+    public Bitmap getUserImg() { return userImg; }
 
     public String getComment() {
         return comment;

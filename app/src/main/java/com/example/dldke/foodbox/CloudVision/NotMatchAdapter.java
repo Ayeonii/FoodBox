@@ -20,18 +20,16 @@ import java.util.List;
 public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    public List<String> notmatchItems;
+    private List<String> notmatchItems;
+    private RecyclerView notmatch;
     private String TAG="NotMatchAdapter";
 
-    public void setNotmatchItems(List<String> items){
-        this.notmatchItems = items;
-    }
+    public NotMatchAdapter(){ }
 
-    public NotMatchAdapter(){}
-
-    public NotMatchAdapter(List<String> items, Context activity){
+    public NotMatchAdapter(List<String> items, Context context, RecyclerView notmatch_view){
         this.notmatchItems = items;
-        this.context = activity;
+        this.context = context;
+        this.notmatch = notmatch_view;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -47,9 +45,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.vision_notmatch_list, parent, false);
-
         return new MyViewHolder(v);
     }
 
@@ -63,7 +59,8 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View view) {
                 String foodname = notmatchItems.get(position);
                 Log.e(TAG, notmatchItems.get(position)+" 눌림");
-                PopupDialog popupDialog = new PopupDialog(context, position, notmatchItems);
+
+                PopupDialog popupDialog = new PopupDialog(context, notmatch, position, notmatchItems);
                 popupDialog.show();
 
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -86,9 +83,7 @@ public class NotMatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public int getItemCount() {
-        return notmatchItems.size();
-    }
+    public int getItemCount() {return (null != notmatchItems ? notmatchItems.size() : 0);}
 }
 
 

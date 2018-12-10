@@ -22,7 +22,7 @@ import java.util.List;
 
 public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHolder> {
 
-    private List<PencilItem> allFoodItems = new ArrayList<>();
+    private static List<PencilItem> allFoodItems = new ArrayList<>();
     private List<PencilCartItem> changeItem = new ArrayList<>();
     private GregorianCalendar cal = new GregorianCalendar();
     private static Date inputDBDate ;
@@ -32,7 +32,7 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
 
     public PopupAdapter (List<PencilItem> allfoodList){
         this.allFoodItems = allfoodList;
-        Log.e(TAG, "AllFoodItems"+allFoodItems);
+        //Log.e(TAG, "AllFoodItems"+ allFoodItems.get(0).getFoodName());
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

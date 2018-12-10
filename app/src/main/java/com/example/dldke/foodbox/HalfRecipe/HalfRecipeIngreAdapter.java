@@ -39,7 +39,7 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         String foodName = mItems.get(position).getName();
         String foodImgUri;
         if (ingreType.equals("sideDish")) {

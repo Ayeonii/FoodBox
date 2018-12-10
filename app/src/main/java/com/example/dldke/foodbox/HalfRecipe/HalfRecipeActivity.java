@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
 public class HalfRecipeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -589,6 +591,9 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         Mapper.addRecipeInMyCommunity(recipe_id);
 
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
         halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         halfRecipeCompleteActivity.putExtra("complete", 0);
@@ -626,7 +631,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
         }
         final String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
-
         Log.d("test", recipe_id);
 
         Mapper.updateIngInfo(1, recipe_id);
@@ -635,6 +639,9 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         // memo table
         Mapper.appendToBuyMemo(needItem);
+
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
         //사용자에게 필요한재료 확인다이얼로그
         showRecipeIngDialog(needItem);

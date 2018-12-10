@@ -1,6 +1,12 @@
 package com.example.dldke.foodbox.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -13,7 +19,21 @@ import android.widget.RelativeLayout;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.AWSStartupHandler;
 import com.amazonaws.mobile.client.AWSStartupResult;
+
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobile.client.UserStateListener;
+import com.amazonaws.mobile.client.results.SignInResult;
+import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,18 +47,91 @@ public class MainActivity extends AppCompatActivity {
 
     int MY_PERMISSIONS_REQUEST_CAMERA;
 
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+    private static PinpointManager pinpointManager;
+
+    public static PinpointManager getPinpointManager(final Context applicationContext) {
+
+        if (pinpointManager == null) {
+            AWSMobileClient.getInstance().initialize(applicationContext, new AWSConfiguration(applicationContext),new Callback<UserStateDetails>() {
+                @Override
+                public void onResult(UserStateDetails userStateDetails) {
+                    //Mapper.setUserId(applicationContext);
+                    //Mapper.setBucketName(applicationContext);
+                    //Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
+                    Log.i("INIT", userStateDetails.getUserState().toString());
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("INIT", "Initialization error.", e);
+                }
+            });
+
+            PinpointConfiguration pinpointConfig = new PinpointConfiguration(
+                    applicationContext,
+                    AWSMobileClient.getInstance(),
+                    new AWSConfiguration(applicationContext));
+                    //AWSMobileClient.getInstance().getConfiguration());
+
+            pinpointManager = new PinpointManager(pinpointConfig);
+
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            final String token = task.getResult().getToken();
+                            Log.d(TAG, "Registering push notifications token: " + token);
+                            pinpointManager.getNotificationClient().registerDeviceToken(token);
+                        }
+                    });
+        }
+        return pinpointManager;
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
 
-        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
-                @Override
-                public void onComplete(AWSStartupResult awsStartupResult) {
-                    Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
+                    @Override
+                    public void onResult(UserStateDetails userStateDetails) {
+                        switch (userStateDetails.getUserState()){
+                            case SIGNED_IN:
+                                Log.e("자동로그인","자동로그인");
+                                Mapper.setUserId(getApplicationContext());
+                                Mapper.setBucketName(getApplicationContext());
+                                Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
+                                getPinpointManager(getApplicationContext());
+                                String locate = getIntent().getStringExtra("locate");
+                                Intent RefriActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                                RefriActivity.putExtra("locate",locate);
+                                startActivity(RefriActivity);
+                                break;
+                            case SIGNED_OUT_FEDERATED_TOKENS_INVALID:
+                            case SIGNED_OUT_USER_POOLS_TOKENS_INVALID:
+                                Log.i("userState", "need to login again.");
+                                Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(LoginActivity);
+                                //Alternatively call .showSignIn()
+                                break;
+                        }
+                        Log.i("INIT", "onResult: " + userStateDetails.getUserState());
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("INIT", "Initialization error.", e);
+                    }
                 }
-            }).execute();
+        );
+
 
 
         login_btn = (Button)findViewById(R.id.btn_login);
@@ -48,37 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(LoginActivity);
             }
         });
-
-
-//        PermissionCheck();
     }
 
-//    void PermissionCheck() {
-//        int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA);
-//
-//        if (permissionCheck!=PackageManager.PERMISSION_GRANTED) {
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
-//                // dialog
-//                Log.e("test", "다이얼로그 띄워서 권한 요청하는 부분");
-//            } else {
-//                ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
-//
-//                Log.e("test", "권한허가요청을 받아서 결과를 받는 부분");
-//            }
-//
-//        } else {
-//
-//        }
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        switch (requestCode) {
-//            case MY_PERMISSIONS_REQUEST_CAMERA:
-//                return;
-//        }
-//    }
 }
 

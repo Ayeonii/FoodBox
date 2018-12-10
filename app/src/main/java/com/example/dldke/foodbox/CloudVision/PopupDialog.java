@@ -14,6 +14,8 @@ import android.widget.ImageButton;
 
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.MyRecipe.CustomDialog;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.R;
 
@@ -26,10 +28,9 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
     private Context context;
     private NotMatchAdapter notMatchAdapter = new NotMatchAdapter();
     public List<String> notMatchingInfo;
-    private String foodname;
     private int index;
 
-    private RecyclerView ingredientView;
+    private RecyclerView ingredientView, notmatch;
     private EditText searchBar;
     private ImageButton deleteButton;
     private FloatingActionButton ok;
@@ -40,30 +41,33 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
     private static List<InfoDO> freshList, meatList, etcList;
     private String foodImg;
     private boolean isFrozen;
+    private static List<PencilCartItem> changeItem;
 
-    private String TAG="PopupActivity";
+    private String TAG="PopupDialog";
 
-    public PopupDialog(Context context, int index, List<String> items){
+    public PopupDialog(Context context, RecyclerView notmatch_view, int index, List<String> items){
         super(context);
         this.context = context;
-        //this.foodname = foodname;
         this.notMatchingInfo = items;
         this.index = index;
+        this.notmatch = notmatch_view;
+    }
+
+    public void setChangeItem(List<PencilCartItem> items){
+        this.changeItem = items;
     }
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vision_ingredient_popup);
 
+        Log.e(TAG, "onCreate");
+
         ingredientView = (RecyclerView) findViewById(R.id.vision_ingredient_view);
         searchBar = (EditText) findViewById(R.id.vision_searchBar);
         deleteButton = (ImageButton) findViewById(R.id.vision_delete_button);
         ok = (FloatingActionButton) findViewById(R.id.vision_ingredient_add);
 
-        Log.e(TAG, "바꿀 음식 이름 : "+foodname);
-//        for(int i = 0;i<notMatchingInfo.size(); i++){
-//            Log.e(TAG, ""+notMatchingInfo.get(i));
-//        }
 
         freshList = getInfoDOList("fresh");
         meatList = getInfoDOList("meat");
@@ -72,7 +76,6 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
         makeFoodList(freshList);
         makeFoodList(meatList);
         makeFoodList(etcList);
-
 
 
         ingredientView.setHasFixedSize(true);
@@ -130,13 +133,18 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
                 }
                 break;
             case R.id.vision_ingredient_add:
-                Log.e(TAG,"눌린것"+index);
+
                 notMatchingInfo.remove(index);
-                notMatchAdapter.setNotmatchItems(notMatchingInfo);
-                notMatchAdapter.notifyItemRemoved(index);
-                notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
+                for(int i = 0; i<notMatchingInfo.size(); i++){
+                    Log.e(TAG, "재료 : "+notMatchingInfo.get(i));
+                }
+                VisionReturnActivity visionReturnActivity = new VisionReturnActivity();
+                visionReturnActivity.notMatchingIngredient(notmatch, notMatchingInfo);
+                //notMatchAdapter.notifyItemRemoved(index);
+                //notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
                 notMatchAdapter.notifyDataSetChanged();
-                cancel();
+                //cancel();
+                dismiss();
                 break;
 
             default:

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -26,33 +27,44 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         return recipe_id;
     }
 
+    public static boolean IsPost() { return isPost; }
+
     //등록된 간이레시피 ID 가져오기 위한 설정
     private ArrayList<RecipeBoxData> recipedata = new ArrayList<>();
     private static String recipe_id;
+    private String TAG="MyRecipeBoxHalfRecipeAdapter";
+    private static boolean isPost;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView name;
         private Context context;
         private TextView isIng;
+        private ImageView post;
 
         public ViewHolder(Context context, View view){
             super(view);
             this.name = (TextView)view.findViewById(R.id.half_recipe_title);
             this.context = context;
             this.isIng = (TextView) view.findViewById(R.id.ing);
+            this.post = (ImageView) view.findViewById(R.id.recipe_post);
             view.setOnClickListener(this);
         }
 
         //'자세히 보기' 눌렀을 때, 해당 레시피 ID의 식재료 보여주기
         public void onClick(View view){
             int position = getAdapterPosition();
-
-            //포지션 확인(추후에는 지울것임 - test용)
-            //if(position != RecyclerView.NO_POSITION) Toast.makeText(context,"포지션"+position, Toast.LENGTH_SHORT).show();
-
+            isPost = recipedata.get(position).isPost();
             recipe_id = recipedata.get(position).getRecipeId();
-            Intent RecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);
-            context.startActivity(RecipeDetailActivity);
+
+            if(isPost){
+                Intent FullRecipeDetailActivity = new Intent(context,RecipeBoxFullRecipeDetailActivity.class);
+                context.startActivity(FullRecipeDetailActivity);
+            }
+            else {
+                Intent RecipeDetailActivity = new Intent(context, RecipeBoxHalfRecipeDetailActivity.class);
+                context.startActivity(RecipeDetailActivity);
+            }
+
         }
     }
 
@@ -68,7 +80,14 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
 
     public void onBindViewHolder(final MyRecipeBoxHalfRecipeAdapter.ViewHolder holder, final int position){
         int isIng = recipedata.get(position).isIng();
+        isPost = recipedata.get(position).isPost();
+        Log.e(TAG, "isPost : "+isPost);
+
         holder.name.setText(recipedata.get(position).getSimpleName());
+        holder.post.setVisibility(View.GONE);
+        if(isPost){
+            holder.post.setVisibility(View.VISIBLE);
+        }
 
         if(isIng==0){
             holder.isIng.setText("작성 완료");
@@ -80,6 +99,7 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         else if(isIng==2){
             holder.isIng.setText("");
         }
+
     }
 
     public int getItemCount(){

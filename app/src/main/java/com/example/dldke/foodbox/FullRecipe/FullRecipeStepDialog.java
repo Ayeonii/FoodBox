@@ -152,7 +152,6 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
             Log.e(TAG, "방법"+specList.get(k).getSpecMethod()+"시간"+specList.get(k).getSpecMinute()+"불"+specList.get(k).getSpecFire());
         }
 
-
         FullRecipeData data = new FullRecipeData(step_description);
         FullRecipeActivity.mArrayList.add(data);
         FullRecipeActivity.mAdapter.notifyDataSetChanged();

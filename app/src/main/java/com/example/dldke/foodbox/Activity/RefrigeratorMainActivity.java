@@ -1,9 +1,15 @@
 package com.example.dldke.foodbox.Activity;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +24,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -33,7 +45,14 @@ import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.HashMap;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,16 +61,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
 
 public class RefrigeratorMainActivity extends AppCompatActivity {
 
     private static final int LAYOUT = R.layout.activity_refrigerator;
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
+    public static final String TAG = RefrigeratorMainActivity.class.getSimpleName();
     private static List<RecipeDO.Ingredient> urgentList = new ArrayList<>();
     private static List<RecipeDO.Ingredient> tobuyList = new ArrayList<>();
     public RefrigeratorMainActivity(){ }
-    String TAG = "RefrigeratorMainActivity";
 
     public List<RecipeDO.Ingredient> getUrgentList(){
         return urgentList;
@@ -106,10 +126,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     /***************************etc********************************/
     public static boolean isCookingClass;
     private String user_id;
+    private static boolean isMemo;
 
 
-    //public RefrigeratorMainActivity(){  }
-
+    public boolean getIsMemo(){ return isMemo; }
     public boolean getisCookingClass(){
         return isCookingClass;
     }
@@ -123,6 +143,12 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
         //User DB Create
         Mapper.setUserId(getApplicationContext());
+        Mapper.setBucketName(getApplicationContext());
+
+        Mapper.checkAndCreateFirst();
+
+        Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
+
         try {
             user_id = Mapper.searchUserInfo().getUserId();
             Log.e(TAG, "유저 아이디 : "+user_id);
@@ -130,8 +156,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             Mapper.createUserInfo();
             Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
         }
-
-        Mapper.checkAndCreateFirst();
 
 
         //Mapper.createMemo();
@@ -225,10 +249,23 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         menuTransBack.setOnClickListener(onClickListener);
         listview.setOnItemClickListener(listClickListener);
 
+        try{
+            if (getIntent().getStringExtra("locate").equals("pencil")){
+                Intent recipeboxIntent = new Intent(getApplicationContext(),MyRecipeBoxActivity.class);
+                startActivity(recipeboxIntent);
+            }
+            else if(getIntent().getStringExtra("locate").equals("memo")){
+                Intent memoIntent = new Intent(getApplicationContext(),MemoActivity.class);
+                startActivity(memoIntent);
+            }
+        }
+        catch (Exception e){
+            Log.e("pencil error","error");
+        }
+
         urgent_postit.setOnClickListener(onClickListener);
         tobuy_postit.setOnClickListener(onClickListener);
 
-        MemoCreate();
     }
 
     @Override
@@ -247,7 +284,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             String strText = (String) parent.getItemAtPosition(position);
 
             if (strText.equals("로그아웃")) {
-                IdentityManager.getDefaultIdentityManager().signOut();
+                AWSMobileClient.getInstance().signOut();
                 Intent MainActivity = new Intent(getApplicationContext(), MainActivity.class);
                 //로그아웃 후, 뒤로가기 누르면 다시 로그인 된 상태로 가는 것을 방지
                 MainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -426,10 +463,12 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.startAnimation(rightAnim);
                     break;
                 case R.id.urgent_postit:
+                    isMemo = false;
                     Intent memoActivity1 = new Intent(getApplicationContext(), MemoActivity.class);
                     startActivity(memoActivity1);
                     break;
                 case R.id.tobuy_postit:
+                    isMemo = true;
                     Intent memoActivity2 = new Intent(getApplicationContext(), MemoActivity.class);
                     startActivity(memoActivity2);
                     break;
@@ -465,6 +504,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     public void MemoCreate() {
         Log.e("test", "MemoCreate() 들어옴");
         Mapper.updateUrgentMemo();
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateUrgentPushEndPoint(tmp.getTargetingClient());
+
 
         try {
             urgentList = Mapper.scanUrgentMemo();

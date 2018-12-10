@@ -287,8 +287,8 @@
 
         <ImageView
             android:id="@+id/menu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="3dp"
             android:layout_marginEnd="3dp"

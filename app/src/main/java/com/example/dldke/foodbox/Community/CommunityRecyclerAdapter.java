@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
@@ -19,6 +21,14 @@ import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
 
 import android.widget.Toast;
+
+
+
+
+
+
+
+
 
 
 public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecyclerAdapter.ItemViewHolder> {
@@ -97,16 +107,17 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
         }
 
         final Bitmap foodImgUrl = mItems.get(position).getCommunity_foodImg();
+        final Bitmap userUrl = mItems.get(position).getCommunity_profile();
         if(foodImgUrl == null) {
             holder.communityFoodImg.setBackground(context.getResources().getDrawable(R.drawable.splash_background, null));
         } else {
-          holder.communityFoodImg.setImageBitmap(foodImgUrl);
-           // new DownloadImageTask(holder.communityFoodImg).execute(foodImgUrl);
+            holder.communityFoodImg.setImageBitmap(foodImgUrl);
+            // new DownloadImageTask(holder.communityFoodImg).execute(foodImgUrl);
         }
-        if(mItems.get(position).getCommunity_profile() ==-1)
+        if(mItems.get(position).getCommunity_profile() == null)
             holder.communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
         else
-            holder.communityProfile.setImageDrawable(context.getResources().getDrawable(mItems.get(position).getCommunity_profile(),null));
+            holder.communityFoodImg.setImageBitmap(userUrl);
 
         holder.cardView.setOnClickListener(onClickListener);
         holder.communityProfile.setOnClickListener(onClickListener);
@@ -144,3 +155,4 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
         }
     }
 }
+

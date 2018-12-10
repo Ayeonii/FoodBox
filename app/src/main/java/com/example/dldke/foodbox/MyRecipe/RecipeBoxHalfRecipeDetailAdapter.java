@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.MyRecipe;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
@@ -19,6 +21,8 @@ import com.example.dldke.foodbox.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
 
 public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<RecipeBoxHalfRecipeDetailAdapter.ViewHolder> {
@@ -31,17 +35,16 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     private String recipeId;
     private int cnt;
     private int ing;
+    Context context;
 
-    public RecipeBoxHalfRecipeDetailAdapter() {}
-    public RecipeBoxHalfRecipeDetailAdapter(List<RecipeDO.Ingredient> ingredientdata) {
+    public RecipeBoxHalfRecipeDetailAdapter(Context context, List<RecipeDO.Ingredient> ingredientdata) {
         this.items = ingredientdata;
+        this.context = context;
         RecipeBoxHalfRecipeDetailActivity activity = new RecipeBoxHalfRecipeDetailActivity();
         recipeId = activity.getRecipeId();
         AddIngredient(items);
         ing = Mapper.searchRecipe(recipeId).getIng();
 
-        Log.e("test", "어댑터에서 레시피 아이디 : " + recipeId);
-        Log.e("test", "어댑터에서 ing : " + ing);
         if (ing == 0 || ing == 1) {
             scanRefrigeratorAndRecipe();
         }
@@ -67,7 +70,6 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_box_halfrecipe_detail_item, parent, false);
-//        AddIngredient(items);
         return new ViewHolder(v);
     }
 
@@ -94,7 +96,6 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
         }
 
         if (ing == 0 || ing == 1) {
-            Log.d("test", "refriCount[position] = " + refriCount[position] + ", count=" + count);
             if (refriCount[position] < count)
                 holder.ingredientCount.setTextColor(Color.RED);
             else
@@ -111,28 +112,20 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     }
 
     public void AddIngredient(List<RecipeDO.Ingredient> ingredientList) {
-        Log.d("test", "AddIngredient 들어옴");
 
         for (int i = 0; i < ingredientList.size(); i++) {
             String name = ingredientList.get(i).getIngredientName();
             Double count = ingredientList.get(i).getIngredientCount();
             String foodImg = "file:///storage/emulated/0/Download/" + ingredientList.get(i).getIngredientName() + ".jpg";
             recipeItems.add(new HalfRecipeRecipeItem(name, count, Uri.parse(foodImg)));
-            //Log.e("들어간다들어간다", ""+recipeItems.get(i).getName()+""+recipeItems.get(i).getCount());
-
         }
 
     }
 
     public void scanRefrigeratorAndRecipe() {
-        Log.d("test", "scanRefrigeratorAndRecipe 들어옴");
+
         refrigeratorItem = Mapper.scanRefri();
-
         refriCount = new Double[recipeItems.size()];
-
-        Log.d("test", "refriCount.length = " + refriCount.length);
-        Log.d("test", "recipeItems.size() = " + recipeItems.size());
-        Log.d("test", "refrigeratorItem.size() = " + refrigeratorItem.size());
 
         for (int i = 0; i < recipeItems.size(); i++) {
             refriCount[i] = 0.0;
@@ -146,18 +139,17 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
 
         cnt = 0;
         for (int i = 0; i < refriCount.length; i++) {
-            Log.d("test", "refriCount[i] ==" + refriCount[i] + ", recipeItems.get(i).getCount() = " + recipeItems.get(i).getCount());
             if (refriCount[i] == 0.0 || refriCount[i] < recipeItems.get(i).getCount())
                 cnt++;
         }
 
-        Log.d("test", recipeId);
-        Log.d("test", "cnt = " + cnt);
+        PinpointManager tmp = getPinpointManager(context);
 
         if (cnt != 0)
             Mapper.updateIngInfo(1, recipeId);
         else
             Mapper.updateIngInfo(0, recipeId);
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
     }
 }
