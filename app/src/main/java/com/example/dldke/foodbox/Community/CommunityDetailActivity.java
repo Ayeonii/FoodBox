@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -35,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class CommunityDetailActivity extends AppCompatActivity {
+public class CommunityDetailActivity extends AppCompatActivity implements View.OnClickListener{
     private CommunityLoadingAdapter communityLoadingAdapter = new CommunityLoadingAdapter();
     private String recipe_id, post_id;
     private RecipeDO.Detail detail;
@@ -45,6 +47,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
     private RecyclerView.Adapter detail_adapter;
     private RecyclerView.Adapter ingre_adapter;
     private RecyclerView.Adapter comment_adapter;
+    private Button takenBtn ;
 
     private List<RecipeDO.Ingredient> ingreList = new ArrayList<>();
     private ArrayList<String> list = new ArrayList<>();
@@ -53,7 +56,6 @@ public class CommunityDetailActivity extends AppCompatActivity {
     List<RecipeDO.Ingredient> specIngredientList;
 
 
-    private String searchText;
     private EditText commentBar;
     private ImageView okBtn;
     private ArrayList<CommunityCommentItem> detailList = new ArrayList<>();
@@ -66,7 +68,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_community_detail);
        // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        searchText = "";
+        takenBtn = (Button)findViewById(R.id.takeBtn);
         commentBar = (EditText)findViewById(R.id.community_commentBar);
         okBtn = (ImageView)findViewById(R.id.community_ok_btn);
         Toolbar toolbar = (Toolbar)findViewById(R.id.community_detail_toolbar);
@@ -108,36 +110,43 @@ public class CommunityDetailActivity extends AppCompatActivity {
         }catch (NullPointerException e){
         }
 
-       AddStep(specList);
+        AddStep(specList);
 
-        /****************search bar input *****************************/
+        takenBtn.setOnClickListener(this);
+        okBtn.setOnClickListener(this);
 
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(commentBar.getWindowToken(), 0);
-                comment = commentBar.getText().toString();
-                //텍스트가 존재 시, 댓글 등록
-                if (commentBar.getText().length() != 0) {
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm a", Locale.KOREA);
-                    String date = df.format(new Date());
-                    Mapper.createComment(post_id, comment);
-                    commentBar.setText("");
-                    commentBar.setHint(" 댓글을 입력하세요");
-                    detailList.add(new CommunityCommentItem(Mapper.getUserId()
-                                ,R.drawable.ic_person
-                                ,comment
-                                ,date
-                                ,0
-                                ,null
-                                ,CommunityCommentItem.ItemType.ONE_ITEM));
-                }
-                detail_adapter.notifyDataSetChanged();
+    }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+           case R.id.community_ok_btn:
+               InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+               imm.hideSoftInputFromWindow(commentBar.getWindowToken(), 0);
+               comment = commentBar.getText().toString();
+               //텍스트가 존재 시, 댓글 등록
+               if (commentBar.getText().length() != 0) {
+                   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm a", Locale.KOREA);
+                   String date = df.format(new Date());
+                   Mapper.createComment(post_id, comment);
+                   commentBar.setText("");
+                   commentBar.setHint(" 댓글을 입력하세요");
+                   detailList.add(new CommunityCommentItem(Mapper.getUserId()
+                           ,R.drawable.ic_person
+                           ,comment
+                           ,date
+                           ,0
+                           ,null
+                           ,CommunityCommentItem.ItemType.ONE_ITEM));
+               }
+               detail_adapter.notifyDataSetChanged();
+               break;
+            case R.id.takeBtn:
+                Mapper.updateIsPost(recipe_id);
+                break;
 
-            }
-        });
 
+
+        }
     }
     public void AddStep(List<RecipeDO.Spec> specList){
         for(int i = 0; i<specList.size(); i++){

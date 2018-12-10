@@ -28,6 +28,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
     private ArrayList<CommunityItem> itemList;
+    private static List<CommunityItem> favoriteList = new ArrayList<>();
     private Context context;
     private static String clicked_Recipe_id;
     private static String clicked_Post_id;
@@ -58,12 +59,12 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public CommunityLoadingAdapter(){
-        this.context = context;
     }
 
     public CommunityLoadingAdapter(OnLoadMoreListener onLoadMoreListener, Context context) {
         this.onLoadMoreListener=onLoadMoreListener;
         itemList =new ArrayList<>();
+        favoriteList.clear();
         this.context = context;
     }
 
@@ -108,6 +109,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void addAll(List<CommunityItem> lst){
             itemList.clear();
             itemList.addAll(lst);
+            favoriteList.clear();
             notifyDataSetChanged();
     }
 
@@ -118,7 +120,6 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-
         Button.OnClickListener onClickListener = new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,6 +137,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case R.id.user_id:
                         Toast.makeText(context, "user_id click", Toast.LENGTH_SHORT).show();
                         break;
+
                 }
             }
         } ;
@@ -151,15 +153,20 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     if(itemList.get(position).getFavorite()) {
                         ((StudentViewHolder) holder).star_btn.setSelected(false);
                         Mapper.deleteFavorite(itemList.get(position).getPostId());
+
                     }
                     else if(!itemList.get(position).getFavorite()){
                         ((StudentViewHolder) holder).star_btn.setSelected(true);
                         Mapper.addFavoriteInMyCommunity(itemList.get(position).getPostId());
+
                     }
                 }
             });
             if(itemList.get(position).getFavorite()){
                 ((StudentViewHolder) holder).star_btn.setSelected(true);
+
+
+
             }
             else if(!itemList.get(position).getFavorite()){
                 ((StudentViewHolder) holder).star_btn.setSelected(false);

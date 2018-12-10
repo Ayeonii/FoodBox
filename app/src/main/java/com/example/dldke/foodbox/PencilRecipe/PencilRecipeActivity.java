@@ -103,9 +103,9 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                     frag.setVisibility(View.VISIBLE);
                 SearchIngredientFragment.search(text, true,false,false,false);
             }
+
         });
 
-    
     }
 
     @Override public void onBackPressed() {
