@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -82,7 +81,8 @@ public class CartPopupDialog {
                 }
                 //Log.e("clickedList",""+clickedList);
                 Mapper.putFood(clickedList);
-                Toast.makeText(context, "냉장(동)고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                Mapper.updateToBuyMemo(clickedList);
+                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 pencilAdapter.getClickFood().clear();
                 pencilAdapter.setClickCnt(0);
                 Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);

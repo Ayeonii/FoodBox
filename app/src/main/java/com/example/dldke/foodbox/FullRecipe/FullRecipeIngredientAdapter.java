@@ -19,7 +19,6 @@ import java.util.List;
 
 public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipeIngredientAdapter.ViewHolder> {
 
-    private String TAG = "FullRecipeIngredientAdapter";
     private Context context;
     String foodImg;
     private List<RecipeDO.Ingredient> ingredients;

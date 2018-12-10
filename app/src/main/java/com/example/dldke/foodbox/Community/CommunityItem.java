@@ -9,7 +9,7 @@ public class CommunityItem {
     private String foodTitle;
     private String foodName;
     private Bitmap community_foodImg;
-    private int community_profile;
+    private Bitmap community_profile;
     private boolean isFavorite;
     private String postId;
     private String recipeId;
@@ -18,7 +18,7 @@ public class CommunityItem {
             ,String foodTitle
             ,String foodName
             ,Bitmap community_foodImg
-            ,int community_profile
+            ,Bitmap community_profile
             , boolean isFavorite
             , String postId
             , String recipeId){
@@ -42,7 +42,7 @@ public class CommunityItem {
 
     public Bitmap getCommunity_foodImg(){return community_foodImg;}
 
-    public int getCommunity_profile(){return community_profile;}
+    public Bitmap getCommunity_profile(){return community_profile;}
 
     public void setFavorite(boolean isFavorite){
         this.isFavorite = isFavorite;

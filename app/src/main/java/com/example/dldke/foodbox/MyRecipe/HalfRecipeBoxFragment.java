@@ -28,9 +28,13 @@ public class HalfRecipeBoxFragment extends Fragment {
     private ArrayList<RecipeBoxData> data = new ArrayList<>();
     private boolean isRecipe = false;
     private static int isIng;
+    private static boolean isPost;
     private static boolean isDetailBack;
     private static View view;
 
+    public boolean getIsPost(){
+        return isPost;
+    }
 
     public void setisDetailBack(boolean isDetailBack){
         this.isDetailBack = isDetailBack;
@@ -41,6 +45,7 @@ public class HalfRecipeBoxFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e(TAG, "onCreateView");
 
         if (isRecipe) {
             view = inflater.inflate(R.layout.recipe_box_fragment_halfrecipe, container, false);
@@ -49,7 +54,7 @@ public class HalfRecipeBoxFragment extends Fragment {
             adapter = new MyRecipeBoxHalfRecipeAdapter(data);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyclerview.setLayoutManager(layoutManager);
-            recyclerview.setItemAnimator(new DefaultItemAnimator());
+            //recyclerview.setItemAnimator(new DefaultItemAnimator());
             recyclerview.setAdapter(adapter);
 
             return view;
@@ -62,21 +67,23 @@ public class HalfRecipeBoxFragment extends Fragment {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "onCreate");
         prepareData();
     }
 
     @Override
     public void onStart(){
-        if(isDetailBack){
+        Log.e(TAG, "onStart");
+       if(isDetailBack){
+           data.clear();
             prepareData();
             isDetailBack = false;
 
             recyclerview = (RecyclerView) view.findViewById(R.id.recycler_view2);
             recyclerview.setHasFixedSize(true);
+            recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
             adapter = new MyRecipeBoxHalfRecipeAdapter(data);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-            recyclerview.setLayoutManager(layoutManager);
-            recyclerview.setItemAnimator(new DefaultItemAnimator());
+            //recyclerview.setItemAnimator(new DefaultItemAnimator());
             recyclerview.setAdapter(adapter);
         }
         super.onStart();
@@ -84,16 +91,19 @@ public class HalfRecipeBoxFragment extends Fragment {
 
     @Override
     public void onResume(){
+        Log.e(TAG, "onResume");
         super.onResume();
     }
 
     @Override
     public void onPause(){
+        Log.e(TAG, "onPause");
         super.onPause();
     }
 
     @Override
     public void onStop(){
+        Log.e(TAG, "onStop");
         super.onStop();
     }
 
@@ -101,17 +111,18 @@ public class HalfRecipeBoxFragment extends Fragment {
 
         List<String> myrecipe = Mapper.searchMyCommunity().getMyRecipes();
 
-
         for (int i = 0; i < myrecipe.size(); i++) {
             String recipeId = myrecipe.get(i);
             try {
+
                 String foodname = Mapper.searchRecipe(recipeId).getDetail().getFoodName();
-                boolean isPost = Mapper.searchRecipe(recipeId).getIsPost();
+                isPost = Mapper.searchRecipe(recipeId).getIsPost();
 
                 if (isPost) {
                     String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
-                    isIng = Mapper.searchRecipe(recipeId).getIng();
-                    data.add(new RecipeBoxData(simpleName, recipeId, isIng));
+                    Mapper.updateIngInfo(0, recipeId);
+                    Log.e(TAG, "음식 이름 : "+simpleName+" 작성중?(0:작성완료/1:작성중) "+isIng+"isPost : "+isPost);
+                    data.add(new RecipeBoxData(simpleName, recipeId, 0, isPost));
                     isRecipe = true;
                 }
 
@@ -119,8 +130,9 @@ public class HalfRecipeBoxFragment extends Fragment {
                 recipeId = myrecipe.get(i);
                 String simpleName = Mapper.searchRecipe(recipeId).getSimpleName();
                 isIng = Mapper.searchRecipe(recipeId).getIng();
+                isPost = false;
                 Log.e(TAG, "음식 이름 : "+simpleName+" 작성중?(0:작성완료/1:작성중) "+isIng);
-                data.add(new RecipeBoxData(simpleName, recipeId, isIng));
+                data.add(new RecipeBoxData(simpleName, recipeId, isIng, isPost));
                 isRecipe = true;
 
             }

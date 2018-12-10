@@ -67,15 +67,15 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         }
 
         protected void onPostExecute(List result) {
-                if(postList.size() != 0 ){
-                    mAdapter.setProgressMore(false);
+            if(postList.size() != 0 ){
+                mAdapter.setProgressMore(false);
 
-                    loadData();
-                }else{
-                    mAdapter.setProgressMore(false);
-                    mAdapter.setMoreLoading(false);
-                    noneRecommend.setVisibility(View.VISIBLE);
-                }
+                loadData();
+            }else{
+                mAdapter.setProgressMore(false);
+                mAdapter.setMoreLoading(false);
+                noneRecommend.setVisibility(View.VISIBLE);
+            }
 
         }
     }
@@ -91,43 +91,47 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
     public void onLoadMore() {
 
         mAdapter.setProgressMore(true);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    itemList.clear();
-                    mAdapter.setProgressMore(false);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                itemList.clear();
+                mAdapter.setProgressMore(false);
 
-                    int start = mAdapter.getItemCount() - 1;
-                    int end = start + 2;
+                int start = mAdapter.getItemCount() - 1;
+                int end = start + 2;
 
 
-                    if (end >= postList.size()) {
-                        end = start + (end - postList.size());
+                if (end >= postList.size()) {
+                    end = start + (end - postList.size());
+                }
+                try {
+                    for (int i = start + 1; i <= end + 1; i++) {
+                        String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
+                        Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
+
+                        String profileUrl = Mapper.getImageUrlUser();
+                        Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
+
+
+                        itemList.add(new CommunityItem(postList.get(i).getWriter()
+                                , postList.get(i).getTitle()
+                                , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
+                                , bm
+                                , userBitmap
+                                , Mapper.matchFavorite(postList.get(i).getPostId())
+                                , postList.get(i).getPostId()
+                                , postList.get(i).getRecipeId()
+                        ));
+                        cnt = 1;
                     }
-                    try {
-                        for (int i = start + 1; i <= end + 1; i++) {
-                            String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                            Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
-
-                            itemList.add(new CommunityItem(postList.get(i).getWriter()
-                                    , postList.get(i).getTitle()
-                                    , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                                    , bm
-                                    , R.drawable.temp_profile4
-                                    , Mapper.matchFavorite(postList.get(i).getPostId())
-                                    , postList.get(i).getPostId()
-                                    , postList.get(i).getRecipeId()
-                            ));
-                            cnt = 1;
-                        }
-                        mAdapter.addItemMore(itemList);
-                        mAdapter.setMoreLoading(false);
-                    } catch (Exception e) {
-
-                    }
+                    mAdapter.addItemMore(itemList);
+                    mAdapter.setMoreLoading(false);
+                } catch (Exception e) {
 
                 }
-            }, 2000);
+
+            }
+        }, 2000);
 
 
 
@@ -136,35 +140,38 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
     private void loadData() {
         itemList.clear();
 
-            int end;
-            if(postList.size() < 4)
-                end = postList.size() ;
-            else
-                end = 4;
-            try {
-                for (int i = 0; i <= end; i++) {
+        int end;
+        if(postList.size() < 4)
+            end = postList.size() ;
+        else
+            end = 4;
+        try {
+            for (int i = 0; i <= end; i++) {
 
-                    //비동기
-                    String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                    Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
+                //비동기
+                String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
+                Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
+                String profileUrl = Mapper.getImageUrlUser();
+                Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
-                    itemList.add(new CommunityItem(postList.get(i).getWriter()
-                            , postList.get(i).getTitle()
-                            , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                            , bm
-                            , R.drawable.temp_profile4
-                            , Mapper.matchFavorite(postList.get(i).getPostId())
-                            , postList.get(i).getPostId()
-                            , postList.get(i).getRecipeId()
-                    ));
+                itemList.add(new CommunityItem(postList.get(i).getWriter()
+                        , postList.get(i).getTitle()
+                        , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
+                        , bm
+                        , userBitmap
+                        , Mapper.matchFavorite(postList.get(i).getPostId())
+                        , postList.get(i).getPostId()
+                        , postList.get(i).getRecipeId()
 
-                    Log.e("load", "" + postList.get(i).getTitle());
-                }
+                ));
 
-            } catch (Exception e) {
-
+                Log.e("load", "" + postList.get(i).getTitle());
             }
+
+        } catch (Exception e) {
+
+        }
 
 
         mAdapter.addAll(itemList);

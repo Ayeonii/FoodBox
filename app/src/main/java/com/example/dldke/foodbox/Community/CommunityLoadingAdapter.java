@@ -1,6 +1,8 @@
 package com.example.dldke.foodbox.Community;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 
@@ -8,10 +10,12 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,7 +36,6 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Context context;
     private static String clicked_Recipe_id;
     private static String clicked_Post_id;
-    private static String postWriter;
     private OnLoadMoreListener onLoadMoreListener;
     private LinearLayoutManager mLinearLayoutManager;
 
@@ -40,15 +43,8 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
     private int visibleThreshold = 1;
     int firstVisibleItem, visibleItemCount, totalItemCount, lastVisibleItem;
 
+    private String TAG="CommunityLoadingAdapter";
 
-
-    /*********clickedPostInfo*******/
-    private void setClickedPostWriter(String postWriter){
-        this.postWriter = postWriter;
-    }
-    private String getClickedPostWriter(){
-        return postWriter;
-    }
     private void setClickedRecipeId(String clicked_Recipe_id){
         this.clicked_Recipe_id = clicked_Recipe_id;
     }
@@ -117,10 +113,10 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     }
     public void addAll(List<CommunityItem> lst){
-            itemList.clear();
-            itemList.addAll(lst);
-            favoriteList.clear();
-            notifyDataSetChanged();
+        itemList.clear();
+        itemList.addAll(lst);
+        favoriteList.clear();
+        notifyDataSetChanged();
     }
 
     public void addItemMore(List<CommunityItem> lst){
@@ -138,13 +134,49 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case R.id.communityFoodTitle:
                     case R.id.community_cardview :
                     case R.id.communityFoodName:
-                        setClickedRecipeId(itemList.get(position).getRecipeId());
-                        setClickedPostId(itemList.get(position).getPostId());
-                        setClickedPostWriter(itemList.get(position).getUserId());
-                        Intent refMain = new Intent(context, CommunityDetailActivity.class);
-                        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        context.startActivity(refMain);
+                        String recipeId = itemList.get(position).getRecipeId();
+                        String password = Mapper.searchRecipe(recipeId).getPassword();
+                        Log.e(TAG, "password : "+password);
+
+                        if(password.equals(null)){
+
+                            setClickedRecipeId(itemList.get(position).getRecipeId());
+                            setClickedPostId(itemList.get(position).getPostId());
+                            Intent refMain = new Intent(context, CommunityDetailActivity.class);
+                            refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            context.startActivity(refMain);
+                        }
+                        else{
+                            EditText editText = new EditText(context);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("비밀번호를 입력하세요");
+                            builder.setView(editText);
+                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                    String check_pw = editText.getText().toString();
+                                    if(password.equals(check_pw)){
+                                        setClickedRecipeId(itemList.get(position).getRecipeId());
+                                        setClickedPostId(itemList.get(position).getPostId());
+                                        Intent refMain = new Intent(context, CommunityDetailActivity.class);
+                                        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        context.startActivity(refMain);
+                                    }
+                                }
+                            });
+                            builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.create().show();
+                        }
+
+
                         break ;
+
                     case R.id.user_id:
                         Toast.makeText(context, "user_id click", Toast.LENGTH_SHORT).show();
                         break;
@@ -183,17 +215,22 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                 ((StudentViewHolder) holder).star_btn.setSelected(false);
             }
             Bitmap foodImgUrl = itemList.get(position).getCommunity_foodImg();
+            Bitmap userUrl = itemList.get(position).getCommunity_profile();
             if(foodImgUrl == null) {
+                Log.e(TAG, "foodImg null");
                 ((StudentViewHolder) holder).communityFoodImg.setImageDrawable(context.getResources().getDrawable(R.drawable.splash_background, null));
             } else {
+                Log.e(TAG, "foodImg exist");
                 ((StudentViewHolder) holder).communityFoodImg.setImageBitmap(foodImgUrl);
                 //new CommunityLoadingAdapter.DownloadImageTask( ((StudentViewHolder) holder).communityFoodImg).execute(foodImgUrl);
             }
-            if(itemList.get(position).getCommunity_profile() ==-1)
+            if(userUrl == null) {
                 ((StudentViewHolder) holder).communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
-            else
-                ((StudentViewHolder) holder).communityProfile.setImageDrawable(context.getResources().getDrawable(itemList.get(position).getCommunity_profile(),null));
+            }
+            else{
+                ((StudentViewHolder) holder).communityProfile.setImageBitmap(itemList.get(position).getCommunity_profile());
 
+            }
 
             ((StudentViewHolder) holder).cardView.setOnClickListener(onClickListener);
             ((StudentViewHolder) holder).communityProfile.setOnClickListener(onClickListener);
@@ -220,7 +257,7 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
         } else {
-            itemList.remove(itemList.size() - 1);
+            itemList.remove(itemList.size()-1 );
             notifyItemRemoved(itemList.size());
         }
     }

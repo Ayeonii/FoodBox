@@ -116,14 +116,15 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
                     for (int i = start + 1; i <= end + 1; i++) {
                         String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                         Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
-                        Log.e("start:end", "" + start + ":" + end);
-                        Log.e("loadMore", "" + postList.get(i).getTitle());
+
+                        String profileUrl = Mapper.getImageUrlUser();
+                        Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
                         itemList.add(new CommunityItem(postList.get(i).getWriter()
                                 , postList.get(i).getTitle()
                                 , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
                                 , bm
-                                , R.drawable.temp_profile4
+                                , userBitmap
                                 , Mapper.matchFavorite(postList.get(i).getPostId())
                                 , postList.get(i).getPostId()
                                 , postList.get(i).getRecipeId()
@@ -157,12 +158,14 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
+                String profileUrl = Mapper.getImageUrlUser();
+                Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
                 itemList.add(new CommunityItem(postList.get(i).getWriter()
                         , postList.get(i).getTitle()
                         , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
                         , bm
-                        , R.drawable.temp_profile4
+                        , userBitmap
                         , Mapper.matchFavorite(postList.get(i).getPostId())
                         , postList.get(i).getPostId()
                         , postList.get(i).getRecipeId()

@@ -23,7 +23,6 @@ import java.util.List;
 public class FullRecipeStepAdapter extends RecyclerView.Adapter<FullRecipeStepAdapter.ViewHolder> {
     private static List<RecipeDO .Ingredient> ingredients = new ArrayList<>();
     final List<String> tempItems = new ArrayList<>();
-
     private boolean isChecked;
 
     public void setChecked(boolean checked){
@@ -32,8 +31,6 @@ public class FullRecipeStepAdapter extends RecyclerView.Adapter<FullRecipeStepAd
     public boolean getChecked(){
         return isChecked;
     }
-
-    String TAG = "FullRecipeStepAdapter";
 
 
     public FullRecipeStepAdapter(List<RecipeDO.Ingredient> ingredientList){
@@ -64,7 +61,6 @@ public class FullRecipeStepAdapter extends RecyclerView.Adapter<FullRecipeStepAd
                         checkBox1.setChecked(b);
                         tempItems.remove(ingredients.get(getAdapterPosition()).getIngredientName());
                     }
-                    Log.e(TAG, "체크된 재료들!!! "+tempItems);
                 }
             });
         }

@@ -107,16 +107,17 @@ public class CommunityRecyclerAdapter extends RecyclerView.Adapter<CommunityRecy
         }
 
         final Bitmap foodImgUrl = mItems.get(position).getCommunity_foodImg();
+        final Bitmap userUrl = mItems.get(position).getCommunity_profile();
         if(foodImgUrl == null) {
             holder.communityFoodImg.setBackground(context.getResources().getDrawable(R.drawable.splash_background, null));
         } else {
-          holder.communityFoodImg.setImageBitmap(foodImgUrl);
-           // new DownloadImageTask(holder.communityFoodImg).execute(foodImgUrl);
+            holder.communityFoodImg.setImageBitmap(foodImgUrl);
+            // new DownloadImageTask(holder.communityFoodImg).execute(foodImgUrl);
         }
-        if(mItems.get(position).getCommunity_profile() ==-1)
+        if(mItems.get(position).getCommunity_profile() == null)
             holder.communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
         else
-            holder.communityProfile.setImageDrawable(context.getResources().getDrawable(mItems.get(position).getCommunity_profile(),null));
+            holder.communityFoodImg.setImageBitmap(userUrl);
 
         holder.cardView.setOnClickListener(onClickListener);
         holder.communityProfile.setOnClickListener(onClickListener);

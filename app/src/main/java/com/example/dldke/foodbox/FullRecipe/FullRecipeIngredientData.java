@@ -14,11 +14,6 @@ public class FullRecipeIngredientData {
         this.ingredient_count = count;
     }
 
-    public FullRecipeIngredientData(String name, boolean check){
-        this.ingredient_name = name;
-        this.checked = check;
-    }
-
     public String getIngredientName() {
         return this.ingredient_name;
     }

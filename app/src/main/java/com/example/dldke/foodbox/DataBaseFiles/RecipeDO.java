@@ -132,6 +132,14 @@ public class RecipeDO {
         private List<Ingredient> _specIngredient = new ArrayList<Ingredient>();
         private String _specMethod;
         private Integer _specMinute;
+        private S3Link _specImage;
+
+        public S3Link getSpecImage() {
+            return _specImage;
+        }
+        public void setSpecImage(S3Link specImage){
+            this._specImage = specImage;
+        }
 
         @DynamoDBAttribute(attributeName = "specFire")
         public String getSpecFire() {

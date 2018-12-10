@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -27,12 +26,12 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
     private String ingreType;
     private boolean isEmpty;
 
-    private RecyclerView.Adapter adapter;
+    private HalfRecipeIngreAdapter adapter;
     private ArrayList<LocalRefrigeratorItem> localArray = new ArrayList<>();
     private ArrayList<HalfRecipeIngreItem> mItems = new ArrayList<>();
 
     private HalfRecipeDialogListener dialogListener;
-    private Boolean[] checkIngre = new Boolean[50];
+    private Boolean[] checkIngre;
 
     private ArrayList<String> nameArray = new ArrayList<>();
 
@@ -49,6 +48,7 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
         this.ingreType = type;
         this.isEmpty = isEmpty;
         this.nameArray = arrayList;
+        checkIngre = new Boolean[nameArray.size()];
         System.arraycopy(check, 0, this.checkIngre, 0, arrayList.size());
     }
 
@@ -56,8 +56,6 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_ingredient_dialog);
-
-        Log.d("test", ingreType + " dialog onCreate");
 
         txtType = (TextView) findViewById(R.id.txt_type);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
@@ -110,19 +108,6 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
         adapter = new HalfRecipeIngreAdapter(mItems, nameArray.size(), checkIngre, ingreType);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
-        recyclerView.addOnItemTouchListener(
-                new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        if (checkIngre[position])
-                            checkIngre[position] = false;
-                        else
-                            checkIngre[position] = true;
-
-                        setRecyclerView();
-                    }
-                }
-                ));
 
         setData();
     }
@@ -151,6 +136,7 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
                 cancel();
                 break;
             case R.id.btn_ok:
+                checkIngre = adapter.getCheckIngre();
                 dialogListener.onPositiveClicked(ingreType, checkIngre);
                 dismiss();
                 break;

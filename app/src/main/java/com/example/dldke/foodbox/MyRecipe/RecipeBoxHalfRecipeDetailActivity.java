@@ -1,11 +1,9 @@
 package com.example.dldke.foodbox.MyRecipe;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
@@ -32,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
 public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
     public RecipeBoxHalfRecipeDetailActivity(){}
@@ -75,7 +75,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         recipe_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 
         recipe_detail_view.setLayoutManager(new GridLayoutManager(this, 2));
-        recipeBoxHalfRecipeDetailAdapter = new RecipeBoxHalfRecipeDetailAdapter(recipeItems);
+        recipeBoxHalfRecipeDetailAdapter = new RecipeBoxHalfRecipeDetailAdapter(getApplicationContext(), recipeItems);
         recipe_detail_view.setAdapter(recipeBoxHalfRecipeDetailAdapter);
 
         int cnt = recipeBoxHalfRecipeDetailAdapter.getCnt();
@@ -155,10 +155,12 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Log.e(TAG, "뒤로가기 눌림");
             Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
             MyRecipeBoxActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             halfRecipeBoxFragment.setisDetailBack(true);
             startActivity(MyRecipeBoxActivity);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -273,9 +275,12 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         }
 
         Mapper.updateIngInfo(2, recipe_id); // 레시피 사용완료
+        PinpointManager tmp =getPinpointManager(getApplicationContext());
+        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
 
         Intent halfRecipeCompleteActivity = new Intent(getApplicationContext(), HalfRecipeCompleteActivity.class);
         halfRecipeCompleteActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        halfRecipeCompleteActivity.putExtra("complete", 2);
         startActivity(halfRecipeCompleteActivity);
     }
 }

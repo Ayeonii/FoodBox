@@ -24,8 +24,8 @@ import com.example.dldke.foodbox.R;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.os.Handler;
+
 
 
 //public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
@@ -34,9 +34,21 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
     private CommunityLoadingAdapter mAdapter;
     private ArrayList<CommunityItem> itemList;
-    private static ArrayList<CommunityItem> favoriteList = new ArrayList<>();
+    private static ArrayList<CommunityItem> favoriteList  = new ArrayList<>();
     private static List<PostDO> postList;
-    private boolean isFalse = true;
+    private  boolean isFalse = true;
+
+    public CommunityFragmentNewsfeed(){}
+
+    public List<PostDO> getPostList(){
+        return postList;
+    }
+
+
+    public List<CommunityItem> getFavoriteList(){
+        return favoriteList;
+    }
+
 
 
     @Nullable
@@ -55,24 +67,33 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
         return view;
     }
-
     private class PostAsync extends AsyncTask<Void, Void, List<PostDO>> {
 
         protected void onPreExecute() { //2
+
             super.onPreExecute();
             mAdapter.setProgressMore(true);
         }
-
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.scanPost();
+
+            if(postList.size()==0){
+                isCancelled();
+            }
+
             return postList;
         }
 
         protected void onPostExecute(List result) {
-            if (postList.size() != 0)
+            Log.e("size:","끝");
+            // setData(3);
+
+            if(postList.size() != 0 ){
                 loadData();
-            else
+            }
+            else{
                 mAdapter.setProgressMore(false);
+            }
         }
     }
 
@@ -80,7 +101,11 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
     @Override
     public void onStart() {
         super.onStart();
+
         new PostAsync().execute();
+
+
+
     }
 
 
@@ -95,7 +120,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 itemList.clear();
                 mAdapter.setProgressMore(false);
 
-                int start = mAdapter.getItemCount() - 1;
+                int start = mAdapter.getItemCount() -1 ;
                 int end = start + 2;
 
                 try {
@@ -109,12 +134,14 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                         String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                         Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
+                        String profileUrl = Mapper.getImageUrlUser();
+                        Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
                         itemList.add(new CommunityItem(postList.get(i).getWriter()
                                 , postList.get(i).getTitle()
                                 , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
                                 , bm
-                                , R.drawable.temp_profile4
+                                , userBitmap
                                 , Mapper.matchFavorite(postList.get(i).getPostId())
                                 , postList.get(i).getPostId()
                                 , postList.get(i).getRecipeId()
@@ -137,10 +164,10 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         itemList.clear();
 
         int end;
-        if (postList.size() < 4)
-            end = postList.size();
+        if(postList.size() < 4)
+            end = postList.size() ;
         else
-            end = 3;
+            end = 4;
         try {
             for (int i = 0; i <= end; i++) {
 
@@ -148,12 +175,15 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
+                String profileUrl = Mapper.getImageUrlUser();
+                Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
+
 
                 itemList.add(new CommunityItem(postList.get(i).getWriter()
                         , postList.get(i).getTitle()
                         , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
                         , bm
-                        , R.drawable.temp_profile4
+                        , userBitmap
                         , Mapper.matchFavorite(postList.get(i).getPostId())
                         , postList.get(i).getPostId()
                         , postList.get(i).getRecipeId()
@@ -170,9 +200,9 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
     }
 
-    public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    public  class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         protected Bitmap doInBackground(String... urls) {
-            String urlImg = urls[0];
+            String urlImg =urls[0];
             Bitmap foodImg = null;
             try {
                 InputStream in = new java.net.URL(urlImg).openStream();
@@ -182,8 +212,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
             }
             return foodImg;
         }
-
-        protected void onPostExecute(Bitmap result) {
+        protected void onPostExecute(Bitmap result){
         }
     }
 
