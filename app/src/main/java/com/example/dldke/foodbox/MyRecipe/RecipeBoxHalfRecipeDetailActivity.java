@@ -79,9 +79,10 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
 
         int cnt = recipeBoxHalfRecipeDetailAdapter.getCnt();
 
-        if (ing==0 && cnt==0) {
+        if (ing==0) {
             ingredient_use.setVisibility(View.VISIBLE);
             fullrecipe_make.setVisibility(View.GONE);
+            ingredient_use.setEnabled(true);
         } else if (ing==1 || cnt!=0) {
             ingredient_use.setVisibility(View.VISIBLE);
             ingredient_use.setEnabled(false);   // '작성중'인 간이레시피는 재고소진을 할 수 없도록 함
