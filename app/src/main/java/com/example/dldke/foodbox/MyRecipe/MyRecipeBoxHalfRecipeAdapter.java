@@ -94,8 +94,11 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
             holder.isIng.setText("");
         }
 
-    }
+        if (isPost) {
+            holder.isIng.setText("");
+        }
 
+    }
 
     public int getItemCount(){
         return recipedata.size();

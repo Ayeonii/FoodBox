@@ -144,7 +144,9 @@ public class PushListenerService extends FirebaseMessagingService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
-                .setContentText(message);
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_ALL);
         Intent resultIntent = new Intent(this, MainActivity.class);
         resultIntent.putExtra("locate",locate);
 
