@@ -37,6 +37,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
     private static ArrayList<CommunityItem> favoriteList  = new ArrayList<>();
     private static List<PostDO> postList;
     private  boolean isFalse = true;
+    private String TAG="CommunityFragmentNewsfeed";
 
     public CommunityFragmentNewsfeed(){}
 
@@ -72,7 +73,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         protected void onPreExecute() { //2
 
             super.onPreExecute();
-           // mAdapter.setProgressMore(true);
+            // mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.scanPost();
@@ -87,7 +88,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 loadData();
             }
             else{
-               // mAdapter.setProgressMore(false);
+                // mAdapter.setProgressMore(false);
             }
         }
     }
@@ -130,6 +131,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
                         String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
                         Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
+                        //Log.e(TAG, "유저 프로필"+profileUrl);
 
                         itemList.add(new CommunityItem(postList.get(i).getWriter()
                                 , postList.get(i).getTitle()
@@ -169,7 +171,8 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                String profileUrl = Mapper.getImageUrlUser("lay2");
+                String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
+                //Log.e(TAG, "비동기 유저 프로필 : "+profileUrl);
                 Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
 
