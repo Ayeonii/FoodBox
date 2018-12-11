@@ -72,7 +72,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         protected void onPreExecute() { //2
 
             super.onPreExecute();
-            mAdapter.setProgressMore(true);
+           // mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.scanPost();
@@ -87,7 +87,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 loadData();
             }
             else{
-                mAdapter.setProgressMore(false);
+               // mAdapter.setProgressMore(false);
             }
         }
     }
@@ -119,7 +119,6 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 int end = start + 2;
 
                 try {
-
 
                     if (end >= postList.size()) {
                         end = start + (end - postList.size());
@@ -157,10 +156,14 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
     private void loadData() {
         itemList.clear();
-
+        int end ;
+        if (postList.size() < 4)
+            end = postList.size();
+        else
+            end = 4;
         try {
             Log.e("","postsize"+postList.size());
-            for (int i = 0; i <postList.size(); i++) {
+            for (int i = 0; i <=end; i++) {
 
                 //비동기
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());

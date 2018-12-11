@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.Community;
 
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -24,7 +25,7 @@ import android.os.Handler;
 import android.widget.TextView;
 
 
-public class CommunityFragmentFavorite extends android.support.v4.app.Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
+public class CommunityFragmentFavorite extends Fragment implements CommunityLoadingAdapter.OnLoadMoreListener {
 
     private CommunityLoadingAdapter mAdapter;
     private ArrayList<CommunityItem> itemList;
@@ -58,7 +59,7 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
         protected void onPreExecute() { //2
 
             super.onPreExecute();
-            mAdapter.setProgressMore(true);
+           // mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.scanFavorite();
@@ -67,12 +68,12 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
 
         protected void onPostExecute(List result) {
             if(postList.size() != 0 ){
-                mAdapter.setProgressMore(false);
+             //   mAdapter.setProgressMore(false);
 
                 loadData();
             }else{
-                mAdapter.setProgressMore(false);
-                mAdapter.setMoreLoading(false);
+            //    mAdapter.setProgressMore(false);
+            //    mAdapter.setMoreLoading(false);
                 noneFavorite.setVisibility(View.VISIBLE);
             }
 
@@ -100,39 +101,9 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
                 itemList.clear();
                 mAdapter.setProgressMore(false);
 
-                int start = mAdapter.getItemCount() - 1;
-                int end = start + 2;
 
-                Log.e("postList", "postList : " + postList.size() + "end : " + end);
+               // mAdapter.setMoreLoading(false);
 
-
-                try {
-                    if (end >= postList.size()) {
-                        end = start + (end - postList.size());
-                    }
-                    for (int i = start + 1; i <= end + 1; i++) {
-                        String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                        Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
-
-                        String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
-                        Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
-
-                        itemList.add(new CommunityItem(postList.get(i).getWriter()
-                                , postList.get(i).getTitle()
-                                , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                                , bm
-                                , userBitmap
-                                , Mapper.matchFavorite(postList.get(i).getPostId())
-                                , postList.get(i).getPostId()
-                                , postList.get(i).getRecipeId()
-                        ));
-                    }
-
-                } catch (Exception e) {
-
-                }
-                mAdapter.addItemMore(itemList);
-                mAdapter.setMoreLoading(false);
 
             }
         }, 2000);
@@ -143,13 +114,8 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
         itemList.clear();
         Log.e("MainActivity_", "loadData");
 
-        int end;
-        if (postList.size() < 4)
-            end = postList.size();
-        else
-            end = 4;
         try {
-            for (int i = 0; i <= end; i++) {
+            for (int i = 0; i < postList.size(); i++) {
 
                 //비동기
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());

@@ -1521,7 +1521,7 @@ public static String getImageUrlUser(final String userid){
             e.printStackTrace();
         }
     }
-    
+
 
     public static com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO searchMyCommunity() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {

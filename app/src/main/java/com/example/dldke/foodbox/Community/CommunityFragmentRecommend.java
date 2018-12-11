@@ -59,7 +59,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         protected void onPreExecute() { //2
 
             super.onPreExecute();
-            mAdapter.setProgressMore(true);
+            //mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.recommendRecipe();
@@ -73,7 +73,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
                 loadData();
             }else{
                 mAdapter.setProgressMore(false);
-                mAdapter.setMoreLoading(false);
+               // mAdapter.setMoreLoading(false);
                 noneRecommend.setVisibility(View.VISIBLE);
             }
 
