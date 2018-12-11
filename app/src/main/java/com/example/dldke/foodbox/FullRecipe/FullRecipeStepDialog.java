@@ -147,11 +147,6 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         RecipeDO.Spec spec = Mapper.createSpec(specIngredient, method_st, fire_st, minute_int);
         specList.add(spec);
 
-
-        for(int k = 0; k<specList.size(); k++){
-            Log.e(TAG, "방법"+specList.get(k).getSpecMethod()+"시간"+specList.get(k).getSpecMinute()+"불"+specList.get(k).getSpecFire());
-        }
-
         FullRecipeData data = new FullRecipeData(step_description);
         FullRecipeActivity.mArrayList.add(data);
         FullRecipeActivity.mAdapter.notifyDataSetChanged();

@@ -82,7 +82,6 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         }else {
             recyclerView.setAdapter(refriAdapter);
         }
-     //   Log.e("Frag", "SearchFrag");
 
         return view;
     }
@@ -140,7 +139,6 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                 refriAdapter.notifyDataSetChanged();
 
             } else if (isFromRefri) {
-                Log.e("Refri", "" + refriList.size());
                 for (int i = 0; i < refriList.size(); i++) {
                     if (matchString(refriList.get(i).getName(), charText)) {
                         //검색된 데이터 리스트에 추가
@@ -162,7 +160,6 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
 
             } else if (isFromVision) {
                 // 리스트의 모든 데이터를 검색함.
-                Log.e("vision", "" + visionList.size());
                 for (int i = 0; i < visionList.size(); i++) {
                     if (matchString(visionList.get(i).getFoodName(), charText)) {
                         //검색된 데이터 리스트에 추가

@@ -117,7 +117,7 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
                         String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                         Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                        String profileUrl = Mapper.getImageUrlUser();
+                        String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
                         Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
                         itemList.add(new CommunityItem(postList.get(i).getWriter()
@@ -158,7 +158,7 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                String profileUrl = Mapper.getImageUrlUser();
+                String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
                 Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
                 itemList.add(new CommunityItem(postList.get(i).getWriter()

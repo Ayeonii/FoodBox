@@ -28,8 +28,6 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     private String recipe_id;
     private boolean isCookignClass;
 
-    String TAG="CustomDialog";
-
     public CustomDialog(Context context, boolean isCookingClass){
         super(context);
         this.context = context;

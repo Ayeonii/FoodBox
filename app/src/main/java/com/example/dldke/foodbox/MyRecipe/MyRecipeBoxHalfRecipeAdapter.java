@@ -3,18 +3,14 @@ package com.example.dldke.foodbox.MyRecipe;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -32,7 +28,6 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     //등록된 간이레시피 ID 가져오기 위한 설정
     private ArrayList<RecipeBoxData> recipedata = new ArrayList<>();
     private static String recipe_id;
-    private String TAG="MyRecipeBoxHalfRecipeAdapter";
     private static boolean isPost;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -70,10 +65,6 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
 
     public MyRecipeBoxHalfRecipeAdapter(ArrayList<RecipeBoxData> recipedata){
         this.recipedata = recipedata;
-        Log.e(TAG, "recipedata");
-        for(int i = 0; i<recipedata.size(); i++){
-            Log.e(TAG, "simplename : "+ recipedata.get(i).getFoodname());
-        }
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -85,7 +76,6 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
     public void onBindViewHolder(final MyRecipeBoxHalfRecipeAdapter.ViewHolder holder, final int position){
         int isIng = recipedata.get(position).isIng();
         isPost = recipedata.get(position).isPost();
-        Log.e(TAG, "isPost : "+isPost);
 
         holder.name.setText(recipedata.get(position).getSimpleName());
         holder.post.setVisibility(View.GONE);
@@ -105,6 +95,7 @@ public class MyRecipeBoxHalfRecipeAdapter extends RecyclerView.Adapter<MyRecipeB
         }
 
     }
+
 
     public int getItemCount(){
         return recipedata.size();

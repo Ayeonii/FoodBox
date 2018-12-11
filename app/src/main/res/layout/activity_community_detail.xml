@@ -8,18 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context=".MyRecipe.RecipeBoxFullRecipeDetailActivity">
 
-
-    <Button
-        android:id="@+id/takeBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/make_radius"
-        android:backgroundTint="@color/colorAccent"
-        android:fontFamily="@font/font_family"
-        android:text="가져가기"
-        android:textColor="@color/colorWhite"
-        android:textStyle="bold" />
-
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -93,8 +81,21 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        layout="@layout/community_detail_content" />
+    <include layout="@layout/community_detail_content" />
+
+    <Button
+        android:id="@+id/takeBtn"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginLeft="300dp"
+        android:background="@drawable/make_radius"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="@font/font_family"
+        android:text="가져가기"
+        android:textSize="12dp"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/commentLayout"
@@ -137,6 +138,7 @@
             app:layout_constraintTop_toTopOf="@+id/community_commentBar"
             app:layout_constraintVertical_bias="0.6" />
     </android.support.constraint.ConstraintLayout>
+
 
 
 </android.support.design.widget.CoordinatorLayout>

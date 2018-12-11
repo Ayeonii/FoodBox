@@ -130,7 +130,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                                 } catch (NullPointerException e) {
                                     dueDate = 0;
                                 }
-                                Log.e("유통기한", "" + dueDate);
                                 cal.add(cal.DATE, dueDate);
                                 inputDBDate = cal.getTime(); //연산된 날자를 생성.
                                 inputDBDateString = formatter.format(inputDBDate);
@@ -145,14 +144,12 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                                         , mItems.get(position).getIsFrozen()
                                         , dueDate));
 
-                                Log.e("","isFrozen"+mItems.get(position).getIsFrozen());
                             }
                             isAgain = false;
                         }else{
                             for(int i =0 ; i<reItems.size(); i ++){
                                 reItemsString.add(reItems.get(i).getName());
                             }
-                            Log.e("position",": "+position);
                             InsideDialog insideDialog = new InsideDialog(context, reItems.get(position).getSection(), false, reItems, reItemsString);
                             insideDialog.showItemDialog(position);
                         }

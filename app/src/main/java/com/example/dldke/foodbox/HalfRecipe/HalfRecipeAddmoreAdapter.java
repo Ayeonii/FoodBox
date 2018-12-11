@@ -46,26 +46,27 @@ public class HalfRecipeAddmoreAdapter extends RecyclerView.Adapter<HalfRecipeAdd
 
         if (!checkAddFood[position]) {
             holder.ivCheck.setVisibility(View.GONE);
-            holder.food_Img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("test", "food clicked!");
-                    holder.ivCheck.setVisibility(View.VISIBLE);
-                    checkAddFood[position] = true;
-                }
-            });
-
         } else {
             holder.ivCheck.setVisibility(View.VISIBLE);
-            holder.ivCheck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("test", "check clicked!");
-                    holder.ivCheck.setVisibility(View.GONE);
-                    checkAddFood[position] = false;
-                }
-            });
         }
+
+        holder.food_Img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("test", "food clicked!");
+                holder.ivCheck.setVisibility(View.VISIBLE);
+                checkAddFood[position] = true;
+            }
+        });
+
+        holder.ivCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("test", "check clicked!");
+                holder.ivCheck.setVisibility(View.GONE);
+                checkAddFood[position] = false;
+            }
+        });
     }
 
     @Override
@@ -86,4 +87,3 @@ public class HalfRecipeAddmoreAdapter extends RecyclerView.Adapter<HalfRecipeAdd
         }
     }
 }
-

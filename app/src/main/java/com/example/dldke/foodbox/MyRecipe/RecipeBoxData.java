@@ -11,7 +11,6 @@ public class RecipeBoxData {
 
     public RecipeBoxData(String recipeId, String imgUrl, String foodname, boolean isShared){
         this.foodname = foodname;
-        //this.image = image;
         this.food_image = imgUrl;
         this.recipeId = recipeId;
         this.isShared = isShared;
@@ -35,10 +34,6 @@ public class RecipeBoxData {
 
     public String getSimpleName(){
         return simplename;
-    }
-
-    public void setSimplename(String simplename){
-        this.simplename = simplename;
     }
 
     public Integer getImage() {

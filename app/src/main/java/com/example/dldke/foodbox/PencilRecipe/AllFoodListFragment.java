@@ -72,7 +72,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(context,4));
         adapter = new PencilRecyclerAdapter(list, view.getContext());
         recyclerView.setAdapter(adapter);
-        Log.e("Frag", "All");
+
         setData();
 
         return view;

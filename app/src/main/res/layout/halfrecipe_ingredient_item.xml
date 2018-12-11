@@ -28,6 +28,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:background="@drawable/check_background"
+            android:src="@drawable/ic_check_outline"
             android:clickable="true"
             android:visibility="gone" />
 

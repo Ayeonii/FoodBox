@@ -40,7 +40,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
         return recipe_id;
     }
 
-    private String TAG = "RecipeBoxHalfRecipeDetailActivity";
     private static int ing;
 
     private HalfRecipeBoxFragment halfRecipeBoxFragment = new HalfRecipeBoxFragment();
@@ -80,7 +79,7 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
 
         int cnt = recipeBoxHalfRecipeDetailAdapter.getCnt();
 
-        if (ing==0) {
+        if (ing==0 && cnt==0) {
             ingredient_use.setVisibility(View.VISIBLE);
             fullrecipe_make.setVisibility(View.GONE);
         } else if (ing==1 || cnt!=0) {
@@ -111,10 +110,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                         }
                     }
 
-                    for (int l=0; l<dcArray.size(); l++) {
-                        Log.d("test", l + ", "+dcArray.get(l).getStrDueDate());
-                    }
-
                     if (dcArray.size() > 1) {
                         Double countSum = 0.0;  // 총 보유개수
                         for (int k = 0; k < dcArray.size(); k++) {
@@ -125,10 +120,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                             dueDateCheckArray.add(recipeItems.get(i).getIngredientName());
                         }
                     }
-                }
-
-                for (int i=0; i<dueDateCheckArray.size(); i++) {
-                    Log.d("test", i + ", "+dueDateCheckArray.get(i));
                 }
 
                 if (dueDateCheckArray.size() > 0) {
@@ -155,7 +146,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Log.e(TAG, "뒤로가기 눌림");
             Intent MyRecipeBoxActivity = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
             MyRecipeBoxActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             halfRecipeBoxFragment.setisDetailBack(true);
@@ -208,7 +198,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
             // 정수형태의 유통기한과 더블형의 보유개수를 저장할 배열 생성
             ArrayList<DCItem> dcArray = new ArrayList<>();
 
-            Log.e("test", "정수형태의 유통기한과 더블형의 보유개수를 저장할 배열");
             for (int j = 0; j < refrigeratorItem.size(); j++) {
                 if (refrigeratorItem.get(j).getName().equals(radioCheckItems.get(i).getName())) {
                     Integer iDueDate = Integer.parseInt(refrigeratorItem.get(j).getDueDate());
@@ -216,10 +205,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                 }
             }
 
-            for (int j=0; j<dcArray.size(); j++)
-                Log.d("test", dcArray.get(j).getDueDate() + ", " + dcArray.get(j).getCount());
-
-            Log.d("test", "radioCheckItems.get(i).getWhich() = " + radioCheckItems.get(i).getWhich());
             // 2. 유통기한 기준 정렬 which = 0 이면 오름차순 1 이면 내림차순
             switch (radioCheckItems.get(i).getWhich()) {
                 case 0: //오름차순
@@ -230,10 +215,6 @@ public class RecipeBoxHalfRecipeDetailActivity extends AppCompatActivity {
                     break;
             }
 
-            Log.e("test", "정렬된 후의 dcArray");
-            for (int a=0; a<dcArray.size(); a++) {
-                Log.d("test", a+ " : "+dcArray.get(a).getDueDate() + ", " + dcArray.get(a).getCount());
-            }
 
             // 계산하고 바로 updatecount
             // 예를들어 감자 2.0개 + 3.0개, 근데 사용할 개수는 1.0개

@@ -27,7 +27,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:layout_marginTop="30dp"
-                android:scaleType="fitCenter"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_picture_plus" />
 
             <TextView
                 android:id="@+id/loading_text"

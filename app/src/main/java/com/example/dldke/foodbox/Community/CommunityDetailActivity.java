@@ -8,16 +8,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,10 +23,6 @@ import android.widget.Toast;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxFullRecipeDetailAdapter;
-import com.example.dldke.foodbox.MyRecipe.RecipeBoxFullRecipeDetailItem;
-import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
-import com.example.dldke.foodbox.PencilRecipe.SearchIngredientFragment;
 import com.example.dldke.foodbox.R;
 
 import java.io.IOException;
@@ -149,18 +141,26 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
                 comment = commentBar.getText().toString();
                 //텍스트가 존재 시, 댓글 등록
                 if (commentBar.getText().length() != 0) {
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm a", Locale.KOREA);
-                    String date = df.format(new Date());
-                    Mapper.createComment(post_id, comment);
-                    commentBar.setText("");
-                    commentBar.setHint(" 댓글을 입력하세요");
-                    detailList.add(new CommunityCommentItem(Mapper.getUserId()
-                            ,bitmap
-                            ,comment
-                            ,date
-                            ,0
-                            ,null
-                            ,CommunityCommentItem.ItemType.ONE_ITEM));
+                    try {
+                        String profileUrl = Mapper.getImageUrlUser(Mapper.getUserId());
+                        Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
+
+
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm a", Locale.KOREA);
+                        String date = df.format(new Date());
+                        Mapper.createComment(post_id, comment);
+                        commentBar.setText("");
+                        commentBar.setHint(" 댓글을 입력하세요");
+                        detailList.add(new CommunityCommentItem(Mapper.getUserId()
+                                , userBitmap
+                                ,comment
+                                , date
+                                , 0
+                                , null
+                                , CommunityCommentItem.ItemType.ONE_ITEM));
+                    } catch (Exception e){
+
+                    }
                 }
                 detail_adapter.notifyDataSetChanged();
                 break;
@@ -169,9 +169,6 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
                 Mapper.updateIsPost(recipe_id);
                 Mapper.addRecipeInMyCommunity(recipe_id);
                 break;
-
-
-
         }
     }
     public void AddStep(List<RecipeDO.Spec> specList){
@@ -185,7 +182,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
             int number = i+1;
             String descrip = number+". "+result+" 을/를 "+specList.get(i).getSpecMinute()+"분 동안 "+specList.get(i).getSpecMethod()+".\r\n"+"불 세기는 "+specList.get(i).getSpecFire();
             detailList.add(new CommunityCommentItem(null
-                    ,bitmap
+                    ,null
                     ,null
                     ,null
                     ,R.drawable.strawberry
@@ -221,18 +218,42 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         }
     }
 
+    //댓글이미지
+    public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        protected Bitmap doInBackground(String... urls) {
+            String urlImg =urls[0];
+            Bitmap foodImg = null;
+            try {
+                InputStream in = new java.net.URL(urlImg).openStream();
+                foodImg = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return foodImg;
+        }
+        protected void onPostExecute(Bitmap result){
+        }
+    }
+
+    //댓글 등록
     private void setCommentData(){
 
-        for(int i =0; i <commentDBList.size(); i ++){
-            detailList.add(new CommunityCommentItem(commentDBList.get(i).getUserId()
-                    ,bitmap
-                    ,commentDBList.get(i).getContent()
-                    ,commentDBList.get(i).getDate()
-                    ,R.drawable.strawberry
-                    ,null
-                    ,CommunityCommentItem.ItemType.ONE_ITEM));
-        }
+        try {
+            for (int i = 0; i < commentDBList.size(); i++) {
+                String profileUrl = Mapper.getImageUrlUser(commentDBList.get(i).getUserId());
+                Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
+                detailList.add(new CommunityCommentItem(commentDBList.get(i).getUserId()
+                        , userBitmap
+                        , commentDBList.get(i).getContent()
+                        , commentDBList.get(i).getDate()
+                        , R.drawable.strawberry
+                        , null
+                        , CommunityCommentItem.ItemType.ONE_ITEM));
+            }
 
+        }catch (Exception e){
+
+        }
         detail_adapter.notifyDataSetChanged();
     }
 

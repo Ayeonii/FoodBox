@@ -25,7 +25,6 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     private Context context;
     private static ArrayList<PencilCartItem> mItems;
-    String TAG ="PencilCartAdapter";
     private static int removedPosition;
 
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){ this.mItems = cartItems;}

@@ -24,6 +24,7 @@
             android:background="@drawable/make_little_radious"
             android:backgroundTint="@color/colorPrimaryDark"
             android:text="login"
+            android:textSize="18dp"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
