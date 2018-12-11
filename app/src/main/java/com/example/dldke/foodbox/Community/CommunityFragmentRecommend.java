@@ -51,6 +51,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         mAdapter.setRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
+        postList = Mapper.recommendRecipe();
         return view;
     }
 
@@ -59,21 +60,19 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         protected void onPreExecute() { //2
 
             super.onPreExecute();
-            //mAdapter.setProgressMore(true);
+            mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
-            postList = Mapper.recommendRecipe();
             return postList;
         }
 
         protected void onPostExecute(List result) {
             if(postList.size() != 0 ){
                 mAdapter.setProgressMore(false);
-
                 loadData();
             }else{
                 mAdapter.setProgressMore(false);
-               // mAdapter.setMoreLoading(false);
+                mAdapter.setMoreLoading(false);
                 noneRecommend.setVisibility(View.VISIBLE);
             }
 
@@ -141,12 +140,9 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         itemList.clear();
 
         int end;
-        if(postList.size() < 4)
-            end = postList.size() ;
-        else
-            end = 4;
+
         try {
-            for (int i = 0; i <= end; i++) {
+            for (int i = 0; i < postList.size(); i++) {
 
                 //비동기
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());

@@ -65,6 +65,8 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         mAdapter.setRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
+        postList = Mapper.scanPost();
+
         return view;
     }
     private class PostAsync extends AsyncTask<Void, Void, List<PostDO>> {
@@ -72,10 +74,9 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         protected void onPreExecute() { //2
 
             super.onPreExecute();
-           // mAdapter.setProgressMore(true);
+            mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
-            postList = Mapper.scanPost();
             return postList;
         }
 
@@ -87,7 +88,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                 loadData();
             }
             else{
-               // mAdapter.setProgressMore(false);
+                mAdapter.setProgressMore(false);
             }
         }
     }
