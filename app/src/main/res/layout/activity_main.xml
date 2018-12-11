@@ -26,7 +26,8 @@
             android:text="login"
             android:textSize="18dp"
             android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:shadowRadius="5"/>
 
     </RelativeLayout>
 

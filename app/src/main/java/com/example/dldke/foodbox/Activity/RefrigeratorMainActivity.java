@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -50,6 +51,7 @@ import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
 import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
+import com.example.dldke.foodbox.Store.StoreActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccountCreator;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
@@ -304,6 +306,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             if (strText.equals("설정")){
                 Intent settingActivity = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(settingActivity);
+            }
+            if(strText.equals("Store")){
+                Intent storeActivity = new Intent(getApplicationContext(), StoreActivity.class);
+                startActivity(storeActivity);
             }
 
             if (isPageOpen) {

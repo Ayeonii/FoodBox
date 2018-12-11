@@ -136,7 +136,6 @@
         android:layout_marginBottom="8dp"
         android:elevation="12dp"
         android:src="@drawable/add"
-        fab:backgroundTint="@color/colorPrimary"
         fab:elevation="10dp"
         fab:layout_constraintBottom_toBottomOf="parent"
         fab:layout_constraintEnd_toEndOf="parent"

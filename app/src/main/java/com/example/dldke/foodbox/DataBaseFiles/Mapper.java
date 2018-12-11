@@ -158,6 +158,7 @@ public final class Mapper {
         userInfo.setUserId(userId);
         userInfo.setIsCookingClass(false);
         userInfo.setPoint(0);
+        userInfo.setTheme("기본 테마");
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -218,6 +219,31 @@ public final class Mapper {
                 userInfo.setNickname(nickN);
                 userInfo.setIsCookingClass(isCooking);
                 userInfo.setRegisterNumber(registN);
+                Mapper.getDynamoDBMapper().save(userInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateTheme(String theme, int point){
+
+        final String userTheme = theme;
+        final int userPoint = point;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                UserDO userInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+
+                userInfo.setTheme(userTheme);
+                userInfo.setPoint(userPoint);
                 Mapper.getDynamoDBMapper().save(userInfo);
             }
         });

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -161,6 +162,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         login_btn = (Button)findViewById(R.id.btn_login);
+        String theme = "기본 테마";
+        if(theme == "기본 테마"){
+            login_btn.setBackground(getApplicationContext().getDrawable(R.color.colorPrimary));
+        }
+        if(theme == "블랙"){
+            login_btn.setBackgroundColor(Color.BLACK);
+        }
+        if(theme == "베이지"){
+            login_btn.setBackgroundColor(Color.GREEN);
+        }
         login_btn.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
