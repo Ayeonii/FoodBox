@@ -594,10 +594,14 @@ public static String getImageUrlUser(final String userid){
             com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem;
             @Override
             public void run() {
-                foodItem = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
-                        foodName,
-                        sectionName);
+                try {
+                    foodItem = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
+                            foodName,
+                            sectionName);
+                }catch(NullPointerException e){
+
+                }
 
             }
 

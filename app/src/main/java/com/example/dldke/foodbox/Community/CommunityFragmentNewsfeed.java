@@ -156,14 +156,14 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
     private void loadData() {
         itemList.clear();
-        int end ;
+/*        int end ;
         if (postList.size() < 4)
             end = postList.size();
         else
-            end = 4;
+            end = 4;*/
         try {
             Log.e("","postsize"+postList.size());
-            for (int i = 0; i <=end; i++) {
+            for (int i = 0; i <postList.size(); i++) {
 
                 //비동기
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
