@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.DataBaseFiles;
 
 import android.content.Context;
+import android.net.UrlQuerySanitizer;
 import android.util.Log;
 
 import com.amazonaws.auth.AWSCredentials;
@@ -258,6 +259,42 @@ public final class Mapper {
 
 /****************************User Profile***********************************/
 
+/*
+public static String getImageUrlUser(final String userid){
+
+    returnThread thread = new returnThread(new CustomRunnable() {
+
+        com.example.dldke.foodbox.DataBaseFiles.UserDO userItem;
+        URL url;
+        @Override
+        public void run() {
+            userItem = Mapper.getDynamoDBMapper().load(
+                    com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                    userid);
+            // Log.d("why",Mapper.bucketName);
+            try {
+                url = userItem.getProfileImage().getAmazonS3Client().getUrl(userItem.getProfileImage().getBucketName(), "Users/" + userid + ".jpg");
+                Log.d("gerUserProfile", url.toString());
+            }catch (NullPointerException e){
+
+            }
+        }
+        @Override
+        public Object getResult(){
+            return url.toString();
+        }
+    });
+    thread.start();
+    try{
+        thread.join();
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+    String url = (String)thread.getResult();
+    return url;
+}*/
+
+
 public static String getImageUrlUser(final String userid){
 
     returnThread thread = new returnThread(new CustomRunnable() {
@@ -291,13 +328,13 @@ public static String getImageUrlUser(final String userid){
     String url;
     if(thread.getResult()==null){
         url = "default";
-
     }
     else{
         url = (String)thread.getResult();
     }
     return url;
 }
+
 
 
     /************************* Refrigerator Section Method *********************************/

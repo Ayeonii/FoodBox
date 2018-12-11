@@ -152,7 +152,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
+                String profileUrl = Mapper.getImageUrlUser("lay2");
                 Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
                 itemList.add(new CommunityItem(postList.get(i).getWriter()

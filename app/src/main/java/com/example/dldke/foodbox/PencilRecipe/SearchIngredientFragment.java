@@ -108,10 +108,12 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
                         foodImg = "file:///storage/emulated/0/Download/" + allfoodList.get(i).getFoodName() + ".jpg";
                         list.add(new PencilItem(allfoodList.get(i).getFoodName(), Uri.parse(foodImg), allfoodList.get(i).getFoodSection(), allfoodList.get(i).getIsFrozen()));
+                        Log.e("Refri", "listSize" + list.size());
                     }
                 }
                 if (list.size() == 0) {
                     //검색된 것이 아무것도 없을때,
+                    Log.e("Refri", "없음" + list.size());
                     foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
                     list.add(new PencilItem(searchText, Uri.parse(foodImg)));
                 }

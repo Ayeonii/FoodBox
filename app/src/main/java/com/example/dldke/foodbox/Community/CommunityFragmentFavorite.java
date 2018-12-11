@@ -60,19 +60,17 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
             super.onPreExecute();
             mAdapter.setProgressMore(true);
         }
-
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.scanFavorite();
             return postList;
         }
 
         protected void onPostExecute(List result) {
-            Log.e("size:", "끝");
-            if (postList.size() != 0) {
+            if(postList.size() != 0 ){
                 mAdapter.setProgressMore(false);
 
                 loadData();
-            } else {
+            }else{
                 mAdapter.setProgressMore(false);
                 mAdapter.setMoreLoading(false);
                 noneFavorite.setVisibility(View.VISIBLE);
@@ -80,7 +78,6 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
 
         }
     }
-
 
     @Override
     public void onStart() {
@@ -158,7 +155,7 @@ public class CommunityFragmentFavorite extends android.support.v4.app.Fragment i
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
+                String profileUrl = Mapper.getImageUrlUser("lay2");
                 Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
                 itemList.add(new CommunityItem(postList.get(i).getWriter()
