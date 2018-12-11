@@ -59,7 +59,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         protected void onPreExecute() { //2
 
             super.onPreExecute();
-            mAdapter.setProgressMore(true);
+            //mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
             postList = Mapper.recommendRecipe();
@@ -73,7 +73,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
                 loadData();
             }else{
                 mAdapter.setProgressMore(false);
-                mAdapter.setMoreLoading(false);
+               // mAdapter.setMoreLoading(false);
                 noneRecommend.setVisibility(View.VISIBLE);
             }
 
@@ -152,7 +152,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
+                String profileUrl = Mapper.getImageUrlUser("lay2");
                 Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
                 itemList.add(new CommunityItem(postList.get(i).getWriter()
