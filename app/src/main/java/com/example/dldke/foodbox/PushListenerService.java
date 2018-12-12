@@ -119,7 +119,7 @@ public class PushListenerService extends FirebaseMessagingService {
     private void sendNotification(RemoteMessage remoteMessage) {
         int NOTIFICATION_ID = 234;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String CHANNEL_ID = null;
+        String CHANNEL_ID = "channel";
         HashMap<String, String> dataMap = new HashMap<>(remoteMessage.getData());
         String message = getMessage(dataMap,"data");
         String title = getMessage(dataMap,"title");
@@ -156,7 +156,6 @@ public class PushListenerService extends FirebaseMessagingService {
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(resultPendingIntent);
-
         builder.setAutoCancel(true);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
 
