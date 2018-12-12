@@ -304,20 +304,15 @@ public static String getImageUrlUser(final String userid){
         URL url;
         @Override
         public void run() {
+            userItem = Mapper.getDynamoDBMapper().load(
+                    com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                    userid);
+            // Log.d("why",Mapper.bucketName);
             try {
-                userItem = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-                        userid);
-                // Log.d("why",Mapper.bucketName);
                 url = userItem.getProfileImage().getAmazonS3Client().getUrl(userItem.getProfileImage().getBucketName(), "Users/" + userid + ".jpg");
                 Log.d("gerUserProfile", url.toString());
             }catch (Exception e){
-                userItem = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
-                        "default");
-                // Log.d("why",Mapper.bucketName);
-                url = userItem.getProfileImage().getAmazonS3Client().getUrl(userItem.getProfileImage().getBucketName(), "Users/default.jpg");
-                Log.d("gerUserProfile", url.toString());
+                url = null;
             }
         }
         @Override
@@ -344,6 +339,7 @@ public static String getImageUrlUser(final String userid){
     }
     return url;
 }
+
 
 
 
