@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.DataBaseFiles;
 
 import android.content.Context;
+import android.net.UrlQuerySanitizer;
 import android.util.Log;
 
 import com.amazonaws.auth.AWSCredentials;
@@ -15,6 +16,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapperConfig;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMappingException;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
 import com.amazonaws.mobileconnectors.pinpoint.targeting.TargetingClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -158,6 +160,7 @@ public final class Mapper {
         userInfo.setUserId(userId);
         userInfo.setIsCookingClass(false);
         userInfo.setPoint(0);
+        userInfo.setTheme("기본 테마");
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -229,8 +232,69 @@ public final class Mapper {
         }
     }
 
+    public static void updateTheme(String theme, int point){
+
+        final String userTheme = theme;
+        final int userPoint = point;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                UserDO userInfo = Mapper.getDynamoDBMapper().load(
+                        com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                        userId);
+
+                userInfo.setTheme(userTheme);
+                userInfo.setPoint(userPoint);
+                Mapper.getDynamoDBMapper().save(userInfo);
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 /****************************User Profile***********************************/
+
+/*
+public static String getImageUrlUser(final String userid){
+
+    returnThread thread = new returnThread(new CustomRunnable() {
+
+        com.example.dldke.foodbox.DataBaseFiles.UserDO userItem;
+        URL url;
+        @Override
+        public void run() {
+            userItem = Mapper.getDynamoDBMapper().load(
+                    com.example.dldke.foodbox.DataBaseFiles.UserDO.class,
+                    userid);
+            // Log.d("why",Mapper.bucketName);
+            try {
+                url = userItem.getProfileImage().getAmazonS3Client().getUrl(userItem.getProfileImage().getBucketName(), "Users/" + userid + ".jpg");
+                Log.d("gerUserProfile", url.toString());
+            }catch (NullPointerException e){
+
+            }
+        }
+        @Override
+        public Object getResult(){
+            return url.toString();
+        }
+    });
+    thread.start();
+    try{
+        thread.join();
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+    String url = (String)thread.getResult();
+    return url;
+}*/
+
 
 public static String getImageUrlUser(final String userid){
 
@@ -270,13 +334,13 @@ public static String getImageUrlUser(final String userid){
     String url;
     if(thread.getResult()==null){
         url = "default";
-
     }
     else{
         url = (String)thread.getResult();
     }
     return url;
 }
+
 
 
     /************************* Refrigerator Section Method *********************************/
@@ -536,10 +600,14 @@ public static String getImageUrlUser(final String userid){
             com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem;
             @Override
             public void run() {
-                foodItem = Mapper.getDynamoDBMapper().load(
-                        com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
-                        foodName,
-                        sectionName);
+                try {
+                    foodItem = Mapper.getDynamoDBMapper().load(
+                            com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
+                            foodName,
+                            sectionName);
+                }catch(DynamoDBMappingException e){
+
+                }
 
             }
 
@@ -1463,7 +1531,7 @@ public static String getImageUrlUser(final String userid){
             e.printStackTrace();
         }
     }
-    
+
 
     public static com.example.dldke.foodbox.DataBaseFiles.MyCommunityDO searchMyCommunity() {
         com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {

@@ -65,6 +65,8 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         mAdapter.setRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
+        postList = Mapper.scanPost();
+
         return view;
     }
     private class PostAsync extends AsyncTask<Void, Void, List<PostDO>> {
@@ -75,12 +77,6 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
             mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
-            postList = Mapper.scanPost();
-
-            if(postList.size()==0){
-                isCancelled();
-            }
-
             return postList;
         }
 
@@ -125,7 +121,6 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
                 try {
 
-
                     if (end >= postList.size()) {
                         end = start + (end - postList.size());
                         isFalse = false;
@@ -162,20 +157,20 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
 
     private void loadData() {
         itemList.clear();
-
-        int end;
-        if(postList.size() < 4)
-            end = postList.size() ;
+/*        int end ;
+        if (postList.size() < 4)
+            end = postList.size();
         else
-            end = 4;
+            end = 4;*/
         try {
-            for (int i = 0; i <= end; i++) {
+            Log.e("","postsize"+postList.size());
+            for (int i = 0; i <postList.size(); i++) {
 
                 //비동기
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
+                String profileUrl = Mapper.getImageUrlUser("lay2");
                 Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
 
@@ -189,15 +184,15 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
                         , postList.get(i).getRecipeId()
                 ));
 
-                Log.e("load", "" + postList.get(i).getTitle());
+                Log.e("load", "i"+i + ": "+ postList.get(i).getTitle());
             }
 
+
         } catch (Exception e) {
-
+            e.printStackTrace();
+            Log.e("load", "catch ");
         }
-
         mAdapter.addAll(itemList);
-
     }
 
     public  class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

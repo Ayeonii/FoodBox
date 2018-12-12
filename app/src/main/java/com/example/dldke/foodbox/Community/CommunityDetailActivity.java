@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.Community;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,9 +22,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.R;
 
 import java.io.IOException;
@@ -43,7 +47,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
     private RecyclerView.Adapter detail_adapter;
     private RecyclerView.Adapter ingre_adapter;
     private RecyclerView.Adapter comment_adapter;
-    private Button takenBtn ;
+    private FloatingActionButton takenBtn ;
 
     private List<RecipeDO.Ingredient> ingreList = new ArrayList<>();
     private ArrayList<String> list = new ArrayList<>();
@@ -65,7 +69,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_detail);
 
-        takenBtn = (Button)findViewById(R.id.takeBtn);
+        takenBtn = (FloatingActionButton) findViewById(R.id.takeBtn);
         commentBar = (EditText)findViewById(R.id.community_commentBar);
         okBtn = (ImageView)findViewById(R.id.community_ok_btn);
         Toolbar toolbar = (Toolbar)findViewById(R.id.community_detail_toolbar);
@@ -166,8 +170,12 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.takeBtn:
                 Log.e("taken", "가져가기 완료");
+
                 Mapper.updateIsPost(recipe_id);
                 Mapper.addRecipeInMyCommunity(recipe_id);
+                Intent refMain = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(refMain);
                 break;
         }
     }

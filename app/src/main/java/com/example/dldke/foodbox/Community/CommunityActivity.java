@@ -99,12 +99,9 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 setBackeGroundAccent(homeBtn, favoriteBtn,recommendBtn);
                 break;
             case R.id.favorite_btn:
-                Log.e("","favorite btn 누름 ");
+                frag.setVisibility(View.GONE);
+                setFrag(1);
                 setBackeGroundAccent(favoriteBtn, homeBtn,recommendBtn);
-                frag.setVisibility(View.VISIBLE);
-                CommunityFragmentFavorite FavoriteFragment = new CommunityFragmentFavorite();
-                transaction.replace(R.id.favorite_fragment_container, FavoriteFragment);
-                transaction.commit();
                 break;
             case R.id.recommend_btn:
                 frag.setVisibility(View.GONE);
@@ -125,6 +122,10 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         switch (n){
             case 0:
                 tran.replace(R.id.frag_layout, fragmentNewsfeed);
+                tran.commit();
+                break;
+            case 1:
+                tran.replace(R.id.frag_layout, fragmentFavorite);
                 tran.commit();
                 break;
             case 2:
