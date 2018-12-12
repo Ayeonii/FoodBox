@@ -16,6 +16,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapperConfig;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMappingException;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
 import com.amazonaws.mobileconnectors.pinpoint.targeting.TargetingClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -316,7 +317,11 @@ public static String getImageUrlUser(final String userid){
         }
         @Override
         public Object getResult(){
-            return url.toString();
+            if(url == null){
+                return url;
+            }else {
+                return url.toString();
+            }
         }
     });
     thread.start();
@@ -334,6 +339,7 @@ public static String getImageUrlUser(final String userid){
     }
     return url;
 }
+
 
 
 
@@ -599,7 +605,7 @@ public static String getImageUrlUser(final String userid){
                             com.example.dldke.foodbox.DataBaseFiles.InfoDO.class,
                             foodName,
                             sectionName);
-                }catch(NullPointerException e){
+                }catch(DynamoDBMappingException e){
 
                 }
 

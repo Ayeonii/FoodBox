@@ -30,9 +30,8 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
     private ArrayList<CommunityItem> itemList;
     private static List<PostDO> postList;
     private TextView noneRecommend;
-    private boolean isEmpty = false;
+    private static boolean isLast;
 
-    private static int cnt = 0;
 
 
 
@@ -50,7 +49,9 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         mAdapter.setLinearLayoutManager(mLayoutManager);
         mAdapter.setRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
+        isLast = false;
 
+        postList = Mapper.recommendRecipe();
         return view;
     }
 
@@ -59,21 +60,20 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         protected void onPreExecute() { //2
 
             super.onPreExecute();
-            //mAdapter.setProgressMore(true);
+            mAdapter.setProgressMore(true);
         }
         protected List<PostDO> doInBackground(Void... params) {
-            postList = Mapper.recommendRecipe();
             return postList;
         }
 
         protected void onPostExecute(List result) {
             if(postList.size() != 0 ){
                 mAdapter.setProgressMore(false);
-
                 loadData();
             }else{
                 mAdapter.setProgressMore(false);
-               // mAdapter.setMoreLoading(false);
+                mAdapter.setMoreLoading(false);
+                isLast =true;
                 noneRecommend.setVisibility(View.VISIBLE);
             }
 
@@ -87,74 +87,103 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
 
     }
 
+
     @Override
     public void onLoadMore() {
+        if(!isLast) {
 
-        mAdapter.setProgressMore(true);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                itemList.clear();
-                mAdapter.setProgressMore(false);
+            mAdapter.setProgressMore(true);
+            Log.e("dd", "onLoadMore");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    itemList.clear();
+                    mAdapter.setProgressMore(false);
 
-                int start = mAdapter.getItemCount() - 1;
-                int end = start + 2;
+                    int start = mAdapter.getItemCount() - 1;
+                    int end = start + 2;
+                    try {
 
-
-                if (end >= postList.size()) {
-                    end = start + (end - postList.size());
-                }
-                try {
-                    for (int i = start + 1; i <= end + 1; i++) {
-                        String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
-                        Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
-
-                        String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
-                        Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
+                        if (end >= postList.size()) {
+                            Log.e("if", "end : " + end + "start" + start);
+                            end = postList.size() - 1;
+                            isLast = true;
+                        }
+                        for (int i = start + 1; i < end + 1; i++) {
+                            Log.e("for", "end : " + end + "start" + start);
 
 
-                        itemList.add(new CommunityItem(postList.get(i).getWriter()
-                                , postList.get(i).getTitle()
-                                , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
-                                , bm
-                                , userBitmap
-                                , Mapper.matchFavorite(postList.get(i).getPostId())
-                                , postList.get(i).getPostId()
-                                , postList.get(i).getRecipeId()
-                        ));
-                        cnt = 1;
+                            String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
+                            Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
+
+                            String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
+                            Bitmap userBitmap;
+                            if(profileUrl != "default") {
+                                Log.e("loadmore","if");
+                                userBitmap = new DownloadImageTask().execute(profileUrl).get();
+                            }else{
+                                Log.e("loadmore","else");
+                                userBitmap = null;
+                            }
+
+                            itemList.add(new CommunityItem(postList.get(i).getWriter()
+                                    , postList.get(i).getTitle()
+                                    , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
+                                    , bm
+                                    , userBitmap
+                                    , Mapper.matchFavorite(postList.get(i).getPostId())
+                                    , postList.get(i).getPostId()
+                                    , postList.get(i).getRecipeId()
+                            ));
+                            Log.e("loadMore", "i" + i + ": " + postList.get(i).getTitle());
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("loadMore", "catch 들어엄");
+
                     }
                     mAdapter.addItemMore(itemList);
                     mAdapter.setMoreLoading(false);
-                } catch (Exception e) {
+
 
                 }
-
-            }
-        }, 2000);
-
-
+            }, 2000);
+        }
 
     }
+
+
+
 
     private void loadData() {
         itemList.clear();
 
-        int end;
-        if(postList.size() < 4)
-            end = postList.size() ;
-        else
+        int end ;
+        if(postList.size() < 4){
+            end = postList.size();
+        }
+        else{
             end = 4;
+        }
+
+
         try {
-            for (int i = 0; i <= end; i++) {
+            for (int i = 0; i < end; i++) {
 
                 //비동기
                 String imgUrl = Mapper.getImageUrlRecipe(postList.get(i).getRecipeId());
                 Bitmap bm = new DownloadImageTask().execute(imgUrl).get();
 
-                String profileUrl = Mapper.getImageUrlUser("lay2");
-                Bitmap userBitmap = new DownloadImageTask().execute(profileUrl).get();
 
+                String profileUrl = Mapper.getImageUrlUser(postList.get(i).getWriter());
+                Bitmap userBitmap;
+                if(profileUrl != "default") {
+                    Log.e("loadmore","if");
+                    userBitmap = new DownloadImageTask().execute(profileUrl).get();
+                }else{
+                    Log.e("loadmore","else");
+                    userBitmap = null;
+                }
                 itemList.add(new CommunityItem(postList.get(i).getWriter()
                         , postList.get(i).getTitle()
                         , Mapper.searchRecipe(postList.get(i).getRecipeId()).getDetail().getFoodName()
