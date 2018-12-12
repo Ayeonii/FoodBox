@@ -3,11 +3,7 @@ package com.example.dldke.foodbox.FullRecipe;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,12 +30,9 @@ import com.example.dldke.foodbox.CloudVision.PermissionUtils;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 
-import static com.example.dldke.foodbox.CloudVision.VisionActivity.CAMERA_IMAGE_REQUEST;
-import static com.example.dldke.foodbox.CloudVision.VisionActivity.CAMERA_PERMISSIONS_REQUEST;
 import static com.example.dldke.foodbox.CloudVision.VisionActivity.FILE_NAME;
 import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
-import com.example.dldke.foodbox.HalfRecipe.HalfRecipeActivity;
 import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
@@ -49,9 +42,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FullRecipeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -71,17 +62,20 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private ImageView food_img_real;
     private RecyclerView fullrecipeRecyclerView, recipe_ingredient_view;
 
+    private static List<RecipeDO.Spec> specList;
     private List<RecipeDO.Ingredient> data = new ArrayList<>();
-    static ArrayList<FullRecipeData> mArrayList;
-    static FullRecipeAdapter mAdapter;
+    private ArrayList<PencilCartItem> clickItems;
+    static ArrayList<FullRecipeData> fullRecipeData;
+    static FullRecipeAdapter fullRecipeAdapter;
     private FullRecipeIngredientAdapter recipeIngredientAdapter;
     private PencilCartAdapter pencilCartAdapter = new PencilCartAdapter();
-    private ArrayList<PencilCartItem> clickItems;
 
     private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
     private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
     private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
     private FullRecipeStepDialog stepDialog;
+
+    private String TAG="FullRecipeActivity";
 
     public FullRecipeActivity(){}
 
@@ -159,9 +153,9 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         FullRecipe SpecList Init
         */
         fullrecipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mArrayList = new ArrayList<>();
-        mAdapter = new FullRecipeAdapter(this, mArrayList);
-        fullrecipeRecyclerView.setAdapter(mAdapter);
+        fullRecipeData = new ArrayList<>();
+        fullRecipeAdapter = new FullRecipeAdapter(this, fullRecipeData);
+        fullrecipeRecyclerView.setAdapter(fullRecipeAdapter);
 
 
         food_img_real.setOnClickListener(this);
@@ -226,27 +220,38 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void registerSpec(){
-        List<RecipeDO.Spec> specList;
 
         FoodTitle= foodtitle.getText().toString();
-        specList = stepDialog.getSpecList();
 
+        try{
 
-        if(isCookingClass && !isHalfRecipe){
-            recipeId = Mapper.createChefRecipe(FoodTitle, specList);
-            Mapper.addRecipeInMyCommunity(recipeId);
-            Mapper.updateIngredient(stepDialog.getIngredients(), recipeId);
+            if(FoodTitle.equals("") || (imagePath == null)){
+                Toast.makeText(getApplicationContext(), "모든 항목을 입력하세요", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            specList = stepDialog.getSpecList();
+            stepDialog.getIngredients();
+
+            if(isCookingClass && !isHalfRecipe){
+                String recipeId = Mapper.createChefRecipe(FoodTitle, specList);
+                Mapper.addRecipeInMyCommunity(recipeId);
+                Mapper.updateIngredient(stepDialog.getIngredients(), recipeId);
+            }
+            else{
+                Mapper.createFullRecipe(recipeId, FoodTitle, specList);
+            }
+
+            Mapper.attachRecipeImage(recipeId, imagePath);
+            Mapper.updatePointInfo(10);
+
+            Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+            startActivity(RefrigeratorActivity);
+            specList.clear();
+
+        }catch (NullPointerException e){
+            Toast.makeText(getApplicationContext(), "모든 항목을 입력하세요2", Toast.LENGTH_SHORT).show();
         }
-        else{
-            Mapper.createFullRecipe(recipeId, FoodTitle, specList);
-        }
-
-        Mapper.attachRecipeImage(recipeId, imagePath);
-        Mapper.updatePointInfo(10);
-
-        Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
-        startActivity(RefrigeratorActivity);
-        specList.clear();
     }
 
     public void selectGallery(){
