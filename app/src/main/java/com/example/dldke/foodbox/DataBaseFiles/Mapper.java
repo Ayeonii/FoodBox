@@ -317,7 +317,11 @@ public static String getImageUrlUser(final String userid){
         }
         @Override
         public Object getResult(){
-            return url.toString();
+            if(url == null){
+                return url;
+            }else {
+                return url.toString();
+            }
         }
     });
     thread.start();

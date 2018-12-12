@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,7 +116,9 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public void addItemMore(List<CommunityItem> lst){
         itemList.addAll(lst);
+
         notifyItemRangeChanged(0,itemList.size());
+        notifyDataSetChanged();
     }
 
     @Override
@@ -137,6 +140,21 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case R.id.user_id:
                         Toast.makeText(context, "user_id click", Toast.LENGTH_SHORT).show();
                         break;
+                    case R.id.star_btn:
+                        if(itemList.get(position).getFavorite()) {
+                            ((StudentViewHolder) holder).star_btn.setSelected(false);
+                            Mapper.deleteFavorite(itemList.get(position).getPostId());
+                            Log.e("LoadingAdapter","좋아요 취소 누름 ");
+                            itemList.get(position).setFavorite(false);
+                        }
+                        else if(!itemList.get(position).getFavorite()){
+                            ((StudentViewHolder) holder).star_btn.setSelected(true);
+
+                            Mapper.addFavoriteInMyCommunity(itemList.get(position).getPostId());
+                            itemList.get(position).setFavorite(true);
+
+                        }
+                        break;
 
                 }
             }
@@ -147,26 +165,9 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
             ((StudentViewHolder) holder).communityFoodName.setText(itemList.get(position).getFoodName());
 
 
-            ((StudentViewHolder) holder).star_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(itemList.get(position).getFavorite()) {
-                        ((StudentViewHolder) holder).star_btn.setSelected(false);
-                        Mapper.deleteFavorite(itemList.get(position).getPostId());
 
-                    }
-                    else if(!itemList.get(position).getFavorite()){
-                        ((StudentViewHolder) holder).star_btn.setSelected(true);
-                        Mapper.addFavoriteInMyCommunity(itemList.get(position).getPostId());
-
-                    }
-                }
-            });
             if(itemList.get(position).getFavorite()){
                 ((StudentViewHolder) holder).star_btn.setSelected(true);
-
-
-
             }
             else if(!itemList.get(position).getFavorite()){
                 ((StudentViewHolder) holder).star_btn.setSelected(false);
@@ -180,15 +181,17 @@ public class CommunityLoadingAdapter extends RecyclerView.Adapter<RecyclerView.V
                 //new CommunityLoadingAdapter.DownloadImageTask( ((StudentViewHolder) holder).communityFoodImg).execute(foodImgUrl);
             }
             if(userUrl == null) {
-                ((StudentViewHolder) holder).communityProfile.setImageBitmap(itemList.get(position).getCommunity_profile());
+                ((StudentViewHolder) holder).communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
             }
             else{
-                ((StudentViewHolder) holder).communityProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person,null));
+                ((StudentViewHolder) holder).communityProfile.setImageBitmap(itemList.get(position).getCommunity_profile());
             }
 
             ((StudentViewHolder) holder).cardView.setOnClickListener(onClickListener);
             ((StudentViewHolder) holder).communityProfile.setOnClickListener(onClickListener);
-        }
+            ((StudentViewHolder) holder).star_btn.setOnClickListener(onClickListener);
+
+            }
     }
 
 
