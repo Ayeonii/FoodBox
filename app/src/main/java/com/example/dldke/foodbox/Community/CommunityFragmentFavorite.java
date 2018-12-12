@@ -32,7 +32,7 @@ public class CommunityFragmentFavorite extends Fragment implements CommunityLoad
     private static ArrayList<CommunityItem> favoriteList = new ArrayList<>();
     private static List<PostDO> postList;
     private TextView noneFavorite;
-    private boolean isLast = false;
+    private static boolean isLast;
 
     public CommunityFragmentFavorite() {
     }
@@ -51,6 +51,7 @@ public class CommunityFragmentFavorite extends Fragment implements CommunityLoad
         mAdapter.setLinearLayoutManager(mLayoutManager);
         mAdapter.setRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
+        isLast = false;
 
         return view;
     }

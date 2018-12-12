@@ -30,8 +30,8 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
     private ArrayList<CommunityItem> itemList;
     private static List<PostDO> postList;
     private TextView noneRecommend;
-    private boolean isLast = false;
-    private static int cnt = 0;
+    private static boolean isLast;
+
 
 
 
@@ -49,6 +49,7 @@ public class CommunityFragmentRecommend extends Fragment implements CommunityLoa
         mAdapter.setLinearLayoutManager(mLayoutManager);
         mAdapter.setRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
+        isLast = false;
 
         postList = Mapper.recommendRecipe();
         return view;

@@ -36,7 +36,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
     private ArrayList<CommunityItem> itemList;
     private static ArrayList<CommunityItem> favoriteList  = new ArrayList<>();
     private static List<PostDO> postList;
-    private boolean isLast = false;
+    private static boolean isLast ;
 
     public CommunityFragmentNewsfeed(){}
 
@@ -66,6 +66,7 @@ public class CommunityFragmentNewsfeed extends Fragment implements CommunityLoad
         mAdapter.setRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
+        isLast =false;
 
 
         return view;
