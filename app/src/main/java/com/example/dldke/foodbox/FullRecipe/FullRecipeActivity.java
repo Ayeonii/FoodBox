@@ -51,7 +51,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private final int GALLERY_CODE = 2;
     private static final int MAX_DIMENSION = 1200;
 
-    private static boolean isCookingClass, isHalfRecipe;
+    private static boolean isCookingClass, isHalfRecipe, isFullRecipe=true;
 
     private String imagePath, recipeId;
     private static String FoodTitle;
@@ -86,6 +86,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         return isHalfRecipe;
     }
 
+    public boolean getIsFullRecipe(){ return isFullRecipe; }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +109,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
 
 
+        //재료 가져오기
         if(isCookingClass && !isHalfRecipe){
             //쿠킹 클래스 풀레시피 작성
             ingredient_add.setVisibility(View.VISIBLE);
