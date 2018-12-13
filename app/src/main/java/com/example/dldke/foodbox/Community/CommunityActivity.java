@@ -38,8 +38,8 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         frag = (FrameLayout)findViewById(R.id.favorite_fragment_container); //검색시 나오는 화면
 
         searchText = "";
-        searchBar = (EditText)findViewById(R.id.community_commentBar);
-        deleteButton = (ImageButton)findViewById(R.id.community_delete_button);
+     //   searchBar = (EditText)findViewById(R.id.community_commentBar);
+     //   deleteButton = (ImageButton)findViewById(R.id.community_delete_button);
 
         homeBtn = (ImageView)findViewById(R.id.home_btn);
         favoriteBtn =(ImageView)findViewById(R.id.favorite_btn);
@@ -49,17 +49,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         favoriteBtn.setOnClickListener(this);
         recommendBtn.setOnClickListener(this);
 
-        /****************delete button***********************/
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //텍스트가 존재 시, 모두 지운다.
-                if (searchBar.getText().length() != 0) {
-                    searchBar.setHint(" 검색어를 입력하세요.");
-                    searchBar.setText(null);
-                }
-            }
-        });
+
 
         setFrag(0);
     }

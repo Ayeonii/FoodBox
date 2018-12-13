@@ -24,14 +24,17 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     ArrayList<HalfRecipeIngreItem> mItems;
     List<InfoDO> infoItems = new ArrayList<>();
     List<RefrigeratorDO.Item> refriItems = new ArrayList<>();
-    List<RefrigeratorDO.Item> refrifrozneItems = new ArrayList<>();
+    List<RefrigeratorDO.Item> refriSideItems = new ArrayList<>();
+    List<RefrigeratorDO.Item> refriFrozenItems = new ArrayList<>();
     private Boolean[] checkIngre;
     String ingreType;
     private Context context;
+    private String[] foodImgUri;
 
     public HalfRecipeIngreAdapter(ArrayList<HalfRecipeIngreItem> mItems, int arraySize, Boolean[] check, String ingreType) {
         this.mItems = mItems;
         checkIngre = new Boolean[arraySize];
+        foodImgUri = new String[arraySize];
         System.arraycopy(check, 0, this.checkIngre, 0, arraySize);
         this.ingreType = ingreType;
     }
@@ -51,40 +54,46 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         String foodName = mItems.get(position).getName();
-        String foodImgUri = "file://"+context.getFilesDir() +foodName+ ".jpg";
+        for (int i=0; i<mItems.size(); i++) {
+            foodImgUri[i]="file://"+context.getFilesDir() + "default.jpg";
+        }
 
         if (ingreType.equals("sideDish")) {
             infoItems = Mapper.scanKindof("frozen");
             for (int i=0; i<mItems.size(); i++) {
                 for (int j = 0; j< infoItems.size(); j++) {
                     if (mItems.get(i).getName().equals(infoItems.get(j).getName())) {
-                        foodImgUri = "file://"+context.getFilesDir() + foodName + ".jpg";
+                        foodImgUri[i] = "file://"+context.getFilesDir() + foodName + ".jpg";
                         break;
                     }
                 }
             }
         } else if(ingreType.equals("frozen")) {
             refriItems = Mapper.scanRefri();
-            for(int i =0  ; i <refriItems.size() ; i ++){
-                if(refriItems.get(i).getSection().equals("sideDish")){
-                    refrifrozneItems.add(refriItems.get(i));
+            for (int i = 0; i < refriItems.size(); i++) {
+                if (refriItems.get(i).getSection().equals("sideDish")) {
+                    refriSideItems.add(refriItems.get(i));
+                }
+                else {
+                    refriFrozenItems.add(refriItems.get(i));
                 }
             }
-            for (int i=0; i<mItems.size(); i++) {
-                for (int j = 0; j< refrifrozneItems.size(); j++) {
-                    Log.e("","refrifrozneItems"+refrifrozneItems.get(j).getName()+"mItems.get(i).getName()"+mItems.get(i).getName());
-                    if (mItems.get(i).getName().equals(refrifrozneItems.get(j).getName())) {
-                        foodImgUri = "file://"+context.getFilesDir()+"default.jpg";
+            for (int i = 0; i < mItems.size(); i++) {
+                for (int j = 0; j < refriFrozenItems.size(); j++) {
+                    if (mItems.get(i).getName().equals(refriFrozenItems.get(j).getName())) {
+                        foodImgUri[i] = "file://" + context.getFilesDir() + foodName + ".jpg";
                         break;
                     }
                 }
             }
-        } else  {
-            foodImgUri = "file://"+context.getFilesDir() + foodName + ".jpg";
+        } else {
+            for (int i=0; i<mItems.size(); i++) {
+                foodImgUri[i]="file://"+context.getFilesDir() + foodName+ ".jpg";
+            }
         }
 
         holder.mNameTv.setText(foodName);
-        holder.food_Img.setImageURI(Uri.parse(foodImgUri));
+        holder.food_Img.setImageURI(Uri.parse(foodImgUri[position]));
 
         if (!checkIngre[position]) {
             holder.ivCheck.setVisibility(View.GONE);
@@ -129,4 +138,3 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
         }
     }
 }
-

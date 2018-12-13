@@ -145,8 +145,6 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
                 VisionReturnActivity visionReturnActivity = new VisionReturnActivity();
                 visionReturnActivity.notMatchingIngredient(notmatch, notMatchingInfo);
                 visionReturnActivity.matchingIngredient();
-                //notMatchAdapter.notifyItemRemoved(index);
-                //notMatchAdapter.notifyItemRangeChanged(index, notMatchingInfo.size());
                 notMatchAdapter.notifyDataSetChanged();
                 //cancel();
                dlg.dismiss();

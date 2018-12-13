@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.CloudVision;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -29,6 +30,7 @@ import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
+import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.R;
 
 import java.io.InputStream;
@@ -48,7 +50,7 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
     private TextView loading;
     private static RecyclerView match, notmatch;
     private PencilCartAdapter matchingAdapter;
-    private List<InfoDO> matchingList = new ArrayList<>();
+    private static List<InfoDO> matchingList = new ArrayList<>();
     private List<String> notmatchingList = new ArrayList<>();
 
 
@@ -61,7 +63,7 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
     private ArrayList<PencilCartItem> matchFood = new ArrayList<>();
     private static ArrayList<PencilCartItem> matchFoodStatic = new ArrayList<>();
     private VisionActivity visionActivity = new VisionActivity();
-
+    private static Context context;
 
     private String TAG="VisionReturnActivity";
 
@@ -74,6 +76,7 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
         Log.e(TAG, "matching"+matchingList);
         Log.e(TAG, "notmatching"+notmatchingList);
 
+        context = getApplicationContext();
         //toolbar = (Toolbar) findViewById(R.id.vision_return_toolbar);
         insert = (Button) findViewById(R.id.vision_return_btn);
         match = (RecyclerView) findViewById(R.id.vision_return_matching_ingredient_view);
@@ -112,8 +115,9 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
                 for (int i = 0; i < matchFoodStatic.size(); i++) {
                     matchingList.add(Mapper.searchFood(matchFoodStatic.get(i).getFoodName(), matchFoodStatic.get(i).getFoodSection()));
                 }
+                matchFoodStatic.clear();
             }
-        matchFoodStatic.clear();
+
         for (int i = 0; i < matchingList.size(); i++) {
             String matching_name = matchingList.get(i).getName();
             Log.e(TAG, "matching_name" + matching_name);
@@ -127,8 +131,9 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
             cal.add(cal.DATE, dueDate);
             inputDBDate = cal.getTime();
             inputDBDateString = formatter.format(inputDBDate);
+            String foodImg = "file://"+context.getFilesDir()+matchingList.get(i).getName()+".jpg";
 
-            String foodImg = "file:///storage/emulated/0/Download/" + matchingList.get(i).getName() + ".jpg";
+       //     String foodImg = "file:///storage/emulated/0/Download/" + matchingList.get(i).getName() + ".jpg";
             Uri uri = Uri.parse(foodImg);
             if (matchingList.get(i).getKindOf() == "frozen") {
                 isFrozen = true;
@@ -142,7 +147,7 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
         if(clickedSize > 0 ){
             for(int i =0 ; i< clickedSize; i++) {
                 matchFood.add(popupAdapter.getChangeItem().get(i));
-                Log.e(TAG, "matchingFood.add(여기여기)" + popupAdapter.getChangeItem().get(0));
+                Log.e(TAG, "matchingFood.add(여기여기)" + popupAdapter.getChangeItem().get(i));
             }
         }
         matchingAdapter.notifyDataSetChanged();
@@ -158,6 +163,15 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
         adapter = new NotMatchAdapter(items,notmatch_view);
         notmatch_view.setLayoutManager(new LinearLayoutManager(this));
         notmatch_view.setAdapter(adapter);
+    }
+
+    @Override public void onBackPressed() {
+        popupAdapter.setChangeItemClear();
+        Intent refMain = new Intent(VisionReturnActivity.this, VisionActivity.class);
+        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        VisionReturnActivity.this.startActivity(refMain);
+        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+        matchingList.clear();
     }
 
     public void onClick(View view){
@@ -185,7 +199,8 @@ public class VisionReturnActivity extends AppCompatActivity implements View.OnCl
                 Mapper.putFood(inputList);
                 Mapper.updateToBuyMemo(inputList);
                 popupAdapter.setNewOldNameClear();
-
+                popupAdapter.setChangeItemClear();
+                matchingList.clear();
                 Toast.makeText(getApplicationContext(), "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Intent refMain = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
                 refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
