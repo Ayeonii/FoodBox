@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.Store;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
@@ -57,6 +59,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ItemViewHold
         }
         holder.theme_title.setText(theme_title);
         holder.theme_point.setText(theme_point+"point");
+        holder.theme_image.setImageResource(Items.get(position).theme_image);
         holder.buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +72,9 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ItemViewHold
 
                 if((point > 0)){
                     Mapper.updateTheme(theme_title, point);
+                    Toast.makeText(context, "테마가 적용되었습니다.", Toast.LENGTH_SHORT).show();
+                    Intent refriMain = new Intent(context, RefrigeratorMainActivity.class);
+                    context.startActivity(refriMain);
                 }
                 else{
                     Toast.makeText(context, "포인트가 부족합니다.", Toast.LENGTH_SHORT).show();

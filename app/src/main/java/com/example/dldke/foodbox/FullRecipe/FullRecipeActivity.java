@@ -124,7 +124,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
             toolbar_title.setTextColor(Color.WHITE);
             ingredient_add.setBackgroundColor(Color.BLACK);
             ingredient_add.setTextColor(Color.WHITE);
-            spec_add.setBackgroundColor(Color.BLACK);
             ok_btn.setBackgroundColor(Color.BLACK);
             ok_btn.setTextColor(Color.WHITE);
         }
