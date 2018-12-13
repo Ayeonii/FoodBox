@@ -127,8 +127,8 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         }
 
 
-        Uri uri = Uri.parse(imgUrl);
-        uploadImage(uri);
+      //  Uri uri = Uri.parse(imgUrl);
+      //  uploadImage(uri);
 
         AddStep(specList);
 
@@ -264,7 +264,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         }
         detail_adapter.notifyDataSetChanged();
     }
-
+/*
     public void uploadImage(Uri uri) {
 
         if (uri != null) {
@@ -281,7 +281,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
             //Log.d(TAG, "Image picker gave us a null image.");
             Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
     private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
 
