@@ -152,7 +152,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_refrigerator);
 
         /******* 냉장고 테마 설정 *******/
-        
+
         String theme = Mapper.searchUserInfo().getTheme();
         refrigerator_background = (CoordinatorLayout) findViewById(R.id.refrigerator_background);
    /*     if(theme.equals("블랙")){
@@ -161,6 +161,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         else if(theme.equals("베이지")){
             refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_beige));
         }
+        else if(theme.equals("기본 테마")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background));
+        }
+
 */
         //User DB Create
         Mapper.setUserId(getApplicationContext());

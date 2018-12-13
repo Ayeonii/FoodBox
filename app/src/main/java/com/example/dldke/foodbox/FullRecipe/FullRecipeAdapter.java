@@ -25,25 +25,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.dldke.foodbox.CloudVision.PermissionUtils;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.MyRecipe.RecipeBoxHalfRecipeDetailActivity;
 import com.example.dldke.foodbox.R;
-import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.support.constraint.Constraints.TAG;
-import static com.example.dldke.foodbox.CloudVision.VisionActivity.FILE_NAME;
 
 public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.FullRecipeViewHolder> {
 
@@ -51,15 +42,20 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     private Context mContext;
     private List<RecipeDO.Ingredient> data;
     private RecipeBoxHalfRecipeDetailActivity recipeBoxHalfRecipeDetailActivity = new RecipeBoxHalfRecipeDetailActivity();
-    private String recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
+    //private String recipeId = recipeBoxHalfRecipeDetailActivity.getRecipeId();
 
     private List<RecipeDO.Ingredient> ingredients = new ArrayList<>();
     private FullRecipeStepAdapter adapter;
     private List<String> items = new ArrayList<>();
     private List<RecipeDO.Ingredient> specIngredient = new ArrayList<>();
-    private List<RecipeDO.Spec> specList = new ArrayList<>();
+    private static List<RecipeDO.Spec> specList = new ArrayList<>();
     private Dialog dialog;
+    private String TAG = "FullrecipeAdapter";
 
+    public void setSpecList(List<RecipeDO.Spec> specList){
+        this.specList = specList;
+    }
+    public FullRecipeAdapter(){}
     public FullRecipeAdapter(Context context, ArrayList<FullRecipeData> list) {
         mList = list;
         mContext = context;
@@ -77,6 +73,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            Log.e(TAG, "position"+getAdapterPosition());
             MenuItem Edit = menu.add(Menu.NONE, 1001, 1, "수정");
             MenuItem Delete = menu.add(Menu.NONE, 1002, 2, "삭제");
             Edit.setOnMenuItemClickListener(onEditMenu);
@@ -99,7 +96,8 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
                         final Spinner minute = (Spinner) dialog.findViewById(R.id.minute_spinner);
                         final Spinner fire = (Spinner) dialog.findViewById(R.id.fire_spinner);
 
-                        ingredients = Mapper.searchRecipe(recipeId).getIngredient();
+                        FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
+                        ingredients = fullRecipeActivity.getData();
                         ingredient_view.setHasFixedSize(true);
                         ingredient_view.setLayoutManager(new LinearLayoutManager(mContext));
                         adapter = new FullRecipeStepAdapter(ingredients);
@@ -145,8 +143,14 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
                                 }
 
                                 RecipeDO.Spec spec = Mapper.createSpec(specIngredient, method_st, fire_st, minute_int);
+                                Log.e(TAG, "여기 들어옴"+spec.getSpecMethod());
+                                //specList.add(spec);
+                                Log.e(TAG,"getAdapterPosition()"+ getAdapterPosition());
+                                Log.e(TAG, "specList"+specList.get(0).getSpecMethod());
 
-                                specList.add(spec);
+                                specList.set(getAdapterPosition(), spec);
+
+                                Log.e(TAG, "specList"+specList.get(getAdapterPosition()).getSpecMethod());
 
                                 Log.e(TAG, ""+step_description);
 
@@ -162,6 +166,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
 
                     case 1002:
                         mList.remove(getAdapterPosition());
+                        specList.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
                         notifyItemRangeChanged(getAdapterPosition(), mList.size());
                         break;

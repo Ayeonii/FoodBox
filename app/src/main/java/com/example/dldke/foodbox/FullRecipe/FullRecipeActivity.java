@@ -4,11 +4,13 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
@@ -56,14 +59,16 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     private String imagePath, recipeId;
     private static String FoodTitle;
     private Toolbar toolbar;
+    private TextView toolbar_title;
     private EditText foodtitle;
     private Spinner spinner;
     private Button ingredient_add, spec_add, ok_btn;
     private ImageView food_img_real;
+    private ConstraintLayout fullrecipe_main_board;
     private RecyclerView fullrecipeRecyclerView, recipe_ingredient_view;
 
     private static List<RecipeDO.Spec> specList;
-    private List<RecipeDO.Ingredient> data = new ArrayList<>();
+    private static List<RecipeDO.Ingredient> data = new ArrayList<>();
     private ArrayList<PencilCartItem> clickItems;
     static ArrayList<FullRecipeData> fullRecipeData;
     static FullRecipeAdapter fullRecipeAdapter;
@@ -87,6 +92,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     }
 
     public boolean getIsFullRecipe(){ return isFullRecipe; }
+    public List<RecipeDO.Ingredient> getData(){ return data; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +101,7 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         isCookingClass = refrigeratorMainActivity.getisCookingClass();
 
         toolbar = (Toolbar) findViewById(R.id.fullrecipe_toolbar);
+        toolbar_title = (TextView) findViewById(R.id.fullrecipe_title);
         foodtitle = (EditText) findViewById(R.id.food_title);
         food_img_real = (ImageView)findViewById(R.id.food_img_real);
         ingredient_add = (Button)findViewById(R.id.ingredient_add);
@@ -103,10 +110,23 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         spinner = (Spinner) findViewById(R.id.food_spinner);
         recipe_ingredient_view = (RecyclerView) findViewById(R.id.recipe_ingredient_recyclerview);
         fullrecipeRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_main_list);
+        fullrecipe_main_board = (ConstraintLayout) findViewById(R.id.fullrecipe_main_board);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);  //기존 toolbar없애기
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
+
+
+        String theme = Mapper.searchUserInfo().getTheme();
+        if(theme.equals("블랙")){
+            fullrecipe_main_board.setBackgroundColor(Color.WHITE);
+            toolbar.setBackgroundColor(Color.BLACK);
+            toolbar_title.setTextColor(Color.WHITE);
+            ingredient_add.setBackgroundColor(Color.BLACK);
+            ingredient_add.setTextColor(Color.WHITE);
+            ok_btn.setBackgroundColor(Color.BLACK);
+            ok_btn.setTextColor(Color.WHITE);
+        }
 
 
         //재료 가져오기
@@ -240,17 +260,19 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
                 String recipeId = Mapper.createChefRecipe(FoodTitle, specList);
                 Mapper.addRecipeInMyCommunity(recipeId);
                 Mapper.updateIngredient(stepDialog.getIngredients(), recipeId);
+                Mapper.attachRecipeImage(recipeId, imagePath);
             }
             else{
                 Mapper.createFullRecipe(recipeId, FoodTitle, specList);
+                Mapper.attachRecipeImage(recipeId, imagePath);
             }
 
-            Mapper.attachRecipeImage(recipeId, imagePath);
             Mapper.updatePointInfo(10);
 
             Intent RefrigeratorActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
             startActivity(RefrigeratorActivity);
             specList.clear();
+            data.clear();
 
         }catch (NullPointerException e){
             Toast.makeText(getApplicationContext(), "모든 항목을 입력하세요2", Toast.LENGTH_SHORT).show();

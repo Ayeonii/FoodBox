@@ -1,10 +1,13 @@
 package com.example.dldke.foodbox.Store;
 
+import android.graphics.drawable.Drawable;
+
 public class StoreData {
 
     int theme_version;
     String theme_title;
     int theme_point;
+    int theme_image;
 
     public int getTheme_version() {
         return theme_version;
@@ -30,9 +33,10 @@ public class StoreData {
         this.theme_point = theme_point;
     }
 
-    public StoreData(int theme_version, String theme_title, int theme_point) {
+    public StoreData(int theme_version, int theme_image, String theme_title, int theme_point) {
         this.theme_version = theme_version;
         this.theme_title = theme_title;
         this.theme_point = theme_point;
+        this.theme_image = theme_image;
     }
 }

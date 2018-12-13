@@ -74,12 +74,7 @@ public class CartPopupDialog {
             @Override
             public void onClick(View view) {
 
-                if(isFullRecipe){
-                    Log.e("CartPopupDialog", "풀레시피에서 왔음");
-                    Intent intent = new Intent(activityContext, FullRecipeActivity.class);
-                    activityContext.startActivity(intent);
-                    dlg.dismiss();
-                }
+
 
                 List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
                 for(int i =0 ; i<clickItems.size(); i++) {
@@ -91,17 +86,23 @@ public class CartPopupDialog {
                         clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
                 }
-                //Log.e("clickedList",""+clickedList);
-                Mapper.putFood(clickedList);
-                Mapper.updateToBuyMemo(clickedList);
-                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                pencilAdapter.getClickFood().clear();
-                pencilAdapter.setClickCnt(0);
-                Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);
-                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(refMain);
-                dlg.dismiss();
-
+                if(isFullRecipe){
+                    Log.e("CartPopupDialog", "풀레시피에서 왔음");
+                    Intent intent = new Intent(activityContext, FullRecipeActivity.class);
+                    activityContext.startActivity(intent);
+                    dlg.dismiss();
+                }else{
+                    //Log.e("clickedList",""+clickedList);
+                    Mapper.putFood(clickedList);
+                    Mapper.updateToBuyMemo(clickedList);
+                    Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                    pencilAdapter.getClickFood().clear();
+                    pencilAdapter.setClickCnt(0);
+                    Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);
+                    refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(refMain);
+                    dlg.dismiss();
+                }
             }
         });
     }

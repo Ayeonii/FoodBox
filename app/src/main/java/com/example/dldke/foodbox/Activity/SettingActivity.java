@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,11 +51,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     public static final String FILE_NAME = "temp.jpg";
     private static final int MAX_DIMENSION = 1200;
 
+    private Toolbar toolbar;
+    private Button setting_ok;
     private LinearLayout business_license_number, point_layout;
     private TextView business_N1, business_N2, business_N3;
-    private TextView nickname;
+    private TextView nickname, setting_title;
     private String TAG = "SettingActivity";
     private CircleImageView profile;
+    private static boolean profileChange = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -62,11 +66,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_setting);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
+        setting_title = (TextView) findViewById(R.id.setting_title);
         TextView user_id = (TextView) findViewById(R.id.user_name);
         TextView point = (TextView) findViewById(R.id.point);
         Switch cooking_class = (Switch) findViewById(R.id.cooking_class_btn);
-        Button setting_ok = (Button) findViewById(R.id.setting_ok_btn);
+        setting_ok = (Button) findViewById(R.id.setting_ok_btn);
         profile = (CircleImageView) findViewById(R.id.user_profile);
         point_layout = (LinearLayout) findViewById(R.id.point_linear);
         business_license_number = (LinearLayout) findViewById(R.id.business_linear);
@@ -154,13 +159,27 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.setting_ok_btn:
                 user_nickname = nickname.getText().toString();
                 business_number = business_N1.getText().toString() + business_N2.getText().toString() + business_N3.getText().toString();
+                imagePath = Mapper.getImageUrlUser(Mapper.getUserId());
 
-                Mapper.updateUserInfo(user_nickname, isCook, business_number);
-                Mapper.uploadUserImage(imagePath);
+                /******** 고치기 *********/
+                if(imagePath.equals("default")){
+                    imagePath = "file:///storage/emulated/0/Download/default.jpg";
+                }
 
-                Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
-                startActivity(RefrigeratorMainActivity);
-                break;
+                if(user_nickname.equals("") || user_nickname.equals("닉네임이 없습니다.") || business_number == null) {
+                    Toast.makeText(getApplicationContext(), "입력란을 채워주세요", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                else{
+                    Mapper.updateUserInfo(user_nickname, isCook, business_number);
+                    if(profileChange){
+                        Mapper.uploadUserImage(imagePath);
+                    }
+
+                    Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                    startActivity(RefrigeratorMainActivity);
+                    break;
+                }
 
             case R.id.cooking_class_btn:
                 business_license_number.setVisibility(View.VISIBLE);
@@ -200,10 +219,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         String temp = business_et.getText().toString();
-                        business_N1.setText(temp.substring(0,3));
-                        business_N2.setText(temp.substring(4,6));
-                        business_N3.setText(temp.substring(7,10));
-                        dialog.dismiss();
+                        if(temp.equals("")){
+                            Toast.makeText(getApplicationContext(), "사업자 번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                        else{
+                            business_N1.setText(temp.substring(0,3));
+                            business_N2.setText(temp.substring(4,6));
+                            business_N3.setText(temp.substring(7,10));
+                            dialog.dismiss();
+                        }
                     }
                 });
                 business_builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -273,7 +298,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void uploadImage(Uri uri) {
-
+        profileChange = true;
         if (uri != null) {
             try {
                 String real_path = uri.getPath();
@@ -323,6 +348,20 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults))
                     startGalleryChooser();
                 break;
+        }
+    }
+
+    public void ThemeSetting(){
+        String theme = Mapper.searchUserInfo().getTheme();
+
+        if(theme == "블랙"){
+            toolbar.setBackgroundColor(Color.BLACK);
+            setting_title.setTextColor(Color.WHITE);
+            setting_ok.setBackgroundColor(Color.BLACK);
+            setting_ok.setTextColor(Color.WHITE);
+        }
+        else if(theme == "베이지"){
+
         }
     }
 
