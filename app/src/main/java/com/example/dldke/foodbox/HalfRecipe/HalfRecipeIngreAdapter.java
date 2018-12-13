@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -21,7 +22,9 @@ import java.util.List;
 public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngreAdapter.ItemViewHolder> {
 
     ArrayList<HalfRecipeIngreItem> mItems;
-    List<InfoDO> infoFrozenItems = new ArrayList<>();
+    List<InfoDO> infoItems = new ArrayList<>();
+    List<RefrigeratorDO.Item> refriItems = new ArrayList<>();
+    List<RefrigeratorDO.Item> refrifrozneItems = new ArrayList<>();
     private Boolean[] checkIngre;
     String ingreType;
     private Context context;
@@ -48,19 +51,35 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         String foodName = mItems.get(position).getName();
-        String foodImgUri = "file://"+context.getFilesDir() + "default.jpg";
+        String foodImgUri = "file://"+context.getFilesDir() +foodName+ ".jpg";
 
         if (ingreType.equals("sideDish")) {
-            infoFrozenItems = Mapper.scanKindof("frozen");
+            infoItems = Mapper.scanKindof("frozen");
             for (int i=0; i<mItems.size(); i++) {
-                for (int j = 0; j< infoFrozenItems.size(); j++) {
-                    if (mItems.get(i).getName().equals(infoFrozenItems.get(j).getName())) {
+                for (int j = 0; j< infoItems.size(); j++) {
+                    if (mItems.get(i).getName().equals(infoItems.get(j).getName())) {
                         foodImgUri = "file://"+context.getFilesDir() + foodName + ".jpg";
                         break;
                     }
                 }
             }
-        } else {
+        } else if(ingreType.equals("frozen")) {
+            refriItems = Mapper.scanRefri();
+            for(int i =0  ; i <refriItems.size() ; i ++){
+                if(refriItems.get(i).getSection().equals("sideDish")){
+                    refrifrozneItems.add(refriItems.get(i));
+                }
+            }
+            for (int i=0; i<mItems.size(); i++) {
+                for (int j = 0; j< refrifrozneItems.size(); j++) {
+                    Log.e("","refrifrozneItems"+refrifrozneItems.get(j).getName()+"mItems.get(i).getName()"+mItems.get(i).getName());
+                    if (mItems.get(i).getName().equals(refrifrozneItems.get(j).getName())) {
+                        foodImgUri = "file://"+context.getFilesDir()+"default.jpg";
+                        break;
+                    }
+                }
+            }
+        } else  {
             foodImgUri = "file://"+context.getFilesDir() + foodName + ".jpg";
         }
 

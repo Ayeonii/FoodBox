@@ -1600,7 +1600,7 @@ public static String getImageUrlUser(final String userid){
                         compareCount++;
                 }
             }
-            if(compareCount >= 2)
+            if(compareCount >= 1)
                 resultPost.add(entirePost.get(i));
 
         }

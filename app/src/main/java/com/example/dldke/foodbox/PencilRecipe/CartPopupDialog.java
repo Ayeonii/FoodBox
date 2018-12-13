@@ -88,6 +88,7 @@ public class CartPopupDialog {
                 }
                 if(isFullRecipe){
                     Log.e("CartPopupDialog", "풀레시피에서 왔음");
+                    pencilRecipeActivity.setIsFull(false);
                     Intent intent = new Intent(activityContext, FullRecipeActivity.class);
                     activityContext.startActivity(intent);
                     dlg.dismiss();

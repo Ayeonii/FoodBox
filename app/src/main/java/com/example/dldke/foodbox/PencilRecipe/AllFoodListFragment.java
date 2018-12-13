@@ -50,9 +50,9 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
 
         //default 이미지 다운
-        File defaultFile = new File("/storage/emulated/0/Download/" + "default" + ".jpg");
+        File defaultFile = new File(getContext().getFilesDir() + "default.jpg");
         if (!defaultFile.exists()) {
-            Mapper.downLoadImage("default", "/storage/emulated/0/Download/", "sideDish");
+            Mapper.downLoadImage("default",  getContext().getFilesDir().toString(), "sideDish");
         }
         
         if(pencil.getEnterTime() == 0) {
@@ -96,8 +96,8 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
                 allfoodListInfo.add(new PencilItem(foodList.get(i).getName(), foodList.get(i).getSection(), isFrozen));
                 /**********이미지 추가후 주석 삭제**********/
 
-                File file = new File(getContext().getFilesDir() + foodList.get(i).getName() + ".jpg");
             //    File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
+                File file = new File(getContext().getFilesDir() + foodList.get(i).getName() + ".jpg");
                 if (!file.exists()) {
                     Log.e("makeFoodList","존재 ㄴㄴ");
                     Mapper.downLoadImage(foodList.get(i).getName(), getContext().getFilesDir().toString(), foodList.get(i).getSection());

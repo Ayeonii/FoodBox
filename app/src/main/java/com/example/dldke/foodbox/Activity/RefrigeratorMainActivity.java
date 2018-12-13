@@ -151,21 +151,9 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator);
 
-        /******* 냉장고 테마 설정 *******/
 
-        String theme = Mapper.searchUserInfo().getTheme();
-        refrigerator_background = (CoordinatorLayout) findViewById(R.id.refrigerator_background);
-   /*     if(theme.equals("블랙")){
-            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_black));
-        }
-        else if(theme.equals("베이지")){
-            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_beige));
-        }
-        else if(theme.equals("기본 테마")){
-            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background));
-        }
 
-*/
+
         //User DB Create
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
@@ -177,6 +165,19 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             Mapper.createUserInfo();
         }
 
+        /******* 냉장고 테마 설정 *******/
+
+        String theme = Mapper.searchUserInfo().getTheme();
+        refrigerator_background = (CoordinatorLayout) findViewById(R.id.refrigerator_background);
+        if(theme.equals("블랙")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_black));
+        }
+        else if(theme.equals("베이지")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_beige));
+        }
+        else if(theme.equals("기본 테마")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background));
+        }
 
         //Mapper.createMemo();
         if(pencilAdapter.getClickCnt() != 0 ){
