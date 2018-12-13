@@ -24,23 +24,24 @@ public class StoreActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
+
         String theme = Mapper.searchUserInfo().getTheme();
+        String point = String.valueOf(Mapper.searchUserInfo().getPoint());
         int user_point = Mapper.searchUserInfo().getPoint();
-
-        Log.e(TAG, "사용자 테마 : "+theme+"사용자 포인트 : "+user_point);
-
-        getData();
 
         TextView user_point_text = (TextView) findViewById(R.id.user_point);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         RecyclerView theme_recyclerview = (RecyclerView) findViewById(R.id.theme_list);
 
+        Log.e(TAG, "사용자 테마 : "+theme+"사용자 포인트 : "+user_point);
+
+        getData();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);  //기존 toolbar없애기
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
 
-        String point = String.valueOf(Mapper.searchUserInfo().getPoint());
+
         user_point_text.setText(point);
 
         theme_recyclerview.setHasFixedSize(true);

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -43,16 +44,9 @@ import android.support.v4.content.ContextCompat;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    Button join_btn, login_btn, login_ok_btn;
-    EditText id_edittext, pw_edittext;
-    RelativeLayout login_box, login_back;
-    boolean inputID=false, inputPW=false;
-    public static Editable id,pw;
-
-    int MY_PERMISSIONS_REQUEST_CAMERA;
-
+    Button login_btn;
+    ConstraintLayout main_backgroudn;
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -102,7 +96,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //settingTheme();
         setContentView(R.layout.activity_main);
+
+        //로그인 전에는 사용자 정보 받아올 수 없음
+//        main_backgroudn = (ConstraintLayout) findViewById(R.id.refrigerator_background);
+//        String theme = Mapper.searchUserInfo().getTheme();
+//        if(theme == "블랙"){
+//            main_backgroudn.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_black));
+//        }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -159,19 +161,8 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-
-
         login_btn = (Button)findViewById(R.id.btn_login);
-        String theme = "기본 테마";
-        if(theme == "기본 테마"){
-            login_btn.setBackground(getApplicationContext().getDrawable(R.color.colorPrimary));
-        }
-        if(theme == "블랙"){
-            login_btn.setBackgroundColor(Color.BLACK);
-        }
-        if(theme == "베이지"){
-            login_btn.setBackgroundColor(Color.GREEN);
-        }
+
         login_btn.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 Intent LoginActivity = new Intent(getApplicationContext(), LoginActivity.class);
@@ -179,6 +170,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+//    public void settingTheme(){
+//        String theme = "블랙";
+//        if(theme == "기본 테마"){
+//            login_btn.setBackground(getApplicationContext().getDrawable(R.color.colorPrimary));
+//        }
+//        if(theme == "블랙"){
+//            login_btn.setBackground(getApplicationContext().getDrawable(R.color.blackPrimary));
+//        }
+//        if(theme == "베이지"){
+//            login_btn.setBackground(getApplicationContext().getDrawable(R.color.beigePrimary));
+//        }
+//    }
 
 }
 

@@ -11,14 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dldke.foodbox.CloudVision.PopupDialog;
-import com.example.dldke.foodbox.Community.CommunityFragmentNewsfeed;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
-import com.example.dldke.foodbox.HalfRecipe.DCItem;
-import com.example.dldke.foodbox.HalfRecipe.HalfRecipeIngreItem;
 import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
-import com.example.dldke.foodbox.MyRefrigeratorInside.InsideAdapter;
-import com.example.dldke.foodbox.MyRefrigeratorInside.InsideItemAdapter;
-import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorFrozenAdapter;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorFrozenInsideActivity;
 import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity;
 import com.example.dldke.foodbox.R;

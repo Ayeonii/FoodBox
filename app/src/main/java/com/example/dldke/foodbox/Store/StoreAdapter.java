@@ -2,6 +2,7 @@ package com.example.dldke.foodbox.Store;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,15 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ItemViewHold
     public void onBindViewHolder(final ItemViewHolder holder, final int position){
         String theme_title = Items.get(position).getTheme_title();
         String theme_point = Integer.toString(Items.get(position).getTheme_point());
+        String theme = Mapper.searchUserInfo().getTheme();
 
+        Log.e("StoreAdapter", "사용자 테마 : "+theme);
+
+        if(theme_title.equals(theme)){
+            //holder.buy.setBackgroundColor(R.color.colorAccent);  int형으로 바꾸기 -> 아연이한테 물어보기(기억안남....)
+            holder.buy.setText("사용중");
+            holder.buy.setEnabled(false);
+        }
         holder.theme_title.setText(theme_title);
         holder.theme_point.setText(theme_point+"point");
         holder.buy.setOnClickListener(new View.OnClickListener() {

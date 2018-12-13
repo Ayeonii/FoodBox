@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.Community;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -21,9 +22,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.PostDO;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
+import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.R;
 
 import java.io.IOException;
@@ -124,8 +127,8 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         }
 
 
-        Uri uri = Uri.parse(imgUrl);
-        uploadImage(uri);
+      //  Uri uri = Uri.parse(imgUrl);
+      //  uploadImage(uri);
 
         AddStep(specList);
 
@@ -167,8 +170,12 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.takeBtn:
                 Log.e("taken", "가져가기 완료");
+
                 Mapper.updateIsPost(recipe_id);
                 Mapper.addRecipeInMyCommunity(recipe_id);
+                Intent refMain = new Intent(getApplicationContext(), MyRecipeBoxActivity.class);
+                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(refMain);
                 break;
         }
     }
@@ -257,7 +264,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
         }
         detail_adapter.notifyDataSetChanged();
     }
-
+/*
     public void uploadImage(Uri uri) {
 
         if (uri != null) {
@@ -274,7 +281,7 @@ public class CommunityDetailActivity extends AppCompatActivity implements View.O
             //Log.d(TAG, "Image picker gave us a null image.");
             Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
     private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
 

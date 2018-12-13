@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -123,6 +124,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     /***********************Refrigerator****************************/
     //냉장고 오른쪽/왼쪽 부분
+    CoordinatorLayout refrigerator_background;
     Button leftDoor;
     Button rightDoor;
 
@@ -149,8 +151,17 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator);
 
-        Log.e("test", "onCreate() 들어옴");
-
+        /******* 냉장고 테마 설정 *******/
+        
+        String theme = Mapper.searchUserInfo().getTheme();
+        refrigerator_background = (CoordinatorLayout) findViewById(R.id.refrigerator_background);
+   /*     if(theme.equals("블랙")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_black));
+        }
+        else if(theme.equals("베이지")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_beige));
+        }
+*/
         //User DB Create
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());

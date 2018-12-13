@@ -81,7 +81,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
             MenuItem Delete = menu.add(Menu.NONE, 1002, 2, "삭제");
             Edit.setOnMenuItemClickListener(onEditMenu);
             Delete.setOnMenuItemClickListener(onEditMenu);
-            data = Mapper.searchRecipe(recipeId).getIngredient();
+            //data = Mapper.searchRecipe(recipeId).getIngredient();
         }
 
         private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {

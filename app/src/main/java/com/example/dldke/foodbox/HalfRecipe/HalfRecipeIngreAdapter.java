@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -45,8 +46,10 @@ public class HalfRecipeIngreAdapter extends RecyclerView.Adapter<HalfRecipeIngre
         if (ingreType.equals("sideDish")) {
             foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
         } else {
-            foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+            Log.e("else ","여긴 들어오냐??");
+            foodImgUri = "file:///storage/emulated/0/Download/" + foodName + ".jpg";
         }
+        Log.e("여기에 들어와야해 ",""+foodImgUri);
         holder.mNameTv.setText(foodName);
         holder.food_Img.setImageURI(Uri.parse(foodImgUri));
 
