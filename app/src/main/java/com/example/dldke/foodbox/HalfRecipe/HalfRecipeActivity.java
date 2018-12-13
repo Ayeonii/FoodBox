@@ -25,15 +25,15 @@ import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 
 public class HalfRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnSidedish, btnDairy, btnEtc, btnMeat, btnFresh;
+    private Button btnSidedish, btnDairy, btnEtc, btnMeat, btnFresh, btnFrozen;
     private FloatingActionButton fbtnRecipe;
 
     private List<RefrigeratorDO.Item> refrigeratorItem;
-    private ArrayList<LocalRefrigeratorItem> localSideDish, localDairy, localEtc, localMeat, localFresh;
-    private ArrayList<String> nameSideDish, nameDairy, nameEtc, nameMeat, nameFresh, nameAll;
+    private ArrayList<LocalRefrigeratorItem> localSideDish, localDairy, localEtc, localMeat, localFresh, localFrozen;
+    private ArrayList<String> nameSideDish, nameDairy, nameEtc, nameMeat, nameFresh, nameAll, nameFrozen;
     private ArrayList<String> dupliArray;
 
-    private Boolean[] checkSideDish, checkDairy, checkEtc, checkMeat, checkFresh;
+    private Boolean[] checkSideDish, checkDairy, checkEtc, checkMeat, checkFresh, checkFrozen;
     private ArrayList<LocalRefrigeratorItem> selectedItem;
 
     private HalfRecipeIngreDialog ingreDialog;
@@ -58,6 +58,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         btnEtc = (Button) findViewById(R.id.btn_etc);
         btnMeat = (Button) findViewById(R.id.btn_meat);
         btnFresh = (Button) findViewById(R.id.btn_fresh);
+        btnFrozen = (Button) findViewById(R.id.btn_frozen);
         fbtnRecipe = (FloatingActionButton) findViewById(R.id.floatingButtonRecipe);
 
         btnSidedish.setOnClickListener(this);
@@ -65,6 +66,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         btnEtc.setOnClickListener(this);
         btnMeat.setOnClickListener(this);
         btnFresh.setOnClickListener(this);
+        btnFrozen.setOnClickListener(this);
         fbtnRecipe.setOnClickListener(this);
 
         scanToLocalRefrigerator();
@@ -170,6 +172,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         localEtc = new ArrayList<>();
         localMeat = new ArrayList<>();
         localFresh = new ArrayList<>();
+        localFrozen = new ArrayList<>();
 
         Log.d("test", "refrigeratorItem.size : " + refrigeratorItem.size());
         for (int i = 0; i < refrigeratorItem.size(); i++) {
@@ -207,6 +210,13 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             } catch (NullPointerException e) {
                 Log.d("test", "fresh null: " + e.getMessage());
             }
+
+            try {
+                if (refrigeratorItem.get(i).getKindOf().equals("frozen") || refrigeratorItem.get(i).getIsFrozen())
+                    localFrozen.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+            } catch (NullPointerException e) {
+                Log.d("test", "frozen null: " + e.getMessage());
+            }
         }
     }
 
@@ -218,6 +228,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         nameEtc = new ArrayList<>();
         nameMeat = new ArrayList<>();
         nameFresh = new ArrayList<>();
+        nameFrozen = new ArrayList<>();
 
         for (int i = 0; i < localSideDish.size(); i++) {
             int check = 0;
@@ -298,6 +309,22 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             else if (check == 1)
                 dupliArray.add(localFresh.get(i).getName());
         }
+
+        for (int i = 0; i < localFrozen.size(); i++) {
+            int check = 0;
+            for (int j = 0; j < nameFrozen.size(); j++) {
+                if (nameFrozen.get(j).equals(localFrozen.get(i).getName())) {
+                    check = 1;
+                    break;
+                } else
+                    check = 0;
+            }
+
+            if (check == 0)
+                nameFrozen.add(localFrozen.get(i).getName());
+            else if (check == 1)
+                dupliArray.add(localFrozen.get(i).getName());
+        }
     }
 
     public void setCheckArray() {
@@ -306,6 +333,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         checkEtc = new Boolean[nameEtc.size()];
         checkMeat = new Boolean[nameMeat.size()];
         checkFresh = new Boolean[nameFresh.size()];
+        checkFrozen = new Boolean[nameFrozen.size()];
 
         for (int i = 0; i < nameSideDish.size(); i++)
             checkSideDish[i] = false;
@@ -317,6 +345,8 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             checkMeat[i] = false;
         for (int i = 0; i < nameFresh.size(); i++)
             checkFresh[i] = false;
+        for (int i = 0; i < nameFrozen.size(); i++)
+            checkFrozen[i] = false;
     }
 
     @Override
@@ -336,6 +366,9 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.btn_fresh:
                 showIngredientDialog(nameFresh, checkFresh, "fresh");
+                break;
+            case R.id.btn_frozen:
+                showIngredientDialog(nameFrozen, checkFrozen, "frozen");
                 break;
             case R.id.floatingButtonRecipe:
                 setSelectedItem();
@@ -398,6 +431,17 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                             checkFresh[i] = true;
                         else
                             checkFresh[i] = false;
+                    }
+                }
+
+                break;
+            case "frozen":
+                for (int i = 0; i < nameFrozen.size(); i++) {
+                    if (check[i] != checkFrozen[i]) {
+                        if (check[i])
+                            checkFrozen[i] = true;
+                        else
+                            checkFrozen[i] = false;
                     }
                 }
 
@@ -469,6 +513,18 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 selectedItem.add(new LocalRefrigeratorItem(nameFresh.get(i), totalCount));
             }
         }
+
+        for (int i = 0; i < nameFrozen.size(); i++) {
+            if (checkFrozen[i]) {
+                totalCount = 0.0;
+                for (int j = 0; j < localFrozen.size(); j++) {
+                    if (localFrozen.get(j).getName().equals(nameFrozen.get(i))) {
+                        totalCount += localFrozen.get(j).getCount();
+                    }
+                }
+                selectedItem.add(new LocalRefrigeratorItem(nameFrozen.get(i), totalCount));
+            }
+        }
     }
 
     public void showIngredientDialog(ArrayList<String> nameArray, Boolean[] checkArray, String type) {
@@ -524,14 +580,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 else if (result == 3) {
                     goIngHalfRecipeMaking(mItems);
                 }
-
-//                if (result == 1) {
-//                    goHalfRecipeMaking(mItems, dueDateCheckArray);
-//                } else if (result == 2) {
-//                    showDueDateDialog(mItems, dueDateCheckArray);
-//                } else if (result == 3) {
-//                    goIngHalfRecipeMaking(mItems);
-//                }
             }
 
             @Override
