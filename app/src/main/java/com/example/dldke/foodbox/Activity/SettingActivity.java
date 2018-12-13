@@ -211,7 +211,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.business_linear:
                 AlertDialog.Builder business_builder = new AlertDialog.Builder(this);
                 final EditText business_et = new EditText(SettingActivity.this);
-                business_et.setText("000-00-000");
+                business_et.setHint("123-80-0002");
                 business_builder.setTitle("사업자 번호 추가");
                 business_builder.setMessage("사업자 번호를 입력해주세요");
                 business_builder.setView(business_et);
@@ -227,6 +227,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                             business_N1.setText(temp.substring(0,3));
                             business_N2.setText(temp.substring(4,6));
                             business_N3.setText(temp.substring(7,10));
+
+                            if(100 >= Integer.parseInt(business_N1.getText().toString()) || 621<= Integer.parseInt(business_N1.getText().toString())){
+                                Toast.makeText(getApplicationContext(), "유효한 숫자가 아닙니다.", Toast.LENGTH_SHORT).show();
+                            }
+                            else if(01>= Integer.parseInt(business_N2.getText().toString()) || 99 <= Integer.parseInt(business_N2.getText().toString())){
+                                Toast.makeText(getApplicationContext(), "유효한 숫자가 아닙니다.", Toast.LENGTH_SHORT).show();
+
+                            }
+                            else if(0001>=Integer.parseInt(business_N3.getText().toString()) || 9999<= Integer.parseInt(business_N3.getText().toString())){
+                                Toast.makeText(getApplicationContext(), "유효한 숫자가 아닙니다.", Toast.LENGTH_SHORT).show();
+                            }
                             dialog.dismiss();
                         }
                     }
@@ -348,20 +359,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults))
                     startGalleryChooser();
                 break;
-        }
-    }
-
-    public void ThemeSetting(){
-        String theme = Mapper.searchUserInfo().getTheme();
-
-        if(theme == "블랙"){
-            toolbar.setBackgroundColor(Color.BLACK);
-            setting_title.setTextColor(Color.WHITE);
-            setting_ok.setBackgroundColor(Color.BLACK);
-            setting_ok.setTextColor(Color.WHITE);
-        }
-        else if(theme == "베이지"){
-
         }
     }
 
