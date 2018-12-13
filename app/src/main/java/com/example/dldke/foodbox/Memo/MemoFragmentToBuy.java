@@ -64,7 +64,7 @@ public class MemoFragmentToBuy extends android.support.v4.app.Fragment {
     private void setData() {
         try {
             for (int i = 0; i < tobuyList.size(); i++) {
-                foodImg = "file:///storage/emulated/0/Download/" + tobuyList.get(i).getIngredientName() + ".jpg";
+                foodImg = "file://"+context.getFilesDir()+tobuyList.get(i).getIngredientName()+".jpg";
                 list.add(new MemoToBuyItem(Uri.parse(foodImg)
                         , tobuyList.get(i).getIngredientName()
                         , tobuyList.get(i).getIngredientCount()));

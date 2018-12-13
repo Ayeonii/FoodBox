@@ -30,12 +30,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){ this.mItems = cartItems;}
     public PencilCartAdapter(){}
 
-    public void setRemovedPosition(int removedPosition){
-        this.removedPosition = removedPosition;
-    }
-    public int getRemovedPosition(){
-        return removedPosition;
-    }
+
     public ArrayList<PencilCartItem> getCartItems(){return mItems; }
 
 

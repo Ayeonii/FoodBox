@@ -53,7 +53,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     static String searchText;
     static RecyclerView recyclerView;
     static String foodImg;
-
+    private static Context context ;
 
     public SearchIngredientFragment(){}
 
@@ -64,6 +64,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pencilrecipe_fragment_search, container, false);
+        context = getContext();
         allfoodList = allList.getAllFoodListWithFrozen();
         frozenList = frozenActivity.getFrozenList();
         refriList =refriInsideActivity.getRefrigeratorItem();
@@ -106,7 +107,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     if (matchString(allfoodList.get(i).getFoodName(), charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/" + allfoodList.get(i).getFoodName() + ".jpg";
+                        foodImg = "file://"+context.getFilesDir()+allfoodList.get(i).getFoodName()+".jpg";
                         list.add(new PencilItem(allfoodList.get(i).getFoodName(), Uri.parse(foodImg), allfoodList.get(i).getFoodSection(), allfoodList.get(i).getIsFrozen()));
                         Log.e("Refri", "listSize" + list.size());
                     }
@@ -114,7 +115,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                 if (list.size() == 0) {
                     //검색된 것이 아무것도 없을때,
                     Log.e("Refri", "없음" + list.size());
-                    foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
+                    foodImg = "file://"+context.getFilesDir()+"default.jpg";
                     list.add(new PencilItem(searchText, Uri.parse(foodImg)));
                 }
                 adapter.notifyDataSetChanged();
@@ -145,7 +146,7 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     if (matchString(refriList.get(i).getName(), charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/" + refriList.get(i).getName() + ".jpg";
+                        foodImg = "file://"+context.getFilesDir()+refriList.get(i).getName()+".jpg";
                         allRefriList.add(new LocalRefrigeratorItem(refriList.get(i).getName()
                                 , refriList.get(i).getCount()
                                 , refriList.get(i).getDueDate()
@@ -166,13 +167,13 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     if (matchString(visionList.get(i).getFoodName(), charText)) {
                         //검색된 데이터 리스트에 추가
                         //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        foodImg = "file:///storage/emulated/0/Download/" + visionList.get(i).getFoodName() + ".jpg";
+                        foodImg = "file://"+context.getFilesDir()+ visionList.get(i).getFoodName()+".jpg";
                         list.add(new PencilItem(visionList.get(i).getFoodName(), Uri.parse(foodImg), visionList.get(i).getFoodSection(), visionList.get(i).getIsFrozen()));
                     }
                 }
                 if (list.size() == 0) {
                     //검색된 것이 아무것도 없을때,
-                    foodImg = "file:///storage/emulated/0/Download/" + "default" + ".jpg"; //나중 default 이미지 넣기
+                    foodImg = "file://"+context.getFilesDir()+"default.jpg";
                     list.add(new PencilItem(searchText, Uri.parse(foodImg)));
                 }
                 adapter.notifyDataSetChanged();

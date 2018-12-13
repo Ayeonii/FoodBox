@@ -92,9 +92,10 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
                 allfoodListInfo.add(new PencilItem(foodList.get(i).getName(), foodList.get(i).getSection(), isFrozen));
                 /**********이미지 추가후 주석 삭제**********/
 
-                File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
+                File file = new File(getContext().getFilesDir() + foodList.get(i).getName() + ".jpg");
+            //    File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
                 if (!file.exists()) {
-                    Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/", foodList.get(i).getSection());
+                    Mapper.downLoadImage(foodList.get(i).getName(), getContext().getFilesDir().toString(), foodList.get(i).getSection());
                 }
             }
     }
@@ -113,7 +114,8 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
     private void setData(){
         for(int i =0 ; i<allfoodListInfo.size(); i++ ){
-            foodImg = "file:///storage/emulated/0/Download/"+allfoodListInfo.get(i).getFoodName()+".jpg";
+            //foodImg = "file:///storage/emulated/0/Download/"+allfoodListInfo.get(i).getFoodName()+".jpg";
+            foodImg = "file://"+getContext().getFilesDir()+allfoodListInfo.get(i).getFoodName()+".jpg";
             list.add(new PencilItem(allfoodListInfo.get(i).getFoodName(), Uri.parse(foodImg),allfoodListInfo.get(i).getFoodSection(), allfoodListInfo.get(i).getIsFrozen()));
         }
         adapter.notifyDataSetChanged();
