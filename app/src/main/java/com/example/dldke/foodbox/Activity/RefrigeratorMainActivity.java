@@ -136,7 +136,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     private CurrentDate currentDate = new CurrentDate();
 
     /***************************etc********************************/
-    public static boolean isCookingClass;
+    public static boolean isCookingClass, isFullRecipe;
     private String user_id;
     private static boolean isMemo;
 
@@ -144,6 +144,14 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     public boolean getIsMemo(){ return isMemo; }
     public boolean getisCookingClass(){
         return isCookingClass;
+    }
+
+    public void setIsFull(boolean isfull){
+        this.isFullRecipe = isfull;
+    }
+
+    public boolean getIsFull(){
+        return isFullRecipe;
     }
 
     @Override

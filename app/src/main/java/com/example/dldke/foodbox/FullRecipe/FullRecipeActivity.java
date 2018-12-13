@@ -91,7 +91,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         return isHalfRecipe;
     }
 
-    public boolean getIsFullRecipe(){ return isFullRecipe; }
     public List<RecipeDO.Ingredient> getData(){ return data; }
 
     @Override
@@ -197,10 +196,11 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.recipe_ok:
                 registerSpec();
+                refrigeratorMainActivity.setIsFull(false);
                 break;
 
             case R.id.ingredient_add:
-                pencilRecipeActivity.setIsFull(true);
+                refrigeratorMainActivity.setIsFull(true);
                 Intent PencilRecipeActivity = new Intent(getApplicationContext(), PencilRecipeActivity.class);
                 startActivity(PencilRecipeActivity);
                 break;
@@ -366,7 +366,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         }
     }
     @Override public void onBackPressed() {
-
+        refrigeratorMainActivity.setIsFull(false);
+        data.clear();
         Intent refMain = new Intent(FullRecipeActivity.this, RefrigeratorMainActivity.class);
         refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         FullRecipeActivity.this.startActivity(refMain);
@@ -375,6 +376,8 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            refrigeratorMainActivity.setIsFull(false);
+            data.clear();
             Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), com.example.dldke.foodbox.Activity.RefrigeratorMainActivity.class);
             RefrigeratorMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(RefrigeratorMainActivity);

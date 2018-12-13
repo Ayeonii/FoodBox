@@ -22,15 +22,13 @@ import java.util.List;
 
 public class CartPopupDialog {
     private Context context;
-    private boolean isEnd = false, isFullRecipe;
-    private FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
-    private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
+    private boolean isEnd = false, isFullRecipe = false;
+    private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
 
     private PencilCartAdapter pencilCartAdapter = new PencilCartAdapter(clickFood);
     private ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
-
 
     public CartPopupDialog(Context context) {
         this.context = context;
@@ -41,7 +39,8 @@ public class CartPopupDialog {
     }
     // 호출할 다이얼로그 함수를 정의한다.
     public void callFunction(final Context activityContext) {
-        isFullRecipe = fullRecipeActivity.getIsFullRecipe();
+
+        isFullRecipe = refrigeratorMainActivity.getIsFull();
         RecyclerView.Adapter adapter;
         final Dialog dlg = new Dialog(context);
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -88,6 +87,7 @@ public class CartPopupDialog {
                 }
                 if(isFullRecipe){
                     Log.e("CartPopupDialog", "풀레시피에서 왔음");
+                    refrigeratorMainActivity.setIsFull(false);
                     Intent intent = new Intent(activityContext, FullRecipeActivity.class);
                     activityContext.startActivity(intent);
                     dlg.dismiss();
