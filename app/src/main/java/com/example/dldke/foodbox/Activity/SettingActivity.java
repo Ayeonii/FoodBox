@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.dldke.foodbox.CloudVision.PermissionUtils;
 import com.example.dldke.foodbox.Community.CommunityFragmentNewsfeed;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
+import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -230,13 +231,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
                             if(100 >= Integer.parseInt(business_N1.getText().toString()) || 621<= Integer.parseInt(business_N1.getText().toString())){
                                 Toast.makeText(getApplicationContext(), "유효한 숫자가 아닙니다.", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
                             }
                             else if(01>= Integer.parseInt(business_N2.getText().toString()) || 99 <= Integer.parseInt(business_N2.getText().toString())){
                                 Toast.makeText(getApplicationContext(), "유효한 숫자가 아닙니다.", Toast.LENGTH_SHORT).show();
-
+                                dialog.dismiss();
                             }
                             else if(0001>=Integer.parseInt(business_N3.getText().toString()) || 9999<= Integer.parseInt(business_N3.getText().toString())){
                                 Toast.makeText(getApplicationContext(), "유효한 숫자가 아닙니다.", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
                             }
                             dialog.dismiss();
                         }
@@ -360,6 +363,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     startGalleryChooser();
                 break;
         }
+    }
+    @Override public void onBackPressed() {
+
+        Intent refMain = new Intent(SettingActivity.this, RefrigeratorMainActivity.class);
+        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        SettingActivity.this.startActivity(refMain);
+        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
     }
 
     @Override

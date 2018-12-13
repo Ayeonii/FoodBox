@@ -40,7 +40,6 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
     public PencilRecipeActivity(){}
 
 
-
     public void setIsFull(boolean isFull){
         this.isFull = isFull;
     }
@@ -126,14 +125,14 @@ public class PencilRecipeActivity extends AppCompatActivity implements View.OnCl
                 transaction.commit();
                 break;
             case R.id.floating:
-                if(!isFull)
-                    customDialog.callFunction(getApplicationContext());
-                else {
+//                if(!isFull)
+//                    customDialog.callFunction(getApplicationContext());
+//                else {
                     //Intent intent = new Intent(getApplicationContext(), FullRecipeActivity.class);
                     //startActivity(intent);
                     //customDialog.setisFull(isFull);
                     customDialog.callFunction(getApplicationContext());
-                }
+
                 break;
             case R.id.delete_button:
                 if (searchBar.getText().length() != 0) {
