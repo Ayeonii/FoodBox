@@ -64,12 +64,14 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onError(Exception e) {
                         Log.e(TAG, "onError: ", e);
+                        Intent RefriActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
+                        startActivity(RefriActivity);
                     }
                 }
         );
-        ok_btn = (Button)findViewById(R.id.login_button);
-        id_edittext = (EditText)findViewById(R.id.edittext_id);
-        pw_edittext = (EditText)findViewById(R.id.edittext_pw);
+        //ok_btn = (Button)findViewById(R.id.login_button);
+        //id_edittext = (EditText)findViewById(R.id.edittext_id);
+        //pw_edittext = (EditText)findViewById(R.id.edittext_pw);
 
 
     }

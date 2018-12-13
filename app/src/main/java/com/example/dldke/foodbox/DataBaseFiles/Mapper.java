@@ -332,12 +332,8 @@ public static String getImageUrlUser(final String userid){
         e.printStackTrace();
     }
     String url;
-    if(thread.getResult()==null){
-        url = "default";
-    }
-    else{
-        url = (String)thread.getResult();
-    }
+    url = (String)thread.getResult();
+
     return url;
 }
 
