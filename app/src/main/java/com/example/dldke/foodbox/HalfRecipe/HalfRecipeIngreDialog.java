@@ -86,6 +86,9 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
             case "fresh":
                 txtType.setText("과일,야채칸");
                 break;
+            case "frozen":
+                txtType.setText("냉동칸");
+                break;
         }
 
         //true : txtEmpty, false : recyclerView
