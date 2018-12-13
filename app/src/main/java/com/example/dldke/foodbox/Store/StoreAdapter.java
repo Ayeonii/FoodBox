@@ -40,7 +40,6 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ItemViewHold
         }
     }
 
-
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.store_list_item, parent, false);
         return new ItemViewHolder(view);
@@ -51,10 +50,8 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ItemViewHold
         String theme_point = Integer.toString(Items.get(position).getTheme_point());
         String theme = Mapper.searchUserInfo().getTheme();
 
-        Log.e("StoreAdapter", "사용자 테마 : "+theme);
-
         if(theme_title.equals(theme)){
-            //holder.buy.setBackgroundColor(R.color.colorAccent);  int형으로 바꾸기 -> 아연이한테 물어보기(기억안남....)
+            //holder.buy.setBackground(context.getResources(R.color.colorAccent));
             holder.buy.setText("사용중");
             holder.buy.setEnabled(false);
         }
