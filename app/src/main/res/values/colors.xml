@@ -6,15 +6,6 @@
     <color name="translucent">#e0000000</color>
     <color name="transparent">#00000000</color>
 
-    <!--<color name="blackPrimary">#FF2C333B</color>-->
-    <!--<color name="blackPrimaryDark">#FF15191E</color>-->
-    <!--<color name="blackAccent">#FF060708</color>-->
-
-    <!--<color name="beigePrimary">#FFEADCA5</color>-->
-    <!--<color name="beigePrimaryDark">#FFEDDB94</color>-->
-    <!--<color name="beigeAccent">#FFEFD15A</color>-->
-
-
     <color name="colorHint">#cecdcd</color>
     <color name="colorActivated">#9dc4e6</color>
     <color name="colorUnderline">#92b6d5</color>

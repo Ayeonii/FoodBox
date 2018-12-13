@@ -116,19 +116,6 @@ public class FullRecipeActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayShowTitleEnabled(false);  //기존 toolbar없애기
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //뒤로가기 버튼 생성
 
-
-        String theme = Mapper.searchUserInfo().getTheme();
-        if(theme.equals("블랙")){
-            fullrecipe_main_board.setBackgroundColor(Color.WHITE);
-            toolbar.setBackgroundColor(Color.BLACK);
-            toolbar_title.setTextColor(Color.WHITE);
-            ingredient_add.setBackgroundColor(Color.BLACK);
-            ingredient_add.setTextColor(Color.WHITE);
-            ok_btn.setBackgroundColor(Color.BLACK);
-            ok_btn.setTextColor(Color.WHITE);
-        }
-
-
         //재료 가져오기
         if(isCookingClass && !isHalfRecipe){
             //쿠킹 클래스 풀레시피 작성
