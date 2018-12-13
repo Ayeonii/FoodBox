@@ -102,10 +102,15 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         holder.minus_btn.setOnClickListener(onClickListener);
         holder.delete_btn.setOnClickListener(onClickListener);
         holder.frozenCheck.setOnClickListener(onClickListener);
-        if(mItems.get(position).getIsFrozen()){
-            holder.frozenCheck.setChecked(true);
-        } else{
-            holder.frozenCheck.setChecked(false);
+        try {
+            if (mItems.get(position).getIsFrozen()) {
+                holder.frozenCheck.setChecked(true);
+            } else {
+                holder.frozenCheck.setChecked(false);
+            }
+        }catch (NullPointerException e){
+            mItems.get(position).setIsFrozen(false);
+            holder.frozenCheck .setChecked(false);
         }
 
     }

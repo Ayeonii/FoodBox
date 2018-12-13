@@ -86,6 +86,8 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
             for(int i =0 ; i< foodList.size(); i++) {
                 if(foodList.get(i).getKindOf() == "frozen"){
                     isFrozen = true;
+                }else if(foodList.get(i).getKindOf() == null){
+                    isFrozen = false;
                 }
                 else
                     isFrozen = false;
