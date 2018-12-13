@@ -39,9 +39,8 @@ public class PopupDialog {
 
     private FrameLayout frag;
     private RecyclerView ingredientView, notmatch;
-    private EditText searchBar;
-    private ImageButton deleteButton;
-    private FloatingActionButton ok;
+
+
 
     private PopupAdapter popupAdapter;
     private static List<PencilItem> allfoodListInfo = new ArrayList<>();
