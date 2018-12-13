@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.PencilRecipe;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -99,6 +100,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             else{
                 holder.food_name.setText(reItems.get(position).getName());
                 holder.food_img.setImageURI(reItems.get(position).getImg());
+
                 if(reItems.get(position).getName().length()>6) {
                     holder.food_name.setTextSize(12);
                 }
@@ -130,7 +132,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                                 } catch (NullPointerException e) {
                                     dueDate = 0;
                                 }
-                                Log.e("유통기한", "" + dueDate);
                                 cal.add(cal.DATE, dueDate);
                                 inputDBDate = cal.getTime(); //연산된 날자를 생성.
                                 inputDBDateString = formatter.format(inputDBDate);
@@ -145,14 +146,12 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                                         , mItems.get(position).getIsFrozen()
                                         , dueDate));
 
-                                Log.e("","isFrozen"+mItems.get(position).getIsFrozen());
                             }
                             isAgain = false;
                         }else{
                             for(int i =0 ; i<reItems.size(); i ++){
                                 reItemsString.add(reItems.get(i).getName());
                             }
-                            Log.e("position",": "+position);
                             InsideDialog insideDialog = new InsideDialog(context, reItems.get(position).getSection(), false, reItems, reItemsString);
                             insideDialog.showItemDialog(position);
                         }

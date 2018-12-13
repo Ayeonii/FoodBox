@@ -150,10 +150,8 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                 cancel();
                 break;
             case R.id.btn_addmore:
-                Log.d("test", "추가재료 버튼 클릭 직후!!");
                 for (int i=0;i<nameAll.size();i++) {
-                    if (checkAddFood[i])
-                        Log.d("test", "checkAddFood["+i+"] is true");
+                    if (checkAddFood[i]);
                 }
                 // 추가재료 부분
                 addmoreDialog = new HalfRecipeAddmoreDialog(context, nameAll, checkAddFood);
@@ -169,15 +167,12 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
                             }
                         }
 
-                        Log.d("test", "체크배열 받아오고 다이얼로그 객체 생성 후!!");
                         for (int i=0;i<nameAll.size();i++) {
-                            if (checkAddFood[i])
-                                Log.d("test", "checkAddFood["+i+"] is true");
+                            if (checkAddFood[i]);
                         }
 
                         for (int i=0; i<nameAll.size(); i++) {
                             if (checkAddFood[i]) {
-                                Log.d("test", nameAll.get(i));
                                 count++;
                                 setRecyclerView();
                             }

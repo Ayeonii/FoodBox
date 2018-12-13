@@ -17,7 +17,6 @@ public class MemoActivity extends AppCompatActivity {
     ViewPager vp;
     TabLayout tabLayout;
     RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
-    String TAG = "MemoActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

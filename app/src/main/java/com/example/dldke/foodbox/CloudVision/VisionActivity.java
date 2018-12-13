@@ -11,22 +11,25 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
+import com.example.dldke.foodbox.FullRecipe.FullRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.R;
@@ -58,21 +61,39 @@ import java.util.List;
 
 public class VisionActivity extends AppCompatActivity implements View.OnClickListener{
 
+
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
+    public PopupAdapter popup = new PopupAdapter();
     public static final String FILE_NAME = "temp.jpg";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAeWacP0qlIcDN_dWHv6PFBZdnUtg0CVvA";
     private static final int MAX_LABEL_RESULTS = 10;
     private static final int MAX_DIMENSION = 1200;
+    private static List<InfoDO> matchingList = new ArrayList<>();
+
+    private static FragmentTransaction transaction;
 
     private static Mapper.RecipeMatching IngredientInfo;
     private ImageView imageView;
     private TextView loading;
+    private Toolbar toolbar;
+    private static int enterCnt = 0;
+
+    public VisionActivity(){}
+
+    public FragmentTransaction getTransaction(){
+        return transaction;
+    }
+
+    public void setEnterTime(int enterCnt){
+        this.enterCnt = enterCnt;
+    }
+    public int getEnterTime(){ return enterCnt;}
 
     private static String TAG = "TestActivity";
 
@@ -81,15 +102,23 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public List<InfoDO> getMatch(){
-        return IngredientInfo.getMatchingList();
+        return matchingList;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vision);
 
+        popup.setChangeItemClear();
+        popup.setNewOldNameClear();
+        transaction = getSupportFragmentManager().beginTransaction();
+        toolbar = (Toolbar) findViewById(R.id.vision_toolbar);
         loading = (TextView) findViewById(R.id.loading_text);
         imageView = (ImageView) findViewById(R.id.main_image);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageView.setOnClickListener(this);
     }
@@ -102,7 +131,6 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
                         .setPositiveButton("Gallery", (dialog, i) -> startGalleryChooser())
                         .setNegativeButton("Camera", (dialogInterface, i) -> startCamera());
                 builder.create().show();
-
                 break;
             default:
                 break;
@@ -200,6 +228,13 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
         } catch (IOException e) {
             Log.d(TAG, "failed to make API request because of other IOException " + e.getMessage());
         }
+    }
+    @Override public void onBackPressed() {
+
+        Intent refMain = new Intent(VisionActivity.this, RefrigeratorMainActivity.class);
+        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        VisionActivity.this.startActivity(refMain);
+        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
     }
 
 
@@ -316,7 +351,8 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
         }*/
 
         //영수증 재료와 DB data 비교
-        IngredientInfo = Mapper.matchingInfo(message.toString());
+        IngredientInfo = Mapper.matchingInfo(message.toString());///////////////////
+        matchingList = IngredientInfo.getMatchingList();
         return message.toString();
     }
 

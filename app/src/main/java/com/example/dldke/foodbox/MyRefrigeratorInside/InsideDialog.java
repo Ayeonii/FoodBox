@@ -62,10 +62,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.halfrecipe_ingredient_dialog);
 
-        Log.e("test", "create하자마자 localArray size: "+localArray.size());
-        for (int i=0; i<localArray.size(); i++) {
-            Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
-        }
 
         txtType = (TextView) findViewById(R.id.txt_type);
         txtEmpty = (TextView) findViewById(R.id.txt_empty);
@@ -121,13 +117,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                 new HalfRecipeRecyclerListener(context, recyclerView, new HalfRecipeRecyclerListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
-                        Log.d("test", "setRecyclerView에서 클릭했을때");
-
-                        Log.e("test", "setRecyclerView에서 클릭했을때 localArray size: "+localArray.size());
-                        for (int i=0; i<localArray.size(); i++) {
-                            Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
-                        }
-
                         showItemDialog(position);
                     }
                 }
@@ -153,11 +142,6 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                 dcArray.add(new DCItem(localArray.get(i).getDueDate(), localArray.get(i).getCount()));
         }
 
-        Log.e("test", "재료 클릭했을때 상세보기다이얼로그 보여질때 dcArray size: "+dcArray.size());
-        for (int i=0; i<dcArray.size(); i++) {
-            Log.d("test", i+","+dcArray.get(i).getStrDueDate()+", "+dcArray.get(i).getCount());
-        }
-
         itemDialog = new InsideItemDialog(context, nameArray.get(position), dcArray);
         itemDialog.setDialogListener(new InsideDialogListener() {
             @Override
@@ -165,18 +149,9 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
 
             @Override
             public void onOkClicked(ArrayList<DCItem> dcItems) {
-                Log.e("test", "오케이버튼 클릭하고 어댑터에서 받아오는 (수정/삭제 후) 유통기한리스트");
-                for (int i=0; i<dcItems.size(); i++) {
-                    Log.d("test", i+","+dcItems.get(i).getStrDueDate() + ", " + dcItems.get(i).getCount());
-                }
-
-                Log.e("test", "재료이름 찾아서 삭제 하기 전 localArray size: "+localArray.size());
-                for (int i=0; i<localArray.size(); i++) {
-                    Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
-                }
 
                 int cnt = 0;
-                Log.e("test", "nameArray.get(position): "+nameArray.get(position));
+
                 for (int i=0; i<localArray.size(); i++) {
                     if (localArray.get(i).getName().equals(nameArray.get(position))){
                         cnt++;
@@ -186,18 +161,8 @@ public class InsideDialog extends Dialog implements View.OnClickListener {
                 for (int i=0; i<cnt; i++)
                     localArray.remove(new LocalRefrigeratorItem(nameArray.get(position)));
 
-                Log.e("test", "재료이름 찾아서 삭제 하고 localArray size: "+localArray.size());
-                for (int i=0; i<localArray.size(); i++) {
-                    Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
-                }
-
                 for (int i=0; i<dcItems.size(); i++) {
                     localArray.add(new LocalRefrigeratorItem(nameArray.get(position), dcItems.get(i).getCount(), dcItems.get(i).getStrDueDate()));
-                }
-
-                Log.e("test", "삭제후 변경안된 유통기한리스트는 살리기 localArray size: "+localArray.size());
-                for (int i=0; i<localArray.size(); i++) {
-                    Log.d("test", i+ " : "+localArray.get(i).getName()+", "+localArray.get(i).getDueDate()+", "+localArray.get(i).getCount());
                 }
             }
         });

@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
+import com.example.dldke.foodbox.Activity.RefrigeratorMainActivity;
 import com.example.dldke.foodbox.DataBaseFiles.InfoDO;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
 import com.example.dldke.foodbox.DataBaseFiles.RefrigeratorDO;
 import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
+import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
     private String user_id;
     private String recipeSimpleName;
+    private static String TAG="HalfRecipeActivity";
 
     // 추가재료 부분================
     private List<InfoDO> infoFreshItem, infoMeatItem, infoEtcItem;
@@ -174,46 +177,56 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         localFresh = new ArrayList<>();
         localFrozen = new ArrayList<>();
 
-        Log.d("test", "refrigeratorItem.size : " + refrigeratorItem.size());
         for (int i = 0; i < refrigeratorItem.size(); i++) {
             try {
-                if (refrigeratorItem.get(i).getSection().equals("sideDish"))
-                    localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                if (refrigeratorItem.get(i).getSection().equals("sideDish") || refrigeratorItem.get(i).getKindOf().equals("frozen"))
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
+
             } catch (NullPointerException e) {
-                Log.d("test", "sideDish null: " + e.getMessage());
+                Log.d(TAG, "sideDish null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getKindOf().equals("dairy"))
-                    localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
             } catch (NullPointerException e) {
-                Log.d("test", "dairy null: " + e.getMessage());
+                Log.d(TAG, "dairy null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getKindOf().equals("beverage") || refrigeratorItem.get(i).getKindOf().equals("sauce"))
-                    localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
             } catch (NullPointerException e) {
-                Log.d("test", "etc null: " + e.getMessage());
+                Log.d(TAG, "etc null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getSection().equals("meat"))
-                    localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
             } catch (NullPointerException e) {
-                Log.d("test", "meat null: " + e.getMessage());
+                Log.d(TAG, "meat null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getSection().equals("fresh"))
-                    localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
             } catch (NullPointerException e) {
-                Log.d("test", "fresh null: " + e.getMessage());
+                Log.d(TAG, "fresh null: " + e.getMessage());
             }
 
             try {
-                if (refrigeratorItem.get(i).getKindOf().equals("frozen") || refrigeratorItem.get(i).getIsFrozen())
-                    localFrozen.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                if (refrigeratorItem.get(i).getIsFrozen())
+                        localFrozen.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
                 Log.d("test", "frozen null: " + e.getMessage());
             }
@@ -377,6 +390,15 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
+
+    @Override public void onBackPressed() {
+
+        Intent refMain = new Intent(HalfRecipeActivity.this, RefrigeratorMainActivity.class);
+        refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        HalfRecipeActivity.this.startActivity(refMain);
+        overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+    }
+
 
     private void setResult(String type, Boolean[] check) {
         switch (type) {
@@ -635,7 +657,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
         }
 
         String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
-        Log.d("test", recipe_id);
 
         Mapper.addRecipeInMyCommunity(recipe_id);
 
@@ -649,11 +670,9 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void goIngHalfRecipeMaking(ArrayList<HalfRecipeRecipeItem> mItems) {
-        Log.d("test", "===HalfRecipeActivity로 넘어온 mItems===");
         List<RecipeDO.Ingredient> needItem = new ArrayList<>();
 
         for (int i=0; i<mItems.size(); i++) {
-            Log.d("test", "name : " + mItems.get(i).getName() + ", count : " + mItems.get(i).getCount() + ", editCount : " + mItems.get(i).getEditCount());
 
             if ( mItems.get(i).getEditCount() - mItems.get(i).getCount() > 0 ) {
                 RecipeDO.Ingredient setlist = new RecipeDO.Ingredient();
@@ -661,17 +680,11 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
                 setlist.setIngredientName(mItems.get(i).getName());
                 setlist.setIngredientCount(mItems.get(i).getEditCount() - mItems.get(i).getCount());
 
-                Log.d("test", "name : " + setlist.getIngredientName() + ", needCount : " + setlist.getIngredientCount());
                 needItem.add(setlist);
             }
         }
 
         // 필요한 재료를 담은 array : needItem
-        Log.d("test", "=====needItems=====");
-        Log.d("test", "size : " + needItem.size());
-        for(int i=0; i<needItem.size(); i++) {
-            Log.d("test", "name : " + needItem.get(i).getIngredientName() + ", needCount : " + needItem.get(i).getIngredientCount());
-        }
 
         //recipe 테이블 접근
         List<RecipeDO.Ingredient> recipeIngredientList = new ArrayList<>();
@@ -679,7 +692,6 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
             recipeIngredientList.add(createIngredient(mItems.get(i).getName(), mItems.get(i).getEditCount()));
         }
         final String recipe_id = Mapper.createRecipe(recipeIngredientList, recipeSimpleName);
-        Log.d("test", recipe_id);
 
         Mapper.updateIngInfo(1, recipe_id);
 

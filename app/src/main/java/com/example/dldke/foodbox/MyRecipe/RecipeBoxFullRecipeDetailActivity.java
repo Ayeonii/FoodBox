@@ -59,8 +59,6 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     private ArrayList<DCItem> dcArray = new ArrayList<>();
     private HalfRecipeDueDateDialog dueDateDialog;
 
-    String TAG = "FullRecipeDetailActivity";
-
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_box_fullrecipe_detail);

@@ -35,14 +35,15 @@ public class RefrigeratorFrozenInsideActivity extends AppCompatActivity implemen
     private PencilRecyclerAdapter pencilRecyclerAdapter = new PencilRecyclerAdapter();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private static ArrayList<LocalRefrigeratorItem> frozenList = new ArrayList<>();
+    private static ArrayList<LocalRefrigeratorItem> frozenListStatic = new ArrayList();
+    private ArrayList<LocalRefrigeratorItem> frozenList = new ArrayList<>();
     private static List<RefrigeratorDO.Item> refriList = new ArrayList<>();
 
     public RefrigeratorFrozenInsideActivity(){}
 
     public List<LocalRefrigeratorItem> getFrozenList(){
         Log.e("","getFrozenList 들어옴 " );
-        return frozenList;
+        return frozenListStatic;
     }
 
     @Override
@@ -124,15 +125,22 @@ public class RefrigeratorFrozenInsideActivity extends AppCompatActivity implemen
     }
 
     public void setData(){
+        frozenListStatic.clear();
         for(int i =0 ; i<refriList.size(); i++){
             if(refriList.get(i).getIsFrozen() == true){
-                String foodImg = "file:///storage/emulated/0/Download/"+refriList.get(i).getName()+".jpg";
+                String foodImg;
+                if(refriList.get(i).getSection().equals("sideDish")){
+                    foodImg = "file:///storage/emulated/0/Download/default.jpg";
+                }else{
+                    foodImg = "file:///storage/emulated/0/Download/"+refriList.get(i).getName()+".jpg";
+                }
                 frozenList.add(new LocalRefrigeratorItem(refriList.get(i).getName()
                                                       ,refriList.get(i).getCount()
                                                       ,refriList.get(i).getDueDate()
                                                       ,Uri.parse(foodImg)
                                                       ,refriList.get(i).getSection()));
             }
+            frozenListStatic = frozenList;
         }
         adapter.notifyDataSetChanged();
     }

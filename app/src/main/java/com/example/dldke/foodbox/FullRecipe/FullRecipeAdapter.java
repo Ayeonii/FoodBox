@@ -60,10 +60,6 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
     private List<RecipeDO.Spec> specList = new ArrayList<>();
     private Dialog dialog;
 
-    private final int CAMERA_CODE = 1;
-    private final int GALLERY_CODE = 2;
-    private static final int MAX_DIMENSION = 1200;
-
     public FullRecipeAdapter(Context context, ArrayList<FullRecipeData> list) {
         mList = list;
         mContext = context;
@@ -85,7 +81,7 @@ public class FullRecipeAdapter extends RecyclerView.Adapter<FullRecipeAdapter.Fu
             MenuItem Delete = menu.add(Menu.NONE, 1002, 2, "삭제");
             Edit.setOnMenuItemClickListener(onEditMenu);
             Delete.setOnMenuItemClickListener(onEditMenu);
-            data = Mapper.searchRecipe(recipeId).getIngredient();
+            //data = Mapper.searchRecipe(recipeId).getIngredient();
         }
 
         private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {

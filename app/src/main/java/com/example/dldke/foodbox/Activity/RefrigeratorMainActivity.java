@@ -1,9 +1,17 @@
 package com.example.dldke.foodbox.Activity;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +26,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.amazonaws.mobile.auth.google.GoogleSignInProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.IdentityProvider;
+import com.amazonaws.mobile.client.UserStateDetails;
+
+import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.example.dldke.foodbox.CloudVision.VisionActivity;
 import com.example.dldke.foodbox.Community.CommunityActivity;
@@ -34,7 +50,20 @@ import com.example.dldke.foodbox.MyRefrigeratorInside.RefrigeratorInsideActivity
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecipeActivity;
 import com.example.dldke.foodbox.PencilRecipe.PencilRecyclerAdapter;
+import com.example.dldke.foodbox.PushListenerService;
 import com.example.dldke.foodbox.R;
+import com.example.dldke.foodbox.Store.StoreActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccountCreator;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
+import java.io.File;
+import java.util.HashMap;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,7 +72,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
 import static com.example.dldke.foodbox.Activity.MainActivity.getPinpointManager;
 
 
@@ -96,6 +124,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     /***********************Refrigerator****************************/
     //냉장고 오른쪽/왼쪽 부분
+    CoordinatorLayout refrigerator_background;
     Button leftDoor;
     Button rightDoor;
 
@@ -122,20 +151,26 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator);
 
-        Log.e("test", "onCreate() 들어옴");
-
+        /******* 냉장고 테마 설정 *******/
+        
+        String theme = Mapper.searchUserInfo().getTheme();
+        refrigerator_background = (CoordinatorLayout) findViewById(R.id.refrigerator_background);
+   /*     if(theme.equals("블랙")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_black));
+        }
+        else if(theme.equals("베이지")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_beige));
+        }
+*/
         //User DB Create
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
         Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
         Mapper.checkAndCreateFirst();
-
         try {
             user_id = Mapper.searchUserInfo().getUserId();
-            Log.e(TAG, "유저 아이디 : "+user_id);
         } catch (NullPointerException e) {
             Mapper.createUserInfo();
-            Log.e(TAG, "유저 아이디 : "+user_id+"쿠킹 클래스? "+Mapper.searchUserInfo().getIsCookingClass()+"포인트 : "+Mapper.searchUserInfo().getPoint());
         }
 
 
@@ -147,8 +182,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         //Separate User vs CookingClass
         isCookingClass = Mapper.searchUserInfo().getIsCookingClass();
 
-        //Toast.makeText(RefrigeratorMainActivity.this, "UserPoolId"+Mapper.getUserId(), Toast.LENGTH_SHORT).show();
-        //pencilAdapter.getClickFoodString().clear();
         pencilAdapter.getClickFood().clear();
         /*메뉴*/
         menuTransBack = (LinearLayout) findViewById(R.id.transparentBack);
@@ -247,13 +280,12 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         urgent_postit.setOnClickListener(onClickListener);
         tobuy_postit.setOnClickListener(onClickListener);
 
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        Log.e("test", "onResume() 들어옴");
         MemoCreate();
     }
 
@@ -286,6 +318,10 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                 Intent settingActivity = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(settingActivity);
             }
+            if(strText.equals("Store")){
+                Intent storeActivity = new Intent(getApplicationContext(), StoreActivity.class);
+                startActivity(storeActivity);
+            }
 
             if (isPageOpen) {
                 //fabPlus.setElevation(10);
@@ -308,7 +344,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             //슬라이드 열기->닫기
             if (isPageOpen) {
                 //fabPlus.setElevation(10);
-                //fabMinus.setElevation(10);
+               // fabMinus.setElevation(10);
                 menuTransBack.setVisibility(View.GONE);
                 menuPage.setVisibility(View.GONE);
                 listview.setVisibility(View.GONE);
@@ -384,12 +420,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fabCamera:
-                    //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    //Intent visionIntent = new Intent(getApplicationContext(), VisionActivity.class);
-                    //startActivity(visionIntent);
-                    //Intent deepLink = new Intent(getApplicationContext(),DeepLinkActivity.class);
-                    //startActivity(deepLink);
-
                     Intent intent = new Intent(getApplicationContext(), VisionActivity.class);
                     startActivity(intent);
 
@@ -436,7 +466,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
                     menuPage.setVisibility(View.VISIBLE);
                     listview.setVisibility(View.VISIBLE);
                     //fabPlus.setElevation(0);
-                    //fabMinus.setElevation(0);
+                    //fabMinus.setElevation(-1);
                     menuTransBack.setVisibility(View.VISIBLE);
                     break;
                 case R.id.transparentBack:
@@ -483,8 +513,8 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     }
 
     public void MemoCreate() {
-        Log.e("test", "MemoCreate() 들어옴");
         Mapper.updateUrgentMemo();
+        Log.e("memoCreate","chk");
         PinpointManager tmp =getPinpointManager(getApplicationContext());
         Mapper.updateUrgentPushEndPoint(tmp.getTargetingClient());
 
@@ -533,10 +563,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
 
     public void setTobuyMemo() {
         // 장보기
-        Log.e("test", "장보기 목록");
-        for (int i=0; i<tobuyList.size(); i++)
-            Log.d("test", tobuyList.get(i).getIngredientName() + ", " + tobuyList.get(i).getIngredientCount());
-
         String tobuyStr = "";
         long intCount = 0;
         for (int i=1; i<tobuyList.size()+1; i++) {

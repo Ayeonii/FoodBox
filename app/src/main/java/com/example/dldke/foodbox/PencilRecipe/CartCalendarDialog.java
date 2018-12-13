@@ -64,7 +64,6 @@ public class CartCalendarDialog {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("확인버튼","달력 종료");
                 foodDate.setText("D-"+diffDays);
                 mItems.setFoodDate(inputDBDateString);
                 dlg.dismiss();
@@ -74,7 +73,6 @@ public class CartCalendarDialog {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("취소버튼","달력 종료");
                 dlg.dismiss();
             }
         });

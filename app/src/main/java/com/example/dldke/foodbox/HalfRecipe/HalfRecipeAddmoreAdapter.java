@@ -37,7 +37,7 @@ public class HalfRecipeAddmoreAdapter extends RecyclerView.Adapter<HalfRecipeAdd
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         String foodName = mItems.get(position).getName();
         String foodImgUri = "file:///storage/emulated/0/Download/" + foodName + ".jpg";
 

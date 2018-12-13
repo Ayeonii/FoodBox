@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dldke.foodbox.CloudVision.PermissionUtils;
+import com.example.dldke.foodbox.Community.CommunityFragmentNewsfeed;
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -73,11 +74,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         business_N2 = (TextView) findViewById(R.id.business_number2);
         business_N3 = (TextView) findViewById(R.id.business_number3);
         nickname = (TextView) findViewById(R.id.nickname);
+        user_id.setText(Mapper.getUserId());
+        String userId = user_id.getText().toString();
 
-
-        //User Profile Image
         try {
-            String imgUrl = Mapper.getImageUrlUser();
+            String imgUrl = Mapper.getImageUrlUser(userId);
             if(imgUrl.equals("default")){
                 profile.setImageDrawable(getApplication().getResources().getDrawable(R.drawable.ic_person, null));
             }
@@ -88,7 +89,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         } catch (Exception e){
 
         }
-
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);  //기존 toolbar없애기
@@ -278,7 +278,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             try {
                 String real_path = uri.getPath();
                 imagePath = real_path;
-                Log.e("","imagePath:"+imagePath);
                 Bitmap bitmap = scaleBitmapDown( MediaStore.Images.Media.getBitmap(getContentResolver(), uri), MAX_DIMENSION);
                 profile.setImageBitmap(bitmap);
 

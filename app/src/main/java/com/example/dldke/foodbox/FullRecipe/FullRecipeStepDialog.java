@@ -2,16 +2,11 @@ package com.example.dldke.foodbox.FullRecipe;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,8 +14,6 @@ import android.widget.Spinner;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
-import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
-import static com.example.dldke.foodbox.DataBaseFiles.Mapper.createIngredient;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -147,14 +140,9 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         RecipeDO.Spec spec = Mapper.createSpec(specIngredient, method_st, fire_st, minute_int);
         specList.add(spec);
 
-
-        for(int k = 0; k<specList.size(); k++){
-            Log.e(TAG, "방법"+specList.get(k).getSpecMethod()+"시간"+specList.get(k).getSpecMinute()+"불"+specList.get(k).getSpecFire());
-        }
-
         FullRecipeData data = new FullRecipeData(step_description);
-        FullRecipeActivity.mArrayList.add(data);
-        FullRecipeActivity.mAdapter.notifyDataSetChanged();
+        FullRecipeActivity.fullRecipeData.add(data);
+        FullRecipeActivity.fullRecipeAdapter.notifyDataSetChanged();
         items.clear();
         specIngredient.clear();
     }
