@@ -88,20 +88,16 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
         allRefriList.clear();
         searchText = charText;
 
-
-        // 문자 입력이 없을때
         if (charText.length() == 0) {
         }
-        // 문자 입력을 할때.
         else {
             if (isFromPencil) {
                 // 리스트의 모든 데이터를 검색함.
                 Log.e("Refri", "" + allfoodList.size());
                 for (int i = 0; i < allfoodList.size(); i++) {
                     if (matchString(allfoodList.get(i).getFoodName(), charText)) {
-                        //검색된 데이터 리스트에 추가
-                        //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
                         foodImg = "file://"+context.getFilesDir()+allfoodList.get(i).getFoodName()+".jpg";
+                        Log.e("url",""+foodImg);
                         list.add(new PencilItem(allfoodList.get(i).getFoodName(), Uri.parse(foodImg), allfoodList.get(i).getFoodSection(), allfoodList.get(i).getIsFrozen()));
                         Log.e("Refri", "listSize" + list.size());
                     }
@@ -110,18 +106,15 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                     //검색된 것이 아무것도 없을때,
                     Log.e("Refri", "없음" + list.size());
                     foodImg = "file://"+context.getFilesDir()+"default.jpg";
+                    Log.e("url",""+foodImg);
                     list.add(new PencilItem(searchText, Uri.parse(foodImg)));
                 }
                 adapter.notifyDataSetChanged();
             } else if (isFromFrozen) {
 
-                //Log.e("Frozen",""+frozenList.size());
                 for (int i = 0; i < frozenList.size(); i++) {
 
                     if (matchString(frozenList.get(i).getName(), charText)) {
-                        //검색된 데이터 리스트에 추가
-                        //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
-                        // foodImg = "file:///storage/emulated/0/Download/" + frozenList.get(i).getName() + ".jpg";
                         allRefriList.add(new LocalRefrigeratorItem(frozenList.get(i).getName()
                                 , frozenList.get(i).getCount()
                                 , frozenList.get(i).getDueDate()
@@ -138,8 +131,6 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
             } else if (isFromRefri) {
                 for (int i = 0; i < refriList.size(); i++) {
                     if (matchString(refriList.get(i).getName(), charText)) {
-                        //검색된 데이터 리스트에 추가
-                        //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
                         foodImg = "file://"+context.getFilesDir()+refriList.get(i).getName()+".jpg";
                         allRefriList.add(new LocalRefrigeratorItem(refriList.get(i).getName()
                                 , refriList.get(i).getCount()
@@ -159,8 +150,6 @@ public class SearchIngredientFragment extends  android.support.v4.app.Fragment {
                 // 리스트의 모든 데이터를 검색함.
                 for (int i = 0; i < visionList.size(); i++) {
                     if (matchString(visionList.get(i).getFoodName(), charText)) {
-                        //검색된 데이터 리스트에 추가
-                        //디비에서 이미지 가져올때 까진 Img를 AllFoodListFragment에서 static 으로 가져옴.
                         foodImg = "file://"+context.getFilesDir()+ visionList.get(i).getFoodName()+".jpg";
                         list.add(new PencilItem(visionList.get(i).getFoodName(), Uri.parse(foodImg), visionList.get(i).getFoodSection(), visionList.get(i).getIsFrozen()));
                     }

@@ -24,7 +24,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
     private RecyclerView.Adapter adapter;
     private ArrayList<PencilItem> list = new ArrayList<>();
     private static ArrayList<PencilItem> allfoodListInfo = new ArrayList<>();
-    private static List<InfoDO> freshList, meatList, etcList;
+    private static List<InfoDO> freshList, meatList, etcList, sideList;
     private String foodImg;
     private boolean isFrozen;
 
@@ -59,10 +59,12 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
             freshList = getInfoDOList("fresh");
             meatList = getInfoDOList("meat");
             etcList = getInfoDOList("etc");
+            sideList = getInfoDOList("sideDish");
 
             makeFoodList(freshList);
             makeFoodList(meatList);
             makeFoodList(etcList);
+            makeFoodList(sideList);
 
             pencil.setEnterTime(1);
         }
@@ -97,6 +99,7 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
                 File file = new File(getContext().getFilesDir() + foodList.get(i).getName() + ".jpg");
             //    File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
                 if (!file.exists()) {
+                    Log.e("makeFoodList","존재 ㄴㄴ");
                     Mapper.downLoadImage(foodList.get(i).getName(), getContext().getFilesDir().toString(), foodList.get(i).getSection());
                 }
             }
@@ -116,8 +119,10 @@ public class AllFoodListFragment extends android.support.v4.app.Fragment {
 
     private void setData(){
         for(int i =0 ; i<allfoodListInfo.size(); i++ ){
+
             //foodImg = "file:///storage/emulated/0/Download/"+allfoodListInfo.get(i).getFoodName()+".jpg";
             foodImg = "file://"+getContext().getFilesDir()+allfoodListInfo.get(i).getFoodName()+".jpg";
+
             list.add(new PencilItem(allfoodListInfo.get(i).getFoodName(), Uri.parse(foodImg),allfoodListInfo.get(i).getFoodSection(), allfoodListInfo.get(i).getIsFrozen()));
         }
         adapter.notifyDataSetChanged();

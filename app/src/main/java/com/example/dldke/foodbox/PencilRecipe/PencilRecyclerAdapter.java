@@ -136,8 +136,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                                 inputDBDate = cal.getTime(); //연산된 날자를 생성.
                                 inputDBDateString = formatter.format(inputDBDate);
 
-                                //clickFoodOnly.add(mItems.get(position).getFoodName());
-                                //clickFoodString.add(mItems.get(position).getFoodName());
                                 clickFood.add(new PencilCartItem(mItems.get(position).getFoodName()
                                         , mItems.get(position).getFoodImg()
                                         , inputDBDateString
