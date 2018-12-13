@@ -179,43 +179,54 @@ public class HalfRecipeActivity extends AppCompatActivity implements View.OnClic
 
         for (int i = 0; i < refrigeratorItem.size(); i++) {
             try {
-                if (refrigeratorItem.get(i).getSection().equals("sideDish"))
-                    localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                if (refrigeratorItem.get(i).getSection().equals("sideDish") || refrigeratorItem.get(i).getKindOf().equals("frozen"))
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
+
             } catch (NullPointerException e) {
                 Log.d(TAG, "sideDish null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getKindOf().equals("dairy"))
-                    localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
             } catch (NullPointerException e) {
                 Log.d(TAG, "dairy null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getKindOf().equals("beverage") || refrigeratorItem.get(i).getKindOf().equals("sauce"))
-                    localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
             } catch (NullPointerException e) {
                 Log.d(TAG, "etc null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getSection().equals("meat"))
-                    localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
             } catch (NullPointerException e) {
                 Log.d(TAG, "meat null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getSection().equals("fresh"))
-                    localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen()) {
+                        localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    }
             } catch (NullPointerException e) {
                 Log.d(TAG, "fresh null: " + e.getMessage());
             }
 
             try {
-                if (refrigeratorItem.get(i).getKindOf().equals("frozen") || refrigeratorItem.get(i).getIsFrozen())
-                    localFrozen.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                if (refrigeratorItem.get(i).getIsFrozen())
+                        localFrozen.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
                 Log.d("test", "frozen null: " + e.getMessage());
             }
