@@ -41,7 +41,7 @@ public class FreshListFragment extends android.support.v4.app.Fragment {
 
     private void setData(){
         for(int i =0 ; i<foodName.size(); i++ ){
-            foodImg = "file:///storage/emulated/0/Download/"+foodName.get(i).getFoodName()+".jpg";
+            foodImg = "file://"+getContext().getFilesDir()+foodName.get(i).getFoodName()+".jpg";
             list.add(new PencilItem(foodName.get(i).getFoodName(), Uri.parse(foodImg),foodName.get(i).getFoodSection(), foodName.get(i).getIsFrozen()));
         }
         adapter.notifyDataSetChanged();

@@ -136,7 +136,7 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
     private CurrentDate currentDate = new CurrentDate();
 
     /***************************etc********************************/
-    public static boolean isCookingClass;
+    public static boolean isCookingClass, isFullRecipe;
     private String user_id;
     private static boolean isMemo;
 
@@ -146,22 +146,22 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         return isCookingClass;
     }
 
+    public void setIsFull(boolean isfull){
+        this.isFullRecipe = isfull;
+    }
+
+    public boolean getIsFull(){
+        return isFullRecipe;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator);
 
-        /******* 냉장고 테마 설정 *******/
-        
-        String theme = Mapper.searchUserInfo().getTheme();
-        refrigerator_background = (CoordinatorLayout) findViewById(R.id.refrigerator_background);
-   /*     if(theme.equals("블랙")){
-            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_black));
-        }
-        else if(theme.equals("베이지")){
-            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_beige));
-        }
-*/
+
+
+
         //User DB Create
         Mapper.setUserId(getApplicationContext());
         Mapper.setBucketName(getApplicationContext());
@@ -173,6 +173,19 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
             Mapper.createUserInfo();
         }
 
+        /******* 냉장고 테마 설정 *******/
+
+        String theme = Mapper.searchUserInfo().getTheme();
+        refrigerator_background = (CoordinatorLayout) findViewById(R.id.refrigerator_background);
+        if(theme.equals("블랙")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_black));
+        }
+        else if(theme.equals("베이지")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background_beige));
+        }
+        else if(theme.equals("기본 테마")){
+            refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background));
+        }
 
         //Mapper.createMemo();
         if(pencilAdapter.getClickCnt() != 0 ){

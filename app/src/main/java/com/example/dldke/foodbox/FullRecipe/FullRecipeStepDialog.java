@@ -19,8 +19,6 @@ import com.example.dldke.foodbox.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.constraint.Constraints.TAG;
-
 public class FullRecipeStepDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
@@ -34,9 +32,11 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
     private List<String> items = new ArrayList<>();
     private List<RecipeDO.Ingredient> ingredients = new ArrayList<>();
     private List<RecipeDO.Ingredient> specIngredient = new ArrayList<>();
-    private static final List<RecipeDO.Spec> specList = new ArrayList<>();
+    private static List<RecipeDO.Spec> specList = new ArrayList<>();
     private FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
     private boolean isHalfRecipe = fullRecipeActivity.getIsHalfRecipe();
+
+    private String TAG="FullRecipeStepDialog";
 
     public List<RecipeDO.Spec> getSpecList(){
         return specList;
@@ -143,6 +143,8 @@ public class FullRecipeStepDialog extends Dialog implements View.OnClickListener
         FullRecipeData data = new FullRecipeData(step_description);
         FullRecipeActivity.fullRecipeData.add(data);
         FullRecipeActivity.fullRecipeAdapter.notifyDataSetChanged();
+        FullRecipeAdapter fullRecipeAdapter = new FullRecipeAdapter();
+        fullRecipeAdapter.setSpecList(specList);
         items.clear();
         specIngredient.clear();
     }

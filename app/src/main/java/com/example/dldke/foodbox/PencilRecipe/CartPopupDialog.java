@@ -22,15 +22,13 @@ import java.util.List;
 
 public class CartPopupDialog {
     private Context context;
-    private boolean isEnd = false, isFullRecipe;
-    private FullRecipeActivity fullRecipeActivity = new FullRecipeActivity();
-    private PencilRecipeActivity pencilRecipeActivity = new PencilRecipeActivity();
+    private boolean isEnd = false, isFullRecipe = false;
+    private RefrigeratorMainActivity refrigeratorMainActivity = new RefrigeratorMainActivity();
     private PencilRecyclerAdapter pencilAdapter = new PencilRecyclerAdapter();
     private ArrayList<PencilCartItem> clickFood = pencilAdapter.getClickFood();
 
     private PencilCartAdapter pencilCartAdapter = new PencilCartAdapter(clickFood);
     private ArrayList<PencilCartItem> clickItems = pencilCartAdapter.getCartItems();
-
 
     public CartPopupDialog(Context context) {
         this.context = context;
@@ -41,7 +39,8 @@ public class CartPopupDialog {
     }
     // 호출할 다이얼로그 함수를 정의한다.
     public void callFunction(final Context activityContext) {
-        isFullRecipe = fullRecipeActivity.getIsFullRecipe();
+
+        isFullRecipe = refrigeratorMainActivity.getIsFull();
         RecyclerView.Adapter adapter;
         final Dialog dlg = new Dialog(context);
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -74,12 +73,7 @@ public class CartPopupDialog {
             @Override
             public void onClick(View view) {
 
-                if(isFullRecipe){
-                    Log.e("CartPopupDialog", "풀레시피에서 왔음");
-                    Intent intent = new Intent(activityContext, FullRecipeActivity.class);
-                    activityContext.startActivity(intent);
-                    dlg.dismiss();
-                }
+
 
                 List<RefrigeratorDO.Item> clickedList = new ArrayList<>();
                 for(int i =0 ; i<clickItems.size(); i++) {
@@ -91,17 +85,24 @@ public class CartPopupDialog {
                         clickedList.add(Mapper.createNonFood(food.getFoodName(), "sideDish" , food.getFoodCount(), food.getFoodDate(), food.getIsFrozen()));
                     }
                 }
-                //Log.e("clickedList",""+clickedList);
-                Mapper.putFood(clickedList);
-                Mapper.updateToBuyMemo(clickedList);
-                Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                pencilAdapter.getClickFood().clear();
-                pencilAdapter.setClickCnt(0);
-                Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);
-                refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(refMain);
-                dlg.dismiss();
-
+                if(isFullRecipe){
+                    Log.e("CartPopupDialog", "풀레시피에서 왔음");
+                    refrigeratorMainActivity.setIsFull(false);
+                    Intent intent = new Intent(activityContext, FullRecipeActivity.class);
+                    activityContext.startActivity(intent);
+                    dlg.dismiss();
+                }else{
+                    //Log.e("clickedList",""+clickedList);
+                    Mapper.putFood(clickedList);
+                    Mapper.updateToBuyMemo(clickedList);
+                    Toast.makeText(context, "냉장고에 재료가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                    pencilAdapter.getClickFood().clear();
+                    pencilAdapter.setClickCnt(0);
+                    Intent refMain = new Intent(activityContext, RefrigeratorMainActivity.class);
+                    refMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(refMain);
+                    dlg.dismiss();
+                }
             }
         });
     }

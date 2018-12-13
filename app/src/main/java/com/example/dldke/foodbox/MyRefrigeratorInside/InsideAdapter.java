@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +20,8 @@ public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHo
 
     ArrayList<HalfRecipeIngreItem> mItems;
     String ingreType;
-    Context context;
+    private static Context context;
 
-    public InsideAdapter(ArrayList<HalfRecipeIngreItem> mItems, Context context) {
-        this.mItems = mItems;
-        this.context = context;
-
-    }
 
 
     public InsideAdapter(ArrayList<HalfRecipeIngreItem> mItems, String ingreType) {
@@ -37,6 +33,7 @@ public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHo
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.halfrecipe_ingredient_item, parent, false);
+        context = view.getContext();
         return new ItemViewHolder(view);
     }
 
@@ -52,9 +49,10 @@ public class InsideAdapter extends RecyclerView.Adapter<InsideAdapter.ItemViewHo
         }
 
         if (ingreType.equals("sideDish")) {
-            foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
+            foodImgUri = "file://"+context.getFilesDir()+"default.jpg";
         } else {
-            foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+            foodImgUri = "file://"+context.getFilesDir()+foodName+".jpg";
+            Log.e("","foodImgUri"+ foodImgUri);
         }
         holder.food_Img.setImageURI(Uri.parse(foodImgUri));
     }

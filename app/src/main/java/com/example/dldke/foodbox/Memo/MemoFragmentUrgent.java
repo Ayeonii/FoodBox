@@ -50,7 +50,7 @@ public class MemoFragmentUrgent extends android.support.v4.app.Fragment {
 
         try {
             for (int i = 0; i < urgentList.size(); i++) {
-                foodImg = "file:///storage/emulated/0/Download/" + urgentList.get(i).getIngredientName() + ".jpg";
+                foodImg = "file://"+getContext().getFilesDir()+urgentList.get(i).getIngredientName()+".jpg";
                 list.add(new MemoUrgentItem(Uri.parse(foodImg)
                         , urgentList.get(i).getIngredientName()
                         , urgentList.get(i).getIngredientDuedate()));

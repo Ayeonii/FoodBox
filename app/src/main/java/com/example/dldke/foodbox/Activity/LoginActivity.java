@@ -28,8 +28,7 @@ import com.example.dldke.foodbox.R;
 
 public class LoginActivity extends AppCompatActivity {
     public static final String TAG = LoginActivity.class.getSimpleName();
-    Button ok_btn;
-    EditText id_edittext, pw_edittext;
+
     boolean isFirst;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +66,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
         );
-        ok_btn = (Button)findViewById(R.id.login_button);
-        id_edittext = (EditText)findViewById(R.id.edittext_id);
-        pw_edittext = (EditText)findViewById(R.id.edittext_pw);
-
-
     }
 
 }

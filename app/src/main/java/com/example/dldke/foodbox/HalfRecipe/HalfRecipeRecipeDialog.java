@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.io.File;
@@ -108,7 +109,8 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
 
         for (int i = 0; i < selectedItem.size(); i++) {
             String foodImgUri ;
-            File file = new File("/storage/emulated/0/Download/" + selectedItem.get(i).getName() + ".jpg");
+            File file = new File(getContext().getFilesDir() +  selectedItem.get(i).getName() + ".jpg");
+
             if(!file.exists())
                 foodImgUri = "file://"+context.getFilesDir() + "default.jpg";
             else

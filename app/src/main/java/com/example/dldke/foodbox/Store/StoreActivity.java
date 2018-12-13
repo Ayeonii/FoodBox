@@ -51,9 +51,9 @@ public class StoreActivity extends AppCompatActivity {
     }
 
     public void getData(){
-        items.add(new StoreData(0, "기본 테마", 0));
-        items.add(new StoreData(1, "블랙", 200));
-        items.add(new StoreData(2, "베이지", 300));
+        items.add(new StoreData(0, R.drawable.fridgerator_background, "기본 테마", 0));
+        items.add(new StoreData(1, R.drawable.fridgerator_background_black, "블랙", 200));
+        items.add(new StoreData(2, R.drawable.fridgerator_background_beige, "베이지", 300));
 
     }
 

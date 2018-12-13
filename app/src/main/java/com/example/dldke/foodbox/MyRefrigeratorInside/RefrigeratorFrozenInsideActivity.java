@@ -130,9 +130,9 @@ public class RefrigeratorFrozenInsideActivity extends AppCompatActivity implemen
             if(refriList.get(i).getIsFrozen() == true){
                 String foodImg;
                 if(refriList.get(i).getSection().equals("sideDish")){
-                    foodImg = "file:///storage/emulated/0/Download/default.jpg";
+                    foodImg = "file://"+getApplicationContext().getFilesDir()+"default.jpg";
                 }else{
-                    foodImg = "file:///storage/emulated/0/Download/"+refriList.get(i).getName()+".jpg";
+                    foodImg = "file://"+getApplicationContext().getFilesDir()+refriList.get(i).getName()+".jpg";
                 }
                 frozenList.add(new LocalRefrigeratorItem(refriList.get(i).getName()
                                                       ,refriList.get(i).getCount()

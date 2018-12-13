@@ -48,31 +48,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         homeBtn.setOnClickListener(this);
         favoriteBtn.setOnClickListener(this);
         recommendBtn.setOnClickListener(this);
-        /****************search bar input *****************************/
-
-        /*
-        searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String text;
-                text = searchBar.getText().toString();
-                if (text.length() == 0)
-                    fragmentSearch.setVisibility(View.GONE);
-                else
-                    fragmentSearch.setVisibility(View.VISIBLE);
-                SearchIngredientFragment.search(text);
-            }
-        });
-        */
-
 
         /****************delete button***********************/
         deleteButton.setOnClickListener(new View.OnClickListener() {
