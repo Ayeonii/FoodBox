@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.HalfRecipe;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public class HalfRecipeDueDateAdapter extends RecyclerView.Adapter<HalfRecipeDueDateAdapter.ItemViewHolder> {
 
     private ArrayList<HalfRecipeDueDateItem> mItems;
+    private Context context;
 
     public HalfRecipeDueDateAdapter(ArrayList<HalfRecipeDueDateItem> mItems) {
         this.mItems = mItems;
@@ -32,13 +34,14 @@ public class HalfRecipeDueDateAdapter extends RecyclerView.Adapter<HalfRecipeDue
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.halfrecipe_duedate_item, parent, false);
+        context = parent.getContext();
         return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         String foodName = mItems.get(position).getName();
-        String foodImgUri = "file:///storage/emulated/0/Download/"+foodName+".jpg";
+        String foodImgUri = "file://"+context.getFilesDir()+foodName+".jpg";
         holder.txtName.setText(foodName);
         holder.imgFood.setImageURI(Uri.parse(foodImgUri));
 

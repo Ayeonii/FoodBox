@@ -1,12 +1,10 @@
 package com.example.dldke.foodbox.HalfRecipe;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,7 +37,6 @@ public class HalfRecipeIngAdapter extends RecyclerView.Adapter<HalfRecipeIngAdap
         final Double iCount = mItems.get(position).getNeedCount();
         String strCount = Double.toString(iCount);
         holder.txtCountNeed.setText(strCount);
-
     }
 
     @Override
