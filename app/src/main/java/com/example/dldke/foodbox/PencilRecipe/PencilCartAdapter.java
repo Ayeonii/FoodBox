@@ -26,6 +26,7 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     private Context context;
     private static ArrayList<PencilCartItem> mItems;
     private static int removedPosition;
+    private static boolean isFromVision = false;
 
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){ this.mItems = cartItems;}
     public PencilCartAdapter(){}
@@ -33,6 +34,9 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
 
     public ArrayList<PencilCartItem> getCartItems(){return mItems; }
 
+    public void setIsFromVision(boolean isFromVision){
+        this.isFromVision = isFromVision;
+    }
 
     // 새로운 뷰 홀더 생성
     @Override
@@ -68,7 +72,9 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                     case R.id.deleteButton :
                         PopupAdapter popup = new PopupAdapter();
                         pencilAdapter.setClickCnt(pencilAdapter.getClickCnt()-(int)mItems.get(position).getFoodCount());
-                        popup.setNewOldName(position);
+                        if(isFromVision) {
+                            popup.setNewOldName(position);
+                        }
                         mItems.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mItems.size());

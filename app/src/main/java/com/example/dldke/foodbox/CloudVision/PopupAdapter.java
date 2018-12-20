@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.HalfRecipe.LocalRefrigeratorItem;
+import com.example.dldke.foodbox.PencilRecipe.PencilCartAdapter;
 import com.example.dldke.foodbox.PencilRecipe.PencilCartItem;
 import com.example.dldke.foodbox.PencilRecipe.PencilItem;
 import com.example.dldke.foodbox.PencilRecipe.SearchIngredientFragment;
@@ -26,6 +27,7 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
 
     private NotMatchAdapter notMatchAdapter = new NotMatchAdapter();
     private SearchIngredientFragment searchIngredientFragment = new SearchIngredientFragment();
+    private PencilCartAdapter pencilCartAdapter = new PencilCartAdapter();
     private static List<PencilItem> allFoodItems = new ArrayList<>();
     private static ArrayList<PencilCartItem> changeItem = new ArrayList<>();
     private GregorianCalendar cal = new GregorianCalendar();
@@ -39,6 +41,7 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
     private Dialog dlg;
     private static List<String[]> newOldName = new ArrayList<String[]>();
     private int matchSize = VisionReturnActivity.matchSize;
+
 
 
     public PopupAdapter(){}
@@ -62,6 +65,7 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
         }
 
     }
+
 
     public List<String[]> getNewOldName(){
         return newOldName;
@@ -94,6 +98,8 @@ public class PopupAdapter extends RecyclerView.Adapter<PopupAdapter.ItemViewHold
     @Override
     public PopupAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vision_ingredient_item,parent,false);
+
+        pencilCartAdapter.setIsFromVision(true);
         return new PopupAdapter.ItemViewHolder(view);
     }
 

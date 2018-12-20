@@ -44,7 +44,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private static String user_nickname, business_number;
     boolean isCook = false;
 
-    private String imagePath;
+    private static String imagePath;
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
@@ -160,23 +160,23 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.setting_ok_btn:
                 user_nickname = nickname.getText().toString();
                 business_number = business_N1.getText().toString() + business_N2.getText().toString() + business_N3.getText().toString();
-                imagePath = Mapper.getImageUrlUser(Mapper.getUserId());
+                //imagePath = Mapper.getImageUrlUser(Mapper.getUserId());
 
-                /******** 고치기 *********/
-                if(imagePath.equals("default")){
+                /******** 고치기 *********필요 없음*/
+/*                if(imagePath == "default"){
                     imagePath = "file:///storage/emulated/0/Download/default.jpg";
+                }*/
+                if(profileChange){
+                    Log.e("imagePath", ""+imagePath);
+                    Mapper.uploadUserImage(imagePath);
                 }
+
 
                 if(user_nickname.equals("") || user_nickname.equals("닉네임이 없습니다.") || business_number == null) {
                     Toast.makeText(getApplicationContext(), "입력란을 채워주세요", Toast.LENGTH_SHORT).show();
                     break;
-                }
-                else{
+                } else{
                     Mapper.updateUserInfo(user_nickname, isCook, business_number);
-                    if(profileChange){
-                        Mapper.uploadUserImage(imagePath);
-                    }
-
                     Intent RefrigeratorMainActivity = new Intent(getApplicationContext(), RefrigeratorMainActivity.class);
                     startActivity(RefrigeratorMainActivity);
                     break;

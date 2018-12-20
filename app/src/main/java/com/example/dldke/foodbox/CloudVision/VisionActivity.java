@@ -74,7 +74,7 @@ public class VisionActivity extends AppCompatActivity implements View.OnClickLis
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAeWacP0qlIcDN_dWHv6PFBZdnUtg0CVvA";
     private static final int MAX_LABEL_RESULTS = 10;
     private static final int MAX_DIMENSION = 1200;
-    private List<InfoDO> matchingList = new ArrayList<>();
+    private static List<InfoDO> matchingList = new ArrayList<>();
 
     private static FragmentTransaction transaction;
 
