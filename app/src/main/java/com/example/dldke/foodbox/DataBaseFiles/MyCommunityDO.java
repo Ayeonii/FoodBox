@@ -45,4 +45,5 @@ public class MyCommunityDO {
         this._myRecipes = _myRecipes;
     }
 
+
 }

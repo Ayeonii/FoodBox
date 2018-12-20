@@ -4,7 +4,7 @@
     <item android:drawable="@android:color/white"/>
 
     <item>
-        <bitmap android:src="@drawable/foodbox_icon"
+        <bitmap android:src="@drawable/foodbox_icon2"
             android:gravity="center"/>
     </item>
 </layer-list>

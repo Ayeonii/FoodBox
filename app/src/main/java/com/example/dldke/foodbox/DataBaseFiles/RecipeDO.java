@@ -18,10 +18,15 @@ import java.util.Set;
 
 public class RecipeDO {
     private String _recipeId;
+    private String _simpleName;
     private String _date;
     private Detail _detail;
     private List<Ingredient> _ingredient = new ArrayList<Ingredient>();
     private S3Link recipeImage;
+    private int Ing;
+    private boolean isShare;
+    private boolean isPost;
+    private String password;
 
     public S3Link getRecipeImage() {
         return recipeImage;
@@ -40,6 +45,16 @@ public class RecipeDO {
     public void setRecipeId(final String _recipeId) {
         this._recipeId = _recipeId;
     }
+
+    @DynamoDBAttribute(attributeName = "simpleName")
+    public String getSimpleName() {
+        return _simpleName;
+    }
+
+    public void setSimpleName(final String _simpleName) {
+        this._simpleName = _simpleName;
+    }
+
     @DynamoDBAttribute(attributeName = "date")
     public String getDate() {
         return _date;
@@ -52,26 +67,45 @@ public class RecipeDO {
     public Detail getDetail() {
         return _detail;
     }
-
     public void setDetail(final Detail _detail) {
         this._detail = _detail;
     }
+
+    @DynamoDBAttribute(attributeName = "Ing")
+    public void setIng(final int Ing) {
+        this.Ing = Ing;
+    }
+    public int getIng() {
+        return Ing;
+    }
+
+
+    @DynamoDBAttribute(attributeName = "isShare")
+    public void setIsShare(final boolean isShare){this.isShare = isShare;}
+    public boolean getIsShare(){return isShare;}
+
+    @DynamoDBAttribute(attributeName = "isPost")
+    public void setIsPost(final boolean isPost){this.isPost = isPost;}
+    public boolean getIsPost(){return isPost;}
+
+    @DynamoDBAttribute(attributeName = "password")
+    public void setPassword(final String password){this.password = password;}
+    public String getPassword(){return password;}
+
+
 
     @DynamoDBAttribute(attributeName = "ingredient")
     public List<Ingredient> getIngredient() {
         return _ingredient;
     }
-
-    public void setIngredient(final List<Ingredient> _ingredient) {
-        this._ingredient = _ingredient;
-    }
+    public void setIngredient(final List<Ingredient> _ingredient) {this._ingredient = _ingredient;}
 
 
 
     @DynamoDBDocument
     public static class Detail{
-        private String _foodName;
         private List<Spec> _specList = new ArrayList<Spec>();
+        private String _foodName;
 
         @DynamoDBAttribute(attributeName = "foodName")
         public String getFoodName() {
@@ -81,6 +115,7 @@ public class RecipeDO {
         public void setFoodName(final String _foodName) {
             this._foodName = _foodName;
         }
+
         @DynamoDBAttribute(attributeName = "specList")
         public List<Spec> getSpecList() {
             return _specList;
@@ -97,6 +132,14 @@ public class RecipeDO {
         private List<Ingredient> _specIngredient = new ArrayList<Ingredient>();
         private String _specMethod;
         private Integer _specMinute;
+        private S3Link _specImage;
+
+        public S3Link getSpecImage() {
+            return _specImage;
+        }
+        public void setSpecImage(S3Link specImage){
+            this._specImage = specImage;
+        }
 
         @DynamoDBAttribute(attributeName = "specFire")
         public String getSpecFire() {
@@ -136,6 +179,7 @@ public class RecipeDO {
     public static class Ingredient {
         private String _ingredientName;
         private Double _ingredientCount;
+        private String _ingredientDuedate;
 
         @DynamoDBAttribute(attributeName = "ingredientName")
         public String getIngredientName() {
@@ -152,6 +196,14 @@ public class RecipeDO {
 
         public void setIngredientCount(final Double _ingredientCount) {
             this._ingredientCount = _ingredientCount;
+        }
+        @DynamoDBAttribute(attributeName = "ingredientDuedate")
+        public String getIngredientDuedate() {
+            return _ingredientDuedate;
+        }
+
+        public void setIngredientDuedate(final String _ingredientDuedate) {
+            this._ingredientDuedate = _ingredientDuedate;
         }
     }
 }

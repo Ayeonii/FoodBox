@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/btn_tab"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/home_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            app:srcCompat="@drawable/ic_home" />
+
+        <ImageView
+            android:id="@+id/favorite_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorWhite"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            app:srcCompat="@drawable/ic_heart" />
+
+        <ImageView
+            android:id="@+id/recommend_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorWhite"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            app:srcCompat="@drawable/ic_recommend" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frag_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorHint"
+        app:layout_constraintBottom_toTopOf="@+id/btn_tab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/favorite_fragment_container"
+        android:layout_width="205dp"
+        android:layout_height="214dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorWhite"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/frag_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+
+</android.support.constraint.ConstraintLayout>
