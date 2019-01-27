@@ -117,8 +117,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             try{
                 String temp = Mapper.searchUserInfo().getRegisterNumber();
                 business_N1.setText(temp.substring(0,3));
-                business_N2.setText(temp.substring(3, 5));
-                business_N3.setText(temp.substring(5, 8));
+                business_N2.setText(temp.substring(4, 6));
+                business_N3.setText(temp.substring(7, 11));
             }
             catch (NullPointerException e){ }
 
