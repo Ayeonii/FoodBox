@@ -159,6 +159,20 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refrigerator);
 
+
+
+
+        //User DB Create
+        Mapper.setUserId(getApplicationContext());
+        Mapper.setBucketName(getApplicationContext());
+        Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
+        Mapper.checkAndCreateFirst();
+        try {
+            user_id = Mapper.searchUserInfo().getUserId();
+        } catch (NullPointerException e) {
+            Mapper.createUserInfo();
+        }
+
         /******* 냉장고 테마 설정 *******/
 
         String theme = Mapper.searchUserInfo().getTheme();
@@ -172,18 +186,6 @@ public class RefrigeratorMainActivity extends AppCompatActivity {
         else if(theme.equals("기본 테마")){
             refrigerator_background.setBackground(getApplicationContext().getDrawable(R.drawable.fridgerator_background));
         }
-
-        //User DB Create
-        Mapper.setUserId(getApplicationContext());
-        Mapper.setBucketName(getApplicationContext());
-        Mapper.setDynamoDBMapper(AWSMobileClient.getInstance());
-        Mapper.checkAndCreateFirst();
-        try {
-            user_id = Mapper.searchUserInfo().getUserId();
-        } catch (NullPointerException e) {
-            Mapper.createUserInfo();
-        }
-
 
         //Mapper.createMemo();
         if(pencilAdapter.getClickCnt() != 0 ){

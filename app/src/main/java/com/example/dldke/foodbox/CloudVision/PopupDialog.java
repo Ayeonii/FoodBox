@@ -39,9 +39,8 @@ public class PopupDialog {
 
     private FrameLayout frag;
     private RecyclerView ingredientView, notmatch;
-    private EditText searchBar;
-    private ImageButton deleteButton;
-    private FloatingActionButton ok;
+
+
 
     private PopupAdapter popupAdapter;
     private static List<PencilItem> allfoodListInfo = new ArrayList<>();
@@ -102,16 +101,18 @@ public class PopupDialog {
                 isFrozen = false;
             }
             allfoodListInfo.add(new PencilItem(foodList.get(i).getName(), foodList.get(i).getSection(), isFrozen));
-            File file = new File("/storage/emulated/0/Download/" + foodList.get(i).getName() + ".jpg");
+
+            File file = new File(context.getFilesDir() + foodList.get(i).getName() + ".jpg");
             if (!file.exists()) {
-                Mapper.downLoadImage(foodList.get(i).getName(), "/storage/emulated/0/Download/", foodList.get(i).getSection());
+                Mapper.downLoadImage(foodList.get(i).getName(), context.getFilesDir().toString(), foodList.get(i).getSection());
             }
+
         }
     }
 
     private void setData() {
         for (int i = 0; i < allfoodListInfo.size(); i++) {
-            foodImg = "file:///storage/emulated/0/Download/" + allfoodListInfo.get(i).getFoodName() + ".jpg";
+            foodImg = "file://"+context.getFilesDir()+allfoodListInfo.get(i).getFoodName()+".jpg";
             list.add(new PencilItem(allfoodListInfo.get(i).getFoodName(), Uri.parse(foodImg), allfoodListInfo.get(i).getFoodSection(), allfoodListInfo.get(i).getIsFrozen()));
         }
         visionList = list;

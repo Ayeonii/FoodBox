@@ -34,7 +34,7 @@ public class CommunityIngreAdapter extends RecyclerView.Adapter<CommunityIngreAd
     @Override
     public void onBindViewHolder(final CommunityIngreAdapter.ItemViewHolder holder, final int position) {
         holder.food_name.setText(mItems.get(position));
-        String foodImg = "file:///storage/emulated/0/Download/"+mItems.get(position)+".jpg";
+        String foodImg = "file://"+context.getFilesDir()+mItems.get(position)+".jpg";
         holder.food_img.setImageURI(Uri.parse(foodImg));
     }
 

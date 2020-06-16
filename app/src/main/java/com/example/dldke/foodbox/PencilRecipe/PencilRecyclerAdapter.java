@@ -1,6 +1,7 @@
 package com.example.dldke.foodbox.PencilRecipe;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -99,6 +100,7 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
             else{
                 holder.food_name.setText(reItems.get(position).getName());
                 holder.food_img.setImageURI(reItems.get(position).getImg());
+
                 if(reItems.get(position).getName().length()>6) {
                     holder.food_name.setTextSize(12);
                 }
@@ -134,8 +136,6 @@ public class PencilRecyclerAdapter extends RecyclerView.Adapter<PencilRecyclerAd
                                 inputDBDate = cal.getTime(); //연산된 날자를 생성.
                                 inputDBDateString = formatter.format(inputDBDate);
 
-                                //clickFoodOnly.add(mItems.get(position).getFoodName());
-                                //clickFoodString.add(mItems.get(position).getFoodName());
                                 clickFood.add(new PencilCartItem(mItems.get(position).getFoodName()
                                         , mItems.get(position).getFoodImg()
                                         , inputDBDateString

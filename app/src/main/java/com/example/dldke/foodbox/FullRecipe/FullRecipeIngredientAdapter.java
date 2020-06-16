@@ -72,7 +72,7 @@ public class FullRecipeIngredientAdapter extends RecyclerView.Adapter<FullRecipe
         for(int i = 0; i<ingredientList.size(); i++){
             String name = ingredientList.get(i).getIngredientName();
             double count = ingredientList.get(i).getIngredientCount();
-            foodImg = "file:///storage/emulated/0/Download/"+ingredientList.get(i).getIngredientName()+".jpg";
+            foodImg = "file://"+context.getFilesDir()+name+".jpg";
             IngredientData.add(new FullRecipeIngredientData(name,  Uri.parse(foodImg), count));
         }
     }

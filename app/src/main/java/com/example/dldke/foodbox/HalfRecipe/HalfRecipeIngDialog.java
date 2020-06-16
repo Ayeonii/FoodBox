@@ -2,7 +2,6 @@ package com.example.dldke.foodbox.HalfRecipe;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.dldke.foodbox.DataBaseFiles.RecipeDO;
-import com.example.dldke.foodbox.MyRecipe.MyRecipeBoxActivity;
 import com.example.dldke.foodbox.R;
 
 import java.util.ArrayList;
@@ -65,7 +63,7 @@ public class HalfRecipeIngDialog extends Dialog implements View.OnClickListener 
         mItems.clear();
 
         for (int i = 0; i < needArray.size(); i++) {
-            String foodImgUri = "file:///storage/emulated/0/Download/"+needArray.get(i).getIngredientName()+".jpg";
+            String foodImgUri = "file://"+context.getFilesDir()+needArray.get(i).getIngredientName()+".jpg";
 
             mItems.add(new HalfRecipeRecipeItem(1, needArray.get(i).getIngredientName(), needArray.get(i).getIngredientCount(), Uri.parse(foodImgUri)));
         }

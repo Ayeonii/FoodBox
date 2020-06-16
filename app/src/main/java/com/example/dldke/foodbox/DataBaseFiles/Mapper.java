@@ -1,17 +1,9 @@
 package com.example.dldke.foodbox.DataBaseFiles;
 
 import android.content.Context;
-import android.net.UrlQuerySanitizer;
 import android.util.Log;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AwsChunkedEncodingInputStream;
-import com.amazonaws.mobile.auth.core.IdentityManager;
-import com.amazonaws.mobile.auth.google.GoogleSignInProvider;
-import com.amazonaws.mobile.auth.userpools.CognitoUserPoolsSignInProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.client.IdentityProvider;
-import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -27,8 +19,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.Region;
 import com.example.dldke.foodbox.PencilRecipe.CurrentDate;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
@@ -331,12 +321,8 @@ public static String getImageUrlUser(final String userid){
         e.printStackTrace();
     }
     String url;
-    if(thread.getResult()==null){
-        url = "default";
-    }
-    else{
-        url = (String)thread.getResult();
-    }
+    url = (String)thread.getResult();
+
     return url;
 }
 
@@ -572,6 +558,37 @@ public static String getImageUrlUser(final String userid){
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(sectionName));
                 scanExpression.addFilterCondition("section", condition);
+                itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
+            }
+            @Override
+            public Object getResult(){
+                return itemList;
+            }
+        });
+
+        thread.start();
+        try{
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<InfoDO> itemList = (List<InfoDO>)thread.getResult();
+        return itemList;
+    }
+
+
+    public static List<InfoDO> scanKindof(String kindof) {
+        final com.example.dldke.foodbox.DataBaseFiles.InfoDO foodItem = new com.example.dldke.foodbox.DataBaseFiles.InfoDO();
+
+        final String kindofName = kindof;
+
+        com.example.dldke.foodbox.DataBaseFiles.returnThread thread = new com.example.dldke.foodbox.DataBaseFiles.returnThread(new com.example.dldke.foodbox.DataBaseFiles.CustomRunnable() {
+            List<InfoDO> itemList;
+            @Override
+            public void run() {
+                DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+                Condition condition = new Condition().withComparisonOperator(ComparisonOperator.EQ).withAttributeValueList(new AttributeValue().withS(kindofName));
+                scanExpression.addFilterCondition("kindOf", condition);
                 itemList = Mapper.getDynamoDBMapper().scan(InfoDO.class, scanExpression);
             }
             @Override
@@ -1579,7 +1596,7 @@ public static String getImageUrlUser(final String userid){
                         compareCount++;
                 }
             }
-            if(compareCount >= 2)
+            if(compareCount >= 1)
                 resultPost.add(entirePost.get(i));
 
         }

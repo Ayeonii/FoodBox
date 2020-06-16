@@ -26,18 +26,17 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
     private Context context;
     private static ArrayList<PencilCartItem> mItems;
     private static int removedPosition;
+    private static boolean isFromVision = false;
 
     public PencilCartAdapter(ArrayList<PencilCartItem> cartItems){ this.mItems = cartItems;}
     public PencilCartAdapter(){}
 
-    public void setRemovedPosition(int removedPosition){
-        this.removedPosition = removedPosition;
-    }
-    public int getRemovedPosition(){
-        return removedPosition;
-    }
+
     public ArrayList<PencilCartItem> getCartItems(){return mItems; }
 
+    public void setIsFromVision(boolean isFromVision){
+        this.isFromVision = isFromVision;
+    }
 
     // 새로운 뷰 홀더 생성
     @Override
@@ -73,7 +72,9 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
                     case R.id.deleteButton :
                         PopupAdapter popup = new PopupAdapter();
                         pencilAdapter.setClickCnt(pencilAdapter.getClickCnt()-(int)mItems.get(position).getFoodCount());
-                        popup.setNewOldName(position);
+                        if(isFromVision) {
+                            popup.setNewOldName(position);
+                        }
                         mItems.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mItems.size());
@@ -102,10 +103,15 @@ public class PencilCartAdapter extends RecyclerView.Adapter<PencilCartAdapter.It
         holder.minus_btn.setOnClickListener(onClickListener);
         holder.delete_btn.setOnClickListener(onClickListener);
         holder.frozenCheck.setOnClickListener(onClickListener);
-        if(mItems.get(position).getIsFrozen()){
-            holder.frozenCheck.setChecked(true);
-        } else{
-            holder.frozenCheck.setChecked(false);
+        try {
+            if (mItems.get(position).getIsFrozen()) {
+                holder.frozenCheck.setChecked(true);
+            } else {
+                holder.frozenCheck.setChecked(false);
+            }
+        }catch (NullPointerException e){
+            mItems.get(position).setIsFrozen(false);
+            holder.frozenCheck .setChecked(false);
         }
 
     }

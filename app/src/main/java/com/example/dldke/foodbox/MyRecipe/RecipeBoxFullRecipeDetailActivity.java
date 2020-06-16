@@ -1,5 +1,6 @@
 package com.example.dldke.foodbox.MyRecipe;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,6 +59,7 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
     List<HalfRecipeRecipeItem> recipeItems = new ArrayList<>();
     private ArrayList<DCItem> dcArray = new ArrayList<>();
     private HalfRecipeDueDateDialog dueDateDialog;
+
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -136,7 +138,8 @@ public class RecipeBoxFullRecipeDetailActivity extends AppCompatActivity {
         for (int i = 0; i < ingredientList.size(); i++) {
             String name = ingredientList.get(i).getIngredientName();
             Double count = ingredientList.get(i).getIngredientCount();
-            String foodImg = "file:///storage/emulated/0/Download/" + ingredientList.get(i).getIngredientName() + ".jpg";
+
+            String foodImg = "file://"+getApplicationContext().getFilesDir()+name+".jpg";
             recipeItems.add(new HalfRecipeRecipeItem(name, count, Uri.parse(foodImg)));
         }
     }

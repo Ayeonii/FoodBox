@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingButtonRecipe"
         android:layout_width="60dp"
@@ -39,14 +37,14 @@
             android:layout_weight="3">
 
             <Button
-                android:id="@+id/btn_sidedish"
+                android:id="@+id/btn_frozen"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
-                android:background="#FFFBE6"
+                android:background="#90CAF9"
                 android:fontFamily="@font/font_family"
                 android:gravity="center"
-                android:text="반찬"
+                android:text="냉동실"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -55,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <Button
                     android:id="@+id/btn_dairy"
@@ -63,7 +61,7 @@
                     android:layout_height="0dp"
                     android:layout_margin="1dp"
                     android:layout_weight="1"
-                    android:background="#fd5523"
+                    android:background="#ECEFF1"
                     android:fontFamily="@font/font_family"
                     android:gravity="center"
                     android:text="계란,유제품"
@@ -78,10 +76,24 @@
                     android:layout_height="0dp"
                     android:layout_margin="1dp"
                     android:layout_weight="1"
-                    android:background="#fd5523"
+                    android:background="#ECEFF1"
                     android:fontFamily="@font/font_family"
                     android:gravity="center"
                     android:text="음료,소스"
+                    android:textColor="#000000"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_sidedish"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="#ECEFF1"
+                    android:fontFamily="@font/font_family"
+                    android:gravity="center"
+                    android:text="반찬"
                     android:textColor="#000000"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -100,11 +112,11 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 android:layout_span="2"
-                android:background="#37966f"
+                android:background="#F44336"
                 android:fontFamily="@font/font_family"
                 android:gravity="center"
                 android:text="육류,생선"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -119,15 +131,16 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 android:layout_span="2"
-                android:background="#356859"
+                android:background="#4CAF50"
                 android:fontFamily="@font/font_family"
                 android:gravity="center"
                 android:text="과일,야채"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
         </TableRow>
 
     </TableLayout>
+
 </android.support.constraint.ConstraintLayout>

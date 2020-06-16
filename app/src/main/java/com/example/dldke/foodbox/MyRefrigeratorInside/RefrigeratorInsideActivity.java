@@ -38,7 +38,6 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
 
     public RefrigeratorInsideActivity(){}
     public List<RefrigeratorDO.Item> getRefrigeratorItem(){
-        Log.e("","getRefirgeratorItem 들어옴 ");
         return refrigeratorItem;
     }
 
@@ -120,35 +119,40 @@ public class RefrigeratorInsideActivity extends AppCompatActivity implements Vie
         for (int i = 0; i < refrigeratorItem.size(); i++) {
             try {
                 if (refrigeratorItem.get(i).getSection().equals("sideDish"))
-                    localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen())
+                        localSideDish.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
                 Log.d("test", "sideDish null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getKindOf().equals("dairy"))
-                    localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen())
+                        localDairy.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
                 Log.d("test", "dairy null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getKindOf().equals("beverage") || refrigeratorItem.get(i).getKindOf().equals("sauce"))
-                    localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen())
+                        localEtc.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
                 Log.d("test", "etc null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getSection().equals("meat"))
-                    localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen())
+                        localMeat.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
                 Log.d("test", "meat null: " + e.getMessage());
             }
 
             try {
                 if (refrigeratorItem.get(i).getSection().equals("fresh"))
-                    localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
+                    if(!refrigeratorItem.get(i).getIsFrozen())
+                        localFresh.add(new LocalRefrigeratorItem(refrigeratorItem.get(i).getName(), refrigeratorItem.get(i).getCount(), refrigeratorItem.get(i).getDueDate()));
             } catch (NullPointerException e) {
                 Log.d("test", "fresh null: " + e.getMessage());
             }

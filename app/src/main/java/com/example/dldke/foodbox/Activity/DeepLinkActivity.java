@@ -31,7 +31,7 @@ public class DeepLinkActivity extends AppCompatActivity {
 
         if (getIntent().getAction() == Intent.ACTION_VIEW) {
             Uri data = getIntent().getData();
-
+ // git test //////
             if (data != null) {
 
                 // show an alert with the "custom" param

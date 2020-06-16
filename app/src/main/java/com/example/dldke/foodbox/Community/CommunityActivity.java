@@ -38,8 +38,8 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         frag = (FrameLayout)findViewById(R.id.favorite_fragment_container); //검색시 나오는 화면
 
         searchText = "";
-        searchBar = (EditText)findViewById(R.id.community_commentBar);
-        deleteButton = (ImageButton)findViewById(R.id.community_delete_button);
+     //   searchBar = (EditText)findViewById(R.id.community_commentBar);
+     //   deleteButton = (ImageButton)findViewById(R.id.community_delete_button);
 
         homeBtn = (ImageView)findViewById(R.id.home_btn);
         favoriteBtn =(ImageView)findViewById(R.id.favorite_btn);
@@ -48,43 +48,8 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         homeBtn.setOnClickListener(this);
         favoriteBtn.setOnClickListener(this);
         recommendBtn.setOnClickListener(this);
-        /****************search bar input *****************************/
-
-        /*
-        searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String text;
-                text = searchBar.getText().toString();
-                if (text.length() == 0)
-                    fragmentSearch.setVisibility(View.GONE);
-                else
-                    fragmentSearch.setVisibility(View.VISIBLE);
-                SearchIngredientFragment.search(text);
-            }
-        });
-        */
 
 
-        /****************delete button***********************/
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //텍스트가 존재 시, 모두 지운다.
-                if (searchBar.getText().length() != 0) {
-                    searchBar.setHint(" 검색어를 입력하세요.");
-                    searchBar.setText(null);
-                }
-            }
-        });
 
         setFrag(0);
     }

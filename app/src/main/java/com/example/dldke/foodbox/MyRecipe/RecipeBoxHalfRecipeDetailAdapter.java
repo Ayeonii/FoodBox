@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     private int ing;
     Context context;
     private String foodName;
+    private String TAG = "RecipeBoxHalfRecipeDetailAdapter";
 
     public RecipeBoxHalfRecipeDetailAdapter(Context context, List<RecipeDO.Ingredient> ingredientdata) {
         this.items = ingredientdata;
@@ -76,12 +78,12 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
     public void onBindViewHolder(ViewHolder holder, int position) {
         foodName = recipeItems.get(position).getName();
         String foodImgUri;
-        File file = new File("/storage/emulated/0/Download/" + foodName + ".jpg");
+        File file = new File(context.getFilesDir() + foodName + ".jpg");
 
         if (!file.exists()) {
-            foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
+            foodImgUri = "file://"+context.getFilesDir()+"default.jpg";
         } else {
-            foodImgUri = "file:///storage/emulated/0/Download/" + foodName + ".jpg";
+            foodImgUri = "file://"+context.getFilesDir()+foodName+".jpg";
         }
 
         holder.ingredientImage.setImageURI(Uri.parse(foodImgUri));
@@ -148,7 +150,11 @@ public class RecipeBoxHalfRecipeDetailAdapter extends RecyclerView.Adapter<Recip
             Mapper.updateIngInfo(0, recipeId);
 
         PinpointManager tmp = getPinpointManager(context);
-        Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+        try {
+            Mapper.updateRecipePushEndPoint(tmp.getTargetingClient());
+        }catch (NullPointerException e){
+            Log.e(TAG, "레시피함 비었음");
+        }
     }
 
     private void MemoUpdate(Double refriCount, Double recipeCount) {

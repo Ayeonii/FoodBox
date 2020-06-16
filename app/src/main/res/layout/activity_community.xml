@@ -6,35 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/community_commentBar"
-        style="@style/EditTextStyle"
-        android:layout_width="353dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/make_radius"
-        android:backgroundTint="#ededed"
-        android:fontFamily="@font/font_family"
-        android:hint=" 검색어를 입력하세요."
-        android:paddingLeft="5dp"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/community_delete_button"
-        android:layout_width="43dp"
-        android:layout_height="38dp"
-        android:background="#00000000"
-        app:layout_constraintBottom_toBottomOf="@+id/community_commentBar"
-        app:layout_constraintEnd_toEndOf="@+id/community_commentBar"
-        app:layout_constraintTop_toTopOf="@+id/community_commentBar"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_delete_all_blue" />
-
     <LinearLayout
         android:id="@+id/btn_tab"
         android:layout_width="0dp"
@@ -80,27 +51,28 @@
         android:id="@+id/frag_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:background="@color/colorHint"
         app:layout_constraintBottom_toTopOf="@+id/btn_tab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/community_commentBar">
+        app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/favorite_fragment_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
+        android:layout_width="205dp"
+        android:layout_height="214dp"
+        android:layout_marginTop="8dp"
         android:background="@color/colorWhite"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/frag_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/community_commentBar">
+        app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
 

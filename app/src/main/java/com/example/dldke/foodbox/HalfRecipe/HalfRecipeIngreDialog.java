@@ -72,7 +72,7 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
 
         switch (ingreType) {
             case "sideDish":
-                txtType.setText("반찬칸");
+                txtType.setText("반찬(기타)칸");
                 break;
             case "dairy":
                 txtType.setText("계란,유제품칸");
@@ -85,6 +85,9 @@ public class HalfRecipeIngreDialog extends Dialog implements View.OnClickListene
                 break;
             case "fresh":
                 txtType.setText("과일,야채칸");
+                break;
+            case "frozen":
+                txtType.setText("냉동칸");
                 break;
         }
 

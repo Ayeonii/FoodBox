@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dldke.foodbox.DataBaseFiles.Mapper;
 import com.example.dldke.foodbox.R;
 
 import java.io.File;
@@ -108,11 +109,12 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
 
         for (int i = 0; i < selectedItem.size(); i++) {
             String foodImgUri ;
-            File file = new File("/storage/emulated/0/Download/" + selectedItem.get(i).getName() + ".jpg");
+            File file = new File(getContext().getFilesDir() +  selectedItem.get(i).getName() + ".jpg");
+
             if(!file.exists())
-                foodImgUri = "file:///storage/emulated/0/Download/default.jpg";
+                foodImgUri = "file://"+context.getFilesDir() + "default.jpg";
             else
-                foodImgUri = "file:///storage/emulated/0/Download/"+selectedItem.get(i).getName()+".jpg";
+                foodImgUri = "file://"+context.getFilesDir()+selectedItem.get(i).getName()+".jpg";
 
             mItems.add(new HalfRecipeRecipeItem(selectedItem.get(i).getName(), selectedItem.get(i).getCount(), Uri.parse(foodImgUri)));
         }
@@ -120,7 +122,7 @@ public class HalfRecipeRecipeDialog extends Dialog implements View.OnClickListen
         if (count != 0) {
             for (int i = 0; i < nameAll.size(); i++) {
                 if (checkAddFood[i]) {
-                    String foodImgUri = "file:///storage/emulated/0/Download/" + nameAll.get(i) + ".jpg";
+                    String foodImgUri = "file://"+context.getFilesDir() + nameAll.get(i) + ".jpg";
                     mItems.add(new HalfRecipeRecipeItem(nameAll.get(i), 0.0, Uri.parse(foodImgUri)));
                 }
             }
