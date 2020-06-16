@@ -48,12 +48,20 @@ public class CartCalendarDialog {
                 long diff;
                 Date clickedDate;
                 try {
-                    clickedDate = formatter.parse(""+year+""+(month+1)+""+dayOfMonth);
+                    if((month+1)<10){
+                        clickedDate = formatter.parse(""+year+"0"+(month+1)+""+dayOfMonth);
+                    }else{
+                        clickedDate = formatter.parse(""+year+""+(month+1)+""+dayOfMonth);
+                    }
                     inputDBDateString = formatter.format(clickedDate);
                     Date curDay = formatter.parse(currentDate.getCurrenDate());
+                    Log.e("","currentDate.getCurrentDate():"+ currentDate.getCurrenDate());
                     diff = clickedDate.getTime() - curDay.getTime();
+                    Log.e("","clickedDate = "+clickedDate+"curDay:"+curDay);
+                    Log.e("","clickedDate.getTime() = "+clickedDate.getTime()/(24 * 60 * 60 * 1000)+"curDay.getTime():"+curDay.getTime()/(24 * 60 * 60 * 1000));
                     diffDays = diff / (24 * 60 * 60 * 1000);
 
+                    Log.e("diffDays : ", ""+diffDays);
 
                 } catch (ParseException e){
                     e.printStackTrace();
